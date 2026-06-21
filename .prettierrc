@@ -3,9 +3,10 @@
   "tabWidth": 2,
   "singleQuote": true,
   "trailingComma": "all",
-  "arrowParens": "avoid",
+  "arrowParens": "always",
   "plugins": ["prettier-plugin-organize-imports"],
-  "semi": true,
-  "singleAttributePerLine": true,
+  "semi": false,
+  "singleAttributePerLine": false,
+  "jsxSingleQuote": false,
   "endOfLine": "auto"
 }
