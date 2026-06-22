@@ -79,10 +79,12 @@ export type CardHolderInput = {
   tPocketTabWidth: number
 
   /**
-   * Narrowest width of a T-pocket at the bottom of its inverted trapezoid section.
-   * The T-pocket narrows downward so the card holder edge does not become bulky.
+   * Symmetric inward taper of the T-pocket's lower trapezoid, measured from the
+   * full calculated pocket width on each side. For example, a value of 10 means
+   * the lower edge is inset by 10 millimeters on the left and 10 millimeters on
+   * the right.
    */
-  tPocketBottomWidth: number
+  tPocketTaper: number
 
   /**
    * Height of the card area that remains visible above a pocket. The actual
@@ -119,19 +121,13 @@ export type BackPanel = {
   kind: 'backPanel'
   /**  Rectangular outline of the full back panel. */
   outline: Rect
-  /** Distance between the back panel's stitch line and its outer leather edge. */
-  stitchMargin: number
 }
 
 /** A full rectangular cover pocket. This is the top pocket above all T-pockets. */
 export type PlainPocket = {
   kind: 'plainPocket'
-  /** Pocket index counted from bottom to top. The cover pocket is the topmost pocket. */
-  index: number
   /** Rectangular outline of the entire leather pocket piece. */
   outline: Rect
-  /** Vertical coordinate of the pocket opening in the SVG-style coordinate system. */
-  openingY: number
 }
 
 /**
@@ -144,12 +140,4 @@ export type TPocket = {
   index: number
   /** Full outline of the T-pocket as a polygon suitable for SVG path or polygon drawing. */
   outline: Polygon
-  /** Top thin rectangular strip of the T-pocket, including the side tabs. */
-  topTab: Rect
-  /** Lower inverted trapezoid section of the T-pocket. This part narrows toward the bottom to reduce bulk at the card holder edge. */
-  lowerTrapezoid: Polygon
-  /** Vertical coordinate of the pocket opening in the SVG-style coordinate system. */
-  openingY: number
-  /** Vertical coordinate of the bottom stitch line that secures the T-pocket. */
-  bottomStitchY: number
 }

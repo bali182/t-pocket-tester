@@ -11,7 +11,7 @@ export const cardHolderInputAtom = atom<CardHolderInput>({
   cardBottomClearanceFromStitch: 1,
   pocketSpacing: 12,
   tPocketTabWidth: 8,
-  tPocketBottomWidth: 30,
+  tPocketTaper: 30,
   visibleCardHeight: 20,
 })
 

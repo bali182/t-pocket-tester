@@ -14,7 +14,7 @@ export const PocketsInputSection: FC = () => {
       { key: 'visibleCardHeight', label: 'Látható kártyamagasság' },
       { key: 'pocketSpacing', label: 'Zsebek távolsága' },
       { key: 'tPocketTabWidth', label: 'T-fül szélessége' },
-      { key: 'tPocketBottomWidth', label: 'T-zseb alsó szélessége' },
+      { key: 'tPocketTaper', label: 'T-zseb szűkülése oldalanként' },
     ],
     [],
   )
