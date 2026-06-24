@@ -8,6 +8,7 @@ import { calculateCardHolder } from '../logic/calculateCardHolder'
 import { adjustColorLightness, setOpacity } from '../logic/colorUtils'
 import { cardHolderInputAtom } from '../state'
 import { BackPanelSvg } from './BackPanelSvg'
+import { CardSvg } from './CardSvg'
 import { PlainPocketSvg } from './PlainPocketSvg'
 import { TPocketSvg } from './TPocketSvg'
 
@@ -31,10 +32,14 @@ export const DrawArea: FC = () => {
       >
         <BackPanelSvg backPanel={cardHolder.backPanel} />
 
-        {cardHolder.tPockets.map((pocket) => (
-          <TPocketSvg key={pocket.index} pocket={pocket} fill={getPocketFill(pocket.index + 1)} />
+        {cardHolder.tPockets.map((pocket, index) => (
+          <g key={pocket.index}>
+            <CardSvg card={cardHolder.cards[index]} />
+            <TPocketSvg pocket={pocket} fill={getPocketFill(pocket.index + 1)} />
+          </g>
         ))}
 
+        <CardSvg card={cardHolder.cards[cardHolder.cards.length - 1]} />
         <PlainPocketSvg pocket={cardHolder.coverPocket} fill={getPocketFill(cardHolder.tPockets.length + 1)} />
       </svg>
     </Box>

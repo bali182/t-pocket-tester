@@ -110,10 +110,21 @@ export type CalculatedCardHolder = {
   overallSize: Size
   /** Back panel that all pockets are stitched onto. */
   backPanel: BackPanel
+  /** Calculated cards. The order follows the pocket order from top to bottom. */
+  cards: Card[]
   /** Calculated T-pockets. For an input pocketCount of N, this list contains N - 1 items. */
   tPockets: TPocket[]
   /** Top plain rectangular cover pocket placed above the T-pockets. */
   coverPocket: PlainPocket
+}
+
+/** A card placed into one of the card holder pockets. */
+export type Card = {
+  kind: 'card'
+  /** Card index counted in the same top-to-bottom order as pockets. */
+  index: number
+  /** Rectangular card outline used for SVG rendering. */
+  outline: Rect
 }
 
 /** The rectangular leather back panel that carries every pocket. */

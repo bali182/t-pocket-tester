@@ -12,17 +12,21 @@ export const calculateTPocketCount = (input: CardHolderInput): number => {
   return input.pocketCount - 1
 }
 
+export const calculateTopInset = (input: CardHolderInput): number => {
+  return input.visibleCardHeight + input.stitchMargin
+}
+
 export const calculateOverallSize = (input: CardHolderInput): Size => {
   return {
     width: calculatePocketWidth(input),
-    height: calculatePocketHeight(input) + calculateTPocketCount(input) * input.pocketSpacing,
+    height: calculateTopInset(input) + calculatePocketHeight(input) + calculateTPocketCount(input) * input.pocketSpacing,
   }
 }
 
 export const calculateTPocketY = (input: CardHolderInput, index: number): number => {
-  return index * input.pocketSpacing
+  return calculateTopInset(input) + index * input.pocketSpacing
 }
 
 export const calculatePlainPocketY = (input: CardHolderInput): number => {
-  return calculateTPocketCount(input) * input.pocketSpacing
+  return calculateTopInset(input) + calculateTPocketCount(input) * input.pocketSpacing
 }
