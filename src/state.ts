@@ -9,10 +9,10 @@ export const cardHolderInputAtom = atom<CardHolderInput>({
   stitchMargin: 4,
   cardSideClearanceFromStitch: 5,
   cardBottomClearanceFromStitch: 1,
-  pocketSpacing: 12,
+  pocketSpacing: 15,
   tPocketTabWidth: 8,
-  tPocketTaper: 30,
-  visibleCardHeight: 20,
+  tPocketTaper: 20,
+  visibleCardHeight: 10,
 })
 
 export const isInputDrawerOpenAtom = atom(false)
