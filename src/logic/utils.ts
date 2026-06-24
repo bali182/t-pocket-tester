@@ -20,5 +20,9 @@ export const calculateOverallSize = (input: CardHolderInput): Size => {
 }
 
 export const calculateTPocketY = (input: CardHolderInput, index: number): number => {
-  return (calculateTPocketCount(input) - index) * input.pocketSpacing
+  return index * input.pocketSpacing
+}
+
+export const calculatePlainPocketY = (input: CardHolderInput): number => {
+  return calculateTPocketCount(input) * input.pocketSpacing
 }

@@ -136,7 +136,7 @@ export type PlainPocket = {
  */
 export type TPocket = {
   kind: 'tPocket'
-  /** Pocket index counted from bottom to top. */
+  /** Pocket index counted from top to bottom. */
   index: number
   /** Full outline of the T-pocket as a polygon suitable for SVG path or polygon drawing. */
   outline: Polygon

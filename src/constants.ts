@@ -18,3 +18,9 @@ export const ISO_CARD_SIZE_BY_ORIENTATION: Record<CardOrientation, Size> = {
   landscape: LANDSCAPE_ISO_CARD_SIZE,
   portrait: PORTRAIT_ISO_CARD_SIZE,
 }
+
+export const BACK_PANEL_COLOR = '#532E21'
+
+export const POCKET_COLOR_LIGHTNESS_ADJUSTMENT = 0.08
+
+export const POCKET_OPACITY = 0.8
