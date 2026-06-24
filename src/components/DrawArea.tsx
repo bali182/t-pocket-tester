@@ -1,27 +1,28 @@
 import { Box } from '@chakra-ui/react'
 import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
-import { BACK_PANEL_COLOR, POCKET_COLOR_LIGHTNESS_ADJUSTMENT, POCKET_OPACITY } from '../constants'
+import { BACK_PANEL_COLOR, CARD_COLOR, CARD_OPACITY, POCKET_COLOR_LIGHTNESS_ADJUSTMENT, POCKET_OPACITY } from '../constants'
 import { calculateCardHolder } from '../logic/calculateCardHolder'
 import { adjustColorLightness, setOpacity } from '../logic/colorUtils'
 import { cardHolderInputAtom } from '../state'
-import { BackPanelSvg } from './BackPanelSvg'
-import { CardSvg } from './CardSvg'
-import { PlainPocketSvg } from './PlainPocketSvg'
-import { TPocketSvg } from './TPocketSvg'
+import { CardHolder } from './CardHolder'
 
 export const DrawArea: FC = () => {
   const input = useAtomValue(cardHolderInputAtom)
   const cardHolder = useMemo(() => calculateCardHolder(input), [input])
 
-  const getPocketFill = (layerIndex: number): string => {
+  const getPocketColor = useCallback((index: number): string => {
     return setOpacity(
-      adjustColorLightness(BACK_PANEL_COLOR, POCKET_COLOR_LIGHTNESS_ADJUSTMENT * layerIndex),
+      adjustColorLightness(BACK_PANEL_COLOR, POCKET_COLOR_LIGHTNESS_ADJUSTMENT * (index + 1)),
       POCKET_OPACITY,
     )
-  }
+  }, [])
+
+  const getCardColor = useCallback((_index: number): string => {
+    return setOpacity(CARD_COLOR, CARD_OPACITY)
+  }, [])
 
   return (
     <Box height="100%" width="100%">
@@ -30,17 +31,12 @@ export const DrawArea: FC = () => {
         height={`${cardHolder.overallSize.height}mm`}
         viewBox={`0 0 ${cardHolder.overallSize.width} ${cardHolder.overallSize.height}`}
       >
-        <BackPanelSvg backPanel={cardHolder.backPanel} />
-
-        {cardHolder.tPockets.map((pocket, index) => (
-          <g key={pocket.index}>
-            <CardSvg card={cardHolder.cards[index]} />
-            <TPocketSvg pocket={pocket} fill={getPocketFill(pocket.index + 1)} />
-          </g>
-        ))}
-
-        <CardSvg card={cardHolder.cards[cardHolder.cards.length - 1]} />
-        <PlainPocketSvg pocket={cardHolder.coverPocket} fill={getPocketFill(cardHolder.tPockets.length + 1)} />
+        <CardHolder
+          input={input}
+          output={cardHolder}
+          getPocketColor={getPocketColor}
+          getCardColor={getCardColor}
+        />
       </svg>
     </Box>
   )

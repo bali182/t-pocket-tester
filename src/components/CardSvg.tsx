@@ -1,14 +1,14 @@
 import type { FC } from 'react'
 
-import { CARD_COLOR, CARD_OPACITY, CARD_RADIUS } from '../constants'
-import { setOpacity } from '../logic/colorUtils'
+import { CARD_RADIUS } from '../constants'
 import type { Card } from '../types'
 
-type Props = {
+type CardSvgProps = {
   card: Card
+  color: string
 }
 
-export const CardSvg: FC<Props> = ({ card }) => {
+export const CardSvg: FC<CardSvgProps> = ({ card, color }) => {
   return (
     <rect
       x={card.outline.x}
@@ -17,7 +17,7 @@ export const CardSvg: FC<Props> = ({ card }) => {
       height={card.outline.height}
       rx={CARD_RADIUS}
       ry={CARD_RADIUS}
-      fill={setOpacity(CARD_COLOR, CARD_OPACITY)}
+      fill={color}
     />
   )
 }
