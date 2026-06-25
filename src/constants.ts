@@ -20,12 +20,14 @@ export const ISO_CARD_SIZE_BY_ORIENTATION: Record<CardOrientation, Size> = {
 }
 
 export const LEATHER_BASE_COLOR = '#532E21'
+export const STROKE_COLOR = '#000000'
+export const CARD_COLOR = '#1CABFF'
+
+export const STROKE_THICKNESS = 0.3
 
 export const POCKET_COLOR_LIGHTNESS_ADJUSTMENT = 0.08
 
 export const POCKET_OPACITY = 0.8
-
-export const CARD_COLOR = '#1CABFF'
 
 export const CARD_OPACITY = 0.8
 
