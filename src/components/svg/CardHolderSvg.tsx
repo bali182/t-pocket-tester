@@ -16,7 +16,7 @@ import { Card } from './Card'
 import { PlainPocket } from './PlainPocket'
 import { TPocket } from './TPocket'
 
-export const CardHolder: FC = () => {
+export const CardHolderSvg: FC = () => {
   const input = useAtomValue(cardHolderInputAtom)
   const output = useMemo(() => calculateCardHolder(input), [input])
 

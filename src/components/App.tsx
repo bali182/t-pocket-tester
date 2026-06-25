@@ -2,7 +2,7 @@ import { Box, Heading, Text } from '@chakra-ui/react'
 import type { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { CardHolder } from './svg/CardHolderSvg'
+import { CardHolderSvg } from './svg/CardHolderSvg'
 import { CardHolderInputDrawer } from './editor/CardHolderInputDrawer'
 import { CenteredLayout } from './CenteredLayout'
 import { Header } from './Header'
@@ -30,7 +30,7 @@ export const App: FC = () => {
             path="/card-holder"
             element={
               <CenteredLayout>
-                <CardHolder />
+                <CardHolderSvg />
               </CenteredLayout>
             }
           />
