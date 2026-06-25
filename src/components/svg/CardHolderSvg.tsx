@@ -2,7 +2,7 @@ import { useCallback, useMemo, type FC } from 'react'
 
 import { useAtomValue } from 'jotai'
 import {
-  BACK_PANEL_COLOR,
+  LEATHER_BASE_COLOR,
   CARD_COLOR,
   CARD_OPACITY,
   POCKET_COLOR_LIGHTNESS_ADJUSTMENT,
@@ -22,7 +22,7 @@ export const CardHolderSvg: FC = () => {
 
   const getPocketColor = useCallback((index: number): string => {
     return setOpacity(
-      adjustColorLightness(BACK_PANEL_COLOR, POCKET_COLOR_LIGHTNESS_ADJUSTMENT * (index + 1)),
+      adjustColorLightness(LEATHER_BASE_COLOR, POCKET_COLOR_LIGHTNESS_ADJUSTMENT * (index + 1)),
       POCKET_OPACITY,
     )
   }, [])

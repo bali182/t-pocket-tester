@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { BACK_PANEL_COLOR } from '../../constants'
+import { LEATHER_BASE_COLOR } from '../../constants'
 import type { BackPanelModel } from '../../types'
 
 type BackPanelProps = {
@@ -14,7 +14,7 @@ export const BackPanel: FC<BackPanelProps> = ({ backPanel }) => {
       y={backPanel.outline.y}
       width={backPanel.outline.width}
       height={backPanel.outline.height}
-      fill={BACK_PANEL_COLOR}
+      fill={LEATHER_BASE_COLOR}
     />
   )
 }
