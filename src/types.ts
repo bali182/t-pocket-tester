@@ -22,6 +22,14 @@ export type Polygon = {
   points: Point[]
 }
 
+/** A straight line segment suitable for SVG rendering. All values are measured in millimeters. */
+export type LineModel = {
+  /** Starting point of the line segment in the SVG-like coordinate system. */
+  start: Point
+  /** Ending point of the line segment in the SVG-like coordinate system. */
+  end: Point
+}
+
 /**
  * Orientation of a standard ISO card size. Custom card dimensions do not have a
  * CardOrientation value and are represented as undefined in the UI layer.
@@ -149,6 +157,32 @@ export type TPocketModel = {
   kind: 'tPocket'
   /** Pocket index counted from top to bottom. */
   index: number
+  /** Top-left corner of the full top tab strip. */
+  topLeft: Point
+  /** Top-right corner of the full top tab strip. */
+  topRight: Point
+  /** Bottom-right corner of the right tab area. */
+  rightTabBottom: Point
+  /** Top-right corner of the lower trapezoid where it meets the right tab. */
+  rightTrapezoidTop: Point
+  /** Bottom-right corner of the lower trapezoid. */
+  rightBottom: Point
+  /** Bottom-left corner of the lower trapezoid. */
+  leftBottom: Point
+  /** Top-left corner of the lower trapezoid where it meets the left tab. */
+  leftTrapezoidTop: Point
+  /** Bottom-left corner of the left tab area. */
+  leftTabBottom: Point
   /** Full outline of the T-pocket as a polygon suitable for SVG path or polygon drawing. */
   outline: Polygon
+}
+
+/** Stitch lines calculated for a T-pocket. */
+export type TPocketStitchLinesModel = {
+  /** Vertical stitch line inside the left top tab. */
+  leftTabStitchLine: LineModel
+  /** Vertical stitch line inside the right top tab. */
+  rightTabStitchLine: LineModel
+  /** Horizontal stitch line near the bottom edge of the lower trapezoid. */
+  bottomStitchLine: LineModel
 }

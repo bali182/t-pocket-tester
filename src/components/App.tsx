@@ -6,6 +6,7 @@ import { CardHolderSvg } from './svg/CardHolderSvg'
 import { CardHolderInputDrawer } from './editor/CardHolderInputDrawer'
 import { CenteredLayout } from './CenteredLayout'
 import { Header } from './Header'
+import { TPocketSvg } from './svg/TPocketSvg'
 
 const renderPlaceholder = (title: string) => {
   return (
@@ -34,7 +35,14 @@ export const App: FC = () => {
               </CenteredLayout>
             }
           />
-          <Route path="/t-pocket" element={renderPlaceholder('T-pocket')} />
+          <Route
+            path="/t-pocket"
+            element={
+              <CenteredLayout>
+                <TPocketSvg />
+              </CenteredLayout>
+            }
+          />
           <Route path="/front-pocket" element={renderPlaceholder('Front pocket')} />
           <Route path="/back-panel" element={renderPlaceholder('Back panel')} />
           <Route path="*" element={<Navigate to="/card-holder" replace />} />

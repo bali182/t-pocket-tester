@@ -2,9 +2,9 @@ import { useCallback, useMemo, type FC } from 'react'
 
 import { useAtomValue } from 'jotai'
 import {
-  LEATHER_BASE_COLOR,
   CARD_COLOR,
   CARD_OPACITY,
+  LEATHER_BASE_COLOR,
   POCKET_COLOR_LIGHTNESS_ADJUSTMENT,
   POCKET_OPACITY,
 } from '../../constants'
