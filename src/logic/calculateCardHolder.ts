@@ -1,11 +1,11 @@
-import type { CalculatedCardHolder, CardHolderInput } from '../types'
+import type { CalculatedCardHolderModel, CardHolderInput } from '../types'
 import { calculateBackPanel } from './calculateBackPanel'
 import { calculateCard } from './calculateCard'
 import { calculatePlainPocket } from './calculatePlainPocket'
 import { calculateTPocket } from './calculateTPocket'
 import { calculateOverallSize, calculateTPocketCount } from './utils'
 
-export const calculateCardHolder = (input: CardHolderInput): CalculatedCardHolder => {
+export const calculateCardHolder = (input: CardHolderInput): CalculatedCardHolderModel => {
   return {
     overallSize: calculateOverallSize(input),
     backPanel: calculateBackPanel(input),

@@ -2,17 +2,19 @@ import { Field, NumberInput, Stack } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import type { FC } from 'react'
 import { useMemo } from 'react'
-import { cardHolderInputAtom } from '../state'
-import type { CardHolderInput, CardHolderInputField } from '../types'
+import { cardHolderInputAtom } from '../../state'
+import type { CardHolderInput, CardHolderInputField } from '../../types'
 
-export const StitchingInputSection: FC = () => {
+export const PocketsInputSection: FC = () => {
   const [input, setInput] = useAtom(cardHolderInputAtom)
 
   const fields = useMemo<CardHolderInputField[]>(
     () => [
-      { key: 'stitchMargin', label: 'Varrás távolsága a széltől' },
-      { key: 'cardSideClearanceFromStitch', label: 'Oldalsó kártyaráhagyás' },
-      { key: 'cardBottomClearanceFromStitch', label: 'Alsó kártyaráhagyás' },
+      { key: 'pocketCount', label: 'Zsebek száma', min: 1 },
+      { key: 'visibleCardHeight', label: 'Látható kártyamagasság' },
+      { key: 'pocketSpacing', label: 'Zsebek távolsága' },
+      { key: 'tPocketTabWidth', label: 'T-fül szélessége' },
+      { key: 'tPocketTaper', label: 'T-zseb szűkülése oldalanként' },
     ],
     [],
   )
@@ -28,6 +30,7 @@ export const StitchingInputSection: FC = () => {
           <Field.Label>{field.label}</Field.Label>
           <NumberInput.Root
             value={String(input[field.key])}
+            min={field.min}
             onValueChange={(details) => {
               if (Number.isFinite(details.valueAsNumber)) {
                 updateField(field.key, details.valueAsNumber)

@@ -1,14 +1,14 @@
 import type { FC } from 'react'
 
-import { CARD_RADIUS } from '../constants'
-import type { Card } from '../types'
+import { CARD_RADIUS } from '../../constants'
+import type { CardModel } from '../../types'
 
-type CardSvgProps = {
-  card: Card
+type CardProps = {
+  card: CardModel
   color: string
 }
 
-export const CardSvg: FC<CardSvgProps> = ({ card, color }) => {
+export const Card: FC<CardProps> = ({ card, color }) => {
   return (
     <rect
       x={card.outline.x}

@@ -1,7 +1,7 @@
-import type { CardHolderInput, PlainPocket } from '../types'
+import type { CardHolderInput, PlainPocketModel } from '../types'
 import { calculatePlainPocketY, calculatePocketHeight, calculatePocketWidth } from './utils'
 
-export const calculatePlainPocket = (input: CardHolderInput): PlainPocket => {
+export const calculatePlainPocket = (input: CardHolderInput): PlainPocketModel => {
   return {
     kind: 'plainPocket',
     outline: {

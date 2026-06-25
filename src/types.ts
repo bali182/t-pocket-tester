@@ -105,21 +105,21 @@ export type CardHolderInputField = {
 export type SectionId = 'card' | 'pockets' | 'stitching'
 
 /** Calculated drawing model for a complete vertically oriented card holder. */
-export type CalculatedCardHolder = {
+export type CalculatedCardHolderModel = {
   /** Bounding size of the complete card holder drawing. */
   overallSize: Size
   /** Back panel that all pockets are stitched onto. */
-  backPanel: BackPanel
+  backPanel: BackPanelModel
   /** Calculated cards. The order follows the pocket order from top to bottom. */
-  cards: Card[]
+  cards: CardModel[]
   /** Calculated T-pockets. For an input pocketCount of N, this list contains N - 1 items. */
-  tPockets: TPocket[]
+  tPockets: TPocketModel[]
   /** Top plain rectangular cover pocket placed above the T-pockets. */
-  coverPocket: PlainPocket
+  coverPocket: PlainPocketModel
 }
 
 /** A card placed into one of the card holder pockets. */
-export type Card = {
+export type CardModel = {
   kind: 'card'
   /** Card index counted in the same top-to-bottom order as pockets. */
   index: number
@@ -128,14 +128,14 @@ export type Card = {
 }
 
 /** The rectangular leather back panel that carries every pocket. */
-export type BackPanel = {
+export type BackPanelModel = {
   kind: 'backPanel'
   /**  Rectangular outline of the full back panel. */
   outline: Rect
 }
 
 /** A full rectangular cover pocket. This is the top pocket above all T-pockets. */
-export type PlainPocket = {
+export type PlainPocketModel = {
   kind: 'plainPocket'
   /** Rectangular outline of the entire leather pocket piece. */
   outline: Rect
@@ -145,7 +145,7 @@ export type PlainPocket = {
  * A T-shaped leather pocket. Its top is a thin rectangular tab strip and its
  * lower part is an inverted trapezoid that narrows downward.
  */
-export type TPocket = {
+export type TPocketModel = {
   kind: 'tPocket'
   /** Pocket index counted from top to bottom. */
   index: number

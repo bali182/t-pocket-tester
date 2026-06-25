@@ -1,7 +1,7 @@
-import type { CardHolderInput, TPocket } from '../types'
+import type { CardHolderInput, TPocketModel } from '../types'
 import { calculatePocketHeight, calculatePocketWidth, calculateTPocketY } from './utils'
 
-export const calculateTPocket = (input: CardHolderInput, index: number): TPocket => {
+export const calculateTPocket = (input: CardHolderInput, index: number): TPocketModel => {
   const pocketWidth = calculatePocketWidth(input)
   const pocketHeight = calculatePocketHeight(input)
   const y = calculateTPocketY(input, index)

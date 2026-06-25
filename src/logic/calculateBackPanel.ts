@@ -1,7 +1,7 @@
-import type { BackPanel, CardHolderInput } from '../types'
+import type { BackPanelModel, CardHolderInput } from '../types'
 import { calculateOverallSize } from './utils'
 
-export const calculateBackPanel = (input: CardHolderInput): BackPanel => {
+export const calculateBackPanel = (input: CardHolderInput): BackPanelModel => {
   const overallSize = calculateOverallSize(input)
 
   return {

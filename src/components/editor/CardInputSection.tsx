@@ -3,9 +3,9 @@ import { useAtom } from 'jotai'
 import type { ChangeEvent, FC } from 'react'
 import { useCallback, useMemo } from 'react'
 
-import { ISO_CARD_SIZE_BY_ORIENTATION } from '../constants'
-import { cardHolderInputAtom } from '../state'
-import type { CardOrientation } from '../types'
+import { ISO_CARD_SIZE_BY_ORIENTATION } from '../../constants'
+import { cardHolderInputAtom } from '../../state'
+import type { CardOrientation } from '../../types'
 
 export const CardInputSection: FC = () => {
   const [input, setInput] = useAtom(cardHolderInputAtom)

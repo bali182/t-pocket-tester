@@ -19,7 +19,8 @@ export const calculateTopInset = (input: CardHolderInput): number => {
 export const calculateOverallSize = (input: CardHolderInput): Size => {
   return {
     width: calculatePocketWidth(input),
-    height: calculateTopInset(input) + calculatePocketHeight(input) + calculateTPocketCount(input) * input.pocketSpacing,
+    height:
+      calculateTopInset(input) + calculatePocketHeight(input) + calculateTPocketCount(input) * input.pocketSpacing,
   }
 }
 

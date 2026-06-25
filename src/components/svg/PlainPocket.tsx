@@ -1,13 +1,13 @@
 import type { FC } from 'react'
 
-import type { PlainPocket } from '../types'
+import type { PlainPocketModel } from '../../types'
 
-type PlainPocketSvgProps = {
-  pocket: PlainPocket
+type PlainPocketProps = {
+  pocket: PlainPocketModel
   fill: string
 }
 
-export const PlainPocketSvg: FC<PlainPocketSvgProps> = ({ fill, pocket }) => {
+export const PlainPocket: FC<PlainPocketProps> = ({ fill, pocket }) => {
   return (
     <rect
       x={pocket.outline.x}

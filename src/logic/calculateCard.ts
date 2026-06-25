@@ -1,7 +1,7 @@
-import type { Card, CardHolderInput } from '../types'
+import type { CardModel, CardHolderInput } from '../types'
 import { calculatePlainPocketY, calculateTPocketCount, calculateTPocketY } from './utils'
 
-export const calculateCard = (input: CardHolderInput, index: number): Card => {
+export const calculateCard = (input: CardHolderInput, index: number): CardModel => {
   const tPocketCount = calculateTPocketCount(input)
   const pocketY = index < tPocketCount ? calculateTPocketY(input, index) : calculatePlainPocketY(input)
 
