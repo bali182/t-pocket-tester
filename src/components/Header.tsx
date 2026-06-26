@@ -4,14 +4,7 @@ import type { FC } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { isInputDrawerOpenAtom } from '../state'
-
-const links = [
-  { label: 'Kártyatartó', to: '/card-holder' },
-  { label: 'T-zseb', to: '/t-pocket' },
-  { label: 'Elülső zseb', to: '/front-pocket' },
-  { label: 'Hátlap', to: '/back-panel' },
-  { label: 'Skálázás', to: '/scale' },
-]
+import { routes } from './routes'
 
 export const Header: FC = () => {
   const setIsInputDrawerOpen = useSetAtom(isInputDrawerOpenAtom)
@@ -32,8 +25,8 @@ export const Header: FC = () => {
         <Heading size="md">Kártyatartó Generátor</Heading>
 
         <HStack gap="2">
-          {links.map((link) => (
-            <NavLink key={link.to} to={link.to}>
+          {routes.map((link) => (
+            <NavLink key={link.path} to={link.path}>
               {({ isActive }) => (
                 <Button colorPalette={isActive ? 'blue' : 'gray'} variant={isActive ? 'subtle' : 'ghost'}>
                   {link.label}

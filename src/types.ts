@@ -186,3 +186,13 @@ export type TPocketStitchLinesModel = {
   /** Horizontal stitch line near the bottom edge of the lower trapezoid. */
   bottomStitchLine: LineModel
 }
+
+/** Stitch lines calculated for the top pocket. */
+export type TopPocketStitchLinesModel = {
+  /** Vertical stitch line near the left edge of the pocket. */
+  leftStitchLine: LineModel
+  /** Vertical stitch line near the right edge of the pocket. */
+  rightStitchLine: LineModel
+  /** Horizontal stitch line near the bottom edge of the pocket. */
+  bottomStitchLine: LineModel
+}

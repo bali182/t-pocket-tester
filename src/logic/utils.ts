@@ -1,4 +1,4 @@
-import type { CardHolderInput, Point, Size } from '../types'
+import type { CardHolderInput, Point, Rect, Size } from '../types'
 
 export const calculatePocketWidth = (input: CardHolderInput): number => {
   return input.cardSize.width + 2 * (input.stitchMargin + input.cardSideClearanceFromStitch)
@@ -37,4 +37,9 @@ export const translatePoint = (point: Point, dx: number, dy: number): Point => {
     x: point.x + dx,
     y: point.y + dy,
   }
+}
+
+export const getViewBox = (strokeWidth: number, boundingBox: Rect): string => {
+  const strokePadding = strokeWidth / 2
+  return `${boundingBox.x - strokePadding} ${boundingBox.y - strokePadding} ${boundingBox.width + strokePadding * 2} ${boundingBox.height + strokePadding * 2}`
 }
