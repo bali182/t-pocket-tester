@@ -2,11 +2,9 @@ import { Box, Heading, Text } from '@chakra-ui/react'
 import type { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { CardHolderSvg } from './svg/CardHolderSvg'
 import { CardHolderInputDrawer } from './editor/CardHolderInputDrawer'
-import { CenteredLayout } from './CenteredLayout'
 import { Header } from './Header'
-import { TPocketSvg } from './svg/TPocketSvg'
+import { CardHolderRoute, TPocketRoute } from './Routes'
 
 const renderPlaceholder = (title: string) => {
   return (
@@ -27,22 +25,8 @@ export const App: FC = () => {
       <Box flex="1" minHeight="0" overflow="hidden">
         <Routes>
           <Route path="/" element={<Navigate to="/card-holder" replace />} />
-          <Route
-            path="/card-holder"
-            element={
-              <CenteredLayout>
-                <CardHolderSvg />
-              </CenteredLayout>
-            }
-          />
-          <Route
-            path="/t-pocket"
-            element={
-              <CenteredLayout>
-                <TPocketSvg />
-              </CenteredLayout>
-            }
-          />
+          <Route path="/card-holder" Component={CardHolderRoute} />
+          <Route path="/t-pocket" Component={TPocketRoute} />
           <Route path="/front-pocket" element={renderPlaceholder('Front pocket')} />
           <Route path="/back-panel" element={renderPlaceholder('Back panel')} />
           <Route path="*" element={<Navigate to="/card-holder" replace />} />
