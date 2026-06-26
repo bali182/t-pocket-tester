@@ -17,6 +17,8 @@ export const cardHolderInputAtom = atom<CardHolderInput>({
 
 export const isInputDrawerOpenAtom = atom(false)
 
+export const scaleAtom = atom(1)
+
 export const inputSectionOpenStateAtom = atom<Record<SectionId, boolean>>({
   card: true,
   pockets: true,

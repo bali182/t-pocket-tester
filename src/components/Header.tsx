@@ -10,6 +10,7 @@ const links = [
   { label: 'T-zseb', to: '/t-pocket' },
   { label: 'Elülső zseb', to: '/front-pocket' },
   { label: 'Hátlap', to: '/back-panel' },
+  { label: 'Skálázás', to: '/scale' },
 ]
 
 export const Header: FC = () => {

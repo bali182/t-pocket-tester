@@ -5,6 +5,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { CardHolderInputDrawer } from './editor/CardHolderInputDrawer'
 import { Header } from './Header'
 import { CardHolderRoute, TPocketRoute } from './Routes'
+import { ScaleRoute } from './ScaleRoute'
 
 const renderPlaceholder = (title: string) => {
   return (
@@ -29,6 +30,7 @@ export const App: FC = () => {
           <Route path="/t-pocket" Component={TPocketRoute} />
           <Route path="/front-pocket" element={renderPlaceholder('Front pocket')} />
           <Route path="/back-panel" element={renderPlaceholder('Back panel')} />
+          <Route path="/scale" Component={ScaleRoute} />
           <Route path="*" element={<Navigate to="/card-holder" replace />} />
         </Routes>
       </Box>

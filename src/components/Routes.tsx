@@ -1,15 +1,22 @@
+import type { FC } from 'react'
+
 import { CenteredLayout } from './CenteredLayout'
+import { ScaledSvgPreview } from './ScaledSvgPreview'
 import { CardHolderSvg } from './svg/CardHolderSvg'
 import { TPocketSvg } from './svg/TPocketSvg'
 
-export const CardHolderRoute = () => (
+export const CardHolderRoute: FC = () => (
   <CenteredLayout>
-    <CardHolderSvg />
+    <ScaledSvgPreview>
+      <CardHolderSvg />
+    </ScaledSvgPreview>
   </CenteredLayout>
 )
 
-export const TPocketRoute = () => (
+export const TPocketRoute: FC = () => (
   <CenteredLayout>
-    <TPocketSvg />
+    <ScaledSvgPreview>
+      <TPocketSvg />
+    </ScaledSvgPreview>
   </CenteredLayout>
 )
