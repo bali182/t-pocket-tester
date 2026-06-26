@@ -1,7 +1,7 @@
 import type { CalculatedCardHolderModel, CardHolderInput } from '../types'
 import { calculateBackPanel } from './calculateBackPanel'
 import { calculateCard } from './calculateCard'
-import { calculatePlainPocket } from './calculatePlainPocket'
+import { calculateTopPocket } from './calculateTopPocket'
 import { calculateTPocket } from './calculateTPocket'
 import { calculateOverallSize, calculateTPocketCount } from './utils'
 
@@ -11,6 +11,6 @@ export const calculateCardHolder = (input: CardHolderInput): CalculatedCardHolde
     backPanel: calculateBackPanel(input),
     cards: Array.from({ length: input.pocketCount }, (_, index) => calculateCard(input, index)),
     tPockets: Array.from({ length: calculateTPocketCount(input) }, (_, index) => calculateTPocket(input, index)),
-    coverPocket: calculatePlainPocket(input),
+    coverPocket: calculateTopPocket(input),
   }
 }

@@ -1,13 +1,13 @@
 import type { FC } from 'react'
 
-import type { PlainPocketModel } from '../../types'
+import type { TopPocketModel } from '../../types'
 
-type PlainPocketProps = {
-  pocket: PlainPocketModel
+type TopPocketProps = {
+  pocket: TopPocketModel
   fill: string
 }
 
-export const PlainPocket: FC<PlainPocketProps> = ({ fill, pocket }) => {
+export const TopPocket: FC<TopPocketProps> = ({ fill, pocket }) => {
   return (
     <rect
       x={pocket.outline.x}

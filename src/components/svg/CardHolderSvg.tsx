@@ -13,7 +13,7 @@ import { adjustColorLightness, setOpacity } from '../../logic/colorUtils'
 import { cardHolderInputAtom } from '../../state'
 import { BackPanel } from './BackPanel'
 import { Card } from './Card'
-import { PlainPocket } from './PlainPocket'
+import { TopPocket } from './TopPocket'
 import { TPocket } from './TPocket'
 
 export const CardHolderSvg: FC = () => {
@@ -48,7 +48,7 @@ export const CardHolderSvg: FC = () => {
         ))}
 
         <Card card={output.cards[output.cards.length - 1]} color={getCardColor(output.cards.length - 1)} />
-        <PlainPocket pocket={output.coverPocket} fill={getPocketColor(output.tPockets.length)} />
+        <TopPocket pocket={output.coverPocket} fill={getPocketColor(output.tPockets.length)} />
       </g>
     </svg>
   )

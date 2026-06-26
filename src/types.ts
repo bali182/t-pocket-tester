@@ -48,7 +48,7 @@ export type CardHolderInput = {
   cardSize: Size
 
   /**
-   * Total number of pockets, including the top plain cover pocket. The minimum
+   * Total number of pockets, including the top cover pocket. The minimum
    * meaningful value is 1; a value of N produces N - 1 T-pockets and 1 cover pocket.
    */
   pocketCount: number
@@ -122,8 +122,8 @@ export type CalculatedCardHolderModel = {
   cards: CardModel[]
   /** Calculated T-pockets. For an input pocketCount of N, this list contains N - 1 items. */
   tPockets: TPocketModel[]
-  /** Top plain rectangular cover pocket placed above the T-pockets. */
-  coverPocket: PlainPocketModel
+  /** Top rectangular cover pocket placed above the T-pockets. */
+  coverPocket: TopPocketModel
 }
 
 /** A card placed into one of the card holder pockets. */
@@ -143,8 +143,8 @@ export type BackPanelModel = {
 }
 
 /** A full rectangular cover pocket. This is the top pocket above all T-pockets. */
-export type PlainPocketModel = {
-  kind: 'plainPocket'
+export type TopPocketModel = {
+  kind: 'topPocket'
   /** Rectangular outline of the entire leather pocket piece. */
   outline: Rect
 }

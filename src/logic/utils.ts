@@ -28,7 +28,7 @@ export const calculateTPocketY = (input: CardHolderInput, index: number): number
   return calculateTopInset(input) + index * input.pocketSpacing
 }
 
-export const calculatePlainPocketY = (input: CardHolderInput): number => {
+export const calculateTopPocketY = (input: CardHolderInput): number => {
   return calculateTopInset(input) + calculateTPocketCount(input) * input.pocketSpacing
 }
 
