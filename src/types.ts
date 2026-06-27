@@ -196,3 +196,14 @@ export type TopPocketStitchLinesModel = {
   /** Horizontal stitch line near the bottom edge of the pocket. */
   bottomStitchLine: LineModel
 }
+
+export type StitchHoleModel = {
+  length: number
+  center: Point
+  rotation?: number
+}
+
+export type StitchingConfig = {
+  stitchDistance: number
+  stitchLength: number
+}

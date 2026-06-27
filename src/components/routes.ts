@@ -1,6 +1,7 @@
 import { ComponentType } from 'react'
 import { CardHolderRoute, DummyRoute, TopPocketRoute, TPocketRoute } from './RouteComponents'
 import { ScaleRoute } from './ScaleRoute'
+import { TestRoute } from './TestRoute'
 
 type RouteConfig = {
   label: string
@@ -14,4 +15,5 @@ export const routes: RouteConfig[] = [
   { label: 'Elülső zseb', path: '/top-pocket', Component: TopPocketRoute },
   { label: 'Hátlap', path: '/back-panel', Component: DummyRoute },
   { label: 'Skálázás', path: '/scale', Component: ScaleRoute },
+  { label: 'Test', path: '/test', Component: TestRoute },
 ]
