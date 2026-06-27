@@ -16,11 +16,11 @@ initializeAtomsFromStorage(appStore)
 subscribeToAtoms(appStore)
 
 createRoot(rootElement).render(
-<ChakraProvider value={defaultSystem}>
-  <JotaiProvider store={appStore}>
-      <BrowserRouter>
+  <ChakraProvider value={defaultSystem}>
+    <JotaiProvider store={appStore}>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <App />
       </BrowserRouter>
-  </JotaiProvider>
-</ChakraProvider>,
+    </JotaiProvider>
+  </ChakraProvider>,
 )
