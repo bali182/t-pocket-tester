@@ -1,13 +1,13 @@
 import type { FC } from 'react'
 
 import { getStitchingHoles } from '../logic/getStitchingHoles'
-import type { LineModel } from '../schemas/LineModelSchema'
-import type { StitchingConfig } from '../schemas/StitchingConfigSchema'
+import type { LineSchema } from '../schemas/LineSchema'
+import type { StitchingConfigSchema } from '../schemas/StitchingConfigSchema'
 import { CenteredLayout } from './CenteredLayout'
 import { Line } from './svg/Line'
 import { StitchHoles } from './svg/StitchHoles'
 
-const lines: LineModel[] = [
+const lines: LineSchema[] = [
   {
     start: { x: 10, y: 10 },
     end: { x: 10, y: 40 },
@@ -26,7 +26,7 @@ const lines: LineModel[] = [
   },
 ]
 
-const stitchingConfig: StitchingConfig = {
+const stitchingConfig: StitchingConfigSchema = {
   stitchDistance: 3.38,
   stitchLength: 1.7,
 }

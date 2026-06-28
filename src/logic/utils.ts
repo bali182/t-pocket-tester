@@ -1,21 +1,21 @@
-import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
-import type { Point } from '../schemas/PointSchema'
-import type { Rect } from '../schemas/RectSchema'
-import type { Size } from '../schemas/SizeSchema'
+import type { CardHolderInputSchema } from '../schemas/CardHolderInputSchema'
+import type { PointSchema } from '../schemas/PointSchema'
+import type { RectSchema } from '../schemas/RectSchema'
+import type { SizeSchema } from '../schemas/SizeSchema'
 
-export const calculatePocketWidth = (input: CardHolderInput): number => {
+export const calculatePocketWidth = (input: CardHolderInputSchema): number => {
   return input.cardSize.width + 2 * (input.stitchMargin + input.cardSideClearanceFromStitch)
 }
 
-export const calculatePocketHeight = (input: CardHolderInput): number => {
+export const calculatePocketHeight = (input: CardHolderInputSchema): number => {
   return input.pocketHeight
 }
 
-export const calculateTPocketCount = (input: CardHolderInput): number => {
+export const calculateTPocketCount = (input: CardHolderInputSchema): number => {
   return input.pocketCount - 1
 }
 
-export const calculateTopInset = (input: CardHolderInput): number => {
+export const calculateTopInset = (input: CardHolderInputSchema): number => {
   return (
     input.cardSize.height -
     input.pocketHeight +
@@ -25,7 +25,7 @@ export const calculateTopInset = (input: CardHolderInput): number => {
   )
 }
 
-export const calculateOverallSize = (input: CardHolderInput): Size => {
+export const calculateOverallSize = (input: CardHolderInputSchema): SizeSchema => {
   return {
     width: calculatePocketWidth(input),
     height:
@@ -33,22 +33,22 @@ export const calculateOverallSize = (input: CardHolderInput): Size => {
   }
 }
 
-export const calculateTPocketY = (input: CardHolderInput, index: number): number => {
+export const calculateTPocketY = (input: CardHolderInputSchema, index: number): number => {
   return calculateTopInset(input) + index * input.pocketSpacing
 }
 
-export const calculateTopPocketY = (input: CardHolderInput): number => {
+export const calculateTopPocketY = (input: CardHolderInputSchema): number => {
   return calculateTopInset(input) + calculateTPocketCount(input) * input.pocketSpacing
 }
 
-export const translatePoint = (point: Point, dx: number, dy: number): Point => {
+export const translatePoint = (point: PointSchema, dx: number, dy: number): PointSchema => {
   return {
     x: point.x + dx,
     y: point.y + dy,
   }
 }
 
-export const getViewBox = (strokeWidth: number, boundingBox: Rect): string => {
+export const getViewBox = (strokeWidth: number, boundingBox: RectSchema): string => {
   const strokePadding = strokeWidth / 2
   return `${boundingBox.x - strokePadding} ${boundingBox.y - strokePadding} ${boundingBox.width + strokePadding * 2} ${boundingBox.height + strokePadding * 2}`
 }

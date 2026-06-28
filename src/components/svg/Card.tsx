@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 
 import { CARD_RADIUS } from '../../constants'
-import type { CardModel } from '../../schemas/CardModelSchema'
+import type { CardSchema } from '../../schemas/CardSchema'
 
 type CardProps = {
-  card: CardModel
+  card: CardSchema
   color: string
 }
 

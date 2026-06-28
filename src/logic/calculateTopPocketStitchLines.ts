@@ -1,11 +1,11 @@
-import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
-import type { TopPocketModel } from '../schemas/TopPocketModelSchema'
-import type { TopPocketStitchLinesModel } from '../schemas/TopPocketStitchLinesModelSchema'
+import type { CardHolderInputSchema } from '../schemas/CardHolderInputSchema'
+import type { TopPocketSchema } from '../schemas/TopPocketSchema'
+import type { TopPocketStitchLinesSchema } from '../schemas/TopPocketStitchLinesSchema'
 
 export const calculateTopPocketStitchLines = (
-  input: CardHolderInput,
-  pocket: TopPocketModel,
-): TopPocketStitchLinesModel => {
+  input: CardHolderInputSchema,
+  pocket: TopPocketSchema,
+): TopPocketStitchLinesSchema => {
   const leftX = pocket.outline.x + input.stitchMargin
   const rightX = pocket.outline.x + pocket.outline.width - input.stitchMargin
   const topY = pocket.outline.y

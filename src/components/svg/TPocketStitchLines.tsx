@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 
-import type { TPocketStitchLinesModel } from '../../schemas/TPocketStitchLinesModelSchema'
+import type { TPocketStitchLinesSchema } from '../../schemas/TPocketStitchLinesSchema'
 import { Line } from './Line'
 
 type TPocketStitchLinesProps = {
-  stitchLines: TPocketStitchLinesModel
+  stitchLines: TPocketStitchLinesSchema
 }
 
 export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ stitchLines }) => {

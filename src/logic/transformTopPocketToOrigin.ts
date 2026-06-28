@@ -1,6 +1,6 @@
-import type { TopPocketModel } from '../schemas/TopPocketModelSchema'
+import type { TopPocketSchema } from '../schemas/TopPocketSchema'
 
-export const transformTopPocketToOrigin = (pocket: TopPocketModel): TopPocketModel => {
+export const transformTopPocketToOrigin = (pocket: TopPocketSchema): TopPocketSchema => {
   return {
     kind: pocket.kind,
     outline: {

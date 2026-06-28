@@ -3,14 +3,14 @@ import { useAtom } from 'jotai'
 import type { ComponentType, FC } from 'react'
 import { useMemo } from 'react'
 
-import type { SectionId } from '../../schemas/SectionIdSchema'
+import type { SectionIdSchema } from '../../schemas/SectionIdSchema'
 import { inputSectionOpenStateAtom, isInputDrawerOpenAtom } from '../../state'
 import { CardInputSection } from './CardInputSection'
 import { PocketsInputSection } from './PocketsInputSection'
 import { StitchingInputSection } from './StitchingInputSection'
 
 type InputSection = {
-  id: SectionId
+  id: SectionIdSchema
   title: string
   isOpen: boolean
   Component: ComponentType

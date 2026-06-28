@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 
-import type { StitchHoleModel } from '../../schemas/StitchHoleModelSchema'
+import type { StitchHoleSchema } from '../../schemas/StitchHoleSchema'
 import { StitchHole } from './StitchHole'
 
 type StitchHolesProps = {
-  holes: StitchHoleModel[]
+  holes: StitchHoleSchema[]
 }
 
 export const StitchHoles: FC<StitchHolesProps> = ({ holes }) => {

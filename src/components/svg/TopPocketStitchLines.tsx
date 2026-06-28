@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 
-import type { TopPocketStitchLinesModel } from '../../schemas/TopPocketStitchLinesModelSchema'
+import type { TopPocketStitchLinesSchema } from '../../schemas/TopPocketStitchLinesSchema'
 import { Line } from './Line'
 
 type TopPocketStitchLinesProps = {
-  stitchLines: TopPocketStitchLinesModel
+  stitchLines: TopPocketStitchLinesSchema
 }
 
 export const TopPocketStitchLines: FC<TopPocketStitchLinesProps> = ({ stitchLines }) => {

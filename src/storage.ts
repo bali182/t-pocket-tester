@@ -1,36 +1,36 @@
 import type { PrimitiveAtom } from 'jotai'
 import type { Store } from 'jotai/vanilla/store'
 
-import {
-  cardHolderInputAtom,
-  DEFAULT_CARD_HOLDER_INPUT,
-  DEFAULT_INPUT_SECTION_OPEN_STATE,
-  DEFAULT_IS_INPUT_DRAWER_OPEN,
-  DEFAULT_SCALE,
-  inputSectionOpenStateAtom,
-  isInputDrawerOpenAtom,
-  scaleAtom,
-} from './state'
+import typia from 'typia'
+import { CardHolderInputSchema } from './schemas/CardHolderInputSchema'
+import { cardHolderInputAtom, DEFAULT_CARD_HOLDER_INPUT, DEFAULT_SCALE, scaleAtom } from './state'
 
 type PersistedAtomEntry<T> = {
   atom: PrimitiveAtom<T>
   name: string
   defaultValue: T
+  validate: (input: unknown) => T
 }
 
-const createPersistedAtomEntry = <T>(atom: PrimitiveAtom<T>, name: string, defaultValue: T): PersistedAtomEntry<T> => {
+const createPersistedAtomEntry = <T>(
+  atom: PrimitiveAtom<T>,
+  name: string,
+  defaultValue: T,
+  validate: (input: unknown) => T,
+): PersistedAtomEntry<T> => {
   return {
     atom,
     name,
     defaultValue,
+    validate,
   }
 }
 
 const persistedAtoms: PersistedAtomEntry<any>[] = [
-  createPersistedAtomEntry(cardHolderInputAtom, 'cardHolderInput', DEFAULT_CARD_HOLDER_INPUT),
-  createPersistedAtomEntry(isInputDrawerOpenAtom, 'isInputDrawerOpen', DEFAULT_IS_INPUT_DRAWER_OPEN),
-  createPersistedAtomEntry(scaleAtom, 'scale', DEFAULT_SCALE),
-  createPersistedAtomEntry(inputSectionOpenStateAtom, 'inputSectionOpenState', DEFAULT_INPUT_SECTION_OPEN_STATE),
+  createPersistedAtomEntry(cardHolderInputAtom, 'cardHolderInput', DEFAULT_CARD_HOLDER_INPUT, (input) =>
+    typia.assert<CardHolderInputSchema>(input),
+  ),
+  createPersistedAtomEntry(scaleAtom, 'scale', DEFAULT_SCALE, (input) => typia.assert<number>(input)),
 ]
 
 const getStorageKey = (name: string): string => {
@@ -39,17 +39,13 @@ const getStorageKey = (name: string): string => {
 
 export const getInitialStateFromStorage = <T>(entry: PersistedAtomEntry<T>): T => {
   const storedValue = localStorage.getItem(getStorageKey(entry.name))
-
   if (!storedValue) {
     return entry.defaultValue
   }
-
   try {
-    const parsedValue: unknown = JSON.parse(storedValue)
-
-    // TODO: Add schema validation before returning persisted values.
-    return parsedValue as T
-  } catch {
+    return entry.validate(JSON.parse(storedValue))
+  } catch (e) {
+    console.error(`Caught invalid localStorage entry "${entry.name}":`, e)
     return entry.defaultValue
   }
 }

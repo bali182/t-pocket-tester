@@ -1,7 +1,7 @@
-import type { TPocketModel } from '../schemas/TPocketModelSchema'
+import type { TPocketSchema } from '../schemas/TPocketSchema'
 import { translatePoint } from './utils'
 
-export const transformTPocketToOrigin = (pocket: TPocketModel): TPocketModel => {
+export const transformTPocketToOrigin = (pocket: TPocketSchema): TPocketSchema => {
   const dx = -pocket.topLeft.x
   const dy = -pocket.topLeft.y
   const topLeft = translatePoint(pocket.topLeft, dx, dy)

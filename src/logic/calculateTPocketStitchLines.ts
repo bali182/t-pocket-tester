@@ -1,18 +1,18 @@
-import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
-import type { Point } from '../schemas/PointSchema'
-import type { TPocketModel } from '../schemas/TPocketModelSchema'
-import type { TPocketStitchLinesModel } from '../schemas/TPocketStitchLinesModelSchema'
+import type { CardHolderInputSchema } from '../schemas/CardHolderInputSchema'
+import type { PointSchema } from '../schemas/PointSchema'
+import type { TPocketSchema } from '../schemas/TPocketSchema'
+import type { TPocketStitchLinesSchema } from '../schemas/TPocketStitchLinesSchema'
 
-const interpolateXAtY = (start: Point, end: Point, y: number): number => {
+const interpolateXAtY = (start: PointSchema, end: PointSchema, y: number): number => {
   const ratio = (y - start.y) / (end.y - start.y)
 
   return start.x + (end.x - start.x) * ratio
 }
 
 export const calculateTPocketStitchLines = (
-  input: CardHolderInput,
-  pocket: TPocketModel,
-): TPocketStitchLinesModel => {
+  input: CardHolderInputSchema,
+  pocket: TPocketSchema,
+): TPocketStitchLinesSchema => {
   const bottomStitchY = pocket.leftBottom.y - input.stitchMargin
 
   return {

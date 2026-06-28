@@ -1,12 +1,12 @@
-import type { LineModel } from '../schemas/LineModelSchema'
-import type { StitchHoleModel } from '../schemas/StitchHoleModelSchema'
-import type { StitchingConfig } from '../schemas/StitchingConfigSchema'
+import type { LineSchema } from '../schemas/LineSchema'
+import type { StitchHoleSchema } from '../schemas/StitchHoleSchema'
+import type { StitchingConfigSchema } from '../schemas/StitchingConfigSchema'
 
 const normalizeDegrees = (degrees: number): number => {
   return ((degrees % 360) + 360) % 360
 }
 
-export const getStitchingHoles = (line: LineModel, config: StitchingConfig): StitchHoleModel[] => {
+export const getStitchingHoles = (line: LineSchema, config: StitchingConfigSchema): StitchHoleSchema[] => {
   if (config.stitchDistance <= 0) {
     throw new RangeError('stitchDistance must be greater than 0')
   }
@@ -27,7 +27,7 @@ export const getStitchingHoles = (line: LineModel, config: StitchingConfig): Sti
   const unitY = dy / lineLength
   const lineAngle = (Math.atan2(dy, dx) * 180) / Math.PI
   const rotation = normalizeDegrees(lineAngle - 90)
-  const holes: StitchHoleModel[] = []
+  const holes: StitchHoleSchema[] = []
 
   for (let distance = 0; distance <= lineLength; distance += config.stitchDistance) {
     holes.push({

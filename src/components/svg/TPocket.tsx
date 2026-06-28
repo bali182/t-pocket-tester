@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { useMemo } from 'react'
 
-import type { TPocketModel } from '../../schemas/TPocketModelSchema'
+import type { TPocketSchema } from '../../schemas/TPocketSchema'
 
 type TPocketPropsBase = {
-  pocket: TPocketModel
+  pocket: TPocketSchema
 }
 
 type TPocketStrokeProps = TPocketPropsBase & {

@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 
 import { LEATHER_BASE_COLOR } from '../../constants'
-import type { BackPanelModel } from '../../schemas/BackPanelModelSchema'
+import type { BackPanelSchema } from '../../schemas/BackPanelSchema'
 
 type BackPanelProps = {
-  backPanel: BackPanelModel
+  backPanel: BackPanelSchema
 }
 
 export const BackPanel: FC<BackPanelProps> = ({ backPanel }) => {

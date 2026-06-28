@@ -1,12 +1,12 @@
-import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
-import type { CalculatedCardHolderModel } from '../schemas/CalculatedCardHolderModelSchema'
+import type { CardHolderInputSchema } from '../schemas/CardHolderInputSchema'
+import type { CalculatedCardHolderSchema } from '../schemas/CalculatedCardHolderSchema'
 import { calculateBackPanel } from './calculateBackPanel'
 import { calculateCard } from './calculateCard'
 import { calculateTopPocket } from './calculateTopPocket'
 import { calculateTPocket } from './calculateTPocket'
 import { calculateOverallSize, calculateTPocketCount } from './utils'
 
-export const calculateCardHolder = (input: CardHolderInput): CalculatedCardHolderModel => {
+export const calculateCardHolder = (input: CardHolderInputSchema): CalculatedCardHolderSchema => {
   return {
     overallSize: calculateOverallSize(input),
     backPanel: calculateBackPanel(input),

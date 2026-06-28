@@ -1,8 +1,8 @@
-import type { BackPanelModel } from '../schemas/BackPanelModelSchema'
-import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
+import type { BackPanelSchema } from '../schemas/BackPanelSchema'
+import type { CardHolderInputSchema } from '../schemas/CardHolderInputSchema'
 import { calculateOverallSize } from './utils'
 
-export const calculateBackPanel = (input: CardHolderInput): BackPanelModel => {
+export const calculateBackPanel = (input: CardHolderInputSchema): BackPanelSchema => {
   const overallSize = calculateOverallSize(input)
 
   return {

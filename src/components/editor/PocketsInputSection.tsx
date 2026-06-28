@@ -2,14 +2,14 @@ import { Field, NumberInput, Stack } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import type { FC } from 'react'
 import { useMemo } from 'react'
-import type { CardHolderInput } from '../../schemas/CardHolderInputSchema'
-import type { CardHolderInputField } from '../../schemas/CardHolderInputFieldSchema'
+import type { CardHolderInputSchema } from '../../schemas/CardHolderInputSchema'
+import type { CardHolderInputFieldSchema } from '../../schemas/CardHolderInputFieldSchema'
 import { cardHolderInputAtom } from '../../state'
 
 export const PocketsInputSection: FC = () => {
   const [input, setInput] = useAtom(cardHolderInputAtom)
 
-  const fields = useMemo<CardHolderInputField[]>(
+  const fields = useMemo<CardHolderInputFieldSchema[]>(
     () => [
       { key: 'pocketCount', label: 'Zsebek száma', min: 1 },
       { key: 'pocketHeight', label: 'Zseb magassága' },
@@ -20,8 +20,8 @@ export const PocketsInputSection: FC = () => {
     [],
   )
 
-  const updateField = (key: keyof CardHolderInput, value: number) => {
-    setInput((current): CardHolderInput => ({ ...current, [key]: value }))
+  const updateField = (key: keyof CardHolderInputSchema, value: number) => {
+    setInput((current): CardHolderInputSchema => ({ ...current, [key]: value }))
   }
 
   return (
