@@ -11,7 +11,7 @@ export const PocketsInputSection: FC = () => {
   const fields = useMemo<CardHolderInputField[]>(
     () => [
       { key: 'pocketCount', label: 'Zsebek száma', min: 1 },
-      { key: 'visibleCardHeight', label: 'Látható kártyamagasság' },
+      { key: 'pocketHeight', label: 'Zseb magassága' },
       { key: 'pocketSpacing', label: 'Zsebek távolsága' },
       { key: 'tPocketTabWidth', label: 'T-fül szélessége' },
       { key: 'tPocketTaper', label: 'T-zseb szűkülése oldalanként' },

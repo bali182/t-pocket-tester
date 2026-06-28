@@ -14,7 +14,7 @@ export const DEFAULT_CARD_HOLDER_INPUT: CardHolderInput = {
   pocketSpacing: 15,
   tPocketTabWidth: 8,
   tPocketTaper: 20,
-  visibleCardHeight: 10,
+  pocketHeight: 45,
 }
 
 export const DEFAULT_IS_INPUT_DRAWER_OPEN = false

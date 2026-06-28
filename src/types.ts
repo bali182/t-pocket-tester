@@ -95,10 +95,10 @@ export type CardHolderInput = {
   tPocketTaper: number
 
   /**
-   * Height of the card area that remains visible above a pocket. The actual
-   * leather pocket height is calculated from this value and the card dimensions.
+   * Full height of each pocket. For the top cover pocket this is the rectangle
+   * height; for T-pockets this is the total bounding height.
    */
-  visibleCardHeight: number
+  pocketHeight: number
 }
 
 /** Configuration for a numeric CardHolderInput field rendered in the input editor. */
