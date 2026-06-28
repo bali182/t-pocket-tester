@@ -1,10 +1,9 @@
-import { Slider, Text, VStack, type SliderValueChangeDetails } from '@chakra-ui/react'
+import { Box, Slider, Text, VStack, type SliderValueChangeDetails } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useCallback, type FC } from 'react'
 
 import { scaleAtom } from '../state'
 import { CenteredLayout } from './CenteredLayout'
-import { ScaledSvgPreview } from './ScaledSvgPreview'
 import { RulerSvg } from './svg/RulerSvg'
 
 export const ScaleRoute: FC = () => {
@@ -25,20 +24,22 @@ export const ScaleRoute: FC = () => {
   return (
     <CenteredLayout>
       <VStack gap="8" width="min(100%, 480px)">
-        <VStack align="stretch" gap="3" width="100%">
-          <Text fontWeight="medium">Skálázás: {scalePercent}%</Text>
-          <Slider.Root min={0.5} max={2} step={0.001} value={[scale]} onValueChange={handleScaleChange}>
-            <Slider.Control>
-              <Slider.Track>
-                <Slider.Range />
-              </Slider.Track>
-              <Slider.Thumb index={0} />
-            </Slider.Control>
-          </Slider.Root>
-        </VStack>
-        <ScaledSvgPreview>
-          <RulerSvg />
-        </ScaledSvgPreview>
+        <Box width="200mm">
+          <VStack align="stretch" gap="3" width="100%" marginBottom="10">
+            <Text fontWeight="medium">Skálázás: {scalePercent}%</Text>
+            <Slider.Root min={0.5} max={2} step={0.001} value={[scale]} onValueChange={handleScaleChange}>
+              <Slider.Control>
+                <Slider.Track>
+                  <Slider.Range />
+                </Slider.Track>
+                <Slider.Thumb index={0} />
+              </Slider.Control>
+            </Slider.Root>
+          </VStack>
+          <Box transform={`scale(${scale})`} transformOrigin="left center">
+            <RulerSvg />
+          </Box>
+        </Box>
       </VStack>
     </CenteredLayout>
   )
