@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 
 import { CARD_RADIUS } from '../../constants'
-import type { CardModel } from '../../types'
+import type { CardModel } from '../../schemas/CardModelSchema'
 
 type CardProps = {
   card: CardModel

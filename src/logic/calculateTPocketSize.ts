@@ -1,4 +1,5 @@
-import { Size, TPocketModel } from '../types'
+import type { Size } from '../schemas/SizeSchema'
+import type { TPocketModel } from '../schemas/TPocketModelSchema'
 
 export const calculateTPocketSize = (pocket: TPocketModel): Size => {
   return {

@@ -2,8 +2,9 @@ import { Field, NumberInput, Stack } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import type { FC } from 'react'
 import { useMemo } from 'react'
+import type { CardHolderInput } from '../../schemas/CardHolderInputSchema'
+import type { CardHolderInputField } from '../../schemas/CardHolderInputFieldSchema'
 import { cardHolderInputAtom } from '../../state'
-import type { CardHolderInput, CardHolderInputField } from '../../types'
 
 export const PocketsInputSection: FC = () => {
   const [input, setInput] = useAtom(cardHolderInputAtom)

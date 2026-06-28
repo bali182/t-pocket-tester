@@ -1,4 +1,7 @@
-import type { CardHolderInput, Point, TPocketModel, TPocketStitchLinesModel } from '../types'
+import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
+import type { Point } from '../schemas/PointSchema'
+import type { TPocketModel } from '../schemas/TPocketModelSchema'
+import type { TPocketStitchLinesModel } from '../schemas/TPocketStitchLinesModelSchema'
 
 const interpolateXAtY = (start: Point, end: Point, y: number): number => {
   const ratio = (y - start.y) / (end.y - start.y)

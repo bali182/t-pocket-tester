@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import type { TopPocketStitchLinesModel } from '../../types'
+import type { TopPocketStitchLinesModel } from '../../schemas/TopPocketStitchLinesModelSchema'
 import { Line } from './Line'
 
 type TopPocketStitchLinesProps = {

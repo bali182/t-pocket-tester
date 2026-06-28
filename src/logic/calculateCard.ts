@@ -1,4 +1,5 @@
-import type { CardModel, CardHolderInput } from '../types'
+import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
+import type { CardModel } from '../schemas/CardModelSchema'
 import { calculatePocketHeight, calculateTopPocketY, calculateTPocketCount, calculateTPocketY } from './utils'
 
 export const calculateCard = (input: CardHolderInput, index: number): CardModel => {

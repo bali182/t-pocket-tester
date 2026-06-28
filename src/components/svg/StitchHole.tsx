@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 
 import { STROKE_COLOR, STROKE_THICKNESS } from '../../constants'
-import type { StitchHoleModel } from '../../types'
+import type { StitchHoleModel } from '../../schemas/StitchHoleModelSchema'
 
 type StitchHoleProps = {
   hole: StitchHoleModel

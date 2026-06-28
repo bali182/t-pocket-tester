@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 
 import { STROKE_COLOR, STROKE_THICKNESS } from '../../constants'
-import type { LineModel } from '../../types'
+import type { LineModel } from '../../schemas/LineModelSchema'
 
 type LineProps = {
   line: LineModel

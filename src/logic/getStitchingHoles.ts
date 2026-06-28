@@ -1,4 +1,6 @@
-import type { LineModel, StitchHoleModel, StitchingConfig } from '../types'
+import type { LineModel } from '../schemas/LineModelSchema'
+import type { StitchHoleModel } from '../schemas/StitchHoleModelSchema'
+import type { StitchingConfig } from '../schemas/StitchingConfigSchema'
 
 const normalizeDegrees = (degrees: number): number => {
   return ((degrees % 360) + 360) % 360

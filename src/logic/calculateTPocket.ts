@@ -1,4 +1,5 @@
-import type { CardHolderInput, TPocketModel } from '../types'
+import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
+import type { TPocketModel } from '../schemas/TPocketModelSchema'
 import { calculatePocketHeight, calculatePocketWidth, calculateTPocketY } from './utils'
 
 export const calculateTPocket = (input: CardHolderInput, index: number): TPocketModel => {

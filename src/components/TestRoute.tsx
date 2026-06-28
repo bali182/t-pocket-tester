@@ -1,7 +1,8 @@
 import type { FC } from 'react'
 
 import { getStitchingHoles } from '../logic/getStitchingHoles'
-import type { LineModel, StitchingConfig } from '../types'
+import type { LineModel } from '../schemas/LineModelSchema'
+import type { StitchingConfig } from '../schemas/StitchingConfigSchema'
 import { CenteredLayout } from './CenteredLayout'
 import { Line } from './svg/Line'
 import { StitchHoles } from './svg/StitchHoles'

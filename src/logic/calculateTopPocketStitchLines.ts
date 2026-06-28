@@ -1,4 +1,6 @@
-import type { CardHolderInput, TopPocketModel, TopPocketStitchLinesModel } from '../types'
+import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
+import type { TopPocketModel } from '../schemas/TopPocketModelSchema'
+import type { TopPocketStitchLinesModel } from '../schemas/TopPocketStitchLinesModelSchema'
 
 export const calculateTopPocketStitchLines = (
   input: CardHolderInput,

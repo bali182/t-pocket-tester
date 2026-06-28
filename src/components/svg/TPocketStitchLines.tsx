@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import type { TPocketStitchLinesModel } from '../../types'
+import type { TPocketStitchLinesModel } from '../../schemas/TPocketStitchLinesModelSchema'
 import { Line } from './Line'
 
 type TPocketStitchLinesProps = {

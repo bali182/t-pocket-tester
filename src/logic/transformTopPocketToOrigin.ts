@@ -1,4 +1,4 @@
-import type { TopPocketModel } from '../types'
+import type { TopPocketModel } from '../schemas/TopPocketModelSchema'
 
 export const transformTopPocketToOrigin = (pocket: TopPocketModel): TopPocketModel => {
   return {

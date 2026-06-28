@@ -1,4 +1,5 @@
-import type { CardHolderInput, TopPocketModel } from '../types'
+import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
+import type { TopPocketModel } from '../schemas/TopPocketModelSchema'
 import { calculatePocketHeight, calculatePocketWidth, calculateTopPocketY } from './utils'
 
 export const calculateTopPocket = (input: CardHolderInput): TopPocketModel => {

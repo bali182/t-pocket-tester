@@ -1,4 +1,7 @@
-import type { CardHolderInput, Point, Rect, Size } from '../types'
+import type { CardHolderInput } from '../schemas/CardHolderInputSchema'
+import type { Point } from '../schemas/PointSchema'
+import type { Rect } from '../schemas/RectSchema'
+import type { Size } from '../schemas/SizeSchema'
 
 export const calculatePocketWidth = (input: CardHolderInput): number => {
   return input.cardSize.width + 2 * (input.stitchMargin + input.cardSideClearanceFromStitch)

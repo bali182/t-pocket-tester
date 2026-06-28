@@ -1,7 +1,8 @@
 import { atom, createStore } from 'jotai'
 
 import { LANDSCAPE_ISO_CARD_SIZE } from './constants'
-import type { CardHolderInput, SectionId } from './types'
+import type { CardHolderInput } from './schemas/CardHolderInputSchema'
+import type { SectionId } from './schemas/SectionIdSchema'
 
 export const appStore = createStore()
 

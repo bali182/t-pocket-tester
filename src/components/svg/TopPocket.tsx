@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import type { TopPocketModel } from '../../types'
+import type { TopPocketModel } from '../../schemas/TopPocketModelSchema'
 
 type TopPocketPropsBase = {
   pocket: TopPocketModel

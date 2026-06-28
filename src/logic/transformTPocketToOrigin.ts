@@ -1,4 +1,4 @@
-import type { TPocketModel } from '../types'
+import type { TPocketModel } from '../schemas/TPocketModelSchema'
 import { translatePoint } from './utils'
 
 export const transformTPocketToOrigin = (pocket: TPocketModel): TPocketModel => {

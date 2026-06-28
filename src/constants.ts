@@ -1,4 +1,5 @@
-import type { CardOrientation, Size } from './types'
+import type { CardOrientation } from './schemas/CardOrientationSchema'
+import type { Size } from './schemas/SizeSchema'
 
 export const ISO_CARD_WIDTH = 85.6
 

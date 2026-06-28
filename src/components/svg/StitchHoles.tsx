@@ -1,5 +1,6 @@
-import { FC } from 'react'
-import { StitchHoleModel } from '../../types'
+import type { FC } from 'react'
+
+import type { StitchHoleModel } from '../../schemas/StitchHoleModelSchema'
 import { StitchHole } from './StitchHole'
 
 type StitchHolesProps = {
