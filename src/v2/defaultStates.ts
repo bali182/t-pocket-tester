@@ -1,10 +1,10 @@
 import { LEATHER_BASE_COLOR } from './constants/colors'
-import { PanelSchema } from './schemas/components'
+import { RootPanelSchema } from './schemas/components'
 
-export const defaultComponent: PanelSchema = {
-  type: 'panel',
+export const defaultComponent: RootPanelSchema = {
+  type: 'root-panel',
   id: 'root',
-  name: 'Main Panel',
+  name: 'Root panel',
   color: LEATHER_BASE_COLOR,
   children: [],
   layout: {
@@ -12,7 +12,7 @@ export const defaultComponent: PanelSchema = {
     orientation: 'horizontal',
   },
   size: {
-    width: 17,
-    height: 10,
+    width: 170,
+    height: 100,
   },
 }

@@ -1,10 +1,10 @@
 import { atom, createStore } from 'jotai'
 import { defaultComponent } from './defaultStates'
-import { PanelSchema } from './schemas/components'
+import { ComponentSchema } from './schemas/components'
 
 export const appStore = createStore()
 
-export const componentsAtom = atom<Record<string, PanelSchema>>({
+export const componentsAtom = atom<Record<string, ComponentSchema>>({
   [defaultComponent.id]: defaultComponent,
 })
 

@@ -14,9 +14,17 @@ export type LayoutSchema = {
 }
 
 /** A plain panel. Can have children (stuff placed on top of it) */
+export type RootPanelSchema = BaseComponentSchema & {
+  type: 'root-panel'
+  size: SizeSchema
+  children: string[]
+  layout: LayoutSchema
+}
+
+/** A plain panel. Can have children (stuff placed on top of it) */
 export type PanelSchema = BaseComponentSchema & {
   type: 'panel'
-  size?: SizeSchema
+  size?: 'fill' | number | SizeSchema
   children: string[]
   layout: LayoutSchema
 }
@@ -50,4 +58,4 @@ export type PocketClusterSchema = BaseComponentSchema & {
   tPocketTaper: number
 }
 
-export type ComponentSchema = PanelSchema | PocketSchema | PocketClusterSchema
+export type ComponentSchema = RootPanelSchema | PanelSchema | PocketSchema | PocketClusterSchema
