@@ -1,10 +1,6 @@
-import { Box, Text } from '@chakra-ui/react'
 import { FC } from 'react'
+import { DrawArea } from '../DrawArea'
 
 export const HomeRoute: FC = () => {
-  return (
-    <Box>
-      <Text>Hello</Text>
-    </Box>
-  )
+  return <DrawArea />
 }

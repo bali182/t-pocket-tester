@@ -12,6 +12,7 @@
     "@chakra-ui/react": "3.36.0",
     "@emotion/react": "11.14.0",
     "jotai": "2.20.1",
+    "nanoid": "^5.1.16",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-router-dom": "7.18.0",

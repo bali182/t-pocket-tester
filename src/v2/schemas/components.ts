@@ -10,12 +10,15 @@ export type LayoutOrientation = 'horizontal' | 'vertical'
 
 export type LayoutSchema = {
   orientation: LayoutOrientation
+  gap: number
 }
 
 /** A plain panel. Can have children (stuff placed on top of it) */
 export type PanelSchema = BaseComponentSchema & {
   type: 'panel'
-  children: ComponentSchema[]
+  size?: SizeSchema
+  children: string[]
+  layout: LayoutSchema
 }
 
 /** A plain pocket. Can have children (stuff placed on top of it) */
