@@ -37,6 +37,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
+          APP_VERSION: v1
           VITE_BASE_PATH: /t-pocket-tester/
 
       - name: Add SPA fallback
