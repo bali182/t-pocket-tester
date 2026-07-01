@@ -6,7 +6,7 @@ import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawArea
 import type { ComponentSchema } from '../schemas/components'
 import { componentsAtom, rootComponentIdAtom } from '../state'
 import { setOpacity } from '../utils/setOpacity'
-import { FloatingEditor } from './FloatingEditor'
+import { FloatingEditor } from './editors/FloatingEditor'
 import { RootPanel } from './svg/RootPanel'
 
 type ComponentHoverCardTarget = {
