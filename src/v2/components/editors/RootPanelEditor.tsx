@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { RootPanelSchema } from '../../schemas/components'
+import { LayoutSection } from './LayoutSection'
 import { NameAndColorSection } from './NameAndColorSection'
 import { WidthAndHeightSizeSection } from './WidthAndHeightSizeSection'
 
@@ -13,6 +14,7 @@ export const RootPanelEditor: FC<RootPanelEditorProps> = ({ component, onChange 
     <>
       <NameAndColorSection component={component} onChange={onChange} />
       <WidthAndHeightSizeSection component={component} onChange={onChange} />
+      <LayoutSection component={component} onChange={onChange} />
     </>
   )
 }

@@ -6,6 +6,10 @@ export type BaseComponentSchema = {
   color: string
 }
 
+export type LayoutedComponentSchema = {
+  layout: LayoutSchema
+}
+
 export type LayoutOrientation = 'horizontal' | 'vertical'
 
 export type LayoutSchema = {
@@ -14,20 +18,20 @@ export type LayoutSchema = {
 }
 
 /** A plain panel. Can have children (stuff placed on top of it) */
-export type RootPanelSchema = BaseComponentSchema & {
-  type: 'root-panel'
-  size: SizeSchema
-  children: string[]
-  layout: LayoutSchema
-}
+export type RootPanelSchema = BaseComponentSchema &
+  LayoutedComponentSchema & {
+    type: 'root-panel'
+    size: SizeSchema
+    children: string[]
+  }
 
 /** A plain panel. Can have children (stuff placed on top of it) */
-export type PanelSchema = BaseComponentSchema & {
-  type: 'panel'
-  size?: 'fill' | number | SizeSchema
-  children: string[]
-  layout: LayoutSchema
-}
+export type PanelSchema = BaseComponentSchema &
+  LayoutedComponentSchema & {
+    type: 'panel'
+    size?: 'fill' | number | SizeSchema
+    children: string[]
+  }
 
 /** A plain pocket. Can have children (stuff placed on top of it) */
 export type PocketSchema = BaseComponentSchema & {

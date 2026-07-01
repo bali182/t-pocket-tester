@@ -1,8 +1,9 @@
 import { Button, Card, CloseButton, Flex, Text, useToken } from '@chakra-ui/react'
-import { arrow, autoUpdate, flip, FloatingArrow, offset, shift, useFloating } from '@floating-ui/react'
+import { FloatingArrow } from '@floating-ui/react'
 import { useSetAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState, type FC } from 'react'
 
+import { useFloatingEditorPositioning } from '../../hooks/useFloatingEditorPositioning'
 import type { ComponentSchema } from '../../schemas/components'
 import { componentsAtom } from '../../state'
 import { ComponentEditor } from './ComponentEditor'
@@ -21,26 +22,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   const [draftComponent, setDraftComponent] = useState<ComponentSchema>(component)
   const isDirty = draftComponent !== component
   const [cardBackgroundColor, cardBorderColor] = useToken('colors', [...floatingEditorColorTokens])
-  const { context, refs, floatingStyles, update } = useFloating({
-    placement: 'top',
-    middleware: [offset(10), flip(), shift(), arrow({ element: arrowRef })],
-    strategy: 'fixed',
-  })
-
-  useEffect(() => {
-    refs.setReference(anchorElement)
-    void update()
-  }, [anchorElement, refs, update])
-
-  useEffect(() => {
-    const floatingElement = refs.floating.current
-
-    if (!floatingElement) {
-      return undefined
-    }
-
-    return autoUpdate(anchorElement, floatingElement, update)
-  }, [anchorElement, refs.floating, update])
+  const { context, refs, floatingStyles } = useFloatingEditorPositioning(anchorElement, arrowRef)
 
   useEffect(() => {
     setDraftComponent(component)
@@ -59,7 +41,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   }, [draftComponent, onClose, setComponents])
 
   return (
-    <Card.Root ref={refs.setFloating} size="sm" style={floatingStyles} width="260px" zIndex="tooltip">
+    <Card.Root ref={refs.setFloating} size="sm" style={floatingStyles} width="320px" zIndex="tooltip">
       <FloatingArrow
         ref={arrowRef}
         context={context}
