@@ -1,8 +1,9 @@
-import { Button, Card, CloseButton, Flex, Text, useToken } from '@chakra-ui/react'
+import { Button, Card, CloseButton, Flex, Text } from '@chakra-ui/react'
 import { FloatingArrow } from '@floating-ui/react'
 import { useSetAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState, type FC } from 'react'
 
+import { useColorTokens } from '../../hooks/useColorTokens'
 import { useFloatingEditorPositioning } from '../../hooks/useFloatingEditorPositioning'
 import type { ComponentSchema } from '../../schemas/components'
 import { componentsAtom } from '../../state'
@@ -14,14 +15,12 @@ type FloatingEditorProps = {
   onClose: () => void
 }
 
-const floatingEditorColorTokens = ['bg.panel', 'border'] as const
-
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
   const arrowRef = useRef<SVGSVGElement | null>(null)
   const setComponents = useSetAtom(componentsAtom)
   const [draftComponent, setDraftComponent] = useState<ComponentSchema>(component)
   const isDirty = draftComponent !== component
-  const [cardBackgroundColor, cardBorderColor] = useToken('colors', [...floatingEditorColorTokens])
+  const [cardBackgroundColor, cardBorderColor] = useColorTokens(['bg.panel', 'border'])
   const { context, refs, floatingStyles } = useFloatingEditorPositioning(anchorElement, arrowRef)
 
   useEffect(() => {
