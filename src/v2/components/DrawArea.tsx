@@ -6,6 +6,7 @@ import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawArea
 import type { ComponentSchema } from '../schemas/components'
 import { componentsAtom, rootComponentIdAtom } from '../state'
 import { setOpacity } from '../utils/setOpacity'
+import { FloatingEditor } from './FloatingEditor'
 import { RootPanel } from './svg/RootPanel'
 
 type ComponentHoverCardTarget = {
@@ -47,7 +48,13 @@ export const DrawArea: FC = () => {
           <RootPanel rootPanel={rootComponent} />
         </svg>
 
-        {componentHoverCardTarget && <>TODO render item hovering and pointing at the selected SVG child</>}
+        {componentHoverCardTarget && (
+          <FloatingEditor
+            component={componentHoverCardTarget.component}
+            anchorElement={componentHoverCardTarget.element}
+            onClose={() => setComponentHoverCardTarget(undefined)}
+          />
+        )}
       </Box>
     </DrawAreaContext.Provider>
   )
