@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 
-import typia from 'typia'
 import type { LayoutSchema, PanelSchema, RootPanelSchema } from '../schemas/components'
-import type { RectSchema, SizeSchema } from '../schemas/geometry'
+import type { FillableSize, RectSchema } from '../schemas/geometry'
 import { clamp } from '../utils/clamp'
 import { isDefined } from '../utils/isDefined'
 import { useChildren } from './useChildren'
@@ -57,16 +56,13 @@ const getFixedComponentSizes = (
   const parentSpace = layout.orientation === 'horizontal' ? parentRect.width : parentRect.height
 
   return components.map((component) => {
-    if (!isDefined(component.size) || component.size === 'fill') {
+    const mainAxisSize = getMainAxisSize(component.size, layout)
+
+    if (mainAxisSize === 'fill') {
       return undefined
     }
 
-    if (typeof component.size === 'number') {
-      return clamp(component.size, 0, parentSpace)
-    }
-
-    const componentSize = layout.orientation === 'horizontal' ? component.size.width : component.size.height
-    return clamp(componentSize, 0, parentSpace)
+    return clamp(mainAxisSize, 0, parentSpace)
   })
 }
 
@@ -113,13 +109,33 @@ const getFixedOffDirectionComponentSize = (
   layout: LayoutSchema,
 ): number => {
   const parentSpace = layout.orientation === 'horizontal' ? parentRect.height : parentRect.width
+  const offAxisSize = getOffAxisSize(component.size, layout)
 
-  if (!typia.is<SizeSchema>(component.size)) {
+  if (offAxisSize === 'fill') {
     return parentSpace
   }
 
-  const componentSize = layout.orientation === 'horizontal' ? component.size.height : component.size.width
-  return clamp(componentSize, 0, parentSpace)
+  return clamp(offAxisSize, 0, parentSpace)
+}
+
+const getMainAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): number | 'fill' => {
+  const axisSize = layout.orientation === 'horizontal' ? size?.width : size?.height
+
+  if (!isDefined(axisSize)) {
+    return 'fill'
+  }
+
+  return axisSize
+}
+
+const getOffAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): number | 'fill' => {
+  const axisSize = layout.orientation === 'horizontal' ? size?.height : size?.width
+
+  if (!isDefined(axisSize)) {
+    return 'fill'
+  }
+
+  return axisSize
 }
 
 const buildChildRects = (

@@ -19,3 +19,8 @@ export type SizeSchema = {
   width: number
   height: number
 }
+
+export type FillableSize = {
+  width: number | 'fill'
+  height: number | 'fill'
+}

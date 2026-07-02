@@ -1,4 +1,4 @@
-import { SizeSchema } from './geometry'
+import { FillableSize, SizeSchema } from './geometry'
 
 export type BaseComponentSchema = {
   id: string
@@ -29,7 +29,7 @@ export type RootPanelSchema = BaseComponentSchema &
 export type PanelSchema = BaseComponentSchema &
   LayoutedComponentSchema & {
     type: 'panel'
-    size?: 'fill' | number | SizeSchema
+    size?: FillableSize
     children: string[]
   }
 
