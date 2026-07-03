@@ -1,4 +1,3 @@
-import { Card } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
 import type { PanelSchema } from '../../schemas/components'
@@ -6,6 +5,7 @@ import type { FillableSize } from '../../schemas/geometry'
 import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
+import { EditorSection } from './EditorSection'
 import { FillableSizeInput } from './FillableSizeInput'
 
 type PanelSizeSectionProps = {
@@ -52,7 +52,7 @@ export const PanelSizeSection: FC<PanelSizeSectionProps> = ({ component, onChang
   )
 
   return (
-    <Card.Body borderTopWidth="1px" gap="2" paddingBlock="3" paddingInline="3">
+    <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Szélesség">
           <FillableSizeInput onChange={handleWidthChange} value={size.width} />
@@ -62,6 +62,6 @@ export const PanelSizeSection: FC<PanelSizeSectionProps> = ({ component, onChang
           <FillableSizeInput onChange={handleHeightChange} value={size.height} />
         </EditorFieldRow>
       </EditorFieldGrid>
-    </Card.Body>
+    </EditorSection>
   )
 }

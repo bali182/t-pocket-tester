@@ -1,10 +1,18 @@
-import { Card, NumberInput, SegmentGroup, type NumberInputValueChangeDetails } from '@chakra-ui/react'
+import {
+  SpinButton,
+  Toolbar,
+  ToolbarRadioButton,
+  ToolbarRadioGroup,
+  type SpinButtonOnChangeData,
+  type ToolbarProps,
+} from '@fluentui/react-components'
 import { useCallback, type ReactNode } from 'react'
 import { PiColumns, PiRows } from 'react-icons/pi'
 
 import type { LayoutedComponentSchema, LayoutOrientation } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
+import { EditorSection } from './EditorSection'
 
 type LayoutSectionProps<T> = {
   component: T
@@ -23,8 +31,8 @@ export function LayoutSection<T extends LayoutedComponentSchema>({
   onChange,
 }: LayoutSectionProps<T>): ReactNode {
   const handleOrientationChange = useCallback(
-    (details: SegmentGroup.ValueChangeDetails) => {
-      const orientation = details.value as LayoutOrientation
+    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
+      const orientation = data.checkedItems[0] as LayoutOrientation
       onChange({
         ...component,
         layout: {
@@ -37,15 +45,17 @@ export function LayoutSection<T extends LayoutedComponentSchema>({
   )
 
   const handleGapChange = useCallback(
-    (details: NumberInputValueChangeDetails) => {
-      if (!isValidGap(details.valueAsNumber)) {
+    (_event: unknown, data: SpinButtonOnChangeData) => {
+      const nextGap = data.value
+
+      if (typeof nextGap !== 'number' || !isValidGap(nextGap)) {
         return
       }
       onChange({
         ...component,
         layout: {
           ...component.layout,
-          gap: details.valueAsNumber,
+          gap: nextGap,
         },
       })
     },
@@ -53,38 +63,31 @@ export function LayoutSection<T extends LayoutedComponentSchema>({
   )
 
   return (
-    <Card.Body borderTopWidth="1px" gap="2" paddingBlock="3" paddingInline="3">
+    <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Elrendezés">
-          <SegmentGroup.Root
-            justifySelf="end"
-            onValueChange={handleOrientationChange}
-            value={component.layout.orientation}
-            width="fit-content"
+          <Toolbar
+            checkedValues={{ orientation: [component.layout.orientation] }}
+            onCheckedValueChange={handleOrientationChange}
+            size="small"
           >
-            <SegmentGroup.Indicator />
-            <SegmentGroup.Items
-              items={[
-                { value: 'horizontal', label: <PiColumns /> },
-                { value: 'vertical', label: <PiRows /> },
-              ]}
-            />
-          </SegmentGroup.Root>
+            <ToolbarRadioGroup>
+              <ToolbarRadioButton aria-label="Vízszintes" icon={<PiColumns />} name="orientation" value="horizontal" />
+              <ToolbarRadioButton aria-label="Függőleges" icon={<PiRows />} name="orientation" value="vertical" />
+            </ToolbarRadioGroup>
+          </Toolbar>
         </EditorFieldRow>
 
         <EditorFieldRow label="Térköz">
-          <NumberInput.Root
-            allowOverflow={false}
-            clampValueOnBlur
+          <SpinButton
             min={minGap}
-            onValueChange={handleGapChange}
+            onChange={handleGapChange}
+            size="small"
             step={gapStep}
-            value={String(component.layout.gap)}
-          >
-            <NumberInput.Input />
-          </NumberInput.Root>
+            value={component.layout.gap}
+          />
         </EditorFieldRow>
       </EditorFieldGrid>
-    </Card.Body>
+    </EditorSection>
   )
 }

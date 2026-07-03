@@ -1,6 +1,5 @@
-import { EmptyState, VStack } from '@chakra-ui/react'
+import { MessageBar, MessageBarBody, MessageBarTitle } from '@fluentui/react-components'
 import { FC } from 'react'
-import { IoAlertCircleOutline } from 'react-icons/io5'
 
 import { ComponentSchema } from '../../schemas/components'
 import { PanelEditor } from './PanelEditor'
@@ -19,17 +18,12 @@ export const ComponentEditor: FC<ComponentEditorProps> = ({ component, onChange 
       return <PanelEditor component={component} onChange={onChange} />
     default:
       return (
-        <EmptyState.Root>
-          <EmptyState.Content>
-            <EmptyState.Indicator>
-              <IoAlertCircleOutline />
-            </EmptyState.Indicator>
-            <VStack textAlign="center">
-              <EmptyState.Title>Hiba</EmptyState.Title>
-              <EmptyState.Description>Ehhez a komponenshez még nincs szerkesztő!</EmptyState.Description>
-            </VStack>
-          </EmptyState.Content>
-        </EmptyState.Root>
+        <MessageBar intent="error">
+          <MessageBarBody>
+            <MessageBarTitle>Hiba</MessageBarTitle>
+            Ehhez a komponenshez még nincs szerkesztő!
+          </MessageBarBody>
+        </MessageBar>
       )
   }
 }

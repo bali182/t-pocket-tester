@@ -1,9 +1,17 @@
-import { Button, Card, CloseButton, Flex, Text } from '@chakra-ui/react'
+import {
+  Button,
+  Card,
+  CardFooter,
+  CardHeader,
+  Caption1Strong,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components'
+import { DismissRegular } from '@fluentui/react-icons'
 import { FloatingArrow } from '@floating-ui/react'
 import { useSetAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState, type FC } from 'react'
 
-import { useColorTokens } from '../../hooks/useColorTokens'
 import { useFloatingEditorPositioning } from '../../hooks/useFloatingEditorPositioning'
 import type { ComponentSchema } from '../../schemas/components'
 import { componentsAtom } from '../../state'
@@ -15,12 +23,29 @@ type FloatingEditorProps = {
   onClose: () => void
 }
 
+const useStyles = makeStyles({
+  root: {
+    width: '320px',
+    zIndex: 1000,
+  },
+  body: {
+    padding: 0,
+  },
+  footer: {
+    borderTop: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke2}`,
+    paddingTop: `${tokens.spacingVerticalM}`,
+    justifyContent: 'end',
+  },
+})
+
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
+  const styles = useStyles()
   const arrowRef = useRef<SVGSVGElement | null>(null)
   const setComponents = useSetAtom(componentsAtom)
   const [draftComponent, setDraftComponent] = useState<ComponentSchema>(component)
   const isDirty = draftComponent !== component
-  const [cardBackgroundColor, cardBorderColor] = useColorTokens(['bg.panel', 'border'])
+  const cardBackgroundColor = tokens.colorNeutralBackground1
+  const cardBorderColor = tokens.colorNeutralStroke1
   const { context, refs, floatingStyles } = useFloatingEditorPositioning(anchorElement, arrowRef)
 
   useEffect(() => {
@@ -40,7 +65,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   }, [draftComponent, onClose, setComponents])
 
   return (
-    <Card.Root ref={refs.setFloating} size="sm" style={floatingStyles} width="320px" zIndex="tooltip">
+    <Card ref={refs.setFloating} className={styles.root} size="small" style={floatingStyles}>
       <FloatingArrow
         ref={arrowRef}
         context={context}
@@ -49,22 +74,26 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
         strokeWidth={1}
         tipRadius={2}
       />
-      <Card.Header paddingBlock="2" paddingInline="3">
-        <Flex align="center" justify="space-between">
-          <Text color="fg.muted" fontSize="sm" fontWeight="bold">
-            #{draftComponent.id}
-          </Text>
-          <CloseButton onClick={onClose} size="xs" variant="ghost" />
-        </Flex>
-      </Card.Header>
-      <Card.Body padding="0">
+      <CardHeader
+        action={
+          <Button
+            appearance="subtle"
+            aria-label="Bezárás"
+            icon={<DismissRegular />}
+            onClick={onClose}
+            size="small"
+          />
+        }
+        header={<Caption1Strong>#{draftComponent.id}</Caption1Strong>}
+      />
+      <div className={styles.body}>
         <ComponentEditor component={draftComponent} onChange={handleComponentChange} />
-      </Card.Body>
-      <Card.Footer borderTopWidth="1px" justifyContent="flex-end" paddingBlock="2" paddingInline="3">
-        <Button disabled={!isDirty} onClick={handleSave} size="xs">
+      </div>
+      <CardFooter className={styles.footer}>
+        <Button disabled={!isDirty} onClick={handleSave} size="small">
           Mentés
         </Button>
-      </Card.Footer>
-    </Card.Root>
+      </CardFooter>
+    </Card>
   )
 }

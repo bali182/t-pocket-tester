@@ -1,14 +1,20 @@
-import { Grid, type GridProps } from '@chakra-ui/react'
-import type { FC } from 'react'
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components'
+import type { ComponentProps, FC } from 'react'
 
-export const EditorFieldGrid: FC<GridProps> = (props) => {
-  return (
-    <Grid
-      alignItems="center"
-      columnGap="3"
-      gridTemplateColumns="max-content minmax(0, 1fr)"
-      rowGap="2"
-      {...props}
-    />
-  )
+type EditorFieldGridProps = ComponentProps<'div'>
+
+const useStyles = makeStyles({
+  root: {
+    alignItems: 'center',
+    columnGap: tokens.spacingHorizontalM,
+    display: 'grid',
+    gridTemplateColumns: 'max-content minmax(0, 1fr)',
+    rowGap: tokens.spacingVerticalS,
+  },
+})
+
+export const EditorFieldGrid: FC<EditorFieldGridProps> = ({ className, ...props }) => {
+  const styles = useStyles()
+
+  return <div className={mergeClasses(styles.root, className)} {...props} />
 }

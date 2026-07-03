@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { makeStyles } from '@fluentui/react-components'
 import { useAtomValue } from 'jotai'
 import { useMemo, useState, type FC } from 'react'
 
@@ -9,12 +9,21 @@ import { setOpacity } from '../utils/setOpacity'
 import { FloatingEditor } from './editors/FloatingEditor'
 import { RootPanel } from './svg/RootPanel'
 
+const useStyles = makeStyles({
+  viewport: {
+    height: '100%',
+    overflow: 'auto',
+    width: '100%',
+  },
+})
+
 type ComponentHoverCardTarget = {
   component: ComponentSchema
   element: SVGGraphicsElement
 }
 
 export const DrawArea: FC = () => {
+  const styles = useStyles()
   const components = useAtomValue(componentsAtom)
   const rootComponentId = useAtomValue(rootComponentIdAtom)
   const rootComponent = components[rootComponentId]
@@ -39,7 +48,7 @@ export const DrawArea: FC = () => {
 
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
-      <Box height="100%" overflow="auto" width="100%">
+      <div className={styles.viewport}>
         <svg
           width={`${rootComponent.size.width}mm`}
           height={`${rootComponent.size.height}mm`}
@@ -55,7 +64,7 @@ export const DrawArea: FC = () => {
             onClose={() => setComponentHoverCardTarget(undefined)}
           />
         )}
-      </Box>
+      </div>
     </DrawAreaContext.Provider>
   )
 }

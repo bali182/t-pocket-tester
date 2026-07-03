@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/react'
+import { Caption1 } from '@fluentui/react-components'
 import type { FC, ReactNode } from 'react'
 
 type EditorFieldRowProps = {
@@ -9,9 +9,7 @@ type EditorFieldRowProps = {
 export const EditorFieldRow: FC<EditorFieldRowProps> = ({ label, children }) => {
   return (
     <>
-      <Text color="fg.muted" fontSize="sm">
-        {label}
-      </Text>
+      <Caption1>{label}</Caption1>
       {children}
     </>
   )

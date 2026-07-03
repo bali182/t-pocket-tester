@@ -1,12 +1,5 @@
-import {
-  createListCollection,
-  HStack,
-  NumberInput,
-  Portal,
-  Select,
-  type NumberInputValueChangeDetails,
-  type SelectValueChangeDetails,
-} from '@chakra-ui/react'
+import type { DropdownProps, SpinButtonOnChangeData } from '@fluentui/react-components'
+import { Dropdown, makeStyles, Option, SpinButton, tokens } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 
 type FillableSizeInputProps = {
@@ -16,13 +9,6 @@ type FillableSizeInputProps = {
 
 type FillableSizeMode = 'fill' | 'fixed'
 
-const fillableSizeModeCollection = createListCollection({
-  items: [
-    { label: 'Kitöltés', value: 'fill' },
-    { label: 'Fix', value: 'fixed' },
-  ],
-})
-
 const fixedSizeFallback = 10
 const panelSizeStep = 0.1
 const minPanelSize = 0
@@ -31,12 +17,33 @@ const isValidPanelSize = (value: number): boolean => {
   return Number.isFinite(value) && value >= minPanelSize
 }
 
+const useStyles = makeStyles({
+  fixedMode: {
+    columnGap: tokens.spacingHorizontalS,
+    display: 'grid',
+    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+  },
+  dropdown: {
+    minWidth: 0,
+    width: '100%',
+  },
+  spinButton: {
+    minWidth: 0,
+    width: '100%',
+  },
+})
+
 export const FillableSizeInput: FC<FillableSizeInputProps> = ({ value, onChange }) => {
+  const styles = useStyles()
   const mode: FillableSizeMode = value === 'fill' ? 'fill' : 'fixed'
 
   const handleModeChange = useCallback(
-    (details: SelectValueChangeDetails) => {
-      const nextMode = details.value[0] as FillableSizeMode
+    (_event: unknown, data: Parameters<NonNullable<DropdownProps['onOptionSelect']>>[1]) => {
+      const nextMode = data.optionValue as FillableSizeMode | undefined
+
+      if (!nextMode) {
+        return
+      }
 
       if (nextMode === 'fill') {
         onChange('fill')
@@ -49,87 +56,54 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ value, onChange 
   )
 
   const handleSizeChange = useCallback(
-    (details: NumberInputValueChangeDetails) => {
-      if (!isValidPanelSize(details.valueAsNumber)) {
+    (_event: unknown, data: SpinButtonOnChangeData) => {
+      const nextValue = data.value
+
+      if (typeof nextValue !== 'number' || !isValidPanelSize(nextValue)) {
         return
       }
 
-      onChange(details.valueAsNumber)
+      onChange(nextValue)
     },
     [onChange],
   )
 
   if (mode === 'fill') {
     return (
-      <Select.Root collection={fillableSizeModeCollection} onValueChange={handleModeChange} value={[mode]} width="full">
-        <Select.HiddenSelect />
-        <Select.Control>
-          <Select.Trigger>
-            <Select.ValueText />
-          </Select.Trigger>
-          <Select.IndicatorGroup>
-            <Select.Indicator />
-          </Select.IndicatorGroup>
-        </Select.Control>
-        <Portal>
-          <Select.Positioner>
-            <Select.Content zIndex="tooltip">
-              {fillableSizeModeCollection.items.map((item) => (
-                <Select.Item item={item} key={item.value}>
-                  <Select.ItemText>{item.label}</Select.ItemText>
-                  <Select.ItemIndicator />
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Positioner>
-        </Portal>
-      </Select.Root>
+      <Dropdown
+        className={styles.dropdown}
+        onOptionSelect={handleModeChange}
+        selectedOptions={[mode]}
+        size="small"
+        value="Kitöltés"
+      >
+        <Option value="fill">Kitöltés</Option>
+        <Option value="fixed">Fix</Option>
+      </Dropdown>
     )
   }
 
   return (
-    <HStack gap={2}>
-      <Select.Root
-        collection={fillableSizeModeCollection}
-        flexShrink={0}
-        onValueChange={handleModeChange}
-        value={[mode]}
-        width={20}
+    <div className={styles.fixedMode}>
+      <Dropdown
+        className={styles.dropdown}
+        onOptionSelect={handleModeChange}
+        selectedOptions={[mode]}
+        size="small"
+        value="Fix"
       >
-        <Select.HiddenSelect />
-        <Select.Control>
-          <Select.Trigger>
-            <Select.ValueText />
-          </Select.Trigger>
-          <Select.IndicatorGroup>
-            <Select.Indicator />
-          </Select.IndicatorGroup>
-        </Select.Control>
-        <Portal>
-          <Select.Positioner>
-            <Select.Content zIndex="tooltip">
-              {fillableSizeModeCollection.items.map((item) => (
-                <Select.Item item={item} key={item.value}>
-                  <Select.ItemText>{item.label}</Select.ItemText>
-                  <Select.ItemIndicator />
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Positioner>
-        </Portal>
-      </Select.Root>
+        <Option value="fill">Kitöltés</Option>
+        <Option value="fixed">Fix</Option>
+      </Dropdown>
 
-      <NumberInput.Root
-        allowOverflow={false}
-        clampValueOnBlur
+      <SpinButton
+        className={styles.spinButton}
         min={minPanelSize}
-        onValueChange={handleSizeChange}
+        onChange={handleSizeChange}
+        size="small"
         step={panelSizeStep}
-        value={String(value)}
-        width="full"
-      >
-        <NumberInput.Input />
-      </NumberInput.Root>
-    </HStack>
+        value={typeof value === 'number' ? value : fixedSizeFallback}
+      />
+    </div>
   )
 }

@@ -1,9 +1,10 @@
-import { Card, NumberInput, type NumberInputValueChangeDetails } from '@chakra-ui/react'
+import { SpinButton, type SpinButtonOnChangeData } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 
 import type { RootPanelSchema } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
+import { EditorSection } from './EditorSection'
 
 type WidthAndHeightSizeSectionProps = {
   component: RootPanelSchema
@@ -19,8 +20,10 @@ const isValidRootPanelSize = (value: number): boolean => {
 
 export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, onChange }) => {
   const handleWidthChange = useCallback(
-    (details: NumberInputValueChangeDetails) => {
-      if (!isValidRootPanelSize(details.valueAsNumber)) {
+    (_event: unknown, data: SpinButtonOnChangeData) => {
+      const nextWidth = data.value
+
+      if (typeof nextWidth !== 'number' || !isValidRootPanelSize(nextWidth)) {
         return
       }
 
@@ -28,7 +31,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
         ...component,
         size: {
           ...component.size,
-          width: details.valueAsNumber,
+          width: nextWidth,
         },
       })
     },
@@ -36,8 +39,10 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
   )
 
   const handleHeightChange = useCallback(
-    (details: NumberInputValueChangeDetails) => {
-      if (!isValidRootPanelSize(details.valueAsNumber)) {
+    (_event: unknown, data: SpinButtonOnChangeData) => {
+      const nextHeight = data.value
+
+      if (typeof nextHeight !== 'number' || !isValidRootPanelSize(nextHeight)) {
         return
       }
 
@@ -45,7 +50,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
         ...component,
         size: {
           ...component.size,
-          height: details.valueAsNumber,
+          height: nextHeight,
         },
       })
     },
@@ -53,34 +58,28 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
   )
 
   return (
-    <Card.Body borderTopWidth="1px" gap="2" paddingBlock="3" paddingInline="3">
+    <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Width">
-          <NumberInput.Root
-            allowOverflow={false}
-            clampValueOnBlur
+          <SpinButton
             min={minRootPanelSize}
-            onValueChange={handleWidthChange}
+            onChange={handleWidthChange}
+            size="small"
             step={rootPanelSizeStep}
-            value={String(component.size.width)}
-          >
-            <NumberInput.Input />
-          </NumberInput.Root>
+            value={component.size.width}
+          />
         </EditorFieldRow>
 
         <EditorFieldRow label="Height">
-          <NumberInput.Root
-            allowOverflow={false}
-            clampValueOnBlur
+          <SpinButton
             min={minRootPanelSize}
-            onValueChange={handleHeightChange}
+            onChange={handleHeightChange}
+            size="small"
             step={rootPanelSizeStep}
-            value={String(component.size.height)}
-          >
-            <NumberInput.Input />
-          </NumberInput.Root>
+            value={component.size.height}
+          />
         </EditorFieldRow>
       </EditorFieldGrid>
-    </Card.Body>
+    </EditorSection>
   )
 }
