@@ -1,4 +1,4 @@
-import { makeStyles } from '@fluentui/react-components'
+import { makeStyles, tokens } from '@fluentui/react-components'
 import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 
@@ -7,6 +7,7 @@ import { RootPanel } from './svg/RootPanel'
 
 const useStyles = makeStyles({
   viewport: {
+    backgroundColor: tokens.colorNeutralBackground2,
     boxSizing: 'border-box',
     height: '100%',
     overflow: 'auto',

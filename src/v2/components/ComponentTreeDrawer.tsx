@@ -6,6 +6,8 @@ import {
   DrawerBody,
   DrawerHeader,
   DrawerHeaderTitle,
+  makeStyles,
+  tokens,
   Tree,
   TreeItem,
   TreeItemLayout,
@@ -23,6 +25,12 @@ type ComponentTreeDrawerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
+
+const useStyles = makeStyles({
+  drawer: {
+    boxShadow: tokens.shadow16,
+  },
+})
 
 const getComponentLabel = (component: ComponentSchema): string => component.name || component.id
 
@@ -49,6 +57,7 @@ const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component }) => {
 }
 
 export const ComponentTreeDrawer: FC<ComponentTreeDrawerProps> = ({ open, onOpenChange }) => {
+  const styles = useStyles()
   const rootComponentId = useAtomValue(rootComponentIdAtom)
   const rootComponent = useChild(rootComponentId)
 
@@ -60,7 +69,15 @@ export const ComponentTreeDrawer: FC<ComponentTreeDrawerProps> = ({ open, onOpen
   )
 
   return (
-    <Drawer separator type="inline" onOpenChange={handleOpenChange} open={open} position="end" size="small">
+    <Drawer
+      separator
+      className={styles.drawer}
+      type="inline"
+      onOpenChange={handleOpenChange}
+      open={open}
+      position="end"
+      size="small"
+    >
       <DrawerHeader>
         <DrawerHeaderTitle
           action={
