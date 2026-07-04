@@ -8,10 +8,10 @@ import {
   PopoverSurface,
   tokens,
 } from '@fluentui/react-components'
-import type { PositioningVirtualElement } from '@fluentui/react-components'
+import type { PositioningImperativeRef, PositioningVirtualElement } from '@fluentui/react-components'
 import { DismissRegular } from '@fluentui/react-icons'
 import { useSetAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type FC } from 'react'
 
 import type { ComponentSchema } from '../../schemas/components'
 import { componentsAtom } from '../../state'
@@ -41,6 +41,7 @@ const useStyles = makeStyles({
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
   const styles = useStyles()
   const setComponents = useSetAtom(componentsAtom)
+  const positioningRef = useRef<PositioningImperativeRef>(null)
   const [draftComponent, setDraftComponent] = useState<ComponentSchema>(component)
   const isDirty = draftComponent !== component
   const positioningTarget = useMemo<PositioningVirtualElement>(
@@ -54,6 +55,24 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   useEffect(() => {
     setDraftComponent(component)
   }, [component])
+
+  useEffect(() => {
+    const editorElement = anchorElement.ownerSVGElement?.parentElement
+
+    if (!editorElement) {
+      return
+    }
+
+    const observer = new ResizeObserver((): void => {
+      positioningRef.current?.updatePosition()
+    })
+
+    observer.observe(editorElement)
+
+    return (): void => {
+      observer.disconnect()
+    }
+  }, [anchorElement])
 
   const handleComponentChange = useCallback((updated: ComponentSchema) => {
     setDraftComponent(updated)
@@ -76,6 +95,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
         offset: 10,
         overflowBoundaryPadding: 8,
         position: 'after',
+        positioningRef,
         strategy: 'fixed',
         target: positioningTarget,
       }}
