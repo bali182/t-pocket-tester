@@ -43,6 +43,7 @@ export default [
     rules: {
       ...reactHooksRecommended.rules,
       'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/static-components': 'off',
     },
   },
 ]

@@ -7,9 +7,12 @@ import { RootPanel } from './svg/RootPanel'
 
 const useStyles = makeStyles({
   viewport: {
+    alignItems: 'center',
     backgroundColor: tokens.colorNeutralBackground2,
     boxSizing: 'border-box',
+    display: 'flex',
     height: '100%',
+    justifyContent: 'center',
     overflow: 'auto',
     width: '100%',
   },
