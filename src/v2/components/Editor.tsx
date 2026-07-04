@@ -1,5 +1,5 @@
 import { Button, makeStyles, tokens } from '@fluentui/react-components'
-import { useMemo, useState, type FC } from 'react'
+import { useCallback, useMemo, useState, type FC } from 'react'
 import { PiTreeStructure } from 'react-icons/pi'
 
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
@@ -39,18 +39,37 @@ export const Editor: FC = () => {
   const styles = useStyles()
   const [componentHoverCardTarget, setComponentHoverCardTarget] = useState<ComponentHoverCardTarget | undefined>()
   const [isComponentTreeOpen, setIsComponentTreeOpen] = useState(false)
+
+  const handleComponentClick = useCallback((component: ComponentSchema, element: SVGGraphicsElement): void => {
+    setComponentHoverCardTarget({
+      component,
+      element,
+    })
+  }, [])
+
+  const getHoverBackgroundColor = useCallback((component: ComponentSchema): string => {
+    return setOpacity(component.color, 0.3)
+  }, [])
+
+  const handleFloatingEditorClose = useCallback((): void => {
+    setComponentHoverCardTarget(undefined)
+  }, [])
+
+  const handleComponentTreeButtonClick = useCallback((): void => {
+    setIsComponentTreeOpen(!isComponentTreeOpen)
+  }, [isComponentTreeOpen])
+
+  const handleComponentTreeOpenChange = useCallback((open: boolean): void => {
+    setIsComponentTreeOpen(open)
+  }, [])
+
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
     () => ({
       isInteractive: true,
-      onComponentClick: (component, element) => {
-        setComponentHoverCardTarget({
-          component,
-          element,
-        })
-      },
-      getHoverBackgroundColor: (component) => setOpacity(component.color, 0.3),
+      onComponentClick: handleComponentClick,
+      getHoverBackgroundColor,
     }),
-    [],
+    [getHoverBackgroundColor, handleComponentClick],
   )
 
   return (
@@ -63,19 +82,20 @@ export const Editor: FC = () => {
             <FloatingEditor
               component={componentHoverCardTarget.component}
               anchorElement={componentHoverCardTarget.element}
-              onClose={() => setComponentHoverCardTarget(undefined)}
+              onClose={handleFloatingEditorClose}
             />
           )}
 
           <Button
             appearance="primary"
             aria-label="Komponensfa megnyitása"
+            size="large"
             className={styles.componentTreeButton}
             icon={<PiTreeStructure />}
-            onClick={() => setIsComponentTreeOpen(true)}
+            onClick={handleComponentTreeButtonClick}
           />
         </div>
-        <ComponentTreeDrawer open={isComponentTreeOpen} onOpenChange={setIsComponentTreeOpen} />
+        <ComponentTreeDrawer open={isComponentTreeOpen} onOpenChange={handleComponentTreeOpenChange} />
       </div>
     </DrawAreaContext.Provider>
   )
