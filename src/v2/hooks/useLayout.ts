@@ -1,35 +1,36 @@
 import { useMemo } from 'react'
 
-import type { LayoutSchema, PanelSchema, RootPanelSchema } from '../schemas/components'
+import type { LayoutSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { FillableSize, RectSchema } from '../schemas/geometry'
 import { clamp } from '../utils/clamp'
 import { isDefined } from '../utils/isDefined'
 import { useChildren } from './useChildren'
 
 type LayoutComponent = RootPanelSchema | PanelSchema
+export type LayoutChildComponent = PanelSchema | PocketClusterSchema
 
 type UseLayoutParams = {
   rect: RectSchema
   component: LayoutComponent
 }
 
-export const useLayout = ({ rect, component }: UseLayoutParams): [PanelSchema, RectSchema][] => {
+export const useLayout = ({ rect, component }: UseLayoutParams): [LayoutChildComponent, RectSchema][] => {
   const children = useChildren(component)
 
-  return useMemo<[PanelSchema, RectSchema][]>(() => {
-    const panelChildren = assertPanelChildren(children)
-    const availableComponentSpace = getAvailableComponentSpace(rect, component.layout, panelChildren.length)
-    const fixedComponentSizes = getFixedComponentSizes(panelChildren, rect, component.layout)
+  return useMemo<[LayoutChildComponent, RectSchema][]>(() => {
+    const layoutChildren = assertLayoutChildren(children)
+    const availableComponentSpace = getAvailableComponentSpace(rect, component.layout, layoutChildren.length)
+    const fixedComponentSizes = getFixedComponentSizes(layoutChildren, rect, component.layout)
     const componentSizes = shrinkFixedComponentSizesToFit(fixedComponentSizes, availableComponentSpace)
     const fillComponentSize = getFillComponentSize(componentSizes, availableComponentSpace)
 
-    return buildChildRects(rect, panelChildren, componentSizes, fillComponentSize, component.layout)
+    return buildChildRects(rect, layoutChildren, componentSizes, fillComponentSize, component.layout)
   }, [children, component.layout, rect])
 }
 
-const assertPanelChildren = (children: ReturnType<typeof useChildren>): PanelSchema[] => {
+const assertLayoutChildren = (children: ReturnType<typeof useChildren>): LayoutChildComponent[] => {
   return children.map((child) => {
-    if (child.type !== 'panel') {
+    if (child.type !== 'panel' && child.type !== 'pocket-cluster') {
       throw new Error(`Unsupported child component type: ${child.type}`)
     }
 
@@ -49,7 +50,7 @@ const getAvailableComponentSpace = (parentRect: RectSchema, layout: LayoutSchema
 }
 
 const getFixedComponentSizes = (
-  components: PanelSchema[],
+  components: LayoutChildComponent[],
   parentRect: RectSchema,
   layout: LayoutSchema,
 ): (number | undefined)[] => {
@@ -104,7 +105,7 @@ const getFillComponentSize = (componentSizes: (number | undefined)[], availableC
 }
 
 const getFixedOffDirectionComponentSize = (
-  component: PanelSchema,
+  component: LayoutChildComponent,
   parentRect: RectSchema,
   layout: LayoutSchema,
 ): number => {
@@ -140,14 +141,14 @@ const getOffAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): n
 
 const buildChildRects = (
   parentRect: RectSchema,
-  components: PanelSchema[],
+  components: LayoutChildComponent[],
   componentSizes: (number | undefined)[],
   fillComponentSize: number,
   layout: LayoutSchema,
-): [PanelSchema, RectSchema][] => {
+): [LayoutChildComponent, RectSchema][] => {
   let cursor = layout.orientation === 'horizontal' ? parentRect.x : parentRect.y
 
-  return components.map((component, index): [PanelSchema, RectSchema] => {
+  return components.map((component, index): [LayoutChildComponent, RectSchema] => {
     const componentSize = componentSizes[index] ?? fillComponentSize
     const offDirectionComponentSize = getFixedOffDirectionComponentSize(component, parentRect, layout)
     const rect: RectSchema =

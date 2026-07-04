@@ -58,6 +58,13 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
     setComponents((components) => addComponent(component.id, 'panel', components))
   }, [canAdd, component.id, setComponents])
 
+  const handleAddPocketCluster = useCallback((): void => {
+    if (!canAdd) {
+      return
+    }
+    setComponents((components) => addComponent(component.id, 'pocket-cluster', components))
+  }, [canAdd, component.id, setComponents])
+
   const handleDelete = useCallback((): void => {
     if (!canDelete) {
       return
@@ -88,7 +95,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
           <MenuList>
             <MenuItem onClick={handleAddPanel}>Panel</MenuItem>
             <MenuItem disabled>Pocket</MenuItem>
-            <MenuItem disabled>Pocket cluster</MenuItem>
+            <MenuItem onClick={handleAddPocketCluster}>Pocket cluster</MenuItem>
           </MenuList>
         </MenuPopover>
       </Menu>

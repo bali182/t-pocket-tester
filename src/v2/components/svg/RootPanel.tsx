@@ -6,6 +6,7 @@ import { useLayout } from '../../hooks/useLayout'
 import type { RootPanelSchema } from '../../schemas/components'
 import { RectSchema } from '../../schemas/geometry'
 import { Panel } from './Panel'
+import { PocketCluster } from './PocketCluster'
 
 type RootPanelProps = {
   rootPanel: RootPanelSchema
@@ -55,9 +56,14 @@ export const RootPanel: FC<RootPanelProps> = ({ rootPanel }) => {
         onClick={isInteractive ? handleClick : undefined}
       />
 
-      {children.map(([panel, rect]) => (
-        <Panel key={panel.id} panel={panel} rect={rect} />
-      ))}
+      {children.map(([component, rect]) => {
+        switch (component.type) {
+          case 'panel':
+            return <Panel key={component.id} panel={component} rect={rect} />
+          case 'pocket-cluster':
+            return <PocketCluster key={component.id} pocketCluster={component} rect={rect} />
+        }
+      })}
     </>
   )
 }

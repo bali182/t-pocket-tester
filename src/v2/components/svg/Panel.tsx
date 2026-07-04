@@ -5,6 +5,7 @@ import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useLayout } from '../../hooks/useLayout'
 import type { PanelSchema } from '../../schemas/components'
 import type { RectSchema } from '../../schemas/geometry'
+import { PocketCluster } from './PocketCluster'
 
 type PanelProps = {
   panel: PanelSchema
@@ -46,9 +47,14 @@ export const Panel: FC<PanelProps> = ({ panel, rect }) => {
         onClick={isInteractive ? handleClick : undefined}
       />
 
-      {children.map(([panel, rect]) => (
-        <Panel key={panel.id} panel={panel} rect={rect} />
-      ))}
+      {children.map(([component, rect]) => {
+        switch (component.type) {
+          case 'panel':
+            return <Panel key={component.id} panel={component} rect={rect} />
+          case 'pocket-cluster':
+            return <PocketCluster key={component.id} pocketCluster={component} rect={rect} />
+        }
+      })}
     </>
   )
 }

@@ -61,18 +61,12 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   type: 'pocket-cluster',
   id: '',
   name: '',
+  orientation: 'up',
   color: LEATHER_BASE_COLOR,
-  cardSize: {
-    width: 85.6,
-    height: 54,
-  },
   pocketCount: 3,
-  sideClearance: 4,
-  bottomClearance: 4,
-  pocketSpacing: 8,
-  pocketHeight: 36,
+  pocketStep: 8,
   tPocketTabWidth: 8,
-  tPocketTaper: 4,
+  tPocketTaper: 20,
 }
 
 const DEFAULT_COMPONENT_BY_TYPE: ComponentByType = {
