@@ -6,6 +6,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
+    "lint": "eslint src",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -28,9 +29,12 @@
     "@types/react-dom": "19.1.6",
     "@typia/unplugin": "^12.1.1",
     "@vitejs/plugin-react": "4.5.2",
+    "eslint": "10.6.0",
+    "eslint-plugin-react-hooks": "7.1.1",
     "prettier": "3.8.4",
     "prettier-plugin-organize-imports": "4.3.0",
     "typescript": "5.8.3",
+    "typescript-eslint": "^8.62.1",
     "vite": "6.4.3"
   }
 }

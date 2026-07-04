@@ -26,6 +26,7 @@ const createPersistedAtomEntry = <T>(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const persistedAtoms: PersistedAtomEntry<any>[] = [
   createPersistedAtomEntry(cardHolderInputAtom, 'cardHolderInput', DEFAULT_CARD_HOLDER_INPUT, (input) =>
     typia.assert<CardHolderInputSchema>(input),

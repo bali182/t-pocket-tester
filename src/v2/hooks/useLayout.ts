@@ -24,7 +24,7 @@ export const useLayout = ({ rect, component }: UseLayoutParams): [PanelSchema, R
     const fillComponentSize = getFillComponentSize(componentSizes, availableComponentSpace)
 
     return buildChildRects(rect, panelChildren, componentSizes, fillComponentSize, component.layout)
-  }, [children, component.layout.gap, component.layout.orientation, rect.height, rect.width, rect.x, rect.y])
+  }, [children, component.layout, rect])
 }
 
 const assertPanelChildren = (children: ReturnType<typeof useChildren>): PanelSchema[] => {
