@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { DrawArea } from '../DrawArea'
+import { Editor } from '../Editor'
 
 export const HomeRoute: FC = () => {
-  return <DrawArea />
+  return <Editor />
 }

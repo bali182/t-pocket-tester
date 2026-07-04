@@ -14,7 +14,7 @@ type UseLayoutParams = {
 }
 
 export const useLayout = ({ rect, component }: UseLayoutParams): [PanelSchema, RectSchema][] => {
-  const children = useChildren(component.children)
+  const children = useChildren(component)
 
   return useMemo<[PanelSchema, RectSchema][]>(() => {
     const panelChildren = assertPanelChildren(children)
