@@ -1,5 +1,6 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
+import { STROKE_COLOR, STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useLayout } from '../../hooks/useLayout'
 import type { PanelSchema } from '../../schemas/components'
@@ -37,6 +38,8 @@ export const Panel: FC<PanelProps> = ({ panel, rect }) => {
         width={rect.width}
         height={rect.height}
         fill={fill}
+        stroke={STROKE_COLOR}
+        strokeWidth={STROKE_THICKNESS}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}
         onClick={isInteractive ? handleClick : undefined}

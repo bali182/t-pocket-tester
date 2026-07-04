@@ -1,4 +1,4 @@
-import { LEATHER_BASE_COLOR } from './constants/colors'
+import { LEATHER_BASE_COLOR } from './constants/drawing'
 import { RootPanelSchema } from './schemas/components'
 
 export const defaultComponent: RootPanelSchema = {

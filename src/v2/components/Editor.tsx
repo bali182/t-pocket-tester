@@ -1,10 +1,10 @@
 import { Button, makeStyles, tokens } from '@fluentui/react-components'
+import { formatHex8, parse } from 'culori'
 import { useCallback, useMemo, useState, type FC } from 'react'
 import { PiTreeStructure } from 'react-icons/pi'
 
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import type { ComponentSchema } from '../schemas/components'
-import { setOpacity } from '../utils/setOpacity'
 import { ComponentTreeDrawer } from './ComponentTreeDrawer'
 import { DrawArea } from './DrawArea'
 import { FloatingEditor } from './editors/FloatingEditor'
@@ -48,7 +48,7 @@ export const Editor: FC = () => {
   }, [])
 
   const getHoverBackgroundColor = useCallback((component: ComponentSchema): string => {
-    return setOpacity(component.color, 0.3)
+    return formatHex8({ ...parse(component.color)!, alpha: 0.3 })
   }, [])
 
   const handleFloatingEditorClose = useCallback((): void => {

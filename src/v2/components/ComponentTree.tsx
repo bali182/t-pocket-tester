@@ -7,6 +7,7 @@ import { useChildren } from '../hooks/useChildren'
 import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
 import { rootComponentIdAtom } from '../state'
+import { ComponentTreeItemActions } from './ComponentTreeItemActions'
 
 type ComponentTreeItemProps = {
   component: ComponentSchema
@@ -23,7 +24,7 @@ const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component }) => {
 
   return (
     <TreeItem itemType={isBranch ? 'branch' : 'leaf'} value={component.id}>
-      <TreeItemLayout aside={component.type} iconBefore={<Icon />}>
+      <TreeItemLayout actions={<ComponentTreeItemActions component={component} />} iconBefore={<Icon />}>
         {component.name}
       </TreeItemLayout>
       {isBranch && <Tree>{children.map(renderChild)}</Tree>}

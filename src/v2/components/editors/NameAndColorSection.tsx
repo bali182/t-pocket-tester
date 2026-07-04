@@ -11,13 +11,15 @@ import {
   tokens,
   type ColorPickerProps,
 } from '@fluentui/react-components'
-import { useCallback, type ChangeEvent, type ReactNode } from 'react'
+import { converter, formatHex } from 'culori'
+import { useCallback, useMemo, type ChangeEvent, type ReactNode } from 'react'
 
 import { BaseComponentSchema } from '../../schemas/components'
-import { hexToHsv, hsvToHex } from '../../utils/colorConverters'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
+
+type ColorPickerColor = NonNullable<ColorPickerProps['color']>
 
 type NameAndColorSectionProps<T> = {
   component: T
@@ -51,6 +53,11 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
 }: NameAndColorSectionProps<T>): ReactNode {
   const styles = useStyles()
 
+  const hsvColor = useMemo<ColorPickerColor>(() => {
+    const { h, s, v, alpha } = converter('hsv')(component.color)!
+    return { h: h!, s, v, a: alpha }
+  }, [component.color])
+
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onChange({
@@ -65,7 +72,10 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
     (_event: unknown, data: Parameters<NonNullable<ColorPickerProps['onColorChange']>>[1]) => {
       onChange({
         ...component,
-        color: hsvToHex(data.color),
+        color: formatHex({
+          mode: 'hsv',
+          ...data.color,
+        }),
       })
     },
     [component, onChange],
@@ -91,7 +101,7 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
               </Button>
             </PopoverTrigger>
             <PopoverSurface className={styles.colorPopoverSurface}>
-              <ColorPicker color={hexToHsv(component.color)} onColorChange={handleColorChange}>
+              <ColorPicker color={hsvColor} onColorChange={handleColorChange}>
                 <ColorArea />
                 <ColorSlider channel="hue" />
               </ColorPicker>

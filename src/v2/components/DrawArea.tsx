@@ -1,8 +1,10 @@
 import { makeStyles, tokens } from '@fluentui/react-components'
 import { useAtomValue } from 'jotai'
-import type { FC } from 'react'
+import { useMemo, type FC } from 'react'
 
+import { STROKE_THICKNESS } from '../constants/drawing'
 import { componentsAtom, rootComponentIdAtom } from '../state'
+import { getViewBox } from '../utils/getViewBox'
 import { RootPanel } from './svg/RootPanel'
 
 const useStyles = makeStyles({
@@ -27,8 +29,20 @@ export const DrawArea: FC = () => {
   const rootComponentId = useAtomValue(rootComponentIdAtom)
   const rootComponent = components[rootComponentId]
 
+  const viewBox = useMemo((): string => {
+    if (!rootComponent || rootComponent.type !== 'root-panel') {
+      throw new Error(`Root must be of type "root-panel"`)
+    }
+    return getViewBox(STROKE_THICKNESS, {
+      x: 0,
+      y: 0,
+      width: rootComponent.size.width,
+      height: rootComponent.size.height,
+    })
+  }, [rootComponent])
+
   if (!rootComponent || rootComponent.type !== 'root-panel') {
-    return null
+    throw new Error(`Root must be of type "root-panel"`)
   }
 
   return (
@@ -37,7 +51,7 @@ export const DrawArea: FC = () => {
         className={styles.svg}
         width={`${rootComponent.size.width}mm`}
         height={`${rootComponent.size.height}mm`}
-        viewBox={`0 0 ${rootComponent.size.width} ${rootComponent.size.height}`}
+        viewBox={viewBox}
       >
         <RootPanel rootPanel={rootComponent} />
       </svg>
