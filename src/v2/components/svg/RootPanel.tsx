@@ -49,6 +49,7 @@ export const RootPanel: FC<RootPanelProps> = ({ rootPanel }) => {
         fill={fill}
         stroke={STROKE_COLOR}
         strokeWidth={STROKE_THICKNESS}
+        data-component-id={rootPanel.id}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}
         onClick={isInteractive ? handleClick : undefined}

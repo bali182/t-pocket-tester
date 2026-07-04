@@ -40,6 +40,7 @@ export const Panel: FC<PanelProps> = ({ panel, rect }) => {
         fill={fill}
         stroke={STROKE_COLOR}
         strokeWidth={STROKE_THICKNESS}
+        data-component-id={panel.id}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}
         onClick={isInteractive ? handleClick : undefined}

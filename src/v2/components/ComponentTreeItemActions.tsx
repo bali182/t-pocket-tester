@@ -8,10 +8,11 @@ import {
   MenuTrigger,
   tokens,
 } from '@fluentui/react-components'
-import { AddRegular, DeleteRegular } from '@fluentui/react-icons'
+import { AddRegular, DeleteRegular, EditRegular } from '@fluentui/react-icons'
 import { useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 
+import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import type { ComponentSchema } from '../schemas/components'
 import { componentsAtom } from '../state'
 import { addComponent } from '../utils/addComponent'
@@ -32,12 +33,23 @@ const useStyles = makeStyles({
 export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ component }) => {
   const styles = useStyles()
   const setComponents = useSetAtom(componentsAtom)
+  const { onComponentClick } = useDrawAreaContext()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasChildren(component), [component])
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
   }, [])
+
+  const handleEdit = useCallback((): void => {
+    const element = document.querySelector<SVGGraphicsElement>(`[data-component-id="${CSS.escape(component.id)}"]`)
+
+    if (!element) {
+      return
+    }
+
+    onComponentClick(component, element)
+  }, [component, onComponentClick])
 
   const handleAddPanel = useCallback((): void => {
     if (!canAdd) {
@@ -55,6 +67,13 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
 
   return (
     <div className={styles.root} onClick={handleActionsClick}>
+      <Button
+        appearance="subtle"
+        aria-label="Elem szerkesztése"
+        icon={<EditRegular />}
+        onClick={handleEdit}
+        size="small"
+      />
       <Menu>
         <MenuTrigger disableButtonEnhancement>
           <Button
