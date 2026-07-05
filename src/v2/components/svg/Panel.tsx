@@ -1,11 +1,12 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { STROKE_COLOR, STROKE_THICKNESS } from '../../constants/drawing'
+import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useLayout } from '../../hooks/useLayout'
 import type { PanelSchema } from '../../schemas/components'
 import type { RectSchema } from '../../schemas/geometry'
 import { PocketCluster } from './PocketCluster'
+import { useSvgElementStyle } from './useSvgElementStyle'
 
 type PanelProps = {
   panel: PanelSchema
@@ -13,10 +14,11 @@ type PanelProps = {
 }
 
 export const Panel: FC<PanelProps> = ({ panel, rect }) => {
-  const { getHoverBackgroundColor, isInteractive, onComponentClick } = useDrawAreaContext()
+  const { isInteractive, onComponentClick } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const children = useLayout({ rect, component: panel })
-  const fill = isHovered && isInteractive ? getHoverBackgroundColor(panel) : panel.color
+  const selectedStyle = useSvgElementStyle(panel, isHovered)
+
   const handlePointerEnter = useCallback<PointerEventHandler<SVGRectElement>>(() => {
     setIsHovered(true)
   }, [])
@@ -34,12 +36,11 @@ export const Panel: FC<PanelProps> = ({ panel, rect }) => {
   return (
     <>
       <rect
+        {...selectedStyle}
         x={rect.x}
         y={rect.y}
         width={rect.width}
         height={rect.height}
-        fill={fill}
-        stroke={STROKE_COLOR}
         strokeWidth={STROKE_THICKNESS}
         data-component-id={panel.id}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}

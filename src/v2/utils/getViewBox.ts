@@ -1,7 +1,9 @@
 import type { RectSchema } from '../schemas/geometry'
 
-export const getViewBox = (strokeWidth: number, boundingBox: RectSchema): string => {
-  const strokePadding = strokeWidth / 2
-
-  return `${boundingBox.x - strokePadding} ${boundingBox.y - strokePadding} ${boundingBox.width + strokePadding * 2} ${boundingBox.height + strokePadding * 2}`
+export const getViewBox = (boundingBox: RectSchema, padding: number): string => {
+  const minX = boundingBox.x - padding
+  const minY = boundingBox.y - padding
+  const width = boundingBox.width + padding * 2
+  const height = boundingBox.height + padding * 2
+  return `${minX} ${minY} ${width} ${height}`
 }

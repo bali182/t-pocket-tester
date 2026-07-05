@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { STROKE_COLOR, STROKE_THICKNESS } from '../../constants/drawing'
+import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { calculatePocketClusterGeometry } from '../../logic/calculatePocketClusterGeometry'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { RectSchema } from '../../schemas/geometry'
 import { TPocket } from './TPocket'
+import { useSvgElementStyle } from './useSvgElementStyle'
 
 type PocketClusterProps = {
   pocketCluster: PocketClusterSchema
@@ -13,10 +14,11 @@ type PocketClusterProps = {
 }
 
 export const PocketCluster: FC<PocketClusterProps> = ({ pocketCluster, rect }) => {
-  const { getHoverBackgroundColor, isInteractive, onComponentClick } = useDrawAreaContext()
+  const { isInteractive, onComponentClick } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const geometry = useMemo(() => calculatePocketClusterGeometry(pocketCluster, rect), [pocketCluster, rect])
-  const fill = isHovered && isInteractive ? getHoverBackgroundColor(pocketCluster) : pocketCluster.color
+  const styles = useSvgElementStyle(pocketCluster, isHovered)
+
   const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
     setIsHovered(true)
   }, [])
@@ -39,19 +41,12 @@ export const PocketCluster: FC<PocketClusterProps> = ({ pocketCluster, rect }) =
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
       {geometry.tPocketPolygons.map((points, index) => (
-        <TPocket
-          key={index}
-          fill={fill}
-          points={points}
-          stroke={STROKE_COLOR}
-          strokeWidth={STROKE_THICKNESS}
-        />
+        <TPocket {...styles} key={index} points={points} strokeWidth={STROKE_THICKNESS} />
       ))}
 
       <rect
-        fill={fill}
+        {...styles}
         height={geometry.topPocketRect.height}
-        stroke={STROKE_COLOR}
         strokeWidth={STROKE_THICKNESS}
         width={geometry.topPocketRect.width}
         x={geometry.topPocketRect.x}

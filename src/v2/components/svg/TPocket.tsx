@@ -7,10 +7,11 @@ type TPocketProps = {
   fill: string
   stroke: string
   strokeWidth: number
+  filter?: string
 }
 
-export const TPocket: FC<TPocketProps> = ({ fill, points, stroke, strokeWidth }) => {
+export const TPocket: FC<TPocketProps> = ({ fill, points, filter, stroke, strokeWidth }) => {
   const pointString = useMemo(() => points.map((point) => `${point.x},${point.y}`).join(' '), [points])
 
-  return <polygon fill={fill} points={pointString} stroke={stroke} strokeWidth={strokeWidth} />
+  return <polygon fill={fill} points={pointString} stroke={stroke} strokeWidth={strokeWidth} filter={filter} />
 }

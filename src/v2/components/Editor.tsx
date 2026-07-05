@@ -1,5 +1,4 @@
 import { Button, makeStyles, tokens } from '@fluentui/react-components'
-import { formatHex8, parse } from 'culori'
 import { useCallback, useMemo, useState, type FC } from 'react'
 import { PiTreeStructure } from 'react-icons/pi'
 
@@ -9,7 +8,7 @@ import { ComponentTreeDrawer } from './ComponentTreeDrawer'
 import { DrawArea } from './DrawArea'
 import { FloatingEditor } from './editors/FloatingEditor'
 
-type ComponentHoverCardTarget = {
+type EditedComponent = {
   component: ComponentSchema
   element: SVGGraphicsElement
 }
@@ -37,22 +36,15 @@ const useStyles = makeStyles({
 
 export const Editor: FC = () => {
   const styles = useStyles()
-  const [componentHoverCardTarget, setComponentHoverCardTarget] = useState<ComponentHoverCardTarget | undefined>()
-  const [isComponentTreeOpen, setIsComponentTreeOpen] = useState(false)
+  const [editedComponent, setEditedComponent] = useState<EditedComponent | undefined>()
+  const [isComponentTreeOpen, setIsComponentTreeOpen] = useState(true)
 
   const handleComponentClick = useCallback((component: ComponentSchema, element: SVGGraphicsElement): void => {
-    setComponentHoverCardTarget({
-      component,
-      element,
-    })
-  }, [])
-
-  const getHoverBackgroundColor = useCallback((component: ComponentSchema): string => {
-    return formatHex8({ ...parse(component.color)!, alpha: 0.3 })
+    setEditedComponent({ component, element })
   }, [])
 
   const handleFloatingEditorClose = useCallback((): void => {
-    setComponentHoverCardTarget(undefined)
+    setEditedComponent(undefined)
   }, [])
 
   const handleComponentTreeButtonClick = useCallback((): void => {
@@ -66,10 +58,10 @@ export const Editor: FC = () => {
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
     () => ({
       isInteractive: true,
+      editedComponent,
       onComponentClick: handleComponentClick,
-      getHoverBackgroundColor,
     }),
-    [getHoverBackgroundColor, handleComponentClick],
+    [editedComponent, handleComponentClick],
   )
 
   return (
@@ -78,10 +70,10 @@ export const Editor: FC = () => {
         <div className={styles.editor}>
           <DrawArea />
 
-          {componentHoverCardTarget && (
+          {editedComponent && (
             <FloatingEditor
-              component={componentHoverCardTarget.component}
-              anchorElement={componentHoverCardTarget.element}
+              component={editedComponent.component}
+              anchorElement={editedComponent.element}
               onClose={handleFloatingEditorClose}
             />
           )}
