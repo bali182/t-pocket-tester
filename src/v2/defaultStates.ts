@@ -4,12 +4,12 @@ import { RootPanelSchema } from './schemas/components'
 export const defaultComponent: RootPanelSchema = {
   type: 'root-panel',
   id: 'root',
-  name: 'Root panel',
+  name: 'Alap',
   color: LEATHER_BASE_COLOR,
   children: [],
   layout: {
-    gap: 10,
     orientation: 'horizontal',
+    gap: 0,
   },
   size: {
     width: 170,

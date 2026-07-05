@@ -23,8 +23,6 @@ const getComponentNameByType = (type: ComponentSchema['type']): string => {
       return 'Fő panel'
     case 'panel':
       return 'Panel'
-    case 'pocket':
-      return 'Zseb'
     case 'pocket-cluster':
       return 'Zsebek'
   }

@@ -33,11 +33,6 @@ export type PanelSchema = BaseComponentSchema &
     children: string[]
   }
 
-/** A plain pocket. Can have children (stuff placed on top of it) */
-export type PocketSchema = BaseComponentSchema & {
-  type: 'pocket'
-}
-
 export type PocketOrientation = 'up' | 'down' | 'left' | 'right'
 
 /**
@@ -60,4 +55,4 @@ export type PocketClusterSchema = BaseComponentSchema & {
   tPocketTaper: number
 }
 
-export type ComponentSchema = RootPanelSchema | PanelSchema | PocketSchema | PocketClusterSchema
+export type ComponentSchema = RootPanelSchema | PanelSchema | PocketClusterSchema

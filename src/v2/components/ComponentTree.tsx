@@ -18,7 +18,7 @@ type ComponentTreeItemProps = {
 const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component }) => {
   const { onComponentClick } = useDrawAreaContext()
   const children = useChildren(component)
-  const Icon = useComponentIcon(component)
+  const Icon = useComponentIcon(component.type)
   const isBranch = children.length > 0
   const renderChild = useCallback(
     (child: ComponentSchema): ReactNode => <ComponentTreeItem key={child.id} component={child} />,

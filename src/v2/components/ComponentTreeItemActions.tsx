@@ -12,6 +12,7 @@ import { AddRegular, DeleteRegular } from '@fluentui/react-icons'
 import { useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 
+import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
 import { componentsAtom } from '../state'
 import { addComponent } from '../utils/addComponent'
@@ -60,6 +61,9 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
     setComponents((components) => removeComponent(component.id, components))
   }, [canDelete, component.id, setComponents])
 
+  const PanelIcon = useComponentIcon('panel')
+  const PocketClusterIcon = useComponentIcon('pocket-cluster')
+
   return (
     <div className={styles.root} onClick={handleActionsClick}>
       <Menu>
@@ -74,9 +78,12 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
         </MenuTrigger>
         <MenuPopover>
           <MenuList>
-            <MenuItem onClick={handleAddPanel}>Panel</MenuItem>
-            <MenuItem disabled>Zseb</MenuItem>
-            <MenuItem onClick={handleAddPocketCluster}>Zsebek</MenuItem>
+            <MenuItem icon={<PanelIcon />} onClick={handleAddPanel}>
+              Panel
+            </MenuItem>
+            <MenuItem icon={<PocketClusterIcon />} onClick={handleAddPocketCluster}>
+              Zsebek
+            </MenuItem>
           </MenuList>
         </MenuPopover>
       </Menu>

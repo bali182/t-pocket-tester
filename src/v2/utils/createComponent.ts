@@ -1,5 +1,5 @@
 import { LEATHER_BASE_COLOR } from '../constants/drawing'
-import { ComponentSchema, PanelSchema, PocketClusterSchema, PocketSchema, RootPanelSchema } from '../schemas/components'
+import { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import { getComponentColor } from './getComponentColor'
 import { getUnusedComponentName } from './getUnusedComponentName'
 import { id } from './id'
@@ -7,7 +7,6 @@ import { id } from './id'
 type ComponentByType = {
   'root-panel': RootPanelSchema
   panel: PanelSchema
-  pocket: PocketSchema
   'pocket-cluster': PocketClusterSchema
 }
 
@@ -50,13 +49,6 @@ const DEFAULT_PANEL: PanelSchema = {
   },
 }
 
-const DEFAULT_POCKET: PocketSchema = {
-  type: 'pocket',
-  id: '',
-  name: '',
-  color: LEATHER_BASE_COLOR,
-}
-
 const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   type: 'pocket-cluster',
   id: '',
@@ -64,7 +56,7 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   orientation: 'up',
   color: LEATHER_BASE_COLOR,
   pocketCount: 3,
-  pocketStep: 8,
+  pocketStep: 12,
   tPocketTabWidth: 8,
   tPocketTaper: 20,
 }
@@ -72,6 +64,5 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
 const DEFAULT_COMPONENT_BY_TYPE: ComponentByType = {
   'root-panel': DEFAULT_ROOT_PANEL,
   panel: DEFAULT_PANEL,
-  pocket: DEFAULT_POCKET,
   'pocket-cluster': DEFAULT_POCKET_CLUSTER,
 }
