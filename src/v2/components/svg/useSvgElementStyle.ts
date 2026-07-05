@@ -5,10 +5,16 @@ import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { ComponentSchema } from '../../schemas/components'
 import { isDefined } from '../../utils/isDefined'
 
-type UseSelectedStyleOutput = {
+type ElementColors = {
   fill: string
   stroke: string
   filter: string | undefined
+}
+
+type UseSvgElementStyleOutput = {
+  isSelected: boolean
+  element: ElementColors
+  child: ElementColors
 }
 
 const addAlpha = (color: string): string => {
@@ -19,10 +25,10 @@ const addAlpha = (color: string): string => {
   return formatHex8({ ...parsed, alpha: 0.6 })
 }
 
-export const useSvgElementStyle = (component: ComponentSchema, isHovered: boolean): UseSelectedStyleOutput => {
+export const useSvgElementStyle = (component: ComponentSchema, isHovered: boolean): UseSvgElementStyleOutput => {
   const { isInteractive, editedComponent } = useDrawAreaContext()
 
-  const nonSelected = useMemo<UseSelectedStyleOutput>(
+  const normal = useMemo<ElementColors>(
     () => ({
       fill: component.color,
       stroke: STROKE_COLOR,
@@ -31,7 +37,7 @@ export const useSvgElementStyle = (component: ComponentSchema, isHovered: boolea
     [component],
   )
 
-  const selected = useMemo<UseSelectedStyleOutput>(
+  const elementSelected = useMemo<ElementColors>(
     () => ({
       fill: component.type === 'root-panel' ? component.color : addAlpha(component.color),
       stroke: SELECTED_STROKE_COLOR,
@@ -40,5 +46,19 @@ export const useSvgElementStyle = (component: ComponentSchema, isHovered: boolea
     [component],
   )
 
-  return isInteractive && (component.id === editedComponent?.component?.id || isHovered) ? selected : nonSelected
+  const childSelected = useMemo<ElementColors>(
+    () => ({
+      fill: addAlpha(component.color),
+      stroke: SELECTED_STROKE_COLOR,
+      filter: undefined,
+    }),
+    [component],
+  )
+  const isSelected = isInteractive && (component.id === editedComponent?.component?.id || isHovered)
+
+  return {
+    isSelected,
+    child: isSelected ? childSelected : normal,
+    element: isSelected ? elementSelected : normal,
+  }
 }

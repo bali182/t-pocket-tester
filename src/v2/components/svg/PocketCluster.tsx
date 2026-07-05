@@ -17,7 +17,7 @@ export const PocketCluster: FC<PocketClusterProps> = ({ pocketCluster, rect }) =
   const { isInteractive, onComponentClick } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const geometry = useMemo(() => calculatePocketClusterGeometry(pocketCluster, rect), [pocketCluster, rect])
-  const styles = useSvgElementStyle(pocketCluster, isHovered)
+  const svgStyles = useSvgElementStyle(pocketCluster, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
     setIsHovered(true)
@@ -40,12 +40,22 @@ export const PocketCluster: FC<PocketClusterProps> = ({ pocketCluster, rect }) =
       onPointerEnter={isInteractive ? handlePointerEnter : undefined}
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
+      {svgStyles.isSelected && (
+        <rect
+          {...svgStyles.element}
+          height={rect.height}
+          strokeWidth={STROKE_THICKNESS}
+          width={rect.width}
+          x={rect.x}
+          y={rect.y}
+        />
+      )}
       {geometry.tPocketPolygons.map((points, index) => (
-        <TPocket {...styles} key={index} points={points} strokeWidth={STROKE_THICKNESS} />
+        <TPocket {...svgStyles.child} key={index} points={points} strokeWidth={STROKE_THICKNESS} />
       ))}
 
       <rect
-        {...styles}
+        {...svgStyles.child}
         height={geometry.topPocketRect.height}
         strokeWidth={STROKE_THICKNESS}
         width={geometry.topPocketRect.width}

@@ -17,7 +17,7 @@ export const Panel: FC<PanelProps> = ({ panel, rect }) => {
   const { isInteractive, onComponentClick } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const children = useLayout({ rect, component: panel })
-  const selectedStyle = useSvgElementStyle(panel, isHovered)
+  const svgStyles = useSvgElementStyle(panel, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGRectElement>>(() => {
     setIsHovered(true)
@@ -36,7 +36,7 @@ export const Panel: FC<PanelProps> = ({ panel, rect }) => {
   return (
     <>
       <rect
-        {...selectedStyle}
+        {...svgStyles.element}
         x={rect.x}
         y={rect.y}
         width={rect.width}

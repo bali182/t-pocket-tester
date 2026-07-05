@@ -26,7 +26,7 @@ export const RootPanel: FC<RootPanelProps> = ({ rootPanel }) => {
     [rootPanel.size.height, rootPanel.size.width],
   )
   const children = useLayout({ rect, component: rootPanel })
-  const styles = useSvgElementStyle(rootPanel, isHovered)
+  const svgStyles = useSvgElementStyle(rootPanel, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGRectElement>>(() => {
     setIsHovered(true)
@@ -45,7 +45,7 @@ export const RootPanel: FC<RootPanelProps> = ({ rootPanel }) => {
   return (
     <>
       <rect
-        {...styles}
+        {...svgStyles.element}
         x={rect.x}
         y={rect.y}
         width={rect.width}

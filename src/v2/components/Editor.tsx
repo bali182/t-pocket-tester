@@ -67,7 +67,7 @@ export const Editor: FC = () => {
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
       <div className={styles.root}>
-        <div className={styles.editor}>
+        <div className={styles.editor} onClick={handleFloatingEditorClose}>
           <DrawArea />
 
           {editedComponent && (

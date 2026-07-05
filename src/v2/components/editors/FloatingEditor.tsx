@@ -1,17 +1,17 @@
+import type { PositioningImperativeRef, PositioningVirtualElement } from '@fluentui/react-components'
 import {
   Button,
+  Caption1Strong,
   CardFooter,
   CardHeader,
-  Caption1Strong,
   makeStyles,
   Popover,
   PopoverSurface,
   tokens,
 } from '@fluentui/react-components'
-import type { PositioningImperativeRef, PositioningVirtualElement } from '@fluentui/react-components'
 import { DismissRegular } from '@fluentui/react-icons'
 import { useSetAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useRef, useState, type FC } from 'react'
+import { MouseEvent, useCallback, useEffect, useMemo, useRef, useState, type FC } from 'react'
 
 import type { ComponentSchema } from '../../schemas/components'
 import { componentsAtom } from '../../state'
@@ -86,6 +86,10 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
     onClose()
   }, [draftComponent, onClose, setComponents])
 
+  const captureClick = useCallback((e: MouseEvent) => {
+    e.stopPropagation()
+  }, [])
+
   return (
     <Popover
       open
@@ -101,16 +105,10 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
       }}
       withArrow
     >
-      <PopoverSurface className={styles.surface}>
+      <PopoverSurface className={styles.surface} onClick={captureClick}>
         <CardHeader
           action={
-            <Button
-              appearance="subtle"
-              aria-label="Bezárás"
-              icon={<DismissRegular />}
-              onClick={onClose}
-              size="small"
-            />
+            <Button appearance="subtle" aria-label="Bezárás" icon={<DismissRegular />} onClick={onClose} size="small" />
           }
           header={<Caption1Strong>#{draftComponent.id}</Caption1Strong>}
         />
