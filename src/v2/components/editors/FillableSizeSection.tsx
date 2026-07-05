@@ -1,6 +1,6 @@
-import { useCallback, type FC } from 'react'
+import { useCallback } from 'react'
 
-import type { PanelSchema } from '../../schemas/components'
+import type { PanelSchema, PocketClusterSchema } from '../../schemas/components'
 import type { FillableSize } from '../../schemas/geometry'
 import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
@@ -8,29 +8,34 @@ import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
 import { FillableSizeInput } from './FillableSizeInput'
 
-type PanelSizeSectionProps = {
-  component: PanelSchema
-  onChange: (updated: PanelSchema) => void
+type SizeableComponent = PanelSchema | PocketClusterSchema
+
+type FillableSizeSectionProps<T> = {
+  component: T
+  onChange: (updated: T) => void
 }
 
 type FillableSizeValue = FillableSize['width']
 
-const getNormalizedPanelSize = (size: PanelSchema['size']): FillableSize => {
+const getNormalizedFillableSize = (size: FillableSize | undefined): FillableSize => {
   return {
     width: isDefined(size?.width) ? size.width : 'fill',
     height: isDefined(size?.height) ? size.height : 'fill',
   }
 }
 
-export const PanelSizeSection: FC<PanelSizeSectionProps> = ({ component, onChange }) => {
-  const size = getNormalizedPanelSize(component.size)
+export function FillableSizeSection<T extends SizeableComponent>({
+  component,
+  onChange,
+}: FillableSizeSectionProps<T>) {
+  const size = getNormalizedFillableSize(component.size)
 
   const handleWidthChange = useCallback(
     (width: FillableSizeValue) => {
       onChange({
         ...component,
         size: {
-          ...getNormalizedPanelSize(component.size),
+          ...getNormalizedFillableSize(component.size),
           width,
         },
       })
@@ -43,7 +48,7 @@ export const PanelSizeSection: FC<PanelSizeSectionProps> = ({ component, onChang
       onChange({
         ...component,
         size: {
-          ...getNormalizedPanelSize(component.size),
+          ...getNormalizedFillableSize(component.size),
           height,
         },
       })

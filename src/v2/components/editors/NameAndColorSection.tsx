@@ -84,11 +84,11 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
   return (
     <EditorSection>
       <EditorFieldGrid>
-        <EditorFieldRow label="Name">
+        <EditorFieldRow label="Név">
           <Input onChange={handleNameChange} size="small" value={component.name} />
         </EditorFieldRow>
 
-        <EditorFieldRow label="Color">
+        <EditorFieldRow label="Szín">
           <Popover positioning="below-end">
             <PopoverTrigger disableButtonEnhancement>
               <Button

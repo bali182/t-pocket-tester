@@ -1,10 +1,12 @@
 import { SpinButton, type SpinButtonOnChangeData } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 
+import { SIZE_STEP } from '../../constants/editor'
 import type { RootPanelSchema } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
+import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
 
 type WidthAndHeightSizeSectionProps = {
   component: RootPanelSchema
@@ -12,7 +14,6 @@ type WidthAndHeightSizeSectionProps = {
 }
 
 const minRootPanelSize = 10
-const rootPanelSizeStep = 0.1
 
 const isValidRootPanelSize = (value: number): boolean => {
   return Number.isFinite(value) && value >= minRootPanelSize
@@ -21,9 +22,9 @@ const isValidRootPanelSize = (value: number): boolean => {
 export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, onChange }) => {
   const handleWidthChange = useCallback(
     (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextWidth = data.value
+      const nextWidth = getSpinButtonNumberValue(data)
 
-      if (typeof nextWidth !== 'number' || !isValidRootPanelSize(nextWidth)) {
+      if (nextWidth === undefined || !isValidRootPanelSize(nextWidth)) {
         return
       }
 
@@ -40,9 +41,9 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
 
   const handleHeightChange = useCallback(
     (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextHeight = data.value
+      const nextHeight = getSpinButtonNumberValue(data)
 
-      if (typeof nextHeight !== 'number' || !isValidRootPanelSize(nextHeight)) {
+      if (nextHeight === undefined || !isValidRootPanelSize(nextHeight)) {
         return
       }
 
@@ -65,7 +66,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
             min={minRootPanelSize}
             onChange={handleWidthChange}
             size="small"
-            step={rootPanelSizeStep}
+            step={SIZE_STEP}
             value={component.size.width}
           />
         </EditorFieldRow>
@@ -75,7 +76,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
             min={minRootPanelSize}
             onChange={handleHeightChange}
             size="small"
-            step={rootPanelSizeStep}
+            step={SIZE_STEP}
             value={component.size.height}
           />
         </EditorFieldRow>

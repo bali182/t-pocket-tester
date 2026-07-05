@@ -2,6 +2,9 @@ import type { DropdownProps, SpinButtonOnChangeData } from '@fluentui/react-comp
 import { Dropdown, makeStyles, Option, SpinButton, tokens } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 
+import { SIZE_STEP } from '../../constants/editor'
+import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
+
 type FillableSizeInputProps = {
   value: number | 'fill'
   onChange: (value: number | 'fill') => void
@@ -10,7 +13,6 @@ type FillableSizeInputProps = {
 type FillableSizeMode = 'fill' | 'fixed'
 
 const fixedSizeFallback = 10
-const panelSizeStep = 0.1
 const minPanelSize = 0
 
 const isValidPanelSize = (value: number): boolean => {
@@ -57,9 +59,9 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ value, onChange 
 
   const handleSizeChange = useCallback(
     (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextValue = data.value
+      const nextValue = getSpinButtonNumberValue(data)
 
-      if (typeof nextValue !== 'number' || !isValidPanelSize(nextValue)) {
+      if (nextValue === undefined || !isValidPanelSize(nextValue)) {
         return
       }
 
@@ -101,7 +103,7 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ value, onChange 
         min={minPanelSize}
         onChange={handleSizeChange}
         size="small"
-        step={panelSizeStep}
+        step={SIZE_STEP}
         value={typeof value === 'number' ? value : fixedSizeFallback}
       />
     </div>

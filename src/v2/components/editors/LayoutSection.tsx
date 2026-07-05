@@ -9,10 +9,12 @@ import {
 import { useCallback, type ReactNode } from 'react'
 import { PiColumns, PiRows } from 'react-icons/pi'
 
+import { SIZE_STEP } from '../../constants/editor'
 import type { LayoutedComponentSchema, LayoutOrientation } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
+import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
 
 type LayoutSectionProps<T> = {
   component: T
@@ -20,7 +22,6 @@ type LayoutSectionProps<T> = {
 }
 
 const minGap = 0
-const gapStep = 0.1
 
 const isValidGap = (value: number): boolean => {
   return Number.isFinite(value) && value >= minGap
@@ -46,9 +47,9 @@ export function LayoutSection<T extends LayoutedComponentSchema>({
 
   const handleGapChange = useCallback(
     (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextGap = data.value
+      const nextGap = getSpinButtonNumberValue(data)
 
-      if (typeof nextGap !== 'number' || !isValidGap(nextGap)) {
+      if (nextGap === undefined || !isValidGap(nextGap)) {
         return
       }
       onChange({
@@ -83,7 +84,7 @@ export function LayoutSection<T extends LayoutedComponentSchema>({
             min={minGap}
             onChange={handleGapChange}
             size="small"
-            step={gapStep}
+            step={SIZE_STEP}
             value={component.layout.gap}
           />
         </EditorFieldRow>

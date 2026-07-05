@@ -3,6 +3,7 @@ import { FC } from 'react'
 
 import { ComponentSchema } from '../../schemas/components'
 import { PanelEditor } from './PanelEditor'
+import { PocketClusterEditor } from './PocketClusterEditor'
 import { RootPanelEditor } from './RootPanelEditor'
 
 type ComponentEditorProps = {
@@ -16,6 +17,8 @@ export const ComponentEditor: FC<ComponentEditorProps> = ({ component, onChange 
       return <RootPanelEditor component={component} onChange={onChange} />
     case 'panel':
       return <PanelEditor component={component} onChange={onChange} />
+    case 'pocket-cluster':
+      return <PocketClusterEditor component={component} onChange={onChange} />
     default:
       return (
         <MessageBar intent="error">
