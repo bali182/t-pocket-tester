@@ -50,8 +50,8 @@ export const PocketCluster: FC<PocketClusterProps> = ({ pocketCluster, rect }) =
           y={rect.y}
         />
       )}
-      {geometry.tPocketPolygons.map((points, index) => (
-        <TPocket {...svgStyles.child} key={index} points={points} strokeWidth={STROKE_THICKNESS} />
+      {geometry.tPocketPolygons.map((polygon, index) => (
+        <TPocket {...svgStyles.child} key={index} points={polygon.points} strokeWidth={STROKE_THICKNESS} />
       ))}
 
       <rect

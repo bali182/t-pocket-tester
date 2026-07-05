@@ -1,8 +1,9 @@
+import { PolygonSchema } from '../../v1/schemas/PolygonSchema'
 import { PocketClusterSchema } from '../schemas/components'
-import { PointSchema, RectSchema } from '../schemas/geometry'
+import { RectSchema } from '../schemas/geometry'
 import { getTPocketTabDepth } from './pocketUtils'
 
-export const calculateTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PointSchema[] => {
+export const calculateTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PolygonSchema => {
   switch (pocketCluster.orientation) {
     case 'up':
       return calculateUpTPocketPolygon(rect, pocketCluster)
@@ -15,12 +16,12 @@ export const calculateTPocketPolygon = (rect: RectSchema, pocketCluster: PocketC
   }
 }
 
-const calculateUpTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PointSchema[] => {
+const calculateUpTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PolygonSchema => {
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const tabBottomY = rect.y + tPocketTabDepth
   const bottomY = rect.y + rect.height
 
-  return [
+  const points = [
     { x: rect.x, y: rect.y },
     { x: rect.x + rect.width, y: rect.y },
     { x: rect.x + rect.width, y: tabBottomY },
@@ -30,15 +31,17 @@ const calculateUpTPocketPolygon = (rect: RectSchema, pocketCluster: PocketCluste
     { x: rect.x + pocketCluster.tPocketTabWidth, y: tabBottomY },
     { x: rect.x, y: tabBottomY },
   ]
+
+  return { points }
 }
 
-const calculateDownTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PointSchema[] => {
+const calculateDownTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PolygonSchema => {
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const topY = rect.y
   const tabTopY = rect.y + rect.height - tPocketTabDepth
   const bottomY = rect.y + rect.height
 
-  return [
+  const points = [
     { x: rect.x, y: bottomY },
     { x: rect.x + rect.width, y: bottomY },
     { x: rect.x + rect.width, y: tabTopY },
@@ -48,14 +51,15 @@ const calculateDownTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClus
     { x: rect.x + pocketCluster.tPocketTabWidth, y: tabTopY },
     { x: rect.x, y: tabTopY },
   ]
+  return { points }
 }
 
-const calculateLeftTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PointSchema[] => {
+const calculateLeftTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PolygonSchema => {
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const tabRightX = rect.x + tPocketTabDepth
   const rightX = rect.x + rect.width
 
-  return [
+  const points = [
     { x: rect.x, y: rect.y },
     { x: rect.x, y: rect.y + rect.height },
     { x: tabRightX, y: rect.y + rect.height },
@@ -65,15 +69,16 @@ const calculateLeftTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClus
     { x: tabRightX, y: rect.y + pocketCluster.tPocketTabWidth },
     { x: tabRightX, y: rect.y },
   ]
+  return { points }
 }
 
-const calculateRightTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PointSchema[] => {
+const calculateRightTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PolygonSchema => {
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const leftX = rect.x
   const tabLeftX = rect.x + rect.width - tPocketTabDepth
   const rightX = rect.x + rect.width
 
-  return [
+  const points = [
     { x: rightX, y: rect.y },
     { x: rightX, y: rect.y + rect.height },
     { x: tabLeftX, y: rect.y + rect.height },
@@ -83,4 +88,5 @@ const calculateRightTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClu
     { x: tabLeftX, y: rect.y + pocketCluster.tPocketTabWidth },
     { x: tabLeftX, y: rect.y },
   ]
+  return { points }
 }

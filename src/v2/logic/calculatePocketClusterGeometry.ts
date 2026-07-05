@@ -1,5 +1,6 @@
+import { PolygonSchema } from '../../v1/schemas/PolygonSchema'
 import type { PocketClusterSchema } from '../schemas/components'
-import type { PointSchema, RectSchema } from '../schemas/geometry'
+import type { RectSchema } from '../schemas/geometry'
 import { initial } from '../utils/initial'
 import { last } from '../utils/last'
 import { calculatePocketBoundingBox } from './calculatePocketBoundingBox'
@@ -7,7 +8,7 @@ import { calculateTPocketPolygon } from './calculateTPocketPolygon'
 import { normalizePocketCluster } from './normalizePocketCluster'
 
 export type PocketClusterGeometry = {
-  tPocketPolygons: PointSchema[][]
+  tPocketPolygons: PolygonSchema[]
   topPocketRect: RectSchema
 }
 
