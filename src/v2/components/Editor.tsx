@@ -2,16 +2,14 @@ import { Button, makeStyles, tokens } from '@fluentui/react-components'
 import { useCallback, useMemo, useState, type FC } from 'react'
 import { PiTreeStructure } from 'react-icons/pi'
 
+import { useAtomValue } from 'jotai'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import type { ComponentSchema } from '../schemas/components'
+import { componentsAtom } from '../state'
+import { isDefined } from '../utils/isDefined'
 import { ComponentTreeDrawer } from './ComponentTreeDrawer'
 import { DrawArea } from './DrawArea'
 import { FloatingEditor } from './editors/FloatingEditor'
-
-type EditedComponent = {
-  component: ComponentSchema
-  element: SVGGraphicsElement
-}
 
 const useStyles = makeStyles({
   root: {
@@ -36,15 +34,20 @@ const useStyles = makeStyles({
 
 export const Editor: FC = () => {
   const styles = useStyles()
-  const [editedComponent, setEditedComponent] = useState<EditedComponent | undefined>()
+  const [componentId, setComponentId] = useState<string | undefined>()
+  const [element, setElement] = useState<SVGGraphicsElement | undefined>()
   const [isComponentTreeOpen, setIsComponentTreeOpen] = useState(true)
+  const components = useAtomValue(componentsAtom)
+  const component = isDefined(componentId) ? components[componentId] : undefined
 
   const handleComponentClick = useCallback((component: ComponentSchema, element: SVGGraphicsElement): void => {
-    setEditedComponent({ component, element })
+    setComponentId(component.id)
+    setElement(element)
   }, [])
 
   const handleFloatingEditorClose = useCallback((): void => {
-    setEditedComponent(undefined)
+    setComponentId(undefined)
+    setElement(undefined)
   }, [])
 
   const handleComponentTreeButtonClick = useCallback((): void => {
@@ -58,10 +61,11 @@ export const Editor: FC = () => {
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
     () => ({
       isInteractive: true,
-      editedComponent,
+      component,
+      element,
       onComponentClick: handleComponentClick,
     }),
-    [editedComponent, handleComponentClick],
+    [component, element, handleComponentClick],
   )
 
   return (
@@ -70,12 +74,8 @@ export const Editor: FC = () => {
         <div className={styles.editor} onClick={handleFloatingEditorClose}>
           <DrawArea />
 
-          {editedComponent && (
-            <FloatingEditor
-              component={editedComponent.component}
-              anchorElement={editedComponent.element}
-              onClose={handleFloatingEditorClose}
-            />
+          {isDefined(component) && isDefined(element) && (
+            <FloatingEditor component={component} anchorElement={element} onClose={handleFloatingEditorClose} />
           )}
 
           <Button
