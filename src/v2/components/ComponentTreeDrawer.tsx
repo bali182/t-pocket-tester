@@ -16,6 +16,7 @@ import { ComponentTree } from './ComponentTree'
 
 type ComponentTreeDrawerProps = {
   open: boolean
+  selectedComponentId: string | undefined
   onOpenChange: (open: boolean) => void
 }
 
@@ -25,7 +26,7 @@ const useStyles = makeStyles({
   },
 })
 
-export const ComponentTreeDrawer: FC<ComponentTreeDrawerProps> = ({ open, onOpenChange }) => {
+export const ComponentTreeDrawer: FC<ComponentTreeDrawerProps> = ({ open, selectedComponentId, onOpenChange }) => {
   const styles = useStyles()
 
   const handleOpenChange = useCallback(
@@ -55,7 +56,7 @@ export const ComponentTreeDrawer: FC<ComponentTreeDrawerProps> = ({ open, onOpen
         </DrawerHeaderTitle>
       </DrawerHeader>
       <DrawerBody>
-        <ComponentTree />
+        <ComponentTree selectedComponentId={selectedComponentId} />
       </DrawerBody>
     </Drawer>
   )

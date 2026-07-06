@@ -1,28 +1,55 @@
-import { Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
+import {
+  makeStyles,
+  tokens,
+  Tree,
+  TreeItem,
+  TreeItemLayout,
+  type TreeItemValue,
+  type TreeOpenChangeData,
+  type TreeOpenChangeEvent,
+} from '@fluentui/react-components'
 import { useAtomValue } from 'jotai'
-import { useCallback, type FC, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, type FC, type ReactNode } from 'react'
 
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useChild } from '../hooks/useChild'
 import { useChildren } from '../hooks/useChildren'
 import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
-import { rootComponentIdAtom } from '../state'
+import { componentsAtom, rootComponentIdAtom } from '../state'
+import { getComponentAncestorIds } from '../utils/getComponentAncestorIds'
 import { isDefined } from '../utils/isDefined'
 import { ComponentTreeItemActions } from './ComponentTreeItemActions'
 
 type ComponentTreeItemProps = {
   component: ComponentSchema
+  selectedComponentId: string | undefined
 }
 
-const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component }) => {
+type ComponentTreeProps = {
+  selectedComponentId: string | undefined
+}
+
+const useStyles = makeStyles({
+  selectedTreeItemLayout: {
+    backgroundColor: tokens.colorSubtleBackgroundSelected,
+    color: tokens.colorNeutralForeground1Selected,
+    fontWeight: tokens.fontWeightSemibold,
+  },
+})
+
+const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component, selectedComponentId }) => {
+  const styles = useStyles()
   const { onComponentClick } = useDrawAreaContext()
   const children = useChildren(component)
   const Icon = useComponentIcon(component.type)
   const isBranch = children.length > 0
+  const isSelected = component.id === selectedComponentId
   const renderChild = useCallback(
-    (child: ComponentSchema): ReactNode => <ComponentTreeItem key={child.id} component={child} />,
-    [],
+    (child: ComponentSchema): ReactNode => (
+      <ComponentTreeItem key={child.id} component={child} selectedComponentId={selectedComponentId} />
+    ),
+    [selectedComponentId],
   )
 
   const handleTreeItemClick = useCallback((): void => {
@@ -35,7 +62,12 @@ const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component }) => {
 
   return (
     <TreeItem itemType={isBranch ? 'branch' : 'leaf'} value={component.id} onClick={handleTreeItemClick}>
-      <TreeItemLayout actions={<ComponentTreeItemActions component={component} />} iconBefore={<Icon />}>
+      <TreeItemLayout
+        actions={<ComponentTreeItemActions component={component} />}
+        aria-current={isSelected ? 'true' : undefined}
+        className={isSelected ? styles.selectedTreeItemLayout : undefined}
+        iconBefore={<Icon />}
+      >
         {component.name}
       </TreeItemLayout>
       {isBranch && <Tree>{children.map(renderChild)}</Tree>}
@@ -43,13 +75,33 @@ const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component }) => {
   )
 }
 
-export const ComponentTree: FC = () => {
+export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
+  const components = useAtomValue(componentsAtom)
   const rootComponentId = useAtomValue(rootComponentIdAtom)
   const rootComponent = useChild(rootComponentId)
+  const [openItems, setOpenItems] = useState<Set<TreeItemValue>>(() => new Set([rootComponentId]))
+
+  useEffect(() => {
+    if (!isDefined(selectedComponentId)) {
+      return
+    }
+    const ancestorIds = getComponentAncestorIds(selectedComponentId, components)
+    setOpenItems((openItems) => new Set([...openItems, ...ancestorIds]))
+  }, [components, selectedComponentId])
+
+  const handleOpenChange = useCallback((_event: TreeOpenChangeEvent, data: TreeOpenChangeData): void => {
+    setOpenItems(data.openItems)
+  }, [])
 
   return (
-    <Tree appearance="subtle" defaultOpenItems={[rootComponentId]} size="small">
-      <ComponentTreeItem component={rootComponent} />
+    <Tree
+      aria-label="Komponensek"
+      appearance="subtle"
+      onOpenChange={handleOpenChange}
+      openItems={openItems}
+      size="small"
+    >
+      <ComponentTreeItem component={rootComponent} selectedComponentId={selectedComponentId} />
     </Tree>
   )
 }

@@ -1,14 +1,5 @@
 import type { ComponentSchema } from '../schemas/components'
-
-const getChildIds = (component: ComponentSchema): string[] => {
-  switch (component.type) {
-    case 'root-panel':
-    case 'panel':
-      return component.children ?? []
-    default:
-      return []
-  }
-}
+import { getChildIds } from './getChildIds'
 
 export const getChildren = (
   component: ComponentSchema,

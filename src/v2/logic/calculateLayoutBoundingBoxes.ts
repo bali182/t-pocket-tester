@@ -8,7 +8,7 @@ import type {
 import type { FillableSize, RectSchema } from '../schemas/geometry'
 import { clamp } from '../utils/clamp'
 import { isDefined } from '../utils/isDefined'
-import { getChildren } from './getChildren'
+import { getChildren } from '../utils/getChildren'
 
 type LayoutComponent = RootPanelSchema | PanelSchema
 type LayoutChildComponent = PanelSchema | PocketClusterSchema

@@ -87,7 +87,11 @@ export const Editor: FC = () => {
             onClick={handleComponentTreeButtonClick}
           />
         </div>
-        <ComponentTreeDrawer open={isComponentTreeOpen} onOpenChange={handleComponentTreeOpenChange} />
+        <ComponentTreeDrawer
+          open={isComponentTreeOpen}
+          selectedComponentId={componentId}
+          onOpenChange={handleComponentTreeOpenChange}
+        />
       </div>
     </DrawAreaContext.Provider>
   )
