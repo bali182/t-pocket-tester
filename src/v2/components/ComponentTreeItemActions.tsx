@@ -1,23 +1,14 @@
-import {
-  Button,
-  makeStyles,
-  Menu,
-  MenuItem,
-  MenuList,
-  MenuPopover,
-  MenuTrigger,
-  tokens,
-} from '@fluentui/react-components'
+import { Button, makeStyles, Menu, MenuTrigger, tokens } from '@fluentui/react-components'
 import { AddRegular, DeleteRegular } from '@fluentui/react-icons'
 import { useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 
-import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
 import { componentsAtom } from '../state'
 import { addComponent } from '../utils/addComponent'
 import { hasChildren } from '../utils/hasChildren'
 import { removeComponent } from '../utils/removeComponent'
+import { AddChildComponentMenu, type ChildComponentType } from './AddChildComponentMenu'
 
 type ComponentTreeItemActionsProps = {
   component: ComponentSchema
@@ -40,19 +31,15 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
     event.stopPropagation()
   }, [])
 
-  const handleAddPanel = useCallback((): void => {
-    if (!canAdd) {
-      return
-    }
-    setComponents((components) => addComponent(component.id, 'panel', components))
-  }, [canAdd, component.id, setComponents])
-
-  const handleAddPocketCluster = useCallback((): void => {
-    if (!canAdd) {
-      return
-    }
-    setComponents((components) => addComponent(component.id, 'pocket-cluster', components))
-  }, [canAdd, component.id, setComponents])
+  const handleAddChild = useCallback(
+    (type: ChildComponentType): void => {
+      if (!canAdd) {
+        return
+      }
+      setComponents((components) => addComponent(component.id, type, components))
+    },
+    [canAdd, component.id, setComponents],
+  )
 
   const handleDelete = useCallback((): void => {
     if (!canDelete) {
@@ -60,9 +47,6 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
     }
     setComponents((components) => removeComponent(component.id, components))
   }, [canDelete, component.id, setComponents])
-
-  const PanelIcon = useComponentIcon('panel')
-  const PocketClusterIcon = useComponentIcon('pocket-cluster')
 
   return (
     <div className={styles.root} onClick={handleActionsClick}>
@@ -76,16 +60,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
             size="small"
           />
         </MenuTrigger>
-        <MenuPopover>
-          <MenuList>
-            <MenuItem icon={<PanelIcon />} onClick={handleAddPanel}>
-              Panel
-            </MenuItem>
-            <MenuItem icon={<PocketClusterIcon />} onClick={handleAddPocketCluster}>
-              Zsebek
-            </MenuItem>
-          </MenuList>
-        </MenuPopover>
+        <AddChildComponentMenu onAddChild={handleAddChild} />
       </Menu>
       <Button
         appearance="subtle"

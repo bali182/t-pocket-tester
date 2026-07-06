@@ -1,20 +1,15 @@
 import type { PositioningImperativeRef, PositioningVirtualElement } from '@fluentui/react-components'
-import {
-  Button,
-  Caption1Strong,
-  CardFooter,
-  CardHeader,
-  makeStyles,
-  Popover,
-  PopoverSurface,
-  tokens,
-} from '@fluentui/react-components'
+import { Button, Caption1Strong, CardHeader, makeStyles, Popover, PopoverSurface } from '@fluentui/react-components'
 import { DismissRegular } from '@fluentui/react-icons'
-import { useSetAtom } from 'jotai'
-import { MouseEvent, useCallback, useEffect, useMemo, useRef, useState, type FC } from 'react'
+import { useAtom } from 'jotai'
+import { MouseEvent, useCallback, useEffect, useMemo, useRef, type FC } from 'react'
 
 import type { ComponentSchema } from '../../schemas/components'
 import { componentsAtom } from '../../state'
+import { addComponent } from '../../utils/addComponent'
+import { isDefined } from '../../utils/isDefined'
+import { removeComponent } from '../../utils/removeComponent'
+import type { ChildComponentType } from '../AddChildComponentMenu'
 import { ComponentEditor } from './ComponentEditor'
 
 type FloatingEditorProps = {
@@ -31,19 +26,13 @@ const useStyles = makeStyles({
   body: {
     padding: 0,
   },
-  footer: {
-    borderTop: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke2}`,
-    paddingTop: `${tokens.spacingVerticalM}`,
-    justifyContent: 'end',
-  },
 })
 
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
   const styles = useStyles()
-  const setComponents = useSetAtom(componentsAtom)
+  const [components, setComponents] = useAtom(componentsAtom)
   const positioningRef = useRef<PositioningImperativeRef>(null)
-  const [draftComponent, setDraftComponent] = useState<ComponentSchema>(component)
-  const isDirty = draftComponent !== component
+  const editedComponent = components[component.id]
   const positioningTarget = useMemo<PositioningVirtualElement>(
     () => ({
       getBoundingClientRect: () => anchorElement.getBoundingClientRect(),
@@ -51,10 +40,6 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
     }),
     [anchorElement],
   )
-
-  useEffect(() => {
-    setDraftComponent(component)
-  }, [component])
 
   useEffect(() => {
     const editorElement = anchorElement.ownerSVGElement?.parentElement
@@ -74,21 +59,40 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
     }
   }, [anchorElement])
 
-  const handleComponentChange = useCallback((updated: ComponentSchema) => {
-    setDraftComponent(updated)
-  }, [])
+  const handleComponentChange = useCallback(
+    (updated: ComponentSchema) => {
+      setComponents((components) => ({
+        ...components,
+        [updated.id]: updated,
+      }))
+    },
+    [setComponents],
+  )
 
-  const handleSave = useCallback(() => {
-    setComponents((components) => ({
-      ...components,
-      [draftComponent.id]: draftComponent,
-    }))
-    onClose()
-  }, [draftComponent, onClose, setComponents])
+  const handleAddChild = useCallback(
+    (type: ChildComponentType): void => {
+      setComponents((components) => addComponent(component.id, type, components))
+    },
+    [component.id, setComponents],
+  )
+
+  const handleRemoveComponent = useCallback((): void => {
+    setComponents((components) => removeComponent(component.id, components))
+  }, [component.id, setComponents])
 
   const captureClick = useCallback((e: MouseEvent) => {
     e.stopPropagation()
   }, [])
+
+  useEffect(() => {
+    if (!isDefined(editedComponent)) {
+      onClose()
+    }
+  }, [editedComponent, onClose])
+
+  if (!isDefined(editedComponent)) {
+    return null
+  }
 
   return (
     <Popover
@@ -110,16 +114,16 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
           action={
             <Button appearance="subtle" aria-label="Bezárás" icon={<DismissRegular />} onClick={onClose} size="small" />
           }
-          header={<Caption1Strong>#{draftComponent.id}</Caption1Strong>}
+          header={<Caption1Strong>#{editedComponent.id}</Caption1Strong>}
         />
         <div className={styles.body}>
-          <ComponentEditor component={draftComponent} onChange={handleComponentChange} />
+          <ComponentEditor
+            component={editedComponent}
+            onAddChild={handleAddChild}
+            onChange={handleComponentChange}
+            onRemoveComponent={handleRemoveComponent}
+          />
         </div>
-        <CardFooter className={styles.footer}>
-          <Button disabled={!isDirty} onClick={handleSave} size="small">
-            Mentés
-          </Button>
-        </CardFooter>
       </PopoverSurface>
     </Popover>
   )
