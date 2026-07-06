@@ -19,14 +19,9 @@ export const calculateLayoutBoundingBoxes = (
   rect: RectSchema,
 ): [LayoutChildComponent, RectSchema][] => {
   const children = getChildren(component, components)
-
   const layoutChildren = assertLayoutChildren(children)
-  const availableComponentSpace = getAvailableComponentSpace(rect, component.layout, layoutChildren.length)
-  const fixedComponentSizes = getFixedComponentSizes(layoutChildren, rect, component.layout)
-  const componentSizes = shrinkFixedComponentSizesToFit(fixedComponentSizes, availableComponentSpace, component.layout)
-  const fillComponentSize = getFillComponentSize(componentSizes, availableComponentSpace)
 
-  return buildChildRects(rect, layoutChildren, componentSizes, fillComponentSize, component.layout)
+  return calculateChildBoundingBoxes(layoutChildren, rect, component.layout)
 }
 
 const assertLayoutChildren = (children: ComponentSchema[]): LayoutChildComponent[] => {
@@ -39,102 +34,177 @@ const assertLayoutChildren = (children: ComponentSchema[]): LayoutChildComponent
   })
 }
 
-const getReservedGapSpace = (componentCount: number, gap: number): number => {
-  return Math.max(componentCount - 1, 0) * gap
-}
-
-const getAvailableComponentSpace = (parentRect: RectSchema, layout: LayoutSchema, componentCount: number): number => {
-  const parentSpace = layout.orientation === 'horizontal' ? parentRect.width : parentRect.height
-  const reservedGapSpace = getReservedGapSpace(componentCount, layout.gap)
-
-  return Math.max(parentSpace - reservedGapSpace, 0)
-}
-
-const getFixedComponentSizes = (
-  components: LayoutChildComponent[],
-  parentRect: RectSchema,
+const calculateChildBoundingBoxes = (
+  children: LayoutChildComponent[],
+  parentBoundingBox: RectSchema,
   layout: LayoutSchema,
-): (number | undefined)[] => {
-  const parentSpace = layout.orientation === 'horizontal' ? parentRect.width : parentRect.height
+): [LayoutChildComponent, RectSchema][] => {
+  switch (layout.orientation) {
+    case 'horizontal': {
+      switch (layout.order) {
+        case 'default':
+          return calculateHorizontalDefaultBoundingBoxes(children, parentBoundingBox, layout)
+        case 'reverse':
+          return calculateHorizontalReverseBoundingBoxes(children, parentBoundingBox, layout)
+      }
+    }
+    case 'vertical': {
+      switch (layout.order) {
+        case 'default':
+          return calculateVerticalDefaultBoundingBoxes(children, parentBoundingBox, layout)
+        case 'reverse':
+          return calculateVerticalReverseBoundingBoxes(children, parentBoundingBox, layout)
+      }
+    }
+  }
+}
 
-  return components.map((component) => {
-    const mainAxisSize = getMainAxisSize(component.size, layout)
+const calculateHorizontalDefaultBoundingBoxes = (
+  children: LayoutChildComponent[],
+  parentBoundingBox: RectSchema,
+  layout: LayoutSchema,
+): [LayoutChildComponent, RectSchema][] => {
+  const widths = calculateMainAxisSizes(children, parentBoundingBox, layout)
+  let nextLeft = parentBoundingBox.x
 
-    if (mainAxisSize === 'fill') {
-      return undefined
+  return children.map((child): [LayoutChildComponent, RectSchema] => {
+    const width = widths[child.id]
+    const height = calculateCrossAxisSize(child, parentBoundingBox, layout)
+    const boundingBox: RectSchema = {
+      x: nextLeft,
+      y: parentBoundingBox.y,
+      width,
+      height,
     }
 
-    return clamp(mainAxisSize, 0, parentSpace)
+    nextLeft += width + layout.gap
+
+    return [child, boundingBox]
   })
 }
 
-const getFixedComponentSizeSum = (componentSizes: (number | undefined)[]): number => {
-  return componentSizes.reduce<number>((sum, componentSize) => sum + (componentSize ?? 0), 0)
-}
-
-const shrinkFixedComponentSizesToFit = (
-  componentSizes: (number | undefined)[],
-  availableComponentSpace: number,
+const calculateHorizontalReverseBoundingBoxes = (
+  children: LayoutChildComponent[],
+  parentBoundingBox: RectSchema,
   layout: LayoutSchema,
-): (number | undefined)[] => {
-  const shrunkComponentSizes = [...componentSizes]
-  let overflow = getFixedComponentSizeSum(shrunkComponentSizes) - availableComponentSpace
+): [LayoutChildComponent, RectSchema][] => {
+  const widths = calculateMainAxisSizes(children, parentBoundingBox, layout)
+  let nextRight = parentBoundingBox.x + parentBoundingBox.width
 
-  for (
-    let index = getShrinkStartIndex(shrunkComponentSizes.length, layout);
-    isShrinkIndexInRange(index, shrunkComponentSizes.length, layout) && overflow > 0;
-    index += getShrinkIndexStep(layout)
-  ) {
-    const componentSize = shrunkComponentSizes[index]
-
-    if (!isDefined(componentSize)) {
-      continue
+  return children.map((child): [LayoutChildComponent, RectSchema] => {
+    const width = widths[child.id]
+    const height = calculateCrossAxisSize(child, parentBoundingBox, layout)
+    const left = nextRight - width
+    const boundingBox: RectSchema = {
+      x: left,
+      y: parentBoundingBox.y,
+      width,
+      height,
     }
 
-    const reduction = Math.min(componentSize, overflow)
-    shrunkComponentSizes[index] = componentSize - reduction
-    overflow -= reduction
+    nextRight = left - layout.gap
+
+    return [child, boundingBox]
+  })
+}
+
+const calculateVerticalDefaultBoundingBoxes = (
+  children: LayoutChildComponent[],
+  parentBoundingBox: RectSchema,
+  layout: LayoutSchema,
+): [LayoutChildComponent, RectSchema][] => {
+  const heights = calculateMainAxisSizes(children, parentBoundingBox, layout)
+  let nextTop = parentBoundingBox.y
+
+  return children.map((child): [LayoutChildComponent, RectSchema] => {
+    const width = calculateCrossAxisSize(child, parentBoundingBox, layout)
+    const height = heights[child.id]
+    const boundingBox: RectSchema = {
+      x: parentBoundingBox.x,
+      y: nextTop,
+      width,
+      height,
+    }
+
+    nextTop += height + layout.gap
+
+    return [child, boundingBox]
+  })
+}
+
+const calculateVerticalReverseBoundingBoxes = (
+  children: LayoutChildComponent[],
+  parentBoundingBox: RectSchema,
+  layout: LayoutSchema,
+): [LayoutChildComponent, RectSchema][] => {
+  const heights = calculateMainAxisSizes(children, parentBoundingBox, layout)
+  let nextBottom = parentBoundingBox.y + parentBoundingBox.height
+
+  return children.map((child): [LayoutChildComponent, RectSchema] => {
+    const width = calculateCrossAxisSize(child, parentBoundingBox, layout)
+    const height = heights[child.id]
+    const top = nextBottom - height
+    const boundingBox: RectSchema = {
+      x: parentBoundingBox.x,
+      y: top,
+      width,
+      height,
+    }
+
+    nextBottom = top - layout.gap
+
+    return [child, boundingBox]
+  })
+}
+
+const calculateMainAxisSizes = (
+  children: LayoutChildComponent[],
+  parentBoundingBox: RectSchema,
+  layout: LayoutSchema,
+): Record<string, number> => {
+  // Reserve the parent main-axis space that is actually available to children.
+  const parentSpace = layout.orientation === 'horizontal' ? parentBoundingBox.width : parentBoundingBox.height
+  const gapSpace = Math.max(children.length - 1, 0) * layout.gap
+  const availableComponentSpace = Math.max(parentSpace - gapSpace, 0)
+  const sizesById: Record<string, number> = {}
+
+  // Save explicit sizes. Children missing from this record are fill children.
+  for (const child of children) {
+    const mainAxisSize = getMainAxisSize(child.size, layout)
+    if (mainAxisSize !== 'fill') {
+      sizesById[child.id] = clamp(mainAxisSize, 0, parentSpace)
+    }
   }
 
-  return shrunkComponentSizes
-}
+  // Split the remaining non-negative space evenly between fill children.
+  const fixedComponentSpace = Object.values(sizesById).reduce((sum, componentSize) => sum + componentSize, 0)
+  const fillComponentCount = children.filter((child) => !isDefined(sizesById[child.id])).length
+  const fillComponentSize =
+    fillComponentCount === 0 ? 0 : Math.max(availableComponentSpace - fixedComponentSpace, 0) / fillComponentCount
 
-const getShrinkStartIndex = (componentCount: number, layout: LayoutSchema): number => {
-  return layout.order === 'default' ? componentCount - 1 : 0
-}
-
-const isShrinkIndexInRange = (index: number, componentCount: number, layout: LayoutSchema): boolean => {
-  return layout.order === 'default' ? index >= 0 : index < componentCount
-}
-
-const getShrinkIndexStep = (layout: LayoutSchema): number => {
-  return layout.order === 'default' ? -1 : 1
-}
-
-const getFillComponentSize = (componentSizes: (number | undefined)[], availableComponentSpace: number): number => {
-  const fillComponentCount = componentSizes.filter((componentSize) => !isDefined(componentSize)).length
-
-  if (fillComponentCount === 0) {
-    return 0
+  for (const child of children) {
+    if (getMainAxisSize(child.size, layout) !== 'fill') {
+      continue
+    }
+    sizesById[child.id] = fillComponentSize
   }
 
-  const fixedComponentSpace = getFixedComponentSizeSum(componentSizes)
-  return Math.max(availableComponentSpace - fixedComponentSpace, 0) / fillComponentCount
+  return sizesById
 }
 
-const getFixedOffDirectionComponentSize = (
-  component: LayoutChildComponent,
-  parentRect: RectSchema,
+const calculateCrossAxisSize = (
+  child: LayoutChildComponent,
+  parentBoundingBox: RectSchema,
   layout: LayoutSchema,
 ): number => {
-  const parentSpace = layout.orientation === 'horizontal' ? parentRect.height : parentRect.width
-  const offAxisSize = getOffAxisSize(component.size, layout)
+  const parentSpace = layout.orientation === 'horizontal' ? parentBoundingBox.height : parentBoundingBox.width
+  const crossAxisSize = getCrossAxisSize(child.size, layout)
 
-  if (offAxisSize === 'fill') {
+  if (crossAxisSize === 'fill') {
     return parentSpace
   }
 
-  return clamp(offAxisSize, 0, parentSpace)
+  return clamp(crossAxisSize, 0, parentSpace)
 }
 
 const getMainAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): number | 'fill' => {
@@ -147,7 +217,7 @@ const getMainAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): 
   return axisSize
 }
 
-const getOffAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): number | 'fill' => {
+const getCrossAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): number | 'fill' => {
   const axisSize = layout.orientation === 'horizontal' ? size?.height : size?.width
 
   if (!isDefined(axisSize)) {
@@ -155,54 +225,4 @@ const getOffAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): n
   }
 
   return axisSize
-}
-
-const buildChildRects = (
-  parentRect: RectSchema,
-  components: LayoutChildComponent[],
-  componentSizes: (number | undefined)[],
-  fillComponentSize: number,
-  layout: LayoutSchema,
-): [LayoutChildComponent, RectSchema][] => {
-  let cursor = getInitialCursor(parentRect, layout)
-
-  return components.map((component, index): [LayoutChildComponent, RectSchema] => {
-    const componentSize = componentSizes[index] ?? fillComponentSize
-    const offDirectionComponentSize = getFixedOffDirectionComponentSize(component, parentRect, layout)
-    const mainAxisStart = getMainAxisStart(cursor, componentSize, layout)
-    const rect: RectSchema =
-      layout.orientation === 'horizontal'
-        ? {
-            x: mainAxisStart,
-            y: parentRect.y,
-            width: componentSize,
-            height: offDirectionComponentSize,
-          }
-        : {
-            x: parentRect.x,
-            y: mainAxisStart,
-            width: offDirectionComponentSize,
-            height: componentSize,
-          }
-
-    cursor = getNextCursor(cursor, componentSize, layout)
-
-    return [component, rect]
-  })
-}
-
-const getInitialCursor = (parentRect: RectSchema, layout: LayoutSchema): number => {
-  if (layout.orientation === 'horizontal') {
-    return layout.order === 'default' ? parentRect.x : parentRect.x + parentRect.width
-  }
-
-  return layout.order === 'default' ? parentRect.y : parentRect.y + parentRect.height
-}
-
-const getMainAxisStart = (cursor: number, componentSize: number, layout: LayoutSchema): number => {
-  return layout.order === 'default' ? cursor : cursor - componentSize
-}
-
-const getNextCursor = (cursor: number, componentSize: number, layout: LayoutSchema): number => {
-  return layout.order === 'default' ? cursor + componentSize + layout.gap : cursor - componentSize - layout.gap
 }
