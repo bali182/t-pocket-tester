@@ -7,10 +7,7 @@ export const testState: Record<string, PanelSchema | RootPanelSchema> = {
     name: 'Root panel',
     color: '#A52A2A',
     children: ['panel-2', 'panel-3'],
-    layout: {
-      gap: 20,
-      orientation: 'horizontal',
-    },
+    layout: { gap: 20, order: 'default', orientation: 'horizontal' },
     size: {
       width: 180,
       height: 100,
@@ -22,7 +19,7 @@ export const testState: Record<string, PanelSchema | RootPanelSchema> = {
     name: 'Fill panel 1',
     color: '#0000FF',
     children: [],
-    layout: { orientation: 'vertical', gap: 0 },
+    layout: { orientation: 'vertical', gap: 0, order: 'default' },
   },
   'panel-3': {
     type: 'panel',
@@ -30,7 +27,7 @@ export const testState: Record<string, PanelSchema | RootPanelSchema> = {
     name: 'Fill panel 2',
     color: '#008000',
     children: ['panel-4', 'panel-5'],
-    layout: { orientation: 'vertical', gap: 5 },
+    layout: { orientation: 'vertical', gap: 5, order: 'default' },
   },
   'panel-4': {
     type: 'panel',
@@ -38,7 +35,7 @@ export const testState: Record<string, PanelSchema | RootPanelSchema> = {
     name: 'Nested child 1',
     color: '#FFFF00',
     children: [],
-    layout: { orientation: 'vertical', gap: 0 },
+    layout: { orientation: 'vertical', gap: 0, order: 'default' },
   },
   'panel-5': {
     type: 'panel',
@@ -46,6 +43,6 @@ export const testState: Record<string, PanelSchema | RootPanelSchema> = {
     name: 'Nested child 2',
     color: '#FFFF00',
     children: [],
-    layout: { orientation: 'vertical', gap: 0 },
+    layout: { orientation: 'vertical', gap: 0, order: 'default' },
   },
 }

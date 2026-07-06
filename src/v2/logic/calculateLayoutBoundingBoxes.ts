@@ -23,7 +23,7 @@ export const calculateLayoutBoundingBoxes = (
   const layoutChildren = assertLayoutChildren(children)
   const availableComponentSpace = getAvailableComponentSpace(rect, component.layout, layoutChildren.length)
   const fixedComponentSizes = getFixedComponentSizes(layoutChildren, rect, component.layout)
-  const componentSizes = shrinkFixedComponentSizesToFit(fixedComponentSizes, availableComponentSpace)
+  const componentSizes = shrinkFixedComponentSizesToFit(fixedComponentSizes, availableComponentSpace, component.layout)
   const fillComponentSize = getFillComponentSize(componentSizes, availableComponentSpace)
 
   return buildChildRects(rect, layoutChildren, componentSizes, fillComponentSize, component.layout)
@@ -75,11 +75,16 @@ const getFixedComponentSizeSum = (componentSizes: (number | undefined)[]): numbe
 const shrinkFixedComponentSizesToFit = (
   componentSizes: (number | undefined)[],
   availableComponentSpace: number,
+  layout: LayoutSchema,
 ): (number | undefined)[] => {
   const shrunkComponentSizes = [...componentSizes]
   let overflow = getFixedComponentSizeSum(shrunkComponentSizes) - availableComponentSpace
 
-  for (let index = shrunkComponentSizes.length - 1; index >= 0 && overflow > 0; index -= 1) {
+  for (
+    let index = getShrinkStartIndex(shrunkComponentSizes.length, layout);
+    isShrinkIndexInRange(index, shrunkComponentSizes.length, layout) && overflow > 0;
+    index += getShrinkIndexStep(layout)
+  ) {
     const componentSize = shrunkComponentSizes[index]
 
     if (!isDefined(componentSize)) {
@@ -92,6 +97,18 @@ const shrinkFixedComponentSizesToFit = (
   }
 
   return shrunkComponentSizes
+}
+
+const getShrinkStartIndex = (componentCount: number, layout: LayoutSchema): number => {
+  return layout.order === 'default' ? componentCount - 1 : 0
+}
+
+const isShrinkIndexInRange = (index: number, componentCount: number, layout: LayoutSchema): boolean => {
+  return layout.order === 'default' ? index >= 0 : index < componentCount
+}
+
+const getShrinkIndexStep = (layout: LayoutSchema): number => {
+  return layout.order === 'default' ? -1 : 1
 }
 
 const getFillComponentSize = (componentSizes: (number | undefined)[], availableComponentSpace: number): number => {
@@ -147,28 +164,45 @@ const buildChildRects = (
   fillComponentSize: number,
   layout: LayoutSchema,
 ): [LayoutChildComponent, RectSchema][] => {
-  let cursor = layout.orientation === 'horizontal' ? parentRect.x : parentRect.y
+  let cursor = getInitialCursor(parentRect, layout)
 
   return components.map((component, index): [LayoutChildComponent, RectSchema] => {
     const componentSize = componentSizes[index] ?? fillComponentSize
     const offDirectionComponentSize = getFixedOffDirectionComponentSize(component, parentRect, layout)
+    const mainAxisStart = getMainAxisStart(cursor, componentSize, layout)
     const rect: RectSchema =
       layout.orientation === 'horizontal'
         ? {
-            x: cursor,
+            x: mainAxisStart,
             y: parentRect.y,
             width: componentSize,
             height: offDirectionComponentSize,
           }
         : {
             x: parentRect.x,
-            y: cursor,
+            y: mainAxisStart,
             width: offDirectionComponentSize,
             height: componentSize,
           }
 
-    cursor += componentSize + layout.gap
+    cursor = getNextCursor(cursor, componentSize, layout)
 
     return [component, rect]
   })
+}
+
+const getInitialCursor = (parentRect: RectSchema, layout: LayoutSchema): number => {
+  if (layout.orientation === 'horizontal') {
+    return layout.order === 'default' ? parentRect.x : parentRect.x + parentRect.width
+  }
+
+  return layout.order === 'default' ? parentRect.y : parentRect.y + parentRect.height
+}
+
+const getMainAxisStart = (cursor: number, componentSize: number, layout: LayoutSchema): number => {
+  return layout.order === 'default' ? cursor : cursor - componentSize
+}
+
+const getNextCursor = (cursor: number, componentSize: number, layout: LayoutSchema): number => {
+  return layout.order === 'default' ? cursor + componentSize + layout.gap : cursor - componentSize - layout.gap
 }

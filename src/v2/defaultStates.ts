@@ -9,6 +9,7 @@ export const defaultComponent: RootPanelSchema = {
   children: [],
   layout: {
     orientation: 'horizontal',
+    order: 'default',
     gap: 0,
   },
   size: {

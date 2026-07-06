@@ -11,9 +11,11 @@ export type LayoutedComponentSchema = {
 }
 
 export type LayoutOrientation = 'horizontal' | 'vertical'
+export type LayoutOrder = 'default' | 'reverse'
 
 export type LayoutSchema = {
   orientation: LayoutOrientation
+  order: LayoutOrder
   gap: number
 }
 

@@ -7,10 +7,10 @@ import {
   type ToolbarProps,
 } from '@fluentui/react-components'
 import { useCallback, type ReactNode } from 'react'
-import { PiColumns, PiRows } from 'react-icons/pi'
+import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
 
 import { SIZE_STEP } from '../../constants/editor'
-import type { LayoutedComponentSchema, LayoutOrientation } from '../../schemas/components'
+import type { LayoutedComponentSchema, LayoutOrder, LayoutOrientation } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
@@ -39,6 +39,20 @@ export function LayoutSection<T extends LayoutedComponentSchema>({
         layout: {
           ...component.layout,
           orientation,
+        },
+      })
+    },
+    [component, onChange],
+  )
+
+  const handleOrderChange = useCallback(
+    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
+      const order = data.checkedItems[0] as LayoutOrder
+      onChange({
+        ...component,
+        layout: {
+          ...component.layout,
+          order,
         },
       })
     },
@@ -75,6 +89,29 @@ export function LayoutSection<T extends LayoutedComponentSchema>({
             <ToolbarRadioGroup>
               <ToolbarRadioButton aria-label="Vízszintes" icon={<PiColumns />} name="orientation" value="horizontal" />
               <ToolbarRadioButton aria-label="Függőleges" icon={<PiRows />} name="orientation" value="vertical" />
+            </ToolbarRadioGroup>
+          </Toolbar>
+        </EditorFieldRow>
+
+        <EditorFieldRow label="Irány">
+          <Toolbar
+            checkedValues={{ order: [component.layout.order] }}
+            onCheckedValueChange={handleOrderChange}
+            size="small"
+          >
+            <ToolbarRadioGroup>
+              <ToolbarRadioButton
+                aria-label="Alapértelmezett"
+                icon={component.layout.orientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
+                name="order"
+                value="default"
+              />
+              <ToolbarRadioButton
+                aria-label="Fordított"
+                icon={component.layout.orientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
+                name="order"
+                value="reverse"
+              />
             </ToolbarRadioGroup>
           </Toolbar>
         </EditorFieldRow>

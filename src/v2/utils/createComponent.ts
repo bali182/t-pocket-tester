@@ -1,5 +1,5 @@
 import { LEATHER_BASE_COLOR } from '../constants/drawing'
-import { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
+import { ComponentSchema, LayoutSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import { getComponentColor } from './getComponentColor'
 import { getUnusedComponentName } from './getUnusedComponentName'
 import { id } from './id'
@@ -21,16 +21,19 @@ export const createComponent = <T extends keyof ComponentByType>(
   name: getUnusedComponentName(type, components),
 })
 
+const DEFAULT_LAYOUT: LayoutSchema = {
+  gap: 0,
+  orientation: 'horizontal',
+  order: 'default',
+}
+
 const DEFAULT_ROOT_PANEL: RootPanelSchema = {
   type: 'root-panel',
   id: '',
   name: '',
   color: LEATHER_BASE_COLOR,
   children: [],
-  layout: {
-    gap: 10,
-    orientation: 'horizontal',
-  },
+  layout: { ...DEFAULT_LAYOUT },
   size: {
     width: 170,
     height: 100,
@@ -43,10 +46,7 @@ const DEFAULT_PANEL: PanelSchema = {
   name: '',
   color: LEATHER_BASE_COLOR,
   children: [],
-  layout: {
-    gap: 0,
-    orientation: 'vertical',
-  },
+  layout: { ...DEFAULT_LAYOUT },
 }
 
 const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
