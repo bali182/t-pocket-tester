@@ -10,7 +10,7 @@ import { useCallback, type ReactNode } from 'react'
 import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
 
 import { SIZE_STEP } from '../../constants/editor'
-import type { LayoutedComponentSchema, LayoutOrder, LayoutOrientation } from '../../schemas/components'
+import type { HasLayoutSchema, LayoutOrder, LayoutOrientation } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
@@ -27,7 +27,7 @@ const isValidGap = (value: number): boolean => {
   return Number.isFinite(value) && value >= minGap
 }
 
-export function LayoutSection<T extends LayoutedComponentSchema>({
+export function LayoutSection<T extends HasLayoutSchema>({
   component,
   onChange,
 }: LayoutSectionProps<T>): ReactNode {

@@ -4,3 +4,4 @@
 - Do not assume the package manager. It is npm.
 - Never perform any mutating git operations (commit, push, etc)
 - Checks after writing code: `npm run typecheck`. Don't try to run a dev server, or anything else.
+- if(value) => if(isDefined(value)). Negating non-booleans is strictly forbidden for null/undefined checks.
