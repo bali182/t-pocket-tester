@@ -1,11 +1,14 @@
 import { makeStyles } from '@fluentui/react-components'
 import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
+
 import { STROKE_THICKNESS, VIEWBOX_PADDING } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { projectAtom } from '../../state'
+import { useComponent } from '../../hooks/useComponent'
+import { useComputedComponent } from '../../hooks/useComputedComponent'
+import type { RootPanelSchema } from '../../schemas/components'
+import type { ComputedRootPanelSchema } from '../../schemas/computed'
+import { computedProjectAtom } from '../../state'
 import { getViewBox } from '../../utils/getViewBox'
-import { isDefined } from '../../utils/isDefined'
 import { RootPanel } from './RootPanel'
 
 const useStyles = makeStyles({
@@ -16,28 +19,12 @@ const useStyles = makeStyles({
 
 export const SvgRoot = () => {
   const styles = useStyles()
-  const project = useAtomValue(projectAtom)
-  const rootComponent = project.components[project.root]
+  const computedProject = useAtomValue(computedProjectAtom)
+  const rootComponent = useComponent<RootPanelSchema>(computedProject.root)
+  const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(computedProject.root)
   const { isInteractive } = useDrawAreaContext()
 
-  const viewBox = useMemo((): string | undefined => {
-    if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {
-      return undefined
-    }
-    return getViewBox(
-      {
-        x: 0,
-        y: 0,
-        width: rootComponent.size.width,
-        height: rootComponent.size.height,
-      },
-      isInteractive ? VIEWBOX_PADDING : STROKE_THICKNESS / 2,
-    )
-  }, [isInteractive, rootComponent])
-
-  if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {
-    return undefined
-  }
+  const viewBox = getViewBox(computedRootPanel.boundingRect, isInteractive ? VIEWBOX_PADDING : STROKE_THICKNESS / 2)
 
   return (
     <svg
@@ -46,7 +33,7 @@ export const SvgRoot = () => {
       height={`${rootComponent.size.height}mm`}
       viewBox={viewBox}
     >
-      <RootPanel rootPanel={rootComponent} />
+      <RootPanel componentId={computedProject.root} />
     </svg>
   )
 }

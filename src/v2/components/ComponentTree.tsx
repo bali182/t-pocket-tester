@@ -12,8 +12,8 @@ import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useState, type FC, type ReactNode } from 'react'
 
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
-import { useChild } from '../hooks/useChild'
 import { useChildren } from '../hooks/useChildren'
+import { useComponent } from '../hooks/useComponent'
 import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
 import { projectAtom } from '../state'
@@ -77,7 +77,7 @@ const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component, selectedComp
 
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
   const project = useAtomValue(projectAtom)
-  const rootComponent = useChild(project.root)
+  const rootComponent = useComponent(project.root)
   const [openItems, setOpenItems] = useState<Set<TreeItemValue>>(() => new Set([project.root]))
 
   useEffect(() => {

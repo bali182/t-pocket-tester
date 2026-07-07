@@ -1,22 +1,23 @@
-import { useCallback, useMemo, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
+import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
 import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { calculatePocketClusterGeometry } from '../../logic/calculatePocketClusterGeometry'
+import { useComponent } from '../../hooks/useComponent'
+import { useComputedComponent } from '../../hooks/useComputedComponent'
 import type { PocketClusterSchema } from '../../schemas/components'
-import type { RectSchema } from '../../schemas/geometry'
+import type { ComputedPocketClusterSchema } from '../../schemas/computed'
 import { TPocket } from './TPocket'
 import { useSvgElementStyle } from './useSvgElementStyle'
 
 type PocketClusterProps = {
-  pocketCluster: PocketClusterSchema
-  rect: RectSchema
+  componentId: string
 }
 
-export const PocketCluster: FC<PocketClusterProps> = ({ pocketCluster, rect }) => {
+export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
   const { isInteractive, onComponentClick } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
-  const geometry = useMemo(() => calculatePocketClusterGeometry(pocketCluster, rect), [pocketCluster, rect])
+  const pocketCluster = useComponent<PocketClusterSchema>(componentId)
+  const computedPocketCluster = useComputedComponent<ComputedPocketClusterSchema>(componentId)
   const svgStyles = useSvgElementStyle(pocketCluster, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
@@ -43,24 +44,24 @@ export const PocketCluster: FC<PocketClusterProps> = ({ pocketCluster, rect }) =
       {svgStyles.isSelected && (
         <rect
           {...svgStyles.element}
-          height={rect.height}
+          height={computedPocketCluster.boundingRect.height}
           strokeWidth={STROKE_THICKNESS}
-          width={rect.width}
-          x={rect.x}
-          y={rect.y}
+          width={computedPocketCluster.boundingRect.width}
+          x={computedPocketCluster.boundingRect.x}
+          y={computedPocketCluster.boundingRect.y}
         />
       )}
-      {geometry.tPocketPolygons.map((polygon, index) => (
+      {computedPocketCluster.tPockets.map((polygon, index) => (
         <TPocket {...svgStyles.child} key={index} points={polygon.points} strokeWidth={STROKE_THICKNESS} />
       ))}
 
       <rect
         {...svgStyles.child}
-        height={geometry.topPocketRect.height}
+        height={computedPocketCluster.frontPocket.height}
         strokeWidth={STROKE_THICKNESS}
-        width={geometry.topPocketRect.width}
-        x={geometry.topPocketRect.x}
-        y={geometry.topPocketRect.y}
+        width={computedPocketCluster.frontPocket.width}
+        x={computedPocketCluster.frontPocket.x}
+        y={computedPocketCluster.frontPocket.y}
       />
     </g>
   )

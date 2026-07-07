@@ -1,31 +1,24 @@
-import { useCallback, useMemo, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
+import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
 import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { useLayout } from '../../hooks/useLayout'
+import { useComponent } from '../../hooks/useComponent'
+import { useComputedComponent } from '../../hooks/useComputedComponent'
 import type { RootPanelSchema } from '../../schemas/components'
-import { RectSchema } from '../../schemas/geometry'
+import type { ComputedRootPanelSchema } from '../../schemas/computed'
 import { Panel } from './Panel'
 import { PocketCluster } from './PocketCluster'
 import { useSvgElementStyle } from './useSvgElementStyle'
 
 type RootPanelProps = {
-  rootPanel: RootPanelSchema
+  componentId: string
 }
 
-export const RootPanel: FC<RootPanelProps> = ({ rootPanel }) => {
+export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
   const { isInteractive, onComponentClick } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
-  const rect = useMemo<RectSchema>(
-    () => ({
-      x: 0,
-      y: 0,
-      width: rootPanel.size.width,
-      height: rootPanel.size.height,
-    }),
-    [rootPanel.size.height, rootPanel.size.width],
-  )
-  const children = useLayout({ rect, component: rootPanel })
+  const rootPanel = useComponent<RootPanelSchema>(componentId)
+  const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(componentId)
   const svgStyles = useSvgElementStyle(rootPanel, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGRectElement>>(() => {
@@ -46,10 +39,10 @@ export const RootPanel: FC<RootPanelProps> = ({ rootPanel }) => {
     <>
       <rect
         {...svgStyles.element}
-        x={rect.x}
-        y={rect.y}
-        width={rect.width}
-        height={rect.height}
+        x={computedRootPanel.boundingRect.x}
+        y={computedRootPanel.boundingRect.y}
+        width={computedRootPanel.boundingRect.width}
+        height={computedRootPanel.boundingRect.height}
         strokeWidth={STROKE_THICKNESS}
         data-component-id={rootPanel.id}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}
@@ -57,12 +50,14 @@ export const RootPanel: FC<RootPanelProps> = ({ rootPanel }) => {
         onClick={isInteractive ? handleClick : undefined}
       />
 
-      {children.map(([component, rect]) => {
+      {computedRootPanel.children.map((component) => {
         switch (component.type) {
           case 'panel':
-            return <Panel key={component.id} panel={component} rect={rect} />
+            return <Panel key={component.componentId} componentId={component.componentId} />
           case 'pocket-cluster':
-            return <PocketCluster key={component.id} pocketCluster={component} rect={rect} />
+            return <PocketCluster key={component.componentId} componentId={component.componentId} />
+          case 'root-panel':
+            throw new Error(`Root panel cannot be rendered as a child: ${component.componentId}`)
         }
       })}
     </>
