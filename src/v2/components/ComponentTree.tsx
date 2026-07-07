@@ -16,7 +16,7 @@ import { useChild } from '../hooks/useChild'
 import { useChildren } from '../hooks/useChildren'
 import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
-import { componentsAtom, rootComponentIdAtom } from '../state'
+import { projectAtom } from '../state'
 import { getComponentAncestorIds } from '../utils/getComponentAncestorIds'
 import { isDefined } from '../utils/isDefined'
 import { ComponentTreeItemActions } from './ComponentTreeItemActions'
@@ -76,18 +76,17 @@ const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ component, selectedComp
 }
 
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
-  const components = useAtomValue(componentsAtom)
-  const rootComponentId = useAtomValue(rootComponentIdAtom)
-  const rootComponent = useChild(rootComponentId)
-  const [openItems, setOpenItems] = useState<Set<TreeItemValue>>(() => new Set([rootComponentId]))
+  const project = useAtomValue(projectAtom)
+  const rootComponent = useChild(project.root)
+  const [openItems, setOpenItems] = useState<Set<TreeItemValue>>(() => new Set([project.root]))
 
   useEffect(() => {
     if (!isDefined(selectedComponentId)) {
       return
     }
-    const ancestorIds = getComponentAncestorIds(selectedComponentId, components)
+    const ancestorIds = getComponentAncestorIds(selectedComponentId, project)
     setOpenItems((openItems) => new Set([...openItems, ...ancestorIds]))
-  }, [components, selectedComponentId])
+  }, [project, selectedComponentId])
 
   const handleOpenChange = useCallback((_event: TreeOpenChangeEvent, data: TreeOpenChangeData): void => {
     setOpenItems(data.openItems)

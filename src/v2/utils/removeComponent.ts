@@ -1,27 +1,28 @@
 import { ComponentSchema } from '../schemas/components'
+import type { ProjectSchema } from '../schemas/project'
 import { hasChildren } from './hasChildren'
 import { isDefined } from './isDefined'
 
-export const removeComponent = (
-  id: string,
-  components: Record<string, ComponentSchema>,
-): Record<string, ComponentSchema> => {
-  const component = components[id]
+export const removeComponent = (id: string, project: ProjectSchema): ProjectSchema => {
+  const component = project.components[id]
 
-  if (!component || component.type === 'root-panel') {
-    return components
+  if (!isDefined(component) || component.type === 'root-panel') {
+    return project
   }
 
-  const deletedIds = collectDescendantIds(component, components)
+  const deletedIds = collectDescendantIds(component, project)
 
-  return Object.fromEntries(
-    Object.entries(components)
-      .filter(([id]) => !deletedIds.has(id))
-      .map(([id, component]) => [id, removeDeletedChildren(component, deletedIds)]),
-  )
+  return {
+    ...project,
+    components: Object.fromEntries(
+      Object.entries(project.components)
+        .filter(([id]) => !deletedIds.has(id))
+        .map(([id, component]) => [id, removeDeletedChildren(component, deletedIds)]),
+    ),
+  }
 }
 
-const collectDescendantIds = (component: ComponentSchema, components: Record<string, ComponentSchema>): Set<string> => {
+const collectDescendantIds = (component: ComponentSchema, project: ProjectSchema): Set<string> => {
   const ids = new Set<string>([component.id])
 
   if (!hasChildren(component)) {
@@ -29,11 +30,11 @@ const collectDescendantIds = (component: ComponentSchema, components: Record<str
   }
 
   component.children.forEach((childId) => {
-    const child = components[childId]
+    const child = project.components[childId]
     if (!isDefined(child)) {
       return
     }
-    collectDescendantIds(child, components).forEach((id) => ids.add(id))
+    collectDescendantIds(child, project).forEach((id) => ids.add(id))
   })
 
   return ids

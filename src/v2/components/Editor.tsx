@@ -5,7 +5,7 @@ import { PiTreeStructure } from 'react-icons/pi'
 import { useAtomValue } from 'jotai'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import type { ComponentSchema } from '../schemas/components'
-import { componentsAtom } from '../state'
+import { projectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
 import { ComponentTreeDrawer } from './ComponentTreeDrawer'
 import { DrawArea } from './DrawArea'
@@ -37,8 +37,8 @@ export const Editor: FC = () => {
   const [componentId, setComponentId] = useState<string | undefined>()
   const [element, setElement] = useState<SVGGraphicsElement | undefined>()
   const [isComponentTreeOpen, setIsComponentTreeOpen] = useState(true)
-  const components = useAtomValue(componentsAtom)
-  const component = isDefined(componentId) ? components[componentId] : undefined
+  const project = useAtomValue(projectAtom)
+  const component = isDefined(componentId) ? project.components[componentId] : undefined
 
   const handleComponentClick = useCallback((component: ComponentSchema, element: SVGGraphicsElement): void => {
     setComponentId(component.id)

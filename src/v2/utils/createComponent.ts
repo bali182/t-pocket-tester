@@ -1,5 +1,6 @@
 import { LEATHER_BASE_COLOR } from '../constants/drawing'
-import { ComponentSchema, LayoutSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
+import { LayoutSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
+import type { ProjectSchema } from '../schemas/project'
 import { getComponentColor } from './getComponentColor'
 import { getUnusedComponentName } from './getUnusedComponentName'
 import { id } from './id'
@@ -12,13 +13,13 @@ type ComponentByType = {
 
 export const createComponent = <T extends keyof ComponentByType>(
   type: T,
-  components: Record<string, ComponentSchema>,
+  project: ProjectSchema,
   nestingLevel = 0,
 ): ComponentByType[T] => ({
   ...DEFAULT_COMPONENT_BY_TYPE[type],
   color: getComponentColor(LEATHER_BASE_COLOR, nestingLevel),
   id: id(),
-  name: getUnusedComponentName(type, components),
+  name: getUnusedComponentName(type, project),
 })
 
 const DEFAULT_LAYOUT: LayoutSchema = {

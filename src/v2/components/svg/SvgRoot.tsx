@@ -3,8 +3,9 @@ import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { STROKE_THICKNESS, VIEWBOX_PADDING } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { componentsAtom, rootComponentIdAtom } from '../../state'
+import { projectAtom } from '../../state'
 import { getViewBox } from '../../utils/getViewBox'
+import { isDefined } from '../../utils/isDefined'
 import { RootPanel } from './RootPanel'
 
 const useStyles = makeStyles({
@@ -15,13 +16,12 @@ const useStyles = makeStyles({
 
 export const SvgRoot = () => {
   const styles = useStyles()
-  const components = useAtomValue(componentsAtom)
-  const rootComponentId = useAtomValue(rootComponentIdAtom)
-  const rootComponent = components[rootComponentId]
+  const project = useAtomValue(projectAtom)
+  const rootComponent = project.components[project.root]
   const { isInteractive } = useDrawAreaContext()
 
   const viewBox = useMemo((): string | undefined => {
-    if (!rootComponent || rootComponent.type !== 'root-panel') {
+    if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {
       return undefined
     }
     return getViewBox(
@@ -35,7 +35,7 @@ export const SvgRoot = () => {
     )
   }, [isInteractive, rootComponent])
 
-  if (!rootComponent || rootComponent.type !== 'root-panel') {
+  if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {
     return undefined
   }
 

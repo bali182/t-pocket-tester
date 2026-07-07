@@ -4,7 +4,7 @@ import { useAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 
 import type { ComponentSchema } from '../schemas/components'
-import { componentsAtom } from '../state'
+import { projectAtom } from '../state'
 import { addComponent } from '../utils/addComponent'
 import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 
 export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ component }) => {
   const styles = useStyles()
-  const [components, setComponents] = useAtom(componentsAtom)
+  const [project, setProject] = useAtom(projectAtom)
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasChildren(component), [component])
   const siblingMoveState = useMemo(() => {
@@ -34,7 +34,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
       return { canMoveUp: false, canMoveDown: false }
     }
 
-    const parent = getParent(component.id, components)
+    const parent = getParent(component.id, project)
 
     if (!isDefined(parent)) {
       return { canMoveUp: false, canMoveDown: false }
@@ -46,7 +46,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
       canMoveUp: index > 0,
       canMoveDown: index >= 0 && index < parent.children.length - 1,
     }
-  }, [component.id, component.type, components])
+  }, [component.id, component.type, project])
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
@@ -57,31 +57,31 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
       if (!canAdd) {
         return
       }
-      setComponents((components) => addComponent(component.id, type, components))
+      setProject((project) => addComponent(component.id, type, project))
     },
-    [canAdd, component.id, setComponents],
+    [canAdd, component.id, setProject],
   )
 
   const handleDelete = useCallback((): void => {
     if (!canDelete) {
       return
     }
-    setComponents((components) => removeComponent(component.id, components))
-  }, [canDelete, component.id, setComponents])
+    setProject((project) => removeComponent(component.id, project))
+  }, [canDelete, component.id, setProject])
 
   const handleMoveUp = useCallback((): void => {
     if (!siblingMoveState.canMoveUp) {
       return
     }
-    setComponents((components) => moveComponentWithinParent(component.id, 'up', components))
-  }, [component.id, setComponents, siblingMoveState.canMoveUp])
+    setProject((project) => moveComponentWithinParent(component.id, 'up', project))
+  }, [component.id, setProject, siblingMoveState.canMoveUp])
 
   const handleMoveDown = useCallback((): void => {
     if (!siblingMoveState.canMoveDown) {
       return
     }
-    setComponents((components) => moveComponentWithinParent(component.id, 'down', components))
-  }, [component.id, setComponents, siblingMoveState.canMoveDown])
+    setProject((project) => moveComponentWithinParent(component.id, 'down', project))
+  }, [component.id, setProject, siblingMoveState.canMoveDown])
 
   return (
     <div className={styles.root} onClick={handleActionsClick}>

@@ -1,14 +1,13 @@
 import type { ComponentSchema } from '../schemas/components'
+import type { ProjectSchema } from '../schemas/project'
 import { getChildIds } from './getChildIds'
+import { isDefined } from './isDefined'
 
-export const getChildren = (
-  component: ComponentSchema,
-  components: Record<string, ComponentSchema>,
-): ComponentSchema[] => {
+export const getChildren = (component: ComponentSchema, project: ProjectSchema): ComponentSchema[] => {
   return getChildIds(component).map((id) => {
-    const component = components[id]
+    const component = project.components[id]
 
-    if (!component) {
+    if (!isDefined(component)) {
       throw new Error(`Child component not found: ${id}`)
     }
 

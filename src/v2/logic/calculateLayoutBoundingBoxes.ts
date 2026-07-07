@@ -6,6 +6,7 @@ import type {
   RootPanelSchema,
 } from '../schemas/components'
 import type { FillableSize, RectSchema } from '../schemas/geometry'
+import type { ProjectSchema } from '../schemas/project'
 import { clamp } from '../utils/clamp'
 import { isDefined } from '../utils/isDefined'
 import { getChildren } from '../utils/getChildren'
@@ -15,10 +16,10 @@ type LayoutChildComponent = PanelSchema | PocketClusterSchema
 
 export const calculateLayoutBoundingBoxes = (
   component: LayoutComponent,
-  components: Record<string, ComponentSchema>,
+  project: ProjectSchema,
   rect: RectSchema,
 ): [LayoutChildComponent, RectSchema][] => {
-  const children = getChildren(component, components)
+  const children = getChildren(component, project)
   const layoutChildren = assertLayoutChildren(children)
 
   return calculateChildBoundingBoxes(layoutChildren, rect, component.layout)

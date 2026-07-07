@@ -1,11 +1,9 @@
 import type { ComponentSchema } from '../schemas/components'
+import type { ProjectSchema } from '../schemas/project'
 
-export const getUnusedComponentName = (
-  type: ComponentSchema['type'],
-  components: Record<string, ComponentSchema>,
-): string => {
+export const getUnusedComponentName = (type: ComponentSchema['type'], project: ProjectSchema): string => {
   const baseName = getComponentNameByType(type)
-  const usedNames = new Set(Object.values(components).map((component) => component.name))
+  const usedNames = new Set(Object.values(project.components).map((component) => component.name))
   let counter = 1
   let name = `${baseName} ${counter}`
 

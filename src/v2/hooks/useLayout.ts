@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai'
 import { calculateLayoutBoundingBoxes } from '../logic/calculateLayoutBoundingBoxes'
 import type { PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { RectSchema } from '../schemas/geometry'
-import { componentsAtom } from '../state'
+import { projectAtom } from '../state'
 
 type LayoutComponent = RootPanelSchema | PanelSchema
 type LayoutChildComponent = PanelSchema | PocketClusterSchema
@@ -15,9 +15,9 @@ type UseLayoutParams = {
 }
 
 export const useLayout = ({ rect, component }: UseLayoutParams): [LayoutChildComponent, RectSchema][] => {
-  const components = useAtomValue(componentsAtom)
+  const project = useAtomValue(projectAtom)
   return useMemo<[LayoutChildComponent, RectSchema][]>(
-    () => calculateLayoutBoundingBoxes(component, components, rect),
-    [component, components, rect],
+    () => calculateLayoutBoundingBoxes(component, project, rect),
+    [component, project, rect],
   )
 }

@@ -1,4 +1,4 @@
-import type { ComponentSchema } from '../schemas/components'
+import type { ProjectSchema } from '../schemas/project'
 import { getParent } from './getParent'
 import { isDefined } from './isDefined'
 
@@ -7,25 +7,25 @@ export type MoveComponentDirection = 'up' | 'down'
 export const moveComponentWithinParent = (
   componentId: string,
   direction: MoveComponentDirection,
-  components: Record<string, ComponentSchema>,
-): Record<string, ComponentSchema> => {
-  const component = components[componentId]
+  project: ProjectSchema,
+): ProjectSchema => {
+  const component = project.components[componentId]
 
   if (!isDefined(component) || component.type === 'root-panel') {
-    return components
+    return project
   }
 
-  const parent = getParent(componentId, components)
+  const parent = getParent(componentId, project)
 
   if (!isDefined(parent)) {
-    return components
+    return project
   }
 
   const currentIndex = parent.children.indexOf(componentId)
   const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
 
   if (targetIndex < 0 || targetIndex >= parent.children.length) {
-    return components
+    return project
   }
 
   const children = parent.children.slice()
@@ -33,10 +33,13 @@ export const moveComponentWithinParent = (
   children.splice(targetIndex, 0, movedChildId)
 
   return {
-    ...components,
-    [parent.id]: {
-      ...parent,
-      children,
+    ...project,
+    components: {
+      ...project.components,
+      [parent.id]: {
+        ...parent,
+        children,
+      },
     },
   }
 }

@@ -2,30 +2,13 @@ import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 
 import type { ComponentSchema } from '../schemas/components'
-import { componentsAtom } from '../state'
+import { projectAtom } from '../state'
+import { getChildren } from '../utils/getChildren'
 
 export const useChildren = (component: ComponentSchema): ComponentSchema[] => {
-  const childIds = useMemo(() => {
-    switch (component.type) {
-      case 'root-panel':
-      case 'panel':
-        return component.children ?? []
-      default:
-        return []
-    }
-  }, [component])
-
-  const components = useAtomValue(componentsAtom)
+  const project = useAtomValue(projectAtom)
 
   return useMemo<ComponentSchema[]>(() => {
-    return childIds.map((id) => {
-      const component = components[id]
-
-      if (!component) {
-        throw new Error(`Child component not found: ${id}`)
-      }
-
-      return component
-    })
-  }, [components, childIds])
+    return getChildren(component, project)
+  }, [component, project])
 }

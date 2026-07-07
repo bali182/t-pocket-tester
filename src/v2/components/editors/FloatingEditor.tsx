@@ -5,7 +5,7 @@ import { useAtom } from 'jotai'
 import { MouseEvent, useCallback, useEffect, useMemo, useRef, type FC } from 'react'
 
 import type { ComponentSchema } from '../../schemas/components'
-import { componentsAtom } from '../../state'
+import { projectAtom } from '../../state'
 import { addComponent } from '../../utils/addComponent'
 import { isDefined } from '../../utils/isDefined'
 import { removeComponent } from '../../utils/removeComponent'
@@ -30,9 +30,9 @@ const useStyles = makeStyles({
 
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
   const styles = useStyles()
-  const [components, setComponents] = useAtom(componentsAtom)
+  const [project, setProject] = useAtom(projectAtom)
   const positioningRef = useRef<PositioningImperativeRef>(null)
-  const editedComponent = components[component.id]
+  const editedComponent = project.components[component.id]
   const positioningTarget = useMemo<PositioningVirtualElement>(
     () => ({
       getBoundingClientRect: () => anchorElement.getBoundingClientRect(),
@@ -44,7 +44,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   useEffect(() => {
     const editorElement = anchorElement.ownerSVGElement?.parentElement
 
-    if (!editorElement) {
+    if (!isDefined(editorElement)) {
       return
     }
 
@@ -61,24 +61,27 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
 
   const handleComponentChange = useCallback(
     (updated: ComponentSchema) => {
-      setComponents((components) => ({
-        ...components,
-        [updated.id]: updated,
+      setProject((project) => ({
+        ...project,
+        components: {
+          ...project.components,
+          [updated.id]: updated,
+        },
       }))
     },
-    [setComponents],
+    [setProject],
   )
 
   const handleAddChild = useCallback(
     (type: ChildComponentType): void => {
-      setComponents((components) => addComponent(component.id, type, components))
+      setProject((project) => addComponent(component.id, type, project))
     },
-    [component.id, setComponents],
+    [component.id, setProject],
   )
 
   const handleRemoveComponent = useCallback((): void => {
-    setComponents((components) => removeComponent(component.id, components))
-  }, [component.id, setComponents])
+    setProject((project) => removeComponent(component.id, project))
+  }, [component.id, setProject])
 
   const captureClick = useCallback((e: MouseEvent) => {
     e.stopPropagation()
