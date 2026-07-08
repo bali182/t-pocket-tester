@@ -1,4 +1,4 @@
-import type { Path, PathCommand } from '../../schemas/geometry'
+import type { Path, PathCommand } from '../schemas/geometry'
 
 const getSvgPathCommandData = (command: PathCommand): string => {
   switch (command.type) {

@@ -25,10 +25,6 @@ export type FillableSize = {
   height: number | 'fill'
 }
 
-export type PolygonSchema = {
-  points: PointSchema[]
-}
-
 export type PathMoveTo = {
   type: 'moveTo'
   point: PointSchema

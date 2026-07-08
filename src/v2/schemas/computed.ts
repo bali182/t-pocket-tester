@@ -1,25 +1,39 @@
-import { PanelSchema, PocketClusterSchema, RootPanelSchema } from './components'
-import { PolygonSchema, RectSchema } from './geometry'
+import { Path, RectSchema } from './geometry'
 
 type BaseComputedSchema = {
   componentId: string
   boundingRect: RectSchema
+  path: Path
 }
 
 export type ComputedRootPanelSchema = BaseComputedSchema & {
-  type: RootPanelSchema['type']
+  type: 'computed-root-panel'
   children: ComputedComponentSchema[]
 }
 
 export type ComputedPanelSchema = BaseComputedSchema & {
-  type: PanelSchema['type']
+  type: 'computed-panel'
   children: ComputedComponentSchema[]
 }
 
+export type ComputedTopPocket = {
+  type: 'computed-top-pocket'
+  id: string
+  boundingRect: RectSchema
+  path: Path
+}
+
+export type ComputedTPocket = {
+  type: 'computed-t-pocket'
+  id: string
+  boundingRect: RectSchema
+  path: Path
+}
+
 export type ComputedPocketClusterSchema = BaseComputedSchema & {
-  type: PocketClusterSchema['type']
-  frontPocket: RectSchema
-  tPockets: PolygonSchema[]
+  type: 'computed-pocket-cluster'
+  frontPocket: ComputedTopPocket
+  tPockets: ComputedTPocket[]
 }
 
 export type ComputedComponentSchema = ComputedRootPanelSchema | ComputedPanelSchema | ComputedPocketClusterSchema

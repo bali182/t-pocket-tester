@@ -15,6 +15,8 @@ import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
 import { isDefined } from '../utils/isDefined'
 import { calculateLayoutBoundingBoxes } from './calculateLayoutBoundingBoxes'
 import { calculatePocketClusterGeometry } from './calculatePocketClusterGeometry'
+import { calculateRectPath } from './calculateRectPath'
+import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
 
 export const getComputedProject = (project: ProjectSchema): ComputedProjectSchema => {
   const rootComponent = project.components[project.root]
@@ -63,9 +65,10 @@ const computeRootPanel = (
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedRootPanelSchema => {
   const computed: ComputedRootPanelSchema = {
-    type: 'root-panel',
+    type: 'computed-root-panel',
     componentId: rootPanel.id,
     boundingRect,
+    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(rootPanel.radius)),
     children: computeLayoutChildren(rootPanel, boundingRect, project, computedComponents),
   }
 
@@ -81,9 +84,10 @@ const computePanel = (
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedPanelSchema => {
   const computed: ComputedPanelSchema = {
-    type: 'panel',
+    type: 'computed-panel',
     componentId: panel.id,
     boundingRect,
+    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(panel.radius)),
     children: computeLayoutChildren(panel, boundingRect, project, computedComponents),
   }
 
@@ -99,11 +103,12 @@ const computePocketCluster = (
 ): ComputedPocketClusterSchema => {
   const geometry = calculatePocketClusterGeometry(pocketCluster, boundingRect)
   const computed: ComputedPocketClusterSchema = {
-    type: 'pocket-cluster',
+    type: 'computed-pocket-cluster',
     componentId: pocketCluster.id,
     boundingRect,
-    frontPocket: geometry.topPocketRect,
-    tPockets: geometry.tPocketPolygons,
+    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(pocketCluster.radius)),
+    frontPocket: geometry.frontPocket,
+    tPockets: geometry.tPockets,
   }
 
   computedComponents[pocketCluster.id] = computed

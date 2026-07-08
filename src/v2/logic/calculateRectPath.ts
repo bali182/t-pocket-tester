@@ -1,5 +1,5 @@
-import type { CornerRadius } from '../../schemas/components'
-import type { Path, PathCommand, RectSchema } from '../../schemas/geometry'
+import type { CornerRadius } from '../schemas/components'
+import type { Path, PathCommand, RectSchema } from '../schemas/geometry'
 
 export const calculateRectPath = (
   rect: RectSchema,

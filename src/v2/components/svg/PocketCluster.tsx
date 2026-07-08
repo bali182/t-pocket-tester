@@ -6,7 +6,7 @@ import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
 import type { PocketClusterSchema } from '../../schemas/components'
-import type { ComputedPocketClusterSchema } from '../../schemas/computed2'
+import type { ComputedPocketClusterSchema } from '../../schemas/computed'
 import { TPocket } from './TPocket'
 import { useSvgElementStyle } from './useSvgElementStyle'
 

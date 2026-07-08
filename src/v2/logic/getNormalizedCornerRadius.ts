@@ -1,5 +1,5 @@
-import type { CornerRadius } from '../../schemas/components'
-import { isDefined } from '../../utils/isDefined'
+import type { CornerRadius } from '../schemas/components'
+import { isDefined } from '../utils/isDefined'
 
 export const getNormalizedCornerRadius = (radius?: number | CornerRadius): CornerRadius => {
   if (!isDefined(radius)) {

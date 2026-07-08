@@ -1,6 +1,6 @@
-import type { PocketClusterSchema } from '../../schemas/components'
-import type { Path, PathCommand, RectSchema } from '../../schemas/geometry'
-import { getTPocketTabDepth } from '../pocketUtils'
+import type { PocketClusterSchema } from '../schemas/components'
+import type { Path, PathCommand, RectSchema } from '../schemas/geometry'
+import { getTPocketTabDepth } from './pocketUtils'
 
 export const calculateTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): Path => {
   switch (pocketCluster.orientation) {
