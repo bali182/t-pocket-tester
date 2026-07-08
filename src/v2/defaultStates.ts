@@ -6,6 +6,7 @@ export const defaultComponent: RootPanelSchema = {
   type: 'root-panel',
   id: 'root',
   name: 'Alap',
+  radius: 0,
   color: LEATHER_BASE_COLOR,
   children: [],
   layout: {

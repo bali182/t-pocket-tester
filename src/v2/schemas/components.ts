@@ -14,8 +14,19 @@ export type HasLayoutSchema = {
   layout: LayoutSchema
 }
 
+export type HasCornerRadius = {
+  radius: number | CornerRadius
+}
+
 export type LayoutOrientation = 'horizontal' | 'vertical'
 export type LayoutOrder = 'default' | 'reverse'
+
+export type CornerRadius = {
+  topLeft: number
+  topRight: number
+  bottomLeft: number
+  bottomRight: number
+}
 
 export type LayoutSchema = {
   orientation: LayoutOrientation
@@ -26,7 +37,8 @@ export type LayoutSchema = {
 /** A plain panel. Can have children (stuff placed on top of it) */
 export type RootPanelSchema = BaseComponentSchema &
   HasLayoutSchema &
-  HasChildrenSchema & {
+  HasChildrenSchema &
+  HasCornerRadius & {
     type: 'root-panel'
     size: SizeSchema
   }
@@ -34,7 +46,8 @@ export type RootPanelSchema = BaseComponentSchema &
 /** A plain panel. Can have children (stuff placed on top of it) */
 export type PanelSchema = BaseComponentSchema &
   HasLayoutSchema &
-  HasChildrenSchema & {
+  HasChildrenSchema &
+  HasCornerRadius & {
     type: 'panel'
     size?: FillableSize
   }
@@ -45,20 +58,26 @@ export type PocketOrientation = 'up' | 'down' | 'left' | 'right'
  * A cluster of pockets.
  * Does not hold individual pockets, rather pocketCount-1 T-Pockets and 1 top pocket (computed internally).
  */
-export type PocketClusterSchema = BaseComponentSchema & {
-  type: 'pocket-cluster'
-  /** The bounding rectangle of the cluster */
-  size?: FillableSize
-  /** How many pockets do we have in this cluster (min 1) */
-  pocketCount: number
-  /** How far each pocket is offset from the previous one along the stack axis */
-  pocketStep: number
-  /** Direction where the pocket opening is. Example means you can put the card in from the top, and left means from the left side. */
-  orientation: PocketOrientation
-  /** Size of the flaps/tabs on the T-Pockets */
-  tPocketTabWidth: number
-  /** How much the t pockets taper from the 2 * tPocketTabWidth reduced width to the bottom of the pocket */
-  tPocketTaper: number
-}
+export type PocketClusterSchema = BaseComponentSchema &
+  HasCornerRadius & {
+    type: 'pocket-cluster'
+    /** The bounding rectangle of the cluster */
+    size?: FillableSize
+    /** How many pockets do we have in this cluster (min 1) */
+    pocketCount: number
+    /** How far each pocket is offset from the previous one along the stack axis */
+    pocketStep: number
+    /** Direction where the pocket opening is. Example means you can put the card in from the top, and left means from the left side. */
+    orientation: PocketOrientation
+    /** Size of the flaps/tabs on the T-Pockets */
+    tPocketTabWidth: number
+    /** How much the t pockets taper from the 2 * tPocketTabWidth reduced width to the bottom of the pocket */
+    tPocketTaper: number
+    /**
+     * The corner radius of pockets on the card insertion side (for example orientaton === up => top left and right radius)
+     * The top pockets other 2 exposed corners are specified by the clusters radius, not this radius.
+     */
+    pocketRadius: number
+  }
 
 export type ComponentSchema = RootPanelSchema | PanelSchema | PocketClusterSchema

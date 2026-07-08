@@ -28,3 +28,29 @@ export type FillableSize = {
 export type PolygonSchema = {
   points: PointSchema[]
 }
+
+export type PathMoveTo = {
+  type: 'moveTo'
+  point: PointSchema
+}
+
+export type PathLineTo = {
+  type: 'lineTo'
+  point: PointSchema
+}
+
+export type PathArcTo = {
+  type: 'arcTo'
+  radius: number
+  point: PointSchema
+}
+
+export type PathClose = {
+  type: 'close'
+}
+
+export type PathCommand = PathMoveTo | PathLineTo | PathArcTo | PathClose
+
+export type Path = {
+  commands: PathCommand[]
+}

@@ -39,6 +39,7 @@ const DEFAULT_ROOT_PANEL: RootPanelSchema = {
     width: 170,
     height: 100,
   },
+  radius: 0,
 }
 
 const DEFAULT_PANEL: PanelSchema = {
@@ -47,6 +48,7 @@ const DEFAULT_PANEL: PanelSchema = {
   name: '',
   color: LEATHER_BASE_COLOR,
   children: [],
+  radius: 0,
   layout: { ...DEFAULT_LAYOUT },
 }
 
@@ -60,6 +62,8 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   pocketStep: 12,
   tPocketTabWidth: 8,
   tPocketTaper: 20,
+  radius: 0,
+  pocketRadius: 0,
 }
 
 const DEFAULT_COMPONENT_BY_TYPE: ComponentByType = {
