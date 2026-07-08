@@ -1,17 +1,18 @@
-import { useMemo, type FC } from 'react'
+import type { FC } from 'react'
 
-import type { PointSchema } from '../../schemas/geometry'
+import { usePath } from '../../hooks/usePath'
+import type { Path } from '../../schemas/geometry'
 
 type TPocketProps = {
-  points: PointSchema[]
+  path: Path
   fill: string
   stroke: string
   strokeWidth: number
   filter?: string
 }
 
-export const TPocket: FC<TPocketProps> = ({ fill, points, filter, stroke, strokeWidth }) => {
-  const pointString = useMemo(() => points.map((point) => `${point.x},${point.y}`).join(' '), [points])
+export const TPocket: FC<TPocketProps> = ({ fill, path, filter, stroke, strokeWidth }) => {
+  const pathData = usePath(path)
 
-  return <polygon fill={fill} points={pointString} stroke={stroke} strokeWidth={strokeWidth} filter={filter} />
+  return <path d={pathData} fill={fill} stroke={stroke} strokeWidth={strokeWidth} filter={filter} />
 }

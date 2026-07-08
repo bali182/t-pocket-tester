@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai'
 
-import type { ComputedComponentSchema } from '../schemas/computed'
+import type { ComputedComponentSchema } from '../schemas/computed2'
 import { computedProjectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
 

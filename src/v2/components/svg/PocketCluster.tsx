@@ -4,8 +4,9 @@ import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
+import { usePath } from '../../hooks/usePath'
 import type { PocketClusterSchema } from '../../schemas/components'
-import type { ComputedPocketClusterSchema } from '../../schemas/computed'
+import type { ComputedPocketClusterSchema } from '../../schemas/computed2'
 import { TPocket } from './TPocket'
 import { useSvgElementStyle } from './useSvgElementStyle'
 
@@ -18,6 +19,8 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
   const [isHovered, setIsHovered] = useState(false)
   const pocketCluster = useComponent<PocketClusterSchema>(componentId)
   const computedPocketCluster = useComputedComponent<ComputedPocketClusterSchema>(componentId)
+  const pathData = usePath(computedPocketCluster.path)
+  const frontPocketPathData = usePath(computedPocketCluster.frontPocket.path)
   const svgStyles = useSvgElementStyle(pocketCluster, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
@@ -42,26 +45,20 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
       {svgStyles.isSelected && (
-        <rect
+        <path
           {...svgStyles.element}
-          height={computedPocketCluster.boundingRect.height}
+          d={pathData}
           strokeWidth={STROKE_THICKNESS}
-          width={computedPocketCluster.boundingRect.width}
-          x={computedPocketCluster.boundingRect.x}
-          y={computedPocketCluster.boundingRect.y}
         />
       )}
-      {computedPocketCluster.tPockets.map((polygon, index) => (
-        <TPocket {...svgStyles.child} key={index} points={polygon.points} strokeWidth={STROKE_THICKNESS} />
+      {computedPocketCluster.tPockets.map((pocket) => (
+        <TPocket {...svgStyles.child} key={pocket.id} path={pocket.path} strokeWidth={STROKE_THICKNESS} />
       ))}
 
-      <rect
+      <path
         {...svgStyles.child}
-        height={computedPocketCluster.frontPocket.height}
+        d={frontPocketPathData}
         strokeWidth={STROKE_THICKNESS}
-        width={computedPocketCluster.frontPocket.width}
-        x={computedPocketCluster.frontPocket.x}
-        y={computedPocketCluster.frontPocket.y}
       />
     </g>
   )
