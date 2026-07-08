@@ -24,3 +24,7 @@ export type FillableSize = {
   width: number | 'fill'
   height: number | 'fill'
 }
+
+export type PolygonSchema = {
+  points: PointSchema[]
+}

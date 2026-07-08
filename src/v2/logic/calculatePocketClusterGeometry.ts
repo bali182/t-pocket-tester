@@ -1,4 +1,4 @@
-import { PolygonSchema } from '../../v1/schemas/PolygonSchema'
+import { PolygonSchema } from '../../v2/schemas/geometry'
 import type { PocketClusterSchema } from '../schemas/components'
 import type { RectSchema } from '../schemas/geometry'
 import { initial } from '../utils/initial'

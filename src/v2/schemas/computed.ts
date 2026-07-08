@@ -1,6 +1,5 @@
-import { PolygonSchema } from '../../v1/schemas/PolygonSchema'
 import { PanelSchema, PocketClusterSchema, RootPanelSchema } from './components'
-import { RectSchema } from './geometry'
+import { PolygonSchema, RectSchema } from './geometry'
 
 type BaseComputedSchema = {
   componentId: string

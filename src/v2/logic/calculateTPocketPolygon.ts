@@ -1,6 +1,5 @@
-import { PolygonSchema } from '../../v1/schemas/PolygonSchema'
 import { PocketClusterSchema } from '../schemas/components'
-import { RectSchema } from '../schemas/geometry'
+import { PolygonSchema, RectSchema } from '../schemas/geometry'
 import { getTPocketTabDepth } from './pocketUtils'
 
 export const calculateTPocketPolygon = (rect: RectSchema, pocketCluster: PocketClusterSchema): PolygonSchema => {
