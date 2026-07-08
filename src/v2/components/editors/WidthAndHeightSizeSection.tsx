@@ -61,7 +61,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
   return (
     <EditorSection>
       <EditorFieldGrid>
-        <EditorFieldRow label="Width">
+        <EditorFieldRow label="Szélesség">
           <SpinButton
             min={minRootPanelSize}
             onChange={handleWidthChange}
@@ -71,7 +71,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
           />
         </EditorFieldRow>
 
-        <EditorFieldRow label="Height">
+        <EditorFieldRow label="Magasság">
           <SpinButton
             min={minRootPanelSize}
             onChange={handleHeightChange}
