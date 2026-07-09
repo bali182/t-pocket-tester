@@ -1,7 +1,7 @@
-import { Button, makeStyles, Menu, MenuTrigger, tokens } from '@fluentui/react-components'
-import { AddRegular, ChevronDownRegular, ChevronUpRegular, DeleteRegular } from '@fluentui/react-icons'
+import { HStack, IconButton, Menu } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
+import { LuChevronDown, LuChevronUp, LuPlus, LuTrash } from 'react-icons/lu'
 
 import type { ComponentSchema } from '../schemas/components'
 import { projectAtom } from '../state'
@@ -15,17 +15,10 @@ import { AddChildComponentMenu, type ChildComponentType } from './AddChildCompon
 
 type ComponentTreeItemActionsProps = {
   component: ComponentSchema
+  onAddChild: (parentId: string) => void
 }
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    gap: tokens.spacingHorizontalXXS,
-  },
-})
-
-export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ component }) => {
-  const styles = useStyles()
+export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ component, onAddChild }) => {
   const [project, setProject] = useAtom(projectAtom)
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasChildren(component), [component])
@@ -58,8 +51,9 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
         return
       }
       setProject((project) => addComponent(component.id, type, project))
+      onAddChild(component.id)
     },
-    [canAdd, component.id, setProject],
+    [canAdd, component.id, onAddChild, setProject],
   )
 
   const handleDelete = useCallback((): void => {
@@ -84,43 +78,40 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
   }, [component.id, setProject, siblingMoveState.canMoveDown])
 
   return (
-    <div className={styles.root} onClick={handleActionsClick}>
-      <Button
-        appearance="subtle"
+    <HStack gap="0.5" onClick={handleActionsClick}>
+      <IconButton
         aria-label="Elem mozgatása fel"
         disabled={!siblingMoveState.canMoveUp}
-        icon={<ChevronUpRegular />}
         onClick={handleMoveUp}
-        size="small"
-      />
-      <Button
-        appearance="subtle"
+        size="2xs"
+        variant="ghost"
+      >
+        <LuChevronUp />
+      </IconButton>
+      <IconButton
         aria-label="Elem mozgatása le"
         disabled={!siblingMoveState.canMoveDown}
-        icon={<ChevronDownRegular />}
         onClick={handleMoveDown}
-        size="small"
-      />
-      <Menu>
-        <MenuTrigger disableButtonEnhancement>
-          <Button
-            appearance="subtle"
-            aria-label="Elem hozzáadása"
-            disabled={!canAdd}
-            icon={<AddRegular />}
-            size="small"
-          />
-        </MenuTrigger>
-        <AddChildComponentMenu onAddChild={handleAddChild} />
-      </Menu>
-      <Button
-        appearance="subtle"
-        aria-label="Elem törlése"
-        disabled={!canDelete}
-        icon={<DeleteRegular />}
-        onClick={handleDelete}
-        size="small"
-      />
-    </div>
+        size="2xs"
+        variant="ghost"
+      >
+        <LuChevronDown />
+      </IconButton>
+      <Menu.Root>
+        <Menu.Trigger asChild>
+          <IconButton aria-label="Elem hozzáadása" disabled={!canAdd} size="2xs" variant="ghost">
+            <LuPlus />
+          </IconButton>
+        </Menu.Trigger>
+        <Menu.Positioner>
+          <Menu.Content>
+            <AddChildComponentMenu onAddChild={handleAddChild} />
+          </Menu.Content>
+        </Menu.Positioner>
+      </Menu.Root>
+      <IconButton aria-label="Elem törlése" disabled={!canDelete} onClick={handleDelete} size="2xs" variant="ghost">
+        <LuTrash />
+      </IconButton>
+    </HStack>
   )
 }
