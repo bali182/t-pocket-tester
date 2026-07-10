@@ -10,7 +10,7 @@ import { useCallback, type ReactNode } from 'react'
 import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
 
 import { SIZE_STEP } from '../../constants/editor'
-import type { HasLayoutSchema, LayoutOrder, LayoutOrientation } from '../../schemas/components'
+import type { HasLayoutSchema, LayoutOrderSchema, LayoutOrientationSchema } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
@@ -33,7 +33,7 @@ export function LayoutSection<T extends HasLayoutSchema>({
 }: LayoutSectionProps<T>): ReactNode {
   const handleOrientationChange = useCallback(
     (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const orientation = data.checkedItems[0] as LayoutOrientation
+      const orientation = data.checkedItems[0] as LayoutOrientationSchema
       onChange({
         ...component,
         layout: {
@@ -47,7 +47,7 @@ export function LayoutSection<T extends HasLayoutSchema>({
 
   const handleOrderChange = useCallback(
     (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const order = data.checkedItems[0] as LayoutOrder
+      const order = data.checkedItems[0] as LayoutOrderSchema
       onChange({
         ...component,
         layout: {

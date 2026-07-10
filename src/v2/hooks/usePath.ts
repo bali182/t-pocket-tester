@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
 import { getSvgPathData } from '../logic/getSvgPathData'
-import type { Path } from '../schemas/geometry'
+import type { PathSchema } from '../schemas/geometry'
 
-export const usePath = (path: Path): string => {
+export const usePath = (path: PathSchema): string => {
   return useMemo(() => getSvgPathData(path), [path])
 }

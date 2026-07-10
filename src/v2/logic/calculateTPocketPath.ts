@@ -1,8 +1,8 @@
 import type { PocketClusterSchema } from '../schemas/components'
-import type { Path, PathCommand, RectSchema } from '../schemas/geometry'
+import type { PathSchema, PathCommand, RectSchema } from '../schemas/geometry'
 import { getTPocketTabDepth } from './pocketUtils'
 
-export const calculateTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): Path => {
+export const calculateTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
   switch (pocketCluster.orientation) {
     case 'up':
       return calculateUpTPocketPath(rect, pocketCluster)
@@ -15,7 +15,7 @@ export const calculateTPocketPath = (rect: RectSchema, pocketCluster: PocketClus
   }
 }
 
-const calculateUpTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): Path => {
+const calculateUpTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
   const r = pocketCluster.pocketRadius
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const right = rect.x + rect.width
@@ -49,7 +49,7 @@ const calculateUpTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSc
   return { commands }
 }
 
-const calculateDownTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): Path => {
+const calculateDownTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
   const r = pocketCluster.pocketRadius
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const top = rect.y
@@ -82,7 +82,7 @@ const calculateDownTPocketPath = (rect: RectSchema, pocketCluster: PocketCluster
   return { commands }
 }
 
-const calculateLeftTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): Path => {
+const calculateLeftTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
   const r = pocketCluster.pocketRadius
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const tabRightX = rect.x + tPocketTabDepth
@@ -114,7 +114,7 @@ const calculateLeftTPocketPath = (rect: RectSchema, pocketCluster: PocketCluster
   return { commands }
 }
 
-const calculateRightTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): Path => {
+const calculateRightTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
   const r = pocketCluster.pocketRadius
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const left = rect.x

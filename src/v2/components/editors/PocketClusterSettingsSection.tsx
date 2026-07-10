@@ -10,7 +10,7 @@ import { useCallback, type FC } from 'react'
 import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/pi'
 
 import { SIZE_STEP } from '../../constants/editor'
-import type { PocketClusterSchema, PocketOrientation } from '../../schemas/components'
+import type { PocketClusterSchema, PocketOrientationSchema } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
@@ -35,7 +35,7 @@ const isValidSize = (value: number): boolean => {
 export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({ component, onChange }) => {
   const handleOrientationChange = useCallback(
     (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const orientation = data.checkedItems[0] as PocketOrientation | undefined
+      const orientation = data.checkedItems[0] as PocketOrientationSchema | undefined
 
       if (!orientation) {
         return

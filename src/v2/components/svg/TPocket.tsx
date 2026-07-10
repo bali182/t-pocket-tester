@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 
 import { usePath } from '../../hooks/usePath'
-import type { Path } from '../../schemas/geometry'
+import type { PathSchema } from '../../schemas/geometry'
 
 type TPocketProps = {
-  path: Path
+  path: PathSchema
   fill: string
   stroke: string
   strokeWidth: number

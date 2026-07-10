@@ -1,4 +1,4 @@
-import type { Path, PathCommand } from '../schemas/geometry'
+import type { PathSchema, PathCommand } from '../schemas/geometry'
 
 const getSvgPathCommandData = (command: PathCommand): string => {
   switch (command.type) {
@@ -13,6 +13,6 @@ const getSvgPathCommandData = (command: PathCommand): string => {
   }
 }
 
-export const getSvgPathData = (path: Path): string => {
+export const getSvgPathData = (path: PathSchema): string => {
   return path.commands.map(getSvgPathCommandData).join(' ')
 }

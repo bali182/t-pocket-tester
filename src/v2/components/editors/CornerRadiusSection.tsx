@@ -10,7 +10,7 @@ import {
 import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
 
-import type { CornerRadius, HasCornerRadius } from '../../schemas/components'
+import type { CornerRadiusSchema, HasCornerRadiusSchema } from '../../schemas/components'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
@@ -52,11 +52,11 @@ const parseRadius = (value: string): number | undefined => {
   return isValidRadius(radius) ? radius : undefined
 }
 
-const getCommonRadius = (radius: number | CornerRadius): number => {
+const getCommonRadius = (radius: number | CornerRadiusSchema): number => {
   return typeof radius === 'number' ? radius : radius.topLeft
 }
 
-const getCustomRadius = (radius: number | CornerRadius): CornerRadius => {
+const getCustomRadius = (radius: number | CornerRadiusSchema): CornerRadiusSchema => {
   if (typeof radius === 'number') {
     return {
       topLeft: radius,
@@ -69,7 +69,7 @@ const getCustomRadius = (radius: number | CornerRadius): CornerRadius => {
   return radius
 }
 
-export function CornerRadiusSection<T extends HasCornerRadius>({
+export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   component,
   onChange,
 }: CornerRadiusSectionProps<T>): ReactNode {
@@ -120,7 +120,7 @@ export function CornerRadiusSection<T extends HasCornerRadius>({
   )
 
   const handleCustomRadiusChange = useCallback(
-    (key: keyof CornerRadius) => (event: ChangeEvent<HTMLInputElement>, _data: InputOnChangeData) => {
+    (key: keyof CornerRadiusSchema) => (event: ChangeEvent<HTMLInputElement>, _data: InputOnChangeData) => {
       const radius = parseRadius(event.currentTarget.value)
 
       if (radius === undefined) {

@@ -1,9 +1,9 @@
-import { Path, RectSchema } from './geometry'
+import { PathSchema, RectSchema } from './geometry'
 
 type BaseComputedSchema = {
   componentId: string
   boundingRect: RectSchema
-  path: Path
+  path: PathSchema
 }
 
 export type ComputedRootPanelSchema = BaseComputedSchema & {
@@ -16,24 +16,24 @@ export type ComputedPanelSchema = BaseComputedSchema & {
   children: ComputedComponentSchema[]
 }
 
-export type ComputedTopPocket = {
+export type ComputedTopPocketSchema = {
   type: 'computed-top-pocket'
   id: string
   boundingRect: RectSchema
-  path: Path
+  path: PathSchema
 }
 
-export type ComputedTPocket = {
+export type ComputedTPocketSchema = {
   type: 'computed-t-pocket'
   id: string
   boundingRect: RectSchema
-  path: Path
+  path: PathSchema
 }
 
 export type ComputedPocketClusterSchema = BaseComputedSchema & {
   type: 'computed-pocket-cluster'
-  frontPocket: ComputedTopPocket
-  tPockets: ComputedTPocket[]
+  frontPocket: ComputedTopPocketSchema
+  tPockets: ComputedTPocketSchema[]
 }
 
 export type ComputedComponentSchema = ComputedRootPanelSchema | ComputedPanelSchema | ComputedPocketClusterSchema

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import type { PanelSchema, PocketClusterSchema } from '../../schemas/components'
-import type { FillableSize } from '../../schemas/geometry'
+import type { FillableSizeSchema } from '../../schemas/geometry'
 import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
@@ -15,9 +15,9 @@ type FillableSizeSectionProps<T> = {
   onChange: (updated: T) => void
 }
 
-type FillableSizeValue = FillableSize['width']
+type FillableSizeValue = FillableSizeSchema['width']
 
-const getNormalizedFillableSize = (size: FillableSize | undefined): FillableSize => {
+const getNormalizedFillableSize = (size: FillableSizeSchema | undefined): FillableSizeSchema => {
   return {
     width: isDefined(size?.width) ? size.width : 'fill',
     height: isDefined(size?.height) ? size.height : 'fill',
