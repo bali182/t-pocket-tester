@@ -49,7 +49,7 @@ export type PanelSchema = BaseComponentSchema &
   HasChildrenSchema &
   HasCornerRadiusSchema & {
     type: 'panel'
-    size?: FillableSizeSchema
+    size: FillableSizeSchema
   }
 
 export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
@@ -62,7 +62,7 @@ export type PocketClusterSchema = BaseComponentSchema &
   HasCornerRadiusSchema & {
     type: 'pocket-cluster'
     /** The bounding rectangle of the cluster */
-    size?: FillableSizeSchema
+    size: FillableSizeSchema
     /** How many pockets do we have in this cluster (min 1) */
     pocketCount: number
     /** How far each pocket is offset from the previous one along the stack axis */

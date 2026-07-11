@@ -1,7 +1,8 @@
-import type { IssueSchema, SeveritySchema, ValidationResult } from '../schemas/validation'
+import type { IssueSchema, SeveritySchema, ValidationIssuesSchema } from '../schemas/validation'
 import { isDefined } from './isDefined'
+import { isRecord } from './isRecord'
 
-export const hasValidationErrors = <T>(result: ValidationResult<T>): boolean => {
+export const hasValidationErrors = <T>(result: ValidationIssuesSchema<T>): boolean => {
   return hasValidationErrorsInValue(result)
 }
 
@@ -31,10 +32,6 @@ const isIssueSchema = (value: unknown): value is IssueSchema => {
   }
 
   return isSeverity(value.severity) && typeof value.message === 'string'
-}
-
-const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return isDefined(value) && typeof value === 'object'
 }
 
 const isSeverity = (value: unknown): value is SeveritySchema => {
