@@ -20,33 +20,33 @@ export type SizeSchema = {
   height: number
 }
 
-export type FillableSize = {
+export type FillableSizeSchema = {
   width: number | 'fill'
   height: number | 'fill'
 }
 
-export type PathMoveTo = {
+export type PathMoveToSchema = {
   type: 'moveTo'
   point: PointSchema
 }
 
-export type PathLineTo = {
+export type PathLineToSchema = {
   type: 'lineTo'
   point: PointSchema
 }
 
-export type PathArcTo = {
+export type PathArcToSchema = {
   type: 'arcTo'
   radius: number
   point: PointSchema
 }
 
-export type PathClose = {
+export type PathCloseSchema = {
   type: 'close'
 }
 
-export type PathCommand = PathMoveTo | PathLineTo | PathArcTo | PathClose
+export type PathCommand = PathMoveToSchema | PathLineToSchema | PathArcToSchema | PathCloseSchema
 
-export type Path = {
+export type PathSchema = {
   commands: PathCommand[]
 }

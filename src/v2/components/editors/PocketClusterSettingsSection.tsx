@@ -1,121 +1,103 @@
-import {
-  SpinButton,
-  Toolbar,
-  ToolbarRadioButton,
-  ToolbarRadioGroup,
-  type SpinButtonOnChangeData,
-  type ToolbarProps,
-} from '@fluentui/react-components'
+import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/pi'
 
-import { SIZE_STEP } from '../../constants/editor'
-import type { PocketClusterSchema, PocketOrientation } from '../../schemas/components'
+import type { PocketClusterSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
+import { NumberInput } from './NumberInput'
 
 type PocketClusterSettingsSectionProps = {
   component: PocketClusterSchema
-  onChange: (updated: PocketClusterSchema) => void
+  editable: EditableSchema<PocketClusterSchema>
+  issues: ValidationIssuesSchema<PocketClusterSchema>
+  onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
-const minPocketCount = 1
-const minSize = 0
-
-const isValidPocketCount = (value: number): boolean => {
-  return Number.isInteger(value) && value >= minPocketCount
-}
-
-const isValidSize = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minSize
-}
-
-export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({ component, onChange }) => {
+export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({
+  editable,
+  issues,
+  onChange,
+}) => {
   const handleOrientationChange = useCallback(
-    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const orientation = data.checkedItems[0] as PocketOrientation | undefined
-
-      if (!orientation) {
+    (details: SegmentGroup.ValueChangeDetails) => {
+      if (details.value !== 'up' && details.value !== 'down' && details.value !== 'left' && details.value !== 'right') {
         return
       }
 
       onChange({
-        ...component,
-        orientation,
+        ...editable,
+        orientation: details.value,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handlePocketCountChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const pocketCount = getSpinButtonNumberValue(data)
-
-      if (pocketCount === undefined || !isValidPocketCount(pocketCount)) {
-        return
-      }
-
+    (pocketCount: string) => {
       onChange({
-        ...component,
+        ...editable,
         pocketCount,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handlePocketStepChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const pocketStep = getSpinButtonNumberValue(data)
-
-      if (pocketStep === undefined || !isValidSize(pocketStep)) {
-        return
-      }
-
+    (pocketStep: string) => {
       onChange({
-        ...component,
+        ...editable,
         pocketStep,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Nyílás iránya">
-          <Toolbar
-            checkedValues={{ orientation: [component.orientation] }}
-            onCheckedValueChange={handleOrientationChange}
-            size="small"
-          >
-            <ToolbarRadioGroup>
-              <ToolbarRadioButton aria-label="Felülről" icon={<PiCaretDown />} name="orientation" value="up" />
-              <ToolbarRadioButton aria-label="Alulról" icon={<PiCaretUp />} name="orientation" value="down" />
-              <ToolbarRadioButton aria-label="Balról" icon={<PiCaretRight />} name="orientation" value="left" />
-              <ToolbarRadioButton aria-label="Jobbról" icon={<PiCaretLeft />} name="orientation" value="right" />
-            </ToolbarRadioGroup>
-          </Toolbar>
+          <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
+            <SegmentGroup.Indicator />
+            <SegmentGroup.Item aria-label="Felülről" value="up">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretDown />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Alulról" value="down">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretUp />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Balról" value="left">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretRight />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Jobbról" value="right">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretLeft />
+            </SegmentGroup.Item>
+          </SegmentGroup.Root>
         </EditorFieldRow>
 
         <EditorFieldRow label="Zsebek száma">
-          <SpinButton
-            min={minPocketCount}
+          <NumberInput
+            issue={issues.pocketCount}
             onChange={handlePocketCountChange}
-            size="small"
             step={1}
-            value={component.pocketCount}
+            unit="db"
+            value={editable.pocketCount}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="Zseb lépés">
-          <SpinButton
-            min={minSize}
+          <NumberInput
+            issue={issues.pocketStep}
             onChange={handlePocketStepChange}
-            size="small"
-            step={SIZE_STEP}
-            value={component.pocketStep}
+            step={1}
+            unit="mm"
+            value={editable.pocketStep}
           />
         </EditorFieldRow>
       </EditorFieldGrid>

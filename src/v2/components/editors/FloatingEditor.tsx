@@ -1,10 +1,11 @@
-import type { PositioningImperativeRef, PositioningVirtualElement } from '@fluentui/react-components'
-import { Button, Caption1Strong, CardHeader, makeStyles, Popover, PopoverSurface } from '@fluentui/react-components'
-import { DismissRegular } from '@fluentui/react-icons'
+import { Box, HStack, IconButton, Popover, Text, usePopover } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { MouseEvent, useCallback, useEffect, useMemo, useRef, type FC } from 'react'
+import { MouseEvent, useCallback, useEffect, useMemo, type FC } from 'react'
+import { LuX } from 'react-icons/lu'
 
+import { useEditableComponent } from '../../hooks/useEditableComponent'
 import type { ComponentSchema } from '../../schemas/components'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { projectAtom } from '../../state'
 import { addComponent } from '../../utils/addComponent'
 import { isDefined } from '../../utils/isDefined'
@@ -18,28 +19,37 @@ type FloatingEditorProps = {
   onClose: () => void
 }
 
-const useStyles = makeStyles({
-  surface: {
-    width: '320px',
-    zIndex: 1000,
-  },
-  body: {
-    padding: 0,
-  },
-})
-
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
-  const styles = useStyles()
-  const [project, setProject] = useAtom(projectAtom)
-  const positioningRef = useRef<PositioningImperativeRef>(null)
-  const editedComponent = project.components[component.id]
-  const positioningTarget = useMemo<PositioningVirtualElement>(
+  const [, setProject] = useAtom(projectAtom)
+  const {
+    component: editedComponent,
+    editableComponent,
+    setComponent,
+    validationIssues,
+  } = useEditableComponent(component.id)
+  const positioningTarget = useMemo(
     () => ({
       getBoundingClientRect: () => anchorElement.getBoundingClientRect(),
       contextElement: anchorElement,
     }),
     [anchorElement],
   )
+  const popover = usePopover({
+    open: true,
+    onOpenChange: ({ open }) => {
+      if (!open) {
+        onClose()
+      }
+    },
+    positioning: {
+      flip: ['left-start', 'bottom', 'top', 'right-start'],
+      getAnchorElement: () => positioningTarget,
+      gutter: 10,
+      overflowPadding: 8,
+      placement: 'right-start',
+      strategy: 'fixed',
+    },
+  })
 
   useEffect(() => {
     const editorElement = anchorElement.ownerSVGElement?.parentElement
@@ -49,7 +59,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
     }
 
     const observer = new ResizeObserver((): void => {
-      positioningRef.current?.updatePosition()
+      popover.reposition()
     })
 
     observer.observe(editorElement)
@@ -57,20 +67,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
     return (): void => {
       observer.disconnect()
     }
-  }, [anchorElement])
-
-  const handleComponentChange = useCallback(
-    (updated: ComponentSchema) => {
-      setProject((project) => ({
-        ...project,
-        components: {
-          ...project.components,
-          [updated.id]: updated,
-        },
-      }))
-    },
-    [setProject],
-  )
+  }, [anchorElement, popover])
 
   const handleAddChild = useCallback(
     (type: ChildComponentType): void => {
@@ -80,54 +77,41 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   )
 
   const handleRemoveComponent = useCallback((): void => {
+    onClose()
     setProject((project) => removeComponent(component.id, project))
-  }, [component.id, setProject])
+  }, [component.id, onClose, setProject])
 
   const captureClick = useCallback((e: MouseEvent) => {
     e.stopPropagation()
   }, [])
 
-  useEffect(() => {
-    if (!isDefined(editedComponent)) {
-      onClose()
-    }
-  }, [editedComponent, onClose])
-
-  if (!isDefined(editedComponent)) {
-    return null
-  }
-
   return (
-    <Popover
-      open
-      positioning={{
-        align: 'top',
-        fallbackPositions: ['before-top', 'below', 'above', 'after-top'],
-        offset: 10,
-        overflowBoundaryPadding: 8,
-        position: 'after',
-        positioningRef,
-        strategy: 'fixed',
-        target: positioningTarget,
-      }}
-      withArrow
-    >
-      <PopoverSurface className={styles.surface} onClick={captureClick}>
-        <CardHeader
-          action={
-            <Button appearance="subtle" aria-label="Bezárás" icon={<DismissRegular />} onClick={onClose} size="small" />
-          }
-          header={<Caption1Strong>#{editedComponent.id}</Caption1Strong>}
-        />
-        <div className={styles.body}>
-          <ComponentEditor
-            component={editedComponent}
-            onAddChild={handleAddChild}
-            onChange={handleComponentChange}
-            onRemoveComponent={handleRemoveComponent}
-          />
-        </div>
-      </PopoverSurface>
-    </Popover>
+    <Popover.RootProvider value={popover}>
+      <Popover.Positioner>
+        <Popover.Content onClick={captureClick} width="400px" zIndex="popover">
+          <Popover.Arrow />
+          <Popover.Header pt="2" pb="2">
+            <HStack justify="space-between">
+              <Text fontWeight="semibold" textStyle="xs">
+                #{editedComponent.id}
+              </Text>
+              <IconButton aria-label="Bezárás" onClick={onClose} size="xs" variant="ghost">
+                <LuX />
+              </IconButton>
+            </HStack>
+          </Popover.Header>
+          <Box>
+            <ComponentEditor
+              component={editedComponent}
+              editable={editableComponent}
+              issues={validationIssues as ValidationIssuesSchema<ComponentSchema>}
+              onAddChild={handleAddChild}
+              onChange={setComponent}
+              onRemoveComponent={handleRemoveComponent}
+            />
+          </Box>
+        </Popover.Content>
+      </Popover.Positioner>
+    </Popover.RootProvider>
   )
 }

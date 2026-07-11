@@ -5,7 +5,7 @@ import type {
   PocketClusterSchema,
   RootPanelSchema,
 } from '../schemas/components'
-import type { FillableSize, RectSchema } from '../schemas/geometry'
+import type { FillableSizeSchema, RectSchema } from '../schemas/geometry'
 import type { ProjectSchema } from '../schemas/project'
 import { clamp } from '../utils/clamp'
 import { isDefined } from '../utils/isDefined'
@@ -208,7 +208,7 @@ const calculateCrossAxisSize = (
   return clamp(crossAxisSize, 0, parentSpace)
 }
 
-const getMainAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): number | 'fill' => {
+const getMainAxisSize = (size: FillableSizeSchema | undefined, layout: LayoutSchema): number | 'fill' => {
   const axisSize = layout.orientation === 'horizontal' ? size?.width : size?.height
 
   if (!isDefined(axisSize)) {
@@ -218,7 +218,7 @@ const getMainAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): 
   return axisSize
 }
 
-const getCrossAxisSize = (size: FillableSize | undefined, layout: LayoutSchema): number | 'fill' => {
+const getCrossAxisSize = (size: FillableSizeSchema | undefined, layout: LayoutSchema): number | 'fill' => {
   const axisSize = layout.orientation === 'horizontal' ? size?.height : size?.width
 
   if (!isDefined(axisSize)) {

@@ -1,10 +1,10 @@
-import type { CornerRadius } from '../schemas/components'
-import type { Path, PathCommand, RectSchema } from '../schemas/geometry'
+import type { CornerRadiusSchema } from '../schemas/components'
+import type { PathSchema, PathCommand, RectSchema } from '../schemas/geometry'
 
 export const calculateRectPath = (
   rect: RectSchema,
-  { topLeft, topRight, bottomRight, bottomLeft }: CornerRadius,
-): Path => {
+  { topLeft, topRight, bottomRight, bottomLeft }: CornerRadiusSchema,
+): PathSchema => {
   const right = rect.x + rect.width
   const bottom = rect.y + rect.height
 

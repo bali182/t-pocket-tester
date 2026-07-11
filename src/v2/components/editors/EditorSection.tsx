@@ -1,20 +1,14 @@
-import { makeStyles, tokens } from '@fluentui/react-components'
+import { Box } from '@chakra-ui/react'
 import type { FC, ReactNode } from 'react'
 
 type EditorSectionProps = {
   children: ReactNode
 }
 
-const useStyles = makeStyles({
-  root: {
-    borderTop: `${tokens.strokeWidthThin} solid ${tokens.colorNeutralStroke2}`,
-    paddingBlock: tokens.spacingVerticalM,
-    paddingInline: tokens.spacingHorizontalM,
-  },
-})
-
 export const EditorSection: FC<EditorSectionProps> = ({ children }) => {
-  const styles = useStyles()
-
-  return <section className={styles.root}>{children}</section>
+  return (
+    <Box as="section" borderTopWidth="1px" px="4" py="3">
+      {children}
+    </Box>
+  )
 }

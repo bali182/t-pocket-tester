@@ -1,6 +1,6 @@
-import { Button, makeStyles, Menu, MenuTrigger, tokens } from '@fluentui/react-components'
-import { AddRegular, DeleteRegular } from '@fluentui/react-icons'
+import { Button, HStack, Menu } from '@chakra-ui/react'
 import { type FC } from 'react'
+import { PiPlus, PiTrash } from 'react-icons/pi'
 
 import { isDefined } from '../../utils/isDefined'
 import { AddChildComponentMenu, type ChildComponentType } from '../AddChildComponentMenu'
@@ -13,38 +13,34 @@ type ToolbarSectionProps = {
   onRemoveComponent?: () => void
 }
 
-const useStyles = makeStyles({
-  toolbar: {
-    display: 'flex',
-    gap: tokens.spacingHorizontalXS,
-    justifyContent: 'end',
-  },
-})
-
 export const ToolbarSection: FC<ToolbarSectionProps> = ({ onAddChild, onRemoveComponent }) => {
-  const styles = useStyles()
-
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Akciók">
-          <div className={styles.toolbar}>
+          <HStack gap="1" justify="end">
             {isDefined(onAddChild) && (
-              <Menu>
-                <MenuTrigger disableButtonEnhancement>
-                  <Button icon={<AddRegular />} size="small">
+              <Menu.Root>
+                <Menu.Trigger asChild>
+                  <Button size="xs" variant="outline">
+                    <PiPlus />
                     Elem hozzáadása
                   </Button>
-                </MenuTrigger>
-                <AddChildComponentMenu onAddChild={onAddChild} />
-              </Menu>
+                </Menu.Trigger>
+                <Menu.Positioner>
+                  <Menu.Content>
+                    <AddChildComponentMenu onAddChild={onAddChild} />
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Menu.Root>
             )}
             {isDefined(onRemoveComponent) && (
-              <Button icon={<DeleteRegular />} onClick={onRemoveComponent} size="small">
+              <Button onClick={onRemoveComponent} size="xs" variant="outline">
+                <PiTrash />
                 Törlés
               </Button>
             )}
-          </div>
+          </HStack>
         </EditorFieldRow>
       </EditorFieldGrid>
     </EditorSection>

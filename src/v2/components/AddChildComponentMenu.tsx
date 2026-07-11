@@ -1,4 +1,4 @@
-import { MenuItem, MenuList, MenuPopover } from '@fluentui/react-components'
+import { Menu } from '@chakra-ui/react'
 import { type FC, useCallback } from 'react'
 
 import { useComponentIcon } from '../hooks/useComponentIcon'
@@ -23,19 +23,18 @@ const AddChildComponentMenuItem: FC<AddChildComponentMenuItemProps> = ({ label, 
   }, [onAddChild, type])
 
   return (
-    <MenuItem icon={<Icon />} onClick={handleClick}>
-      {label}
-    </MenuItem>
+    <Menu.Item value={type} onClick={handleClick}>
+      <Icon />
+      <Menu.ItemText>{label}</Menu.ItemText>
+    </Menu.Item>
   )
 }
 
 export const AddChildComponentMenu: FC<AddChildComponentMenuProps> = ({ onAddChild }) => {
   return (
-    <MenuPopover>
-      <MenuList>
-        <AddChildComponentMenuItem label="Panel" onAddChild={onAddChild} type="panel" />
-        <AddChildComponentMenuItem label="Zsebek" onAddChild={onAddChild} type="pocket-cluster" />
-      </MenuList>
-    </MenuPopover>
+    <>
+      <AddChildComponentMenuItem label="Panel" onAddChild={onAddChild} type="panel" />
+      <AddChildComponentMenuItem label="Zsebek" onAddChild={onAddChild} type="pocket-cluster" />
+    </>
   )
 }

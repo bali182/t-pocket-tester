@@ -1,83 +1,67 @@
-import { SpinButton, type SpinButtonOnChangeData } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 
-import { SIZE_STEP } from '../../constants/editor'
 import type { RootPanelSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
+import { NumberInput } from './NumberInput'
 
 type WidthAndHeightSizeSectionProps = {
   component: RootPanelSchema
-  onChange: (updated: RootPanelSchema) => void
+  editable: EditableSchema<RootPanelSchema>
+  issues: ValidationIssuesSchema<RootPanelSchema['size']>
+  onChange: (updated: EditableSchema<RootPanelSchema>) => void
 }
 
-const minRootPanelSize = 10
-
-const isValidRootPanelSize = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minRootPanelSize
-}
-
-export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, onChange }) => {
+export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ editable, issues, onChange }) => {
   const handleWidthChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextWidth = getSpinButtonNumberValue(data)
-
-      if (nextWidth === undefined || !isValidRootPanelSize(nextWidth)) {
-        return
-      }
-
+    (width: string) => {
       onChange({
-        ...component,
+        ...editable,
         size: {
-          ...component.size,
-          width: nextWidth,
+          ...editable.size,
+          width,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleHeightChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextHeight = getSpinButtonNumberValue(data)
-
-      if (nextHeight === undefined || !isValidRootPanelSize(nextHeight)) {
-        return
-      }
-
+    (height: string) => {
       onChange({
-        ...component,
+        ...editable,
         size: {
-          ...component.size,
-          height: nextHeight,
+          ...editable.size,
+          height,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Szélesség">
-          <SpinButton
-            min={minRootPanelSize}
+          <NumberInput
+            issue={issues.width}
             onChange={handleWidthChange}
-            size="small"
-            step={SIZE_STEP}
-            value={component.size.width}
+            step={1}
+            unit="mm"
+            value={editable.size.width}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="Magasság">
-          <SpinButton
-            min={minRootPanelSize}
+          <NumberInput
+            issue={issues.height}
             onChange={handleHeightChange}
-            size="small"
-            step={SIZE_STEP}
-            value={component.size.height}
+            step={1}
+            unit="mm"
+            value={editable.size.height}
           />
         </EditorFieldRow>
       </EditorFieldGrid>

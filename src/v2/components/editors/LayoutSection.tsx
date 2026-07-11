@@ -1,128 +1,112 @@
-import {
-  SpinButton,
-  Toolbar,
-  ToolbarRadioButton,
-  ToolbarRadioGroup,
-  type SpinButtonOnChangeData,
-  type ToolbarProps,
-} from '@fluentui/react-components'
+import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
 import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
 
-import { SIZE_STEP } from '../../constants/editor'
-import type { HasLayoutSchema, LayoutOrder, LayoutOrientation } from '../../schemas/components'
+import type { HasLayoutSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
+import { NumberInput } from './NumberInput'
 
-type LayoutSectionProps<T> = {
+type LayoutSectionProps<T extends HasLayoutSchema> = {
   component: T
-  onChange: (updated: T) => void
-}
-
-const minGap = 0
-
-const isValidGap = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minGap
+  editable: EditableSchema<T>
+  issues: ValidationIssuesSchema<HasLayoutSchema['layout']>
+  onChange: (updated: EditableSchema<T>) => void
 }
 
 export function LayoutSection<T extends HasLayoutSchema>({
-  component,
+  editable,
+  issues,
   onChange,
 }: LayoutSectionProps<T>): ReactNode {
   const handleOrientationChange = useCallback(
-    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const orientation = data.checkedItems[0] as LayoutOrientation
+    (details: SegmentGroup.ValueChangeDetails) => {
+      if (details.value !== 'horizontal' && details.value !== 'vertical') {
+        return
+      }
+
       onChange({
-        ...component,
+        ...editable,
         layout: {
-          ...component.layout,
-          orientation,
+          ...editable.layout,
+          orientation: details.value,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleOrderChange = useCallback(
-    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const order = data.checkedItems[0] as LayoutOrder
+    (details: SegmentGroup.ValueChangeDetails) => {
+      if (details.value !== 'default' && details.value !== 'reverse') {
+        return
+      }
+
       onChange({
-        ...component,
+        ...editable,
         layout: {
-          ...component.layout,
-          order,
+          ...editable.layout,
+          order: details.value,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleGapChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextGap = getSpinButtonNumberValue(data)
-
-      if (nextGap === undefined || !isValidGap(nextGap)) {
-        return
-      }
+    (gap: string) => {
       onChange({
-        ...component,
+        ...editable,
         layout: {
-          ...component.layout,
-          gap: nextGap,
+          ...editable.layout,
+          gap,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Elrendezés">
-          <Toolbar
-            checkedValues={{ orientation: [component.layout.orientation] }}
-            onCheckedValueChange={handleOrientationChange}
-            size="small"
-          >
-            <ToolbarRadioGroup>
-              <ToolbarRadioButton aria-label="Vízszintes" icon={<PiColumns />} name="orientation" value="horizontal" />
-              <ToolbarRadioButton aria-label="Függőleges" icon={<PiRows />} name="orientation" value="vertical" />
-            </ToolbarRadioGroup>
-          </Toolbar>
+          <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.layout.orientation}>
+            <SegmentGroup.Indicator />
+            <SegmentGroup.Item aria-label="Vízszintes" value="horizontal">
+              <SegmentGroup.ItemHiddenInput />
+              <PiColumns />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Függőleges" value="vertical">
+              <SegmentGroup.ItemHiddenInput />
+              <PiRows />
+            </SegmentGroup.Item>
+          </SegmentGroup.Root>
         </EditorFieldRow>
 
         <EditorFieldRow label="Irány">
-          <Toolbar
-            checkedValues={{ order: [component.layout.order] }}
-            onCheckedValueChange={handleOrderChange}
-            size="small"
-          >
-            <ToolbarRadioGroup>
-              <ToolbarRadioButton
-                aria-label="Alapértelmezett"
-                icon={component.layout.orientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
-                name="order"
-                value="default"
-              />
-              <ToolbarRadioButton
-                aria-label="Fordított"
-                icon={component.layout.orientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
-                name="order"
-                value="reverse"
-              />
-            </ToolbarRadioGroup>
-          </Toolbar>
+          <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layout.order}>
+            <SegmentGroup.Indicator />
+            <SegmentGroup.Item aria-label="Alapértelmezett" value="default">
+              <SegmentGroup.ItemHiddenInput />
+              {editable.layout.orientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Fordított" value="reverse">
+              <SegmentGroup.ItemHiddenInput />
+              {editable.layout.orientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
+            </SegmentGroup.Item>
+          </SegmentGroup.Root>
         </EditorFieldRow>
 
         <EditorFieldRow label="Térköz">
-          <SpinButton
-            min={minGap}
+          <NumberInput
+            issue={issues.gap}
             onChange={handleGapChange}
-            size="small"
-            step={SIZE_STEP}
-            value={component.layout.gap}
+            step={1}
+            unit="mm"
+            value={editable.layout.gap}
           />
         </EditorFieldRow>
       </EditorFieldGrid>
