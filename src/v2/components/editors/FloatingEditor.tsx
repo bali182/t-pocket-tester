@@ -4,6 +4,7 @@ import { MouseEvent, useCallback, useEffect, useMemo, type FC } from 'react'
 import { LuX } from 'react-icons/lu'
 
 import type { ComponentSchema } from '../../schemas/components'
+import { useEditableComponent } from '../../hooks/useEditableComponent'
 import { projectAtom } from '../../state'
 import { addComponent } from '../../utils/addComponent'
 import { isDefined } from '../../utils/isDefined'
@@ -18,8 +19,8 @@ type FloatingEditorProps = {
 }
 
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
-  const [project, setProject] = useAtom(projectAtom)
-  const editedComponent = project.components[component.id]
+  const [, setProject] = useAtom(projectAtom)
+  const { component: editedComponent } = useEditableComponent(component.id)
   const positioningTarget = useMemo(
     () => ({
       getBoundingClientRect: () => anchorElement.getBoundingClientRect(),
@@ -83,22 +84,13 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   )
 
   const handleRemoveComponent = useCallback((): void => {
+    onClose()
     setProject((project) => removeComponent(component.id, project))
-  }, [component.id, setProject])
+  }, [component.id, onClose, setProject])
 
   const captureClick = useCallback((e: MouseEvent) => {
     e.stopPropagation()
   }, [])
-
-  useEffect(() => {
-    if (!isDefined(editedComponent)) {
-      onClose()
-    }
-  }, [editedComponent, onClose])
-
-  if (!isDefined(editedComponent)) {
-    return null
-  }
 
   return (
     <Popover.RootProvider value={popover}>
