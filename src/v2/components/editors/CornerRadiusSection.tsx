@@ -34,12 +34,7 @@ const useStyles = makeStyles({
   },
 })
 
-export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
-  component,
-  editable,
-  issues,
-  onChange,
-}: CornerRadiusSectionProps<T>): ReactNode {
+export function CornerRadiusSection<T extends HasCornerRadiusSchema>({ editable, issues, onChange }: CornerRadiusSectionProps<T>): ReactNode {
   const styles = useStyles()
   const commonRadius = getCommonRadius(editable.radius)
   const customRadius = getCustomRadius(editable.radius)
@@ -115,7 +110,6 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
             {typeof editable.radius === 'string' ? (
               <NumberInput
                 issue={commonIssue}
-                lastValidValue={typeof component.radius === 'number' ? component.radius : undefined}
                 onChange={handleCommonRadiusChange}
                 step={1}
                 unit="mm"
@@ -125,34 +119,26 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
               <div className={styles.customInputs}>
                 <NumberInput
                   issue={customIssues.topLeft}
-                  lastValidValue={typeof component.radius === 'object' ? component.radius.topLeft : undefined}
                   onChange={handleCustomRadiusChange('topLeft')}
                   step={1}
-                  unit="mm"
                   value={customRadius.topLeft}
                 />
                 <NumberInput
                   issue={customIssues.topRight}
-                  lastValidValue={typeof component.radius === 'object' ? component.radius.topRight : undefined}
                   onChange={handleCustomRadiusChange('topRight')}
                   step={1}
-                  unit="mm"
                   value={customRadius.topRight}
                 />
                 <NumberInput
                   issue={customIssues.bottomRight}
-                  lastValidValue={typeof component.radius === 'object' ? component.radius.bottomRight : undefined}
                   onChange={handleCustomRadiusChange('bottomRight')}
                   step={1}
-                  unit="mm"
                   value={customRadius.bottomRight}
                 />
                 <NumberInput
                   issue={customIssues.bottomLeft}
-                  lastValidValue={typeof component.radius === 'object' ? component.radius.bottomLeft : undefined}
                   onChange={handleCustomRadiusChange('bottomLeft')}
                   step={1}
-                  unit="mm"
                   value={customRadius.bottomLeft}
                 />
               </div>

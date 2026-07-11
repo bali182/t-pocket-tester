@@ -18,7 +18,6 @@ type PocketClusterSettingsSectionProps = {
 }
 
 export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({
-  component,
   editable,
   issues,
   onChange,
@@ -80,7 +79,6 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
         <EditorFieldRow label="Zsebek száma">
           <NumberInput
             issue={issues.pocketCount}
-            lastValidValue={component.pocketCount}
             onChange={handlePocketCountChange}
             step={1}
             unit="db"
@@ -91,7 +89,6 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
         <EditorFieldRow label="Zseb lépés">
           <NumberInput
             issue={issues.pocketStep}
-            lastValidValue={component.pocketStep}
             onChange={handlePocketStepChange}
             step={1}
             unit="mm"

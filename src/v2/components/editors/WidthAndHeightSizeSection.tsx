@@ -15,7 +15,7 @@ type WidthAndHeightSizeSectionProps = {
   onChange: (updated: EditableSchema<RootPanelSchema>) => void
 }
 
-export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, editable, issues, onChange }) => {
+export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ editable, issues, onChange }) => {
   const handleWidthChange = useCallback(
     (width: string) => {
       onChange({
@@ -48,7 +48,6 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
         <EditorFieldRow label="Szélesség">
           <NumberInput
             issue={issues.width}
-            lastValidValue={component.size.width}
             onChange={handleWidthChange}
             step={1}
             unit="mm"
@@ -59,7 +58,6 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
         <EditorFieldRow label="Magasság">
           <NumberInput
             issue={issues.height}
-            lastValidValue={component.size.height}
             onChange={handleHeightChange}
             step={1}
             unit="mm"

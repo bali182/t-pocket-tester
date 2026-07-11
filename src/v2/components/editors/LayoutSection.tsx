@@ -18,7 +18,6 @@ type LayoutSectionProps<T extends HasLayoutSchema> = {
 }
 
 export function LayoutSection<T extends HasLayoutSchema>({
-  component,
   editable,
   issues,
   onChange,
@@ -106,7 +105,6 @@ export function LayoutSection<T extends HasLayoutSchema>({
         <EditorFieldRow label="Térköz">
           <NumberInput
             issue={issues.gap}
-            lastValidValue={component.layout.gap}
             onChange={handleGapChange}
             step={1}
             unit="mm"

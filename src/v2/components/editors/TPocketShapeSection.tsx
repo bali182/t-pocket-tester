@@ -14,7 +14,7 @@ type TPocketShapeSectionProps = {
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
-export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, editable, issues, onChange }) => {
+export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, issues, onChange }) => {
   const handleTPocketTabWidthChange = useCallback(
     (tPocketTabWidth: string) => {
       onChange({
@@ -41,7 +41,6 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, e
         <EditorFieldRow label="T-fül szélessége">
           <NumberInput
             issue={issues.tPocketTabWidth}
-            lastValidValue={component.tPocketTabWidth}
             onChange={handleTPocketTabWidthChange}
             step={1}
             unit="mm"
@@ -52,7 +51,6 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, e
         <EditorFieldRow label="T-zseb szűkülése">
           <NumberInput
             issue={issues.tPocketTaper}
-            lastValidValue={component.tPocketTaper}
             onChange={handleTPocketTaperChange}
             step={1}
             unit="mm"

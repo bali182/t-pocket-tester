@@ -7,7 +7,6 @@ import { NumberInput } from './NumberInput'
 
 type FillableSizeInputProps = {
   value: string
-  lastValidValue: number | undefined
   issue: IssueSchema | undefined
   onChange: (value: string) => void
 }
@@ -32,7 +31,7 @@ const useStyles = makeStyles({
   },
 })
 
-export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, lastValidValue, value, onChange }) => {
+export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, value, onChange }) => {
   const styles = useStyles()
   const mode: FillableSizeMode = value === 'fill' ? 'fill' : 'fixed'
 
@@ -85,7 +84,6 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, lastValid
       <div className={styles.numberInput}>
         <NumberInput
           issue={issue}
-          lastValidValue={lastValidValue}
           onChange={onChange}
           step={1}
           unit="mm"

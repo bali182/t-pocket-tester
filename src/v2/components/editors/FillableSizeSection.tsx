@@ -17,7 +17,6 @@ type FillableSizeSectionProps<T extends HasFillableSizeSchema> = {
 }
 
 export function FillableSizeSection<T extends HasFillableSizeSchema>({
-  component,
   editable,
   issues,
   onChange,
@@ -54,7 +53,6 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
         <EditorFieldRow label="Szélesség">
           <FillableSizeInput
             issue={issues.width}
-            lastValidValue={typeof component.size.width === 'number' ? component.size.width : undefined}
             onChange={handleWidthChange}
             value={editable.size.width}
           />
@@ -63,7 +61,6 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
         <EditorFieldRow label="Magasság">
           <FillableSizeInput
             issue={issues.height}
-            lastValidValue={typeof component.size.height === 'number' ? component.size.height : undefined}
             onChange={handleHeightChange}
             value={editable.size.height}
           />
