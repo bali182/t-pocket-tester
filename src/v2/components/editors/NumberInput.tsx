@@ -24,6 +24,7 @@ export const NumberInput: FC<NumberInputProps> = ({ issue, onChange, step, unit,
       step={step}
       type="number"
       value={value}
+      size="xs"
     />
   )
 

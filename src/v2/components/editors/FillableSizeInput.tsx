@@ -1,8 +1,8 @@
-import type { DropdownProps } from '@fluentui/react-components'
-import { Dropdown, makeStyles, Option, tokens } from '@fluentui/react-components'
+import { Box, Grid, Select, createListCollection } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
 import type { IssueSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 import { NumberInput } from './NumberInput'
 
 type FillableSizeInputProps = {
@@ -15,31 +15,23 @@ type FillableSizeMode = 'fill' | 'fixed'
 
 const fixedSizeFallback = 10
 
-const useStyles = makeStyles({
-  fixedMode: {
-    columnGap: tokens.spacingHorizontalS,
-    display: 'grid',
-    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-  },
-  dropdown: {
-    minWidth: 0,
-    width: '100%',
-  },
-  numberInput: {
-    minWidth: 0,
-    width: '100%',
-  },
+const fillableSizeModeItems: { label: string; value: FillableSizeMode }[] = [
+  { label: 'Kitöltés', value: 'fill' },
+  { label: 'Fix', value: 'fixed' },
+]
+
+const fillableSizeModeCollection = createListCollection({
+  items: fillableSizeModeItems,
 })
 
 export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, value, onChange }) => {
-  const styles = useStyles()
   const mode: FillableSizeMode = value === 'fill' ? 'fill' : 'fixed'
 
   const handleModeChange = useCallback(
-    (_event: unknown, data: Parameters<NonNullable<DropdownProps['onOptionSelect']>>[1]) => {
-      const nextMode = data.optionValue as FillableSizeMode | undefined
+    (details: Select.ValueChangeDetails) => {
+      const nextMode = details.value[0]
 
-      if (!nextMode) {
+      if (!isDefined(nextMode)) {
         return
       }
 
@@ -48,48 +40,55 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, value, on
         return
       }
 
-      onChange(value === 'fill' ? String(fixedSizeFallback) : value)
+      if (nextMode === 'fixed') {
+        onChange(value === 'fill' ? String(fixedSizeFallback) : value)
+      }
     },
     [onChange, value],
   )
 
   if (mode === 'fill') {
-    return (
-      <Dropdown
-        className={styles.dropdown}
-        onOptionSelect={handleModeChange}
-        selectedOptions={[mode]}
-        size="small"
-        value="Kitöltés"
-      >
-        <Option value="fill">Kitöltés</Option>
-        <Option value="fixed">Fix</Option>
-      </Dropdown>
-    )
+    return <FillableSizeModeSelect mode={mode} onValueChange={handleModeChange} />
   }
 
   return (
-    <div className={styles.fixedMode}>
-      <Dropdown
-        className={styles.dropdown}
-        onOptionSelect={handleModeChange}
-        selectedOptions={[mode]}
-        size="small"
-        value="Fix"
-      >
-        <Option value="fill">Kitöltés</Option>
-        <Option value="fixed">Fix</Option>
-      </Dropdown>
+    <Grid columnGap="2" gridTemplateColumns="minmax(0, 1fr) minmax(0, 1fr)">
+      <FillableSizeModeSelect mode={mode} onValueChange={handleModeChange} />
 
-      <div className={styles.numberInput}>
-        <NumberInput
-          issue={issue}
-          onChange={onChange}
-          step={1}
-          unit="mm"
-          value={value}
-        />
-      </div>
-    </div>
+      <Box minWidth="0">
+        <NumberInput issue={issue} onChange={onChange} step={1} unit="mm" value={value} />
+      </Box>
+    </Grid>
+  )
+}
+
+type FillableSizeModeSelectProps = {
+  mode: FillableSizeMode
+  onValueChange: (details: Select.ValueChangeDetails) => void
+}
+
+const FillableSizeModeSelect: FC<FillableSizeModeSelectProps> = ({ mode, onValueChange }) => {
+  return (
+    <Select.Root collection={fillableSizeModeCollection} onValueChange={onValueChange} size="xs" value={[mode]} width="100%">
+      <Select.HiddenSelect />
+      <Select.Control>
+        <Select.Trigger>
+          <Select.ValueText />
+        </Select.Trigger>
+        <Select.IndicatorGroup>
+          <Select.Indicator />
+        </Select.IndicatorGroup>
+      </Select.Control>
+      <Select.Positioner>
+        <Select.Content>
+          {fillableSizeModeCollection.items.map((item) => (
+            <Select.Item item={item} key={item.value}>
+              <Select.ItemText>{item.label}</Select.ItemText>
+              <Select.ItemIndicator />
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Positioner>
+    </Select.Root>
   )
 }

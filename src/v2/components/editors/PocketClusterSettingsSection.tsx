@@ -1,8 +1,8 @@
-import { Toolbar, ToolbarRadioButton, ToolbarRadioGroup, type ToolbarProps } from '@fluentui/react-components'
+import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/pi'
 
-import type { PocketClusterSchema, PocketOrientationSchema } from '../../schemas/components'
+import type { PocketClusterSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { EditorFieldGrid } from './EditorFieldGrid'
@@ -23,16 +23,14 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
   onChange,
 }) => {
   const handleOrientationChange = useCallback(
-    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const orientation = data.checkedItems[0] as PocketOrientationSchema | undefined
-
-      if (!orientation) {
+    (details: SegmentGroup.ValueChangeDetails) => {
+      if (details.value !== 'up' && details.value !== 'down' && details.value !== 'left' && details.value !== 'right') {
         return
       }
 
       onChange({
         ...editable,
-        orientation,
+        orientation: details.value,
       })
     },
     [editable, onChange],
@@ -62,18 +60,25 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Nyílás iránya">
-          <Toolbar
-            checkedValues={{ orientation: [editable.orientation] }}
-            onCheckedValueChange={handleOrientationChange}
-            size="small"
-          >
-            <ToolbarRadioGroup>
-              <ToolbarRadioButton aria-label="Felülről" icon={<PiCaretDown />} name="orientation" value="up" />
-              <ToolbarRadioButton aria-label="Alulról" icon={<PiCaretUp />} name="orientation" value="down" />
-              <ToolbarRadioButton aria-label="Balról" icon={<PiCaretRight />} name="orientation" value="left" />
-              <ToolbarRadioButton aria-label="Jobbról" icon={<PiCaretLeft />} name="orientation" value="right" />
-            </ToolbarRadioGroup>
-          </Toolbar>
+          <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
+            <SegmentGroup.Indicator />
+            <SegmentGroup.Item aria-label="Felülről" value="up">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretDown />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Alulról" value="down">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretUp />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Balról" value="left">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretRight />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Jobbról" value="right">
+              <SegmentGroup.ItemHiddenInput />
+              <PiCaretLeft />
+            </SegmentGroup.Item>
+          </SegmentGroup.Root>
         </EditorFieldRow>
 
         <EditorFieldRow label="Zsebek száma">

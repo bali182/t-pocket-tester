@@ -90,7 +90,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
       <Popover.Positioner>
         <Popover.Content onClick={captureClick} width="400px" zIndex="popover">
           <Popover.Arrow />
-          <Popover.Header>
+          <Popover.Header pt="2" pb="2">
             <HStack justify="space-between">
               <Text fontWeight="semibold" textStyle="xs">
                 #{editedComponent.id}

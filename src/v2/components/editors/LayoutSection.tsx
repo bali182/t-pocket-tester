@@ -1,8 +1,8 @@
-import { Toolbar, ToolbarRadioButton, ToolbarRadioGroup, type ToolbarProps } from '@fluentui/react-components'
+import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
 import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
 
-import type { HasLayoutSchema, LayoutOrderSchema, LayoutOrientationSchema } from '../../schemas/components'
+import type { HasLayoutSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { EditorFieldGrid } from './EditorFieldGrid'
@@ -23,13 +23,16 @@ export function LayoutSection<T extends HasLayoutSchema>({
   onChange,
 }: LayoutSectionProps<T>): ReactNode {
   const handleOrientationChange = useCallback(
-    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const orientation = data.checkedItems[0] as LayoutOrientationSchema
+    (details: SegmentGroup.ValueChangeDetails) => {
+      if (details.value !== 'horizontal' && details.value !== 'vertical') {
+        return
+      }
+
       onChange({
         ...editable,
         layout: {
           ...editable.layout,
-          orientation,
+          orientation: details.value,
         },
       })
     },
@@ -37,13 +40,16 @@ export function LayoutSection<T extends HasLayoutSchema>({
   )
 
   const handleOrderChange = useCallback(
-    (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
-      const order = data.checkedItems[0] as LayoutOrderSchema
+    (details: SegmentGroup.ValueChangeDetails) => {
+      if (details.value !== 'default' && details.value !== 'reverse') {
+        return
+      }
+
       onChange({
         ...editable,
         layout: {
           ...editable.layout,
-          order,
+          order: details.value,
         },
       })
     },
@@ -67,39 +73,31 @@ export function LayoutSection<T extends HasLayoutSchema>({
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Elrendezés">
-          <Toolbar
-            checkedValues={{ orientation: [editable.layout.orientation] }}
-            onCheckedValueChange={handleOrientationChange}
-            size="small"
-          >
-            <ToolbarRadioGroup>
-              <ToolbarRadioButton aria-label="Vízszintes" icon={<PiColumns />} name="orientation" value="horizontal" />
-              <ToolbarRadioButton aria-label="Függőleges" icon={<PiRows />} name="orientation" value="vertical" />
-            </ToolbarRadioGroup>
-          </Toolbar>
+          <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.layout.orientation}>
+            <SegmentGroup.Indicator />
+            <SegmentGroup.Item aria-label="Vízszintes" value="horizontal">
+              <SegmentGroup.ItemHiddenInput />
+              <PiColumns />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Függőleges" value="vertical">
+              <SegmentGroup.ItemHiddenInput />
+              <PiRows />
+            </SegmentGroup.Item>
+          </SegmentGroup.Root>
         </EditorFieldRow>
 
         <EditorFieldRow label="Irány">
-          <Toolbar
-            checkedValues={{ order: [editable.layout.order] }}
-            onCheckedValueChange={handleOrderChange}
-            size="small"
-          >
-            <ToolbarRadioGroup>
-              <ToolbarRadioButton
-                aria-label="Alapértelmezett"
-                icon={editable.layout.orientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
-                name="order"
-                value="default"
-              />
-              <ToolbarRadioButton
-                aria-label="Fordított"
-                icon={editable.layout.orientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
-                name="order"
-                value="reverse"
-              />
-            </ToolbarRadioGroup>
-          </Toolbar>
+          <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layout.order}>
+            <SegmentGroup.Indicator />
+            <SegmentGroup.Item aria-label="Alapértelmezett" value="default">
+              <SegmentGroup.ItemHiddenInput />
+              {editable.layout.orientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
+            </SegmentGroup.Item>
+            <SegmentGroup.Item aria-label="Fordított" value="reverse">
+              <SegmentGroup.ItemHiddenInput />
+              {editable.layout.orientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
+            </SegmentGroup.Item>
+          </SegmentGroup.Root>
         </EditorFieldRow>
 
         <EditorFieldRow label="Térköz">

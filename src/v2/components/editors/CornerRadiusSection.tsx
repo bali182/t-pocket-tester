@@ -1,9 +1,10 @@
-import { Dropdown, makeStyles, Option, tokens, type DropdownProps } from '@fluentui/react-components'
+import { Grid, Select, Stack, createListCollection } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
 
 import type { CornerRadiusSchema, HasCornerRadiusSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { IssueSchema, ValidationIssuesSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
@@ -16,50 +17,53 @@ type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
   onChange: (updated: EditableSchema<T>) => void
 }
 
-const useStyles = makeStyles({
-  customInputs: {
-    columnGap: tokens.spacingHorizontalXS,
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-    minWidth: 0,
-  },
-  dropdown: {
-    minWidth: 0,
-    width: '100%',
-  },
-  root: {
-    display: 'grid',
-    rowGap: tokens.spacingVerticalXS,
-    minWidth: 0,
-  },
+type CornerRadiusMode = 'common' | 'custom'
+
+const cornerRadiusModeItems: { label: string; value: CornerRadiusMode }[] = [
+  { label: 'Közös', value: 'common' },
+  { label: 'Egyedi', value: 'custom' },
+]
+
+const cornerRadiusModeCollection = createListCollection({
+  items: cornerRadiusModeItems,
 })
 
-export function CornerRadiusSection<T extends HasCornerRadiusSchema>({ editable, issues, onChange }: CornerRadiusSectionProps<T>): ReactNode {
-  const styles = useStyles()
+export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
+  editable,
+  issues,
+  onChange,
+}: CornerRadiusSectionProps<T>): ReactNode {
   const commonRadius = getCommonRadius(editable.radius)
   const customRadius = getCustomRadius(editable.radius)
 
-  const handleModeChange = useCallback<NonNullable<DropdownProps['onOptionSelect']>>(
-    (_event, data) => {
-      switch (data.optionValue) {
-        case 'common':
-          if (typeof editable.radius === 'string') {
-            return
-          }
-          onChange({
-            ...editable,
-            radius: editable.radius.topLeft,
-          })
+  const handleModeChange = useCallback(
+    (details: Select.ValueChangeDetails) => {
+      const nextMode = details.value[0]
+
+      if (!isDefined(nextMode)) {
+        return
+      }
+
+      if (nextMode === 'common') {
+        if (typeof editable.radius === 'string') {
           return
-        case 'custom':
-          if (typeof editable.radius !== 'string') {
-            return
-          }
-          onChange({
-            ...editable,
-            radius: getCustomRadius(editable.radius),
-          })
-          return
+        }
+        onChange({
+          ...editable,
+          radius: editable.radius.topLeft,
+        })
+        return
+      }
+
+      if (nextMode === 'custom' && typeof editable.radius !== 'string') {
+        return
+      }
+
+      if (nextMode === 'custom') {
+        onChange({
+          ...editable,
+          radius: getCustomRadius(editable.radius),
+        })
       }
     },
     [editable, onChange],
@@ -95,17 +99,34 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({ editable,
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Rádiusz">
-          <div className={styles.root}>
-            <Dropdown
-              className={styles.dropdown}
-              onOptionSelect={handleModeChange}
-              selectedOptions={[typeof editable.radius === 'string' ? 'common' : 'custom']}
-              size="small"
-              value={typeof editable.radius === 'string' ? 'Közös' : 'Egyedi'}
+          <Stack gap="1" minWidth="0">
+            <Select.Root
+              collection={cornerRadiusModeCollection}
+              onValueChange={handleModeChange}
+              size="xs"
+              value={[typeof editable.radius === 'string' ? 'common' : 'custom']}
+              width="100%"
             >
-              <Option value="common">Közös</Option>
-              <Option value="custom">Egyedi</Option>
-            </Dropdown>
+              <Select.HiddenSelect />
+              <Select.Control>
+                <Select.Trigger>
+                  <Select.ValueText />
+                </Select.Trigger>
+                <Select.IndicatorGroup>
+                  <Select.Indicator />
+                </Select.IndicatorGroup>
+              </Select.Control>
+              <Select.Positioner>
+                <Select.Content>
+                  {cornerRadiusModeCollection.items.map((item) => (
+                    <Select.Item item={item} key={item.value}>
+                      <Select.ItemText>{item.label}</Select.ItemText>
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Select.Root>
 
             {typeof editable.radius === 'string' ? (
               <NumberInput
@@ -116,7 +137,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({ editable,
                 value={commonRadius}
               />
             ) : (
-              <div className={styles.customInputs}>
+              <Grid columnGap="1" gridTemplateColumns="repeat(4, minmax(0, 1fr))" minWidth="0">
                 <NumberInput
                   issue={customIssues.topLeft}
                   onChange={handleCustomRadiusChange('topLeft')}
@@ -141,9 +162,9 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({ editable,
                   step={1}
                   value={customRadius.bottomLeft}
                 />
-              </div>
+              </Grid>
             )}
-          </div>
+          </Stack>
         </EditorFieldRow>
       </EditorFieldGrid>
     </EditorSection>

@@ -1,4 +1,4 @@
-import { MessageBar, MessageBarBody, MessageBarTitle } from '@fluentui/react-components'
+import { Alert } from '@chakra-ui/react'
 import { FC } from 'react'
 
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../../schemas/components'
@@ -53,12 +53,12 @@ export const ComponentEditor: FC<ComponentEditorProps> = (props) => {
       )
     default:
       return (
-        <MessageBar intent="error">
-          <MessageBarBody>
-            <MessageBarTitle>Hiba</MessageBarTitle>
-            Ehhez a komponenshez még nincs szerkesztő!
-          </MessageBarBody>
-        </MessageBar>
+        <Alert.Root status="error">
+          <Alert.Content>
+            <Alert.Title>Hiba</Alert.Title>
+            <Alert.Description>Ehhez a komponenshez még nincs szerkesztő!</Alert.Description>
+          </Alert.Content>
+        </Alert.Root>
       )
   }
 }
