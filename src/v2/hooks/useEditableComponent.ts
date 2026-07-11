@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { LANGUAGE } from '../constants/language'
 import type { ComponentSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
-import type { ValidationIssuesSchema } from '../schemas/validation'
+import type { ValidationContextSchema, ValidationIssuesSchema } from '../schemas/validation'
 import { computedProjectAtom, projectAtom } from '../state'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { validateComponentSchema } from '../validators/validateComponentSchema'
@@ -28,7 +28,7 @@ export const useEditableComponent = (componentId: string): UseEditableComponentR
     getEditableSchema(component, { language: LANGUAGE }),
   )
 
-  const validationContext = useMemo(
+  const validationContext = useMemo<ValidationContextSchema>(
     () => ({
       computedProject,
       language: LANGUAGE,

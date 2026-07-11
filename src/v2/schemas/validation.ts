@@ -1,3 +1,5 @@
+import type { DecimalLocale } from 'validator/es/lib/isDecimal'
+
 import type { ComputedProjectSchema, ProjectSchema } from './project'
 
 export type SeveritySchema = 'error' | 'warning' | 'info'
@@ -32,7 +34,7 @@ export type ValidationResultSchema<I, O> =
 export type ValidationContextSchema = {
   project: ProjectSchema
   computedProject: ComputedProjectSchema
-  language: string
+  language: DecimalLocale
 }
 
 export type ValidatorSchema<I, O, Args extends readonly unknown[] = []> = (

@@ -1,5 +1,6 @@
 import { NumberFormatter, NumberParser } from '@internationalized/number'
 import BigNumber from 'bignumber.js'
+import isDecimal from 'validator/es/lib/isDecimal'
 
 import type { ValidationContextSchema, ValidatorSchema } from '../schemas/validation'
 import { isDefined } from '../utils/isDefined'
@@ -19,6 +20,13 @@ export const validateNumber: ValidatorSchema<
   number,
   [context: ValidationContextSchema, config: NumberValidationConfigSchema]
 > = (input, context, config) => {
+  if (!isDecimal(input, { locale: context.language })) {
+    return createInvalidValidationResult<string>({
+      message: 'Érvénytelen számformátum.',
+      severity: 'error',
+    })
+  }
+
   const value = new NumberParser(context.language, { style: 'decimal' }).parse(input)
   const formatter = new NumberFormatter(context.language, {
     maximumSignificantDigits: 21,
