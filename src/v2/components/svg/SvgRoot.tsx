@@ -1,4 +1,3 @@
-import { makeStyles } from '@fluentui/react-components'
 import { useAtomValue } from 'jotai'
 
 import { STROKE_THICKNESS, VIEWBOX_PADDING } from '../../constants/drawing'
@@ -11,14 +10,7 @@ import { computedProjectAtom } from '../../state'
 import { getViewBox } from '../../utils/getViewBox'
 import { RootPanel } from './RootPanel'
 
-const useStyles = makeStyles({
-  svg: {
-    display: 'block',
-  },
-})
-
 export const SvgRoot = () => {
-  const styles = useStyles()
   const computedProject = useAtomValue(computedProjectAtom)
   const rootComponent = useComponent<RootPanelSchema>(computedProject.root)
   const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(computedProject.root)
@@ -28,9 +20,9 @@ export const SvgRoot = () => {
 
   return (
     <svg
-      className={styles.svg}
       width={`${rootComponent.size.width}mm`}
       height={`${rootComponent.size.height}mm`}
+      style={{ display: 'block' }}
       viewBox={viewBox}
     >
       <RootPanel componentId={computedProject.root} />

@@ -1,5 +1,4 @@
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
-import { FluentProvider, webLightTheme } from '@fluentui/react-components'
 import { Provider as JotaiProvider } from 'jotai'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
@@ -13,13 +12,11 @@ if (!rootElement) {
 }
 
 createRoot(rootElement).render(
-  <FluentProvider theme={webLightTheme}>
-    <JotaiProvider store={appStore}>
-      <ChakraProvider value={defaultSystem}>
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <App />
-        </BrowserRouter>
-      </ChakraProvider>
-    </JotaiProvider>
-  </FluentProvider>,
+  <JotaiProvider store={appStore}>
+    <ChakraProvider value={defaultSystem}>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <App />
+      </BrowserRouter>
+    </ChakraProvider>
+  </JotaiProvider>,
 )

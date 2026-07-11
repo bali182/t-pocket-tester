@@ -1,29 +1,13 @@
-import { makeStyles } from '@fluentui/react-components'
+import { Box } from '@chakra-ui/react'
 import type { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { baseRoute, routes } from '../routes'
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100dvh',
-    overflow: 'hidden',
-  },
-  content: {
-    flex: 1,
-    minHeight: 0,
-    overflow: 'hidden',
-  },
-})
-
 export const App: FC = () => {
-  const styles = useStyles()
-
   return (
-    <main className={styles.root}>
-      <div className={styles.content}>
+    <Box as="main" display="flex" flexDirection="column" height="100dvh" overflow="hidden">
+      <Box flex="1" minHeight="0" overflow="hidden">
         <Routes>
           <Route path="/" element={<Navigate to={baseRoute} replace />} />
           {routes.map((route) => (
@@ -31,7 +15,7 @@ export const App: FC = () => {
           ))}
           <Route path="*" element={<Navigate to={baseRoute} replace />} />
         </Routes>
-      </div>
-    </main>
+      </Box>
+    </Box>
   )
 }
