@@ -3,12 +3,15 @@ import { createInvalidValidationResult, createValidValidationResult } from './cr
 
 const hexColorPattern = /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/
 
-export const validateHexColor: ValidatorSchema<string, string> = (input) => {
+export const validateHexColor: ValidatorSchema<string, string> = (input, currentValue) => {
   if (!hexColorPattern.test(input)) {
-    return createInvalidValidationResult<string>({
-      message: 'Érvénytelen hex szín.',
-      severity: 'error',
-    })
+    return createInvalidValidationResult<string, string>(
+      {
+        message: 'Érvénytelen hex szín.',
+        severity: 'error',
+      },
+      currentValue,
+    )
   }
 
   return createValidValidationResult<string, string>(undefined, input)

@@ -19,17 +19,19 @@ export type ValidationResultValidSchema<I, O> = {
   isValid: true
   issues: ValidationIssuesSchema<I>
   value: O
+  committedValue: O
 }
 
-export type ValidationResultInvalidSchema<I> = {
+export type ValidationResultInvalidSchema<I, O> = {
   isValid: false
   issues: ValidationIssuesSchema<I>
   value: undefined
+  committedValue: O
 }
 
 export type ValidationResultSchema<I, O> =
   | ValidationResultValidSchema<I, O>
-  | ValidationResultInvalidSchema<I>
+  | ValidationResultInvalidSchema<I, O>
 
 export type ValidationContextSchema = {
   project: ProjectSchema
@@ -39,5 +41,6 @@ export type ValidationContextSchema = {
 
 export type ValidatorSchema<I, O, Args extends readonly unknown[] = []> = (
   input: I,
+  currentValue: O,
   ...args: Args
 ) => ValidationResultSchema<I, O>

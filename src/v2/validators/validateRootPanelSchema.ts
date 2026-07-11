@@ -9,31 +9,45 @@ import { validateSizeSchema } from './validateSizeSchema'
 
 export const validateRootPanelSchema = (
   input: EditableSchema<RootPanelSchema>,
+  currentValue: RootPanelSchema,
   context: ValidationContextSchema,
 ): ValidationResultSchema<EditableSchema<RootPanelSchema>, RootPanelSchema> => {
-  const baseResult = validateBaseComponentSchema(input, context)
-  const layoutResult = validateLayoutSchema(input.layout, context)
-  const radiusResult = validateCornerRadiusValue(input.radius, context)
-  const sizeResult = validateSizeSchema(input.size, context)
-  const issues = {
+  const baseResult = validateBaseComponentSchema(input, currentValue, context)
+  const layoutResult = validateLayoutSchema(input.layout, currentValue.layout, context)
+  const radiusResult = validateCornerRadiusValue(input.radius, currentValue.radius, context)
+  const sizeResult = validateSizeSchema(input.size, currentValue.size, context)
+  const issues: ValidationIssuesSchema<EditableSchema<RootPanelSchema>> = {
     ...baseResult.issues,
     children: input.children.map(() => undefined),
     layout: layoutResult.issues,
     radius: radiusResult.issues,
     size: sizeResult.issues,
     type: undefined,
-  } satisfies ValidationIssuesSchema<EditableSchema<RootPanelSchema>>
-
-  if (!baseResult.isValid || !layoutResult.isValid || !radiusResult.isValid || !sizeResult.isValid) {
-    return createInvalidValidationResult(issues)
   }
 
-  return createValidValidationResult(issues, {
-    ...baseResult.value,
-    children: input.children,
-    layout: layoutResult.value,
-    radius: radiusResult.value,
-    size: sizeResult.value,
-    type: input.type,
-  })
+  const committedValue: RootPanelSchema = {
+    ...currentValue,
+    color: baseResult.committedValue.color,
+    layout: layoutResult.committedValue,
+    name: baseResult.committedValue.name,
+    radius: radiusResult.committedValue,
+    size: sizeResult.committedValue,
+  }
+
+  if (!baseResult.isValid || !layoutResult.isValid || !radiusResult.isValid || !sizeResult.isValid) {
+    return createInvalidValidationResult(issues, committedValue)
+  }
+
+  return createValidValidationResult(
+    issues,
+    {
+      ...baseResult.value,
+      children: currentValue.children,
+      layout: layoutResult.value,
+      radius: radiusResult.value,
+      size: sizeResult.value,
+      type: currentValue.type,
+    },
+    committedValue,
+  )
 }

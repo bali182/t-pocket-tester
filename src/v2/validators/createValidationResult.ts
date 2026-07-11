@@ -7,18 +7,22 @@ import type {
 export const createValidValidationResult = <I, O>(
   issues: ValidationIssuesSchema<I>,
   value: O,
+  committedValue = value,
 ): ValidationResultValidSchema<I, O> => {
   return {
+    committedValue,
     isValid: true,
     issues,
     value,
   }
 }
 
-export const createInvalidValidationResult = <I>(
+export const createInvalidValidationResult = <I, O>(
   issues: ValidationIssuesSchema<I>,
-): ValidationResultInvalidSchema<I> => {
+  committedValue: O,
+): ValidationResultInvalidSchema<I, O> => {
   return {
+    committedValue,
     isValid: false,
     issues,
     value: undefined,

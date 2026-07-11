@@ -4,36 +4,50 @@ import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultS
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateBaseComponentSchema } from './validateBaseComponentSchema'
 import { validateCornerRadiusValue } from './validateCornerRadiusSchema'
-import { validateLayoutSchema } from './validateLayoutSchema'
 import { validateFillableSizeSchema } from './validateFillableSizeSchema'
+import { validateLayoutSchema } from './validateLayoutSchema'
 
 export const validatePanelSchema = (
   input: EditableSchema<PanelSchema>,
+  currentValue: PanelSchema,
   context: ValidationContextSchema,
 ): ValidationResultSchema<EditableSchema<PanelSchema>, PanelSchema> => {
-  const baseResult = validateBaseComponentSchema(input, context)
-  const layoutResult = validateLayoutSchema(input.layout, context)
-  const radiusResult = validateCornerRadiusValue(input.radius, context)
-  const sizeResult = validateFillableSizeSchema(input.size, context)
-  const issues = {
+  const baseResult = validateBaseComponentSchema(input, currentValue, context)
+  const layoutResult = validateLayoutSchema(input.layout, currentValue.layout, context)
+  const radiusResult = validateCornerRadiusValue(input.radius, currentValue.radius, context)
+  const sizeResult = validateFillableSizeSchema(input.size, currentValue.size, context)
+  const issues: ValidationIssuesSchema<EditableSchema<PanelSchema>> = {
     ...baseResult.issues,
     children: input.children.map(() => undefined),
     layout: layoutResult.issues,
     radius: radiusResult.issues,
     size: sizeResult.issues,
     type: undefined,
-  } satisfies ValidationIssuesSchema<EditableSchema<PanelSchema>>
-
-  if (!baseResult.isValid || !layoutResult.isValid || !radiusResult.isValid || !sizeResult.isValid) {
-    return createInvalidValidationResult(issues)
   }
 
-  return createValidValidationResult(issues, {
-    ...baseResult.value,
-    children: input.children,
-    layout: layoutResult.value,
-    radius: radiusResult.value,
-    size: sizeResult.value,
-    type: input.type,
-  })
+  const committedValue: PanelSchema = {
+    ...currentValue,
+    color: baseResult.committedValue.color,
+    layout: layoutResult.committedValue,
+    name: baseResult.committedValue.name,
+    radius: radiusResult.committedValue,
+    size: sizeResult.committedValue,
+  }
+
+  if (!baseResult.isValid || !layoutResult.isValid || !radiusResult.isValid || !sizeResult.isValid) {
+    return createInvalidValidationResult(issues, committedValue)
+  }
+
+  return createValidValidationResult(
+    issues,
+    {
+      ...baseResult.value,
+      children: currentValue.children,
+      layout: layoutResult.value,
+      radius: radiusResult.value,
+      size: sizeResult.value,
+      type: currentValue.type,
+    },
+    committedValue,
+  )
 }

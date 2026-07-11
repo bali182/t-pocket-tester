@@ -24,8 +24,13 @@ export const useEditableComponent = (componentId: string): UseEditableComponentR
   const setProject = useSetAtom(projectAtom)
 
   const [isDirty, setIsDirty] = useState(false)
+  const [locallyCommittedComponent, setLocallyCommittedComponent] = useState<ComponentSchema | undefined>(undefined)
+  const [lastObservedComponent, setLastObservedComponent] = useState(component)
   const [editableComponent, setEditableComponent] = useState<EditableSchema<ComponentSchema>>(() =>
     getEditableSchema(component, { language: LANGUAGE }),
+  )
+  const [processedEditableComponent, setProcessedEditableComponent] = useState<EditableSchema<ComponentSchema> | undefined>(
+    undefined,
   )
 
   const validationContext = useMemo<ValidationContextSchema>(
@@ -38,29 +43,41 @@ export const useEditableComponent = (componentId: string): UseEditableComponentR
   )
 
   const validationResult = useMemo(
-    () => validateComponentSchema(editableComponent, validationContext),
-    [editableComponent, validationContext],
+    () => validateComponentSchema(editableComponent, component, validationContext),
+    [component, editableComponent, validationContext],
   )
 
   useEffect(() => {
-    setEditableComponent(getEditableSchema(component, { language: LANGUAGE }))
-    setIsDirty(false)
-  }, [component])
-
-  useEffect(() => {
-    if (!isDirty || !validationResult.isValid) {
+    if (component === lastObservedComponent) {
       return
     }
 
+    setLastObservedComponent(component)
+
+    if (component === locallyCommittedComponent) {
+      setLocallyCommittedComponent(undefined)
+      return
+    }
+
+    setEditableComponent(getEditableSchema(component, { language: LANGUAGE }))
+    setIsDirty(false)
+  }, [component, lastObservedComponent, locallyCommittedComponent])
+
+  useEffect(() => {
+    if (!isDirty || editableComponent === processedEditableComponent) {
+      return
+    }
+
+    setProcessedEditableComponent(editableComponent)
+    setLocallyCommittedComponent(validationResult.committedValue)
     setProject((project) => ({
       ...project,
       components: {
         ...project.components,
-        [componentId]: validationResult.value,
+        [componentId]: validationResult.committedValue,
       },
     }))
-    setIsDirty(false)
-  }, [componentId, isDirty, setProject, validationResult])
+  }, [componentId, editableComponent, isDirty, processedEditableComponent, setProject, validationResult])
 
   const setComponent = useCallback((component: EditableSchema<ComponentSchema>): void => {
     setEditableComponent(component)

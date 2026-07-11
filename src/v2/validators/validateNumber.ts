@@ -19,12 +19,15 @@ export const validateNumber: ValidatorSchema<
   string,
   number,
   [context: ValidationContextSchema, config: NumberValidationConfigSchema]
-> = (input, context, config) => {
+> = (input, currentValue, context, config) => {
   if (!isDecimal(input, { locale: context.language })) {
-    return createInvalidValidationResult<string>({
-      message: 'Érvénytelen számformátum.',
-      severity: 'error',
-    })
+    return createInvalidValidationResult<string, number>(
+      {
+        message: 'Érvénytelen számformátum.',
+        severity: 'error',
+      },
+      currentValue,
+    )
   }
 
   const value = new NumberParser(context.language, { style: 'decimal' }).parse(input)
@@ -35,30 +38,39 @@ export const validateNumber: ValidatorSchema<
   })
 
   if (!Number.isFinite(value)) {
-    return createInvalidValidationResult<string>({
-      message: 'Érvénytelen számformátum.',
-      severity: 'error',
-    })
+    return createInvalidValidationResult<string, number>(
+      {
+        message: 'Érvénytelen számformátum.',
+        severity: 'error',
+      },
+      currentValue,
+    )
   }
 
   if (config.allowFraction === false && !Number.isInteger(value)) {
-    return createInvalidValidationResult<string>({
-      message: 'Csak egész érték adható meg.',
-      severity: 'error',
-    })
+    return createInvalidValidationResult<string, number>(
+      {
+        message: 'Csak egész érték adható meg.',
+        severity: 'error',
+      },
+      currentValue,
+    )
   }
 
   if (isDefined(config.min)) {
     const isBelowMinimum = config.minInclusive === false ? value <= config.min : value < config.min
 
     if (isBelowMinimum) {
-      return createInvalidValidationResult<string>({
-        message:
-          config.minInclusive === false
-            ? `Az értéknek a minimum felett kell lennie (${formatter.format(config.min)}).`
-            : `Minimum érték: ${formatter.format(config.min)}.`,
-        severity: 'error',
-      })
+      return createInvalidValidationResult<string, number>(
+        {
+          message:
+            config.minInclusive === false
+              ? `Az értéknek a minimum felett kell lennie (${formatter.format(config.min)}).`
+              : `Minimum érték: ${formatter.format(config.min)}.`,
+          severity: 'error',
+        },
+        currentValue,
+      )
     }
   }
 
@@ -66,21 +78,27 @@ export const validateNumber: ValidatorSchema<
     const isAboveMaximum = config.maxInclusive === false ? value >= config.max : value > config.max
 
     if (isAboveMaximum) {
-      return createInvalidValidationResult<string>({
-        message:
-          config.maxInclusive === false
-            ? `Az értéknek a maximum alatt kell lennie (${formatter.format(config.max)}).`
-            : `Maximum érték: ${formatter.format(config.max)}.`,
-        severity: 'error',
-      })
+      return createInvalidValidationResult<string, number>(
+        {
+          message:
+            config.maxInclusive === false
+              ? `Az értéknek a maximum alatt kell lennie (${formatter.format(config.max)}).`
+              : `Maximum érték: ${formatter.format(config.max)}.`,
+          severity: 'error',
+        },
+        currentValue,
+      )
     }
   }
 
   if (isDefined(config.multipleOf) && !new BigNumber(value).mod(config.multipleOf).isZero()) {
-    return createInvalidValidationResult<string>({
-      message: `Lépték: ${formatter.format(config.multipleOf)}.`,
-      severity: 'error',
-    })
+    return createInvalidValidationResult<string, number>(
+      {
+        message: `Lépték: ${formatter.format(config.multipleOf)}.`,
+        severity: 'error',
+      },
+      currentValue,
+    )
   }
 
   return createValidValidationResult<string, number>(undefined, value)
