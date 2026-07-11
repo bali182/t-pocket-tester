@@ -1,41 +1,31 @@
 import { useCallback } from 'react'
 
-import type { PanelSchema, PocketClusterSchema } from '../../schemas/components'
+import type { HasFillableSizeSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
 import type { FillableSizeSchema } from '../../schemas/geometry'
-import { isDefined } from '../../utils/isDefined'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
 import { FillableSizeInput } from './FillableSizeInput'
 
-type SizeableComponent = PanelSchema | PocketClusterSchema
-
 type FillableSizeSectionProps<T> = {
   component: T
+  issues: ValidationIssuesSchema<FillableSizeSchema>
   onChange: (updated: T) => void
 }
 
-type FillableSizeValue = FillableSizeSchema['width']
-
-const getNormalizedFillableSize = (size: FillableSizeSchema | undefined): FillableSizeSchema => {
-  return {
-    width: isDefined(size?.width) ? size.width : 'fill',
-    height: isDefined(size?.height) ? size.height : 'fill',
-  }
-}
-
-export function FillableSizeSection<T extends SizeableComponent>({
+export function FillableSizeSection<T extends EditableSchema<HasFillableSizeSchema>>({
   component,
+  issues,
   onChange,
 }: FillableSizeSectionProps<T>) {
-  const size = getNormalizedFillableSize(component.size)
-
   const handleWidthChange = useCallback(
-    (width: FillableSizeValue) => {
+    (width: string) => {
       onChange({
         ...component,
         size: {
-          ...getNormalizedFillableSize(component.size),
+          ...component.size,
           width,
         },
       })
@@ -44,11 +34,11 @@ export function FillableSizeSection<T extends SizeableComponent>({
   )
 
   const handleHeightChange = useCallback(
-    (height: FillableSizeValue) => {
+    (height: string) => {
       onChange({
         ...component,
         size: {
-          ...getNormalizedFillableSize(component.size),
+          ...component.size,
           height,
         },
       })
@@ -60,11 +50,11 @@ export function FillableSizeSection<T extends SizeableComponent>({
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Szélesség">
-          <FillableSizeInput onChange={handleWidthChange} value={size.width} />
+          <FillableSizeInput issue={issues.width} onChange={handleWidthChange} value={component.size.width} />
         </EditorFieldRow>
 
         <EditorFieldRow label="Magasság">
-          <FillableSizeInput onChange={handleHeightChange} value={size.height} />
+          <FillableSizeInput issue={issues.height} onChange={handleHeightChange} value={component.size.height} />
         </EditorFieldRow>
       </EditorFieldGrid>
     </EditorSection>

@@ -1,34 +1,25 @@
-import {
-  SpinButton,
-  Toolbar,
-  ToolbarRadioButton,
-  ToolbarRadioGroup,
-  type SpinButtonOnChangeData,
-  type ToolbarProps,
-} from '@fluentui/react-components'
+import { Input } from '@chakra-ui/react'
+import { Toolbar, ToolbarRadioButton, ToolbarRadioGroup, type ToolbarProps } from '@fluentui/react-components'
 import { useCallback, type ReactNode } from 'react'
 import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
 
-import { SIZE_STEP } from '../../constants/editor'
 import type { HasLayoutSchema, LayoutOrderSchema, LayoutOrientationSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
 
 type LayoutSectionProps<T> = {
   component: T
+  issues: ValidationIssuesSchema<HasLayoutSchema['layout']>
   onChange: (updated: T) => void
 }
 
-const minGap = 0
-
-const isValidGap = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minGap
-}
-
-export function LayoutSection<T extends HasLayoutSchema>({
+export function LayoutSection<T extends EditableSchema<HasLayoutSchema>>({
   component,
+  issues,
   onChange,
 }: LayoutSectionProps<T>): ReactNode {
   const handleOrientationChange = useCallback(
@@ -60,17 +51,12 @@ export function LayoutSection<T extends HasLayoutSchema>({
   )
 
   const handleGapChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextGap = getSpinButtonNumberValue(data)
-
-      if (nextGap === undefined || !isValidGap(nextGap)) {
-        return
-      }
+    (gap: string) => {
       onChange({
         ...component,
         layout: {
           ...component.layout,
-          gap: nextGap,
+          gap,
         },
       })
     },
@@ -117,11 +103,11 @@ export function LayoutSection<T extends HasLayoutSchema>({
         </EditorFieldRow>
 
         <EditorFieldRow label="Térköz">
-          <SpinButton
-            min={minGap}
-            onChange={handleGapChange}
-            size="small"
-            step={SIZE_STEP}
+          <Input
+            inputMode="decimal"
+            aria-invalid={isDefined(issues.gap) && issues.gap.severity === 'error'}
+            onChange={(event) => handleGapChange(event.currentTarget.value)}
+            type="text"
             value={component.layout.gap}
           />
         </EditorFieldRow>

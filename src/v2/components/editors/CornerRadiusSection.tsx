@@ -1,22 +1,18 @@
-import {
-  Dropdown,
-  Input,
-  makeStyles,
-  Option,
-  tokens,
-  type DropdownProps,
-  type InputOnChangeData,
-} from '@fluentui/react-components'
-import { useCallback, type ChangeEvent, type ReactNode } from 'react'
-import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
+import { Input } from '@chakra-ui/react'
+import { Dropdown, makeStyles, Option, tokens, type DropdownProps } from '@fluentui/react-components'
+import { useCallback, type ReactNode } from 'react'
 
 import type { CornerRadiusSchema, HasCornerRadiusSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { IssueSchema, ValidationIssuesSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
 
 type CornerRadiusSectionProps<T> = {
   component: T
+  issues: ValidationIssuesSchema<HasCornerRadiusSchema>
   onChange: (updated: T) => void
 }
 
@@ -42,35 +38,9 @@ const useStyles = makeStyles({
   },
 })
 
-const isValidRadius = (value: number): boolean => {
-  return Number.isFinite(value) && value >= 0
-}
-
-const parseRadius = (value: string): number | undefined => {
-  const radius = Number(value.replace(',', '.'))
-
-  return isValidRadius(radius) ? radius : undefined
-}
-
-const getCommonRadius = (radius: number | CornerRadiusSchema): number => {
-  return typeof radius === 'number' ? radius : radius.topLeft
-}
-
-const getCustomRadius = (radius: number | CornerRadiusSchema): CornerRadiusSchema => {
-  if (typeof radius === 'number') {
-    return {
-      topLeft: radius,
-      topRight: radius,
-      bottomRight: radius,
-      bottomLeft: radius,
-    }
-  }
-
-  return radius
-}
-
-export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
+export function CornerRadiusSection<T extends EditableSchema<HasCornerRadiusSchema>>({
   component,
+  issues,
   onChange,
 }: CornerRadiusSectionProps<T>): ReactNode {
   const styles = useStyles()
@@ -81,7 +51,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
     (_event, data) => {
       switch (data.optionValue) {
         case 'common':
-          if (typeof component.radius === 'number') {
+          if (typeof component.radius === 'string') {
             return
           }
           onChange({
@@ -90,7 +60,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
           })
           return
         case 'custom':
-          if (typeof component.radius !== 'number') {
+          if (typeof component.radius !== 'string') {
             return
           }
           onChange({
@@ -104,13 +74,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   )
 
   const handleCommonRadiusChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>, _data: InputOnChangeData) => {
-      const radius = parseRadius(event.currentTarget.value)
-
-      if (radius === undefined) {
-        return
-      }
-
+    (radius: string) => {
       onChange({
         ...component,
         radius,
@@ -120,13 +84,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   )
 
   const handleCustomRadiusChange = useCallback(
-    (key: keyof CornerRadiusSchema) => (event: ChangeEvent<HTMLInputElement>, _data: InputOnChangeData) => {
-      const radius = parseRadius(event.currentTarget.value)
-
-      if (radius === undefined) {
-        return
-      }
-
+    (key: keyof CornerRadiusSchema) => (radius: string) => {
       onChange({
         ...component,
         radius: {
@@ -138,6 +96,9 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
     [component, customRadius, onChange],
   )
 
+  const commonIssue = issues.radius as IssueSchema | undefined
+  const customIssues = issues.radius as ValidationIssuesSchema<CornerRadiusSchema>
+
   return (
     <EditorSection>
       <EditorFieldGrid>
@@ -146,50 +107,56 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
             <Dropdown
               className={styles.dropdown}
               onOptionSelect={handleModeChange}
-              selectedOptions={[typeof component.radius === 'number' ? 'common' : 'custom']}
+              selectedOptions={[typeof component.radius === 'string' ? 'common' : 'custom']}
               size="small"
-              value={typeof component.radius === 'number' ? 'Közös' : 'Egyedi'}
+              value={typeof component.radius === 'string' ? 'Közös' : 'Egyedi'}
             >
               <Option value="common">Közös</Option>
               <Option value="custom">Egyedi</Option>
             </Dropdown>
 
-            {typeof component.radius === 'number' ? (
+            {typeof component.radius === 'string' ? (
               <Input
                 className={styles.input}
-                onChange={handleCommonRadiusChange}
-                size="small"
-                value={String(commonRadius)}
+                inputMode="decimal"
+                aria-invalid={isDefined(commonIssue) && commonIssue.severity === 'error'}
+                onChange={(event) => handleCommonRadiusChange(event.currentTarget.value)}
+                type="text"
+                value={commonRadius}
               />
             ) : (
               <div className={styles.customInputs}>
                 <Input
                   className={styles.input}
-                  contentBefore={<TbRadiusTopLeft />}
-                  onChange={handleCustomRadiusChange('topLeft')}
-                  size="small"
-                  value={String(customRadius.topLeft)}
+                  inputMode="decimal"
+                  aria-invalid={isDefined(customIssues.topLeft) && customIssues.topLeft.severity === 'error'}
+                  onChange={(event) => handleCustomRadiusChange('topLeft')(event.currentTarget.value)}
+                  type="text"
+                  value={customRadius.topLeft}
                 />
                 <Input
                   className={styles.input}
-                  contentBefore={<TbRadiusTopRight />}
-                  onChange={handleCustomRadiusChange('topRight')}
-                  size="small"
-                  value={String(customRadius.topRight)}
+                  inputMode="decimal"
+                  aria-invalid={isDefined(customIssues.topRight) && customIssues.topRight.severity === 'error'}
+                  onChange={(event) => handleCustomRadiusChange('topRight')(event.currentTarget.value)}
+                  type="text"
+                  value={customRadius.topRight}
                 />
                 <Input
                   className={styles.input}
-                  contentBefore={<TbRadiusBottomRight />}
-                  onChange={handleCustomRadiusChange('bottomRight')}
-                  size="small"
-                  value={String(customRadius.bottomRight)}
+                  inputMode="decimal"
+                  aria-invalid={isDefined(customIssues.bottomRight) && customIssues.bottomRight.severity === 'error'}
+                  onChange={(event) => handleCustomRadiusChange('bottomRight')(event.currentTarget.value)}
+                  type="text"
+                  value={customRadius.bottomRight}
                 />
                 <Input
                   className={styles.input}
-                  contentBefore={<TbRadiusBottomLeft />}
-                  onChange={handleCustomRadiusChange('bottomLeft')}
-                  size="small"
-                  value={String(customRadius.bottomLeft)}
+                  inputMode="decimal"
+                  aria-invalid={isDefined(customIssues.bottomLeft) && customIssues.bottomLeft.severity === 'error'}
+                  onChange={(event) => handleCustomRadiusChange('bottomLeft')(event.currentTarget.value)}
+                  type="text"
+                  value={customRadius.bottomLeft}
                 />
               </div>
             )}
@@ -198,4 +165,21 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
       </EditorFieldGrid>
     </EditorSection>
   )
+}
+
+const getCommonRadius = (radius: EditableSchema<number | CornerRadiusSchema>): string => {
+  return typeof radius === 'string' ? radius : radius.topLeft
+}
+
+const getCustomRadius = (radius: EditableSchema<number | CornerRadiusSchema>): EditableSchema<CornerRadiusSchema> => {
+  if (typeof radius === 'string') {
+    return {
+      bottomLeft: radius,
+      bottomRight: radius,
+      topLeft: radius,
+      topRight: radius,
+    }
+  }
+
+  return radius
 }

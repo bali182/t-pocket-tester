@@ -1,38 +1,27 @@
-import {
-  SpinButton,
-  Toolbar,
-  ToolbarRadioButton,
-  ToolbarRadioGroup,
-  type SpinButtonOnChangeData,
-  type ToolbarProps,
-} from '@fluentui/react-components'
+import { Input } from '@chakra-ui/react'
+import { Toolbar, ToolbarRadioButton, ToolbarRadioGroup, type ToolbarProps } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/pi'
 
-import { SIZE_STEP } from '../../constants/editor'
 import type { PocketClusterSchema, PocketOrientationSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
 
 type PocketClusterSettingsSectionProps = {
-  component: PocketClusterSchema
-  onChange: (updated: PocketClusterSchema) => void
+  component: EditableSchema<PocketClusterSchema>
+  issues: ValidationIssuesSchema<PocketClusterSchema>
+  onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
-const minPocketCount = 1
-const minSize = 0
-
-const isValidPocketCount = (value: number): boolean => {
-  return Number.isInteger(value) && value >= minPocketCount
-}
-
-const isValidSize = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minSize
-}
-
-export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({ component, onChange }) => {
+export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({
+  component,
+  issues,
+  onChange,
+}) => {
   const handleOrientationChange = useCallback(
     (_event: unknown, data: Parameters<NonNullable<ToolbarProps['onCheckedValueChange']>>[1]) => {
       const orientation = data.checkedItems[0] as PocketOrientationSchema | undefined
@@ -50,13 +39,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
   )
 
   const handlePocketCountChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const pocketCount = getSpinButtonNumberValue(data)
-
-      if (pocketCount === undefined || !isValidPocketCount(pocketCount)) {
-        return
-      }
-
+    (pocketCount: string) => {
       onChange({
         ...component,
         pocketCount,
@@ -66,13 +49,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
   )
 
   const handlePocketStepChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const pocketStep = getSpinButtonNumberValue(data)
-
-      if (pocketStep === undefined || !isValidSize(pocketStep)) {
-        return
-      }
-
+    (pocketStep: string) => {
       onChange({
         ...component,
         pocketStep,
@@ -100,21 +77,21 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
         </EditorFieldRow>
 
         <EditorFieldRow label="Zsebek száma">
-          <SpinButton
-            min={minPocketCount}
-            onChange={handlePocketCountChange}
-            size="small"
-            step={1}
+          <Input
+            inputMode="decimal"
+            aria-invalid={isDefined(issues.pocketCount) && issues.pocketCount.severity === 'error'}
+            onChange={(event) => handlePocketCountChange(event.currentTarget.value)}
+            type="text"
             value={component.pocketCount}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="Zseb lépés">
-          <SpinButton
-            min={minSize}
-            onChange={handlePocketStepChange}
-            size="small"
-            step={SIZE_STEP}
+          <Input
+            inputMode="decimal"
+            aria-invalid={isDefined(issues.pocketStep) && issues.pocketStep.severity === 'error'}
+            onChange={(event) => handlePocketStepChange(event.currentTarget.value)}
+            type="text"
             value={component.pocketStep}
           />
         </EditorFieldRow>

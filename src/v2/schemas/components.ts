@@ -18,6 +18,11 @@ export type HasCornerRadiusSchema = {
   radius: number | CornerRadiusSchema
 }
 
+export type HasFillableSizeSchema = {
+  /** The bounding rectangle of the cluster */
+  size: FillableSizeSchema
+}
+
 export type LayoutOrientationSchema = 'horizontal' | 'vertical'
 export type LayoutOrderSchema = 'default' | 'reverse'
 
@@ -47,9 +52,9 @@ export type RootPanelSchema = BaseComponentSchema &
 export type PanelSchema = BaseComponentSchema &
   HasLayoutSchema &
   HasChildrenSchema &
-  HasCornerRadiusSchema & {
+  HasCornerRadiusSchema &
+  HasFillableSizeSchema & {
     type: 'panel'
-    size: FillableSizeSchema
   }
 
 export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
@@ -59,10 +64,9 @@ export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
  * Does not hold individual pockets, rather pocketCount-1 T-Pockets and 1 top pocket (computed internally).
  */
 export type PocketClusterSchema = BaseComponentSchema &
-  HasCornerRadiusSchema & {
+  HasCornerRadiusSchema &
+  HasFillableSizeSchema & {
     type: 'pocket-cluster'
-    /** The bounding rectangle of the cluster */
-    size: FillableSizeSchema
     /** How many pockets do we have in this cluster (min 1) */
     pocketCount: number
     /** How far each pocket is offset from the previous one along the stack axis */

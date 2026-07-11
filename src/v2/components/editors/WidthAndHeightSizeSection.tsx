@@ -1,38 +1,28 @@
-import { SpinButton, type SpinButtonOnChangeData } from '@fluentui/react-components'
+import { Input } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
-import { SIZE_STEP } from '../../constants/editor'
 import type { RootPanelSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
 
 type WidthAndHeightSizeSectionProps = {
-  component: RootPanelSchema
-  onChange: (updated: RootPanelSchema) => void
+  component: EditableSchema<RootPanelSchema>
+  issues: ValidationIssuesSchema<RootPanelSchema['size']>
+  onChange: (updated: EditableSchema<RootPanelSchema>) => void
 }
 
-const minRootPanelSize = 10
-
-const isValidRootPanelSize = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minRootPanelSize
-}
-
-export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, onChange }) => {
+export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, issues, onChange }) => {
   const handleWidthChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextWidth = getSpinButtonNumberValue(data)
-
-      if (nextWidth === undefined || !isValidRootPanelSize(nextWidth)) {
-        return
-      }
-
+    (width: string) => {
       onChange({
         ...component,
         size: {
           ...component.size,
-          width: nextWidth,
+          width,
         },
       })
     },
@@ -40,18 +30,12 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
   )
 
   const handleHeightChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextHeight = getSpinButtonNumberValue(data)
-
-      if (nextHeight === undefined || !isValidRootPanelSize(nextHeight)) {
-        return
-      }
-
+    (height: string) => {
       onChange({
         ...component,
         size: {
           ...component.size,
-          height: nextHeight,
+          height,
         },
       })
     },
@@ -62,21 +46,21 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Szélesség">
-          <SpinButton
-            min={minRootPanelSize}
-            onChange={handleWidthChange}
-            size="small"
-            step={SIZE_STEP}
+          <Input
+            inputMode="decimal"
+            aria-invalid={isDefined(issues.width) && issues.width.severity === 'error'}
+            onChange={(event) => handleWidthChange(event.currentTarget.value)}
+            type="text"
             value={component.size.width}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="Magasság">
-          <SpinButton
-            min={minRootPanelSize}
-            onChange={handleHeightChange}
-            size="small"
-            step={SIZE_STEP}
+          <Input
+            inputMode="decimal"
+            aria-invalid={isDefined(issues.height) && issues.height.severity === 'error'}
+            onChange={(event) => handleHeightChange(event.currentTarget.value)}
+            type="text"
             value={component.size.height}
           />
         </EditorFieldRow>

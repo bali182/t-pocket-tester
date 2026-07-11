@@ -1,23 +1,20 @@
-import type { DropdownProps, SpinButtonOnChangeData } from '@fluentui/react-components'
-import { Dropdown, makeStyles, Option, SpinButton, tokens } from '@fluentui/react-components'
+import { Input } from '@chakra-ui/react'
+import type { DropdownProps } from '@fluentui/react-components'
+import { Dropdown, makeStyles, Option, tokens } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 
-import { SIZE_STEP } from '../../constants/editor'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
+import type { IssueSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 
 type FillableSizeInputProps = {
-  value: number | 'fill'
-  onChange: (value: number | 'fill') => void
+  value: string
+  issue: IssueSchema | undefined
+  onChange: (value: string) => void
 }
 
 type FillableSizeMode = 'fill' | 'fixed'
 
 const fixedSizeFallback = 10
-const minPanelSize = 0
-
-const isValidPanelSize = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minPanelSize
-}
 
 const useStyles = makeStyles({
   fixedMode: {
@@ -29,13 +26,13 @@ const useStyles = makeStyles({
     minWidth: 0,
     width: '100%',
   },
-  spinButton: {
+  numberInput: {
     minWidth: 0,
     width: '100%',
   },
 })
 
-export const FillableSizeInput: FC<FillableSizeInputProps> = ({ value, onChange }) => {
+export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, value, onChange }) => {
   const styles = useStyles()
   const mode: FillableSizeMode = value === 'fill' ? 'fill' : 'fixed'
 
@@ -52,22 +49,9 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ value, onChange 
         return
       }
 
-      onChange(value === 'fill' ? fixedSizeFallback : value)
+      onChange(value === 'fill' ? String(fixedSizeFallback) : value)
     },
     [onChange, value],
-  )
-
-  const handleSizeChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const nextValue = getSpinButtonNumberValue(data)
-
-      if (nextValue === undefined || !isValidPanelSize(nextValue)) {
-        return
-      }
-
-      onChange(nextValue)
-    },
-    [onChange],
   )
 
   if (mode === 'fill') {
@@ -98,13 +82,13 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ value, onChange 
         <Option value="fixed">Fix</Option>
       </Dropdown>
 
-      <SpinButton
-        className={styles.spinButton}
-        min={minPanelSize}
-        onChange={handleSizeChange}
-        size="small"
-        step={SIZE_STEP}
-        value={typeof value === 'number' ? value : fixedSizeFallback}
+      <Input
+        className={styles.numberInput}
+        inputMode="decimal"
+        aria-invalid={isDefined(issue) && issue.severity === 'error'}
+        onChange={(event) => onChange(event.currentTarget.value)}
+        type="text"
+        value={value}
       />
     </div>
   )

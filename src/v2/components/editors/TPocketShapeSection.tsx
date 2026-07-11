@@ -1,33 +1,22 @@
-import { SpinButton, type SpinButtonOnChangeData } from '@fluentui/react-components'
+import { Input } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
-import { SIZE_STEP } from '../../constants/editor'
 import type { PocketClusterSchema } from '../../schemas/components'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
-import { getSpinButtonNumberValue } from './getSpinButtonNumberValue'
-
 type TPocketShapeSectionProps = {
-  component: PocketClusterSchema
-  onChange: (updated: PocketClusterSchema) => void
+  component: EditableSchema<PocketClusterSchema>
+  issues: ValidationIssuesSchema<PocketClusterSchema>
+  onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
-const minSize = 0
-
-const isValidSize = (value: number): boolean => {
-  return Number.isFinite(value) && value >= minSize
-}
-
-export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, onChange }) => {
+export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, issues, onChange }) => {
   const handleTPocketTabWidthChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const tPocketTabWidth = getSpinButtonNumberValue(data)
-
-      if (tPocketTabWidth === undefined || !isValidSize(tPocketTabWidth)) {
-        return
-      }
-
+    (tPocketTabWidth: string) => {
       onChange({
         ...component,
         tPocketTabWidth,
@@ -37,13 +26,7 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, o
   )
 
   const handleTPocketTaperChange = useCallback(
-    (_event: unknown, data: SpinButtonOnChangeData) => {
-      const tPocketTaper = getSpinButtonNumberValue(data)
-
-      if (tPocketTaper === undefined || !isValidSize(tPocketTaper)) {
-        return
-      }
-
+    (tPocketTaper: string) => {
       onChange({
         ...component,
         tPocketTaper,
@@ -56,21 +39,21 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, o
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="T-fül szélessége">
-          <SpinButton
-            min={minSize}
-            onChange={handleTPocketTabWidthChange}
-            size="small"
-            step={SIZE_STEP}
+          <Input
+            inputMode="decimal"
+            aria-invalid={isDefined(issues.tPocketTabWidth) && issues.tPocketTabWidth.severity === 'error'}
+            onChange={(event) => handleTPocketTabWidthChange(event.currentTarget.value)}
+            type="text"
             value={component.tPocketTabWidth}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="T-zseb szűkülése">
-          <SpinButton
-            min={minSize}
-            onChange={handleTPocketTaperChange}
-            size="small"
-            step={SIZE_STEP}
+          <Input
+            inputMode="decimal"
+            aria-invalid={isDefined(issues.tPocketTaper) && issues.tPocketTaper.severity === 'error'}
+            onChange={(event) => handleTPocketTaperChange(event.currentTarget.value)}
+            type="text"
             value={component.tPocketTaper}
           />
         </EditorFieldRow>

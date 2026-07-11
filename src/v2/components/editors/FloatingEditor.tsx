@@ -3,8 +3,9 @@ import { useAtom } from 'jotai'
 import { MouseEvent, useCallback, useEffect, useMemo, type FC } from 'react'
 import { LuX } from 'react-icons/lu'
 
-import type { ComponentSchema } from '../../schemas/components'
 import { useEditableComponent } from '../../hooks/useEditableComponent'
+import type { ComponentSchema } from '../../schemas/components'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { projectAtom } from '../../state'
 import { addComponent } from '../../utils/addComponent'
 import { isDefined } from '../../utils/isDefined'
@@ -20,7 +21,12 @@ type FloatingEditorProps = {
 
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
   const [, setProject] = useAtom(projectAtom)
-  const { component: editedComponent } = useEditableComponent(component.id)
+  const {
+    component: editedComponent,
+    editableComponent,
+    setComponent,
+    validationIssues,
+  } = useEditableComponent(component.id)
   const positioningTarget = useMemo(
     () => ({
       getBoundingClientRect: () => anchorElement.getBoundingClientRect(),
@@ -63,19 +69,6 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
     }
   }, [anchorElement, popover])
 
-  const handleComponentChange = useCallback(
-    (updated: ComponentSchema) => {
-      setProject((project) => ({
-        ...project,
-        components: {
-          ...project.components,
-          [updated.id]: updated,
-        },
-      }))
-    },
-    [setProject],
-  )
-
   const handleAddChild = useCallback(
     (type: ChildComponentType): void => {
       setProject((project) => addComponent(component.id, type, project))
@@ -109,9 +102,10 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
           </Popover.Header>
           <Box>
             <ComponentEditor
-              component={editedComponent}
+              component={editableComponent}
+              issues={validationIssues as ValidationIssuesSchema<ComponentSchema>}
               onAddChild={handleAddChild}
-              onChange={handleComponentChange}
+              onChange={setComponent}
               onRemoveComponent={handleRemoveComponent}
             />
           </Box>
