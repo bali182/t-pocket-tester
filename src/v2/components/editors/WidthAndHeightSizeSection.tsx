@@ -1,67 +1,69 @@
-import { Input } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
 import type { RootPanelSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
+import { NumberInput } from './NumberInput'
 
 type WidthAndHeightSizeSectionProps = {
-  component: EditableSchema<RootPanelSchema>
+  component: RootPanelSchema
+  editable: EditableSchema<RootPanelSchema>
   issues: ValidationIssuesSchema<RootPanelSchema['size']>
   onChange: (updated: EditableSchema<RootPanelSchema>) => void
 }
 
-export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, issues, onChange }) => {
+export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ component, editable, issues, onChange }) => {
   const handleWidthChange = useCallback(
     (width: string) => {
       onChange({
-        ...component,
+        ...editable,
         size: {
-          ...component.size,
+          ...editable.size,
           width,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleHeightChange = useCallback(
     (height: string) => {
       onChange({
-        ...component,
+        ...editable,
         size: {
-          ...component.size,
+          ...editable.size,
           height,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Szélesség">
-          <Input
-            inputMode="decimal"
-            aria-invalid={isDefined(issues.width) && issues.width.severity === 'error'}
-            onChange={(event) => handleWidthChange(event.currentTarget.value)}
-            type="text"
-            value={component.size.width}
+          <NumberInput
+            issue={issues.width}
+            lastValidValue={component.size.width}
+            onChange={handleWidthChange}
+            step={1}
+            unit="mm"
+            value={editable.size.width}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="Magasság">
-          <Input
-            inputMode="decimal"
-            aria-invalid={isDefined(issues.height) && issues.height.severity === 'error'}
-            onChange={(event) => handleHeightChange(event.currentTarget.value)}
-            type="text"
-            value={component.size.height}
+          <NumberInput
+            issue={issues.height}
+            lastValidValue={component.size.height}
+            onChange={handleHeightChange}
+            step={1}
+            unit="mm"
+            value={editable.size.height}
           />
         </EditorFieldRow>
       </EditorFieldGrid>

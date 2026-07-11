@@ -102,7 +102,8 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
           </Popover.Header>
           <Box>
             <ComponentEditor
-              component={editableComponent}
+              component={editedComponent}
+              editable={editableComponent}
               issues={validationIssues as ValidationIssuesSchema<ComponentSchema>}
               onAddChild={handleAddChild}
               onChange={setComponent}

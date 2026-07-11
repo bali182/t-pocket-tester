@@ -10,20 +10,21 @@ import { ToolbarSection } from './ToolbarSection'
 import { WidthAndHeightSizeSection } from './WidthAndHeightSizeSection'
 
 type RootPanelEditorProps = {
-  component: EditableSchema<RootPanelSchema>
+  component: RootPanelSchema
+  editable: EditableSchema<RootPanelSchema>
   issues: ValidationIssuesSchema<RootPanelSchema>
   onAddChild: (type: ChildComponentType) => void
   onChange: (updated: EditableSchema<RootPanelSchema>) => void
 }
 
-export const RootPanelEditor: FC<RootPanelEditorProps> = ({ component, issues, onAddChild, onChange }) => {
+export const RootPanelEditor: FC<RootPanelEditorProps> = ({ component, editable, issues, onAddChild, onChange }) => {
   return (
     <>
       <ToolbarSection onAddChild={onAddChild} />
-      <NameAndColorSection component={component} onChange={onChange} />
-      <WidthAndHeightSizeSection component={component} issues={issues.size} onChange={onChange} />
-      <CornerRadiusSection component={component} issues={issues} onChange={onChange} />
-      <LayoutSection component={component} issues={issues.layout} onChange={onChange} />
+      <NameAndColorSection editable={editable} onChange={onChange} />
+      <WidthAndHeightSizeSection component={component} editable={editable} issues={issues.size} onChange={onChange} />
+      <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
+      <LayoutSection component={component} editable={editable} issues={issues.layout} onChange={onChange} />
     </>
   )
 }

@@ -22,7 +22,7 @@ import { EditorSection } from './EditorSection'
 type ColorPickerColor = NonNullable<ColorPickerProps['color']>
 
 type NameAndColorSectionProps<T> = {
-  component: T
+  editable: T
   onChange: (updated: T) => void
 }
 
@@ -48,44 +48,44 @@ const useStyles = makeStyles({
 })
 
 export function NameAndColorSection<T extends BaseComponentSchema>({
-  component,
+  editable,
   onChange,
 }: NameAndColorSectionProps<T>): ReactNode {
   const styles = useStyles()
 
   const hsvColor = useMemo<ColorPickerColor>(() => {
-    const { h, s, v, alpha } = converter('hsv')(component.color)!
+    const { h, s, v, alpha } = converter('hsv')(editable.color)!
     return { h: h!, s, v, a: alpha }
-  }, [component.color])
+  }, [editable.color])
 
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onChange({
-        ...component,
+        ...editable,
         name: event.target.value,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleColorChange = useCallback(
     (_event: unknown, data: Parameters<NonNullable<ColorPickerProps['onColorChange']>>[1]) => {
       onChange({
-        ...component,
+        ...editable,
         color: formatHex({
           mode: 'hsv',
           ...data.color,
         }),
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Név">
-          <Input onChange={handleNameChange} size="small" value={component.name} />
+          <Input onChange={handleNameChange} size="small" value={editable.name} />
         </EditorFieldRow>
 
         <EditorFieldRow label="Szín">
@@ -94,10 +94,10 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
               <Button
                 aria-label="Szín kiválasztása"
                 className={styles.colorTrigger}
-                icon={<span className={styles.colorPreview} style={{ backgroundColor: component.color }} />}
+                icon={<span className={styles.colorPreview} style={{ backgroundColor: editable.color }} />}
                 size="small"
               >
-                {component.color}
+                {editable.color}
               </Button>
             </PopoverTrigger>
             <PopoverSurface className={styles.colorPopoverSurface}>

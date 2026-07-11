@@ -11,7 +11,8 @@ import { ToolbarSection } from './ToolbarSection'
 import { TPocketShapeSection } from './TPocketShapeSection'
 
 type PocketClusterEditorProps = {
-  component: EditableSchema<PocketClusterSchema>
+  component: PocketClusterSchema
+  editable: EditableSchema<PocketClusterSchema>
   issues: ValidationIssuesSchema<PocketClusterSchema>
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
   onRemoveComponent: () => void
@@ -19,6 +20,7 @@ type PocketClusterEditorProps = {
 
 export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
   component,
+  editable,
   issues,
   onChange,
   onRemoveComponent,
@@ -26,11 +28,11 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
   return (
     <>
       <ToolbarSection onRemoveComponent={onRemoveComponent} />
-      <NameAndColorSection component={component} onChange={onChange} />
-      <FillableSizeSection component={component} issues={issues.size} onChange={onChange} />
-      <CornerRadiusSection component={component} issues={issues} onChange={onChange} />
-      <PocketClusterSettingsSection component={component} issues={issues} onChange={onChange} />
-      <TPocketShapeSection component={component} issues={issues} onChange={onChange} />
+      <NameAndColorSection editable={editable} onChange={onChange} />
+      <FillableSizeSection component={component} editable={editable} issues={issues.size} onChange={onChange} />
+      <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
+      <PocketClusterSettingsSection component={component} editable={editable} issues={issues} onChange={onChange} />
+      <TPocketShapeSection component={component} editable={editable} issues={issues} onChange={onChange} />
     </>
   )
 }

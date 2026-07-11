@@ -9,52 +9,64 @@ import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
 import { FillableSizeInput } from './FillableSizeInput'
 
-type FillableSizeSectionProps<T> = {
+type FillableSizeSectionProps<T extends HasFillableSizeSchema> = {
   component: T
+  editable: EditableSchema<T>
   issues: ValidationIssuesSchema<FillableSizeSchema>
-  onChange: (updated: T) => void
+  onChange: (updated: EditableSchema<T>) => void
 }
 
-export function FillableSizeSection<T extends EditableSchema<HasFillableSizeSchema>>({
+export function FillableSizeSection<T extends HasFillableSizeSchema>({
   component,
+  editable,
   issues,
   onChange,
 }: FillableSizeSectionProps<T>) {
   const handleWidthChange = useCallback(
     (width: string) => {
       onChange({
-        ...component,
+        ...editable,
         size: {
-          ...component.size,
+          ...editable.size,
           width,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleHeightChange = useCallback(
     (height: string) => {
       onChange({
-        ...component,
+        ...editable,
         size: {
-          ...component.size,
+          ...editable.size,
           height,
         },
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Szélesség">
-          <FillableSizeInput issue={issues.width} onChange={handleWidthChange} value={component.size.width} />
+          <FillableSizeInput
+            issue={issues.width}
+            lastValidValue={typeof component.size.width === 'number' ? component.size.width : undefined}
+            onChange={handleWidthChange}
+            value={editable.size.width}
+          />
         </EditorFieldRow>
 
         <EditorFieldRow label="Magasság">
-          <FillableSizeInput issue={issues.height} onChange={handleHeightChange} value={component.size.height} />
+          <FillableSizeInput
+            issue={issues.height}
+            lastValidValue={typeof component.size.height === 'number' ? component.size.height : undefined}
+            onChange={handleHeightChange}
+            value={editable.size.height}
+          />
         </EditorFieldRow>
       </EditorFieldGrid>
     </EditorSection>

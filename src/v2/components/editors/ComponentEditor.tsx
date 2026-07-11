@@ -10,7 +10,8 @@ import { PocketClusterEditor } from './PocketClusterEditor'
 import { RootPanelEditor } from './RootPanelEditor'
 
 type ComponentEditorProps = {
-  component: EditableSchema<ComponentSchema>
+  component: ComponentSchema
+  editable: EditableSchema<ComponentSchema>
   issues: ValidationIssuesSchema<ComponentSchema>
   onAddChild: (type: ChildComponentType) => void
   onChange: (updated: EditableSchema<ComponentSchema>) => void
@@ -18,11 +19,12 @@ type ComponentEditorProps = {
 }
 
 export const ComponentEditor: FC<ComponentEditorProps> = (props) => {
-  switch (props.component.type) {
+  switch (props.editable.type) {
     case 'root-panel':
       return (
         <RootPanelEditor
-          component={props.component}
+          component={props.component as RootPanelSchema}
+          editable={props.editable}
           issues={props.issues as ValidationIssuesSchema<RootPanelSchema>}
           onAddChild={props.onAddChild}
           onChange={props.onChange}
@@ -31,7 +33,8 @@ export const ComponentEditor: FC<ComponentEditorProps> = (props) => {
     case 'panel':
       return (
         <PanelEditor
-          component={props.component}
+          component={props.component as PanelSchema}
+          editable={props.editable}
           issues={props.issues as ValidationIssuesSchema<PanelSchema>}
           onAddChild={props.onAddChild}
           onChange={props.onChange}
@@ -41,7 +44,8 @@ export const ComponentEditor: FC<ComponentEditorProps> = (props) => {
     case 'pocket-cluster':
       return (
         <PocketClusterEditor
-          component={props.component}
+          component={props.component as PocketClusterSchema}
+          editable={props.editable}
           issues={props.issues as ValidationIssuesSchema<PocketClusterSchema>}
           onChange={props.onChange}
           onRemoveComponent={props.onRemoveComponent}

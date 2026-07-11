@@ -1,4 +1,3 @@
-import { Input } from '@chakra-ui/react'
 import { Toolbar, ToolbarRadioButton, ToolbarRadioGroup, type ToolbarProps } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/pi'
@@ -6,19 +5,21 @@ import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/p
 import type { PocketClusterSchema, PocketOrientationSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
+import { NumberInput } from './NumberInput'
 
 type PocketClusterSettingsSectionProps = {
-  component: EditableSchema<PocketClusterSchema>
+  component: PocketClusterSchema
+  editable: EditableSchema<PocketClusterSchema>
   issues: ValidationIssuesSchema<PocketClusterSchema>
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
 export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({
   component,
+  editable,
   issues,
   onChange,
 }) => {
@@ -31,31 +32,31 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
       }
 
       onChange({
-        ...component,
+        ...editable,
         orientation,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handlePocketCountChange = useCallback(
     (pocketCount: string) => {
       onChange({
-        ...component,
+        ...editable,
         pocketCount,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handlePocketStepChange = useCallback(
     (pocketStep: string) => {
       onChange({
-        ...component,
+        ...editable,
         pocketStep,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
@@ -63,7 +64,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
       <EditorFieldGrid>
         <EditorFieldRow label="Nyílás iránya">
           <Toolbar
-            checkedValues={{ orientation: [component.orientation] }}
+            checkedValues={{ orientation: [editable.orientation] }}
             onCheckedValueChange={handleOrientationChange}
             size="small"
           >
@@ -77,22 +78,24 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
         </EditorFieldRow>
 
         <EditorFieldRow label="Zsebek száma">
-          <Input
-            inputMode="decimal"
-            aria-invalid={isDefined(issues.pocketCount) && issues.pocketCount.severity === 'error'}
-            onChange={(event) => handlePocketCountChange(event.currentTarget.value)}
-            type="text"
-            value={component.pocketCount}
+          <NumberInput
+            issue={issues.pocketCount}
+            lastValidValue={component.pocketCount}
+            onChange={handlePocketCountChange}
+            step={1}
+            unit="db"
+            value={editable.pocketCount}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="Zseb lépés">
-          <Input
-            inputMode="decimal"
-            aria-invalid={isDefined(issues.pocketStep) && issues.pocketStep.severity === 'error'}
-            onChange={(event) => handlePocketStepChange(event.currentTarget.value)}
-            type="text"
-            value={component.pocketStep}
+          <NumberInput
+            issue={issues.pocketStep}
+            lastValidValue={component.pocketStep}
+            onChange={handlePocketStepChange}
+            step={1}
+            unit="mm"
+            value={editable.pocketStep}
           />
         </EditorFieldRow>
       </EditorFieldGrid>

@@ -1,13 +1,13 @@
-import { Input } from '@chakra-ui/react'
 import type { DropdownProps } from '@fluentui/react-components'
 import { Dropdown, makeStyles, Option, tokens } from '@fluentui/react-components'
 import { useCallback, type FC } from 'react'
 
 import type { IssueSchema } from '../../schemas/validation'
-import { isDefined } from '../../utils/isDefined'
+import { NumberInput } from './NumberInput'
 
 type FillableSizeInputProps = {
   value: string
+  lastValidValue: number | undefined
   issue: IssueSchema | undefined
   onChange: (value: string) => void
 }
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
   },
 })
 
-export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, value, onChange }) => {
+export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, lastValidValue, value, onChange }) => {
   const styles = useStyles()
   const mode: FillableSizeMode = value === 'fill' ? 'fill' : 'fixed'
 
@@ -82,14 +82,16 @@ export const FillableSizeInput: FC<FillableSizeInputProps> = ({ issue, value, on
         <Option value="fixed">Fix</Option>
       </Dropdown>
 
-      <Input
-        className={styles.numberInput}
-        inputMode="decimal"
-        aria-invalid={isDefined(issue) && issue.severity === 'error'}
-        onChange={(event) => onChange(event.currentTarget.value)}
-        type="text"
-        value={value}
-      />
+      <div className={styles.numberInput}>
+        <NumberInput
+          issue={issue}
+          lastValidValue={lastValidValue}
+          onChange={onChange}
+          step={1}
+          unit="mm"
+          value={value}
+        />
+      </div>
     </div>
   )
 }

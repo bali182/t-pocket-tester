@@ -1,19 +1,19 @@
-import { Input } from '@chakra-ui/react'
 import { Dropdown, makeStyles, Option, tokens, type DropdownProps } from '@fluentui/react-components'
 import { useCallback, type ReactNode } from 'react'
 
 import type { CornerRadiusSchema, HasCornerRadiusSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { IssueSchema, ValidationIssuesSchema } from '../../schemas/validation'
-import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
+import { NumberInput } from './NumberInput'
 
-type CornerRadiusSectionProps<T> = {
+type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
   component: T
+  editable: EditableSchema<T>
   issues: ValidationIssuesSchema<HasCornerRadiusSchema>
-  onChange: (updated: T) => void
+  onChange: (updated: EditableSchema<T>) => void
 }
 
 const useStyles = makeStyles({
@@ -27,10 +27,6 @@ const useStyles = makeStyles({
     minWidth: 0,
     width: '100%',
   },
-  input: {
-    minWidth: 0,
-    width: '100%',
-  },
   root: {
     display: 'grid',
     rowGap: tokens.spacingVerticalXS,
@@ -38,62 +34,63 @@ const useStyles = makeStyles({
   },
 })
 
-export function CornerRadiusSection<T extends EditableSchema<HasCornerRadiusSchema>>({
+export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   component,
+  editable,
   issues,
   onChange,
 }: CornerRadiusSectionProps<T>): ReactNode {
   const styles = useStyles()
-  const commonRadius = getCommonRadius(component.radius)
-  const customRadius = getCustomRadius(component.radius)
+  const commonRadius = getCommonRadius(editable.radius)
+  const customRadius = getCustomRadius(editable.radius)
 
   const handleModeChange = useCallback<NonNullable<DropdownProps['onOptionSelect']>>(
     (_event, data) => {
       switch (data.optionValue) {
         case 'common':
-          if (typeof component.radius === 'string') {
+          if (typeof editable.radius === 'string') {
             return
           }
           onChange({
-            ...component,
-            radius: component.radius.topLeft,
+            ...editable,
+            radius: editable.radius.topLeft,
           })
           return
         case 'custom':
-          if (typeof component.radius !== 'string') {
+          if (typeof editable.radius !== 'string') {
             return
           }
           onChange({
-            ...component,
-            radius: getCustomRadius(component.radius),
+            ...editable,
+            radius: getCustomRadius(editable.radius),
           })
           return
       }
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleCommonRadiusChange = useCallback(
     (radius: string) => {
       onChange({
-        ...component,
+        ...editable,
         radius,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleCustomRadiusChange = useCallback(
     (key: keyof CornerRadiusSchema) => (radius: string) => {
       onChange({
-        ...component,
+        ...editable,
         radius: {
           ...customRadius,
           [key]: radius,
         },
       })
     },
-    [component, customRadius, onChange],
+    [editable, customRadius, onChange],
   )
 
   const commonIssue = issues.radius as IssueSchema | undefined
@@ -107,55 +104,55 @@ export function CornerRadiusSection<T extends EditableSchema<HasCornerRadiusSche
             <Dropdown
               className={styles.dropdown}
               onOptionSelect={handleModeChange}
-              selectedOptions={[typeof component.radius === 'string' ? 'common' : 'custom']}
+              selectedOptions={[typeof editable.radius === 'string' ? 'common' : 'custom']}
               size="small"
-              value={typeof component.radius === 'string' ? 'Közös' : 'Egyedi'}
+              value={typeof editable.radius === 'string' ? 'Közös' : 'Egyedi'}
             >
               <Option value="common">Közös</Option>
               <Option value="custom">Egyedi</Option>
             </Dropdown>
 
-            {typeof component.radius === 'string' ? (
-              <Input
-                className={styles.input}
-                inputMode="decimal"
-                aria-invalid={isDefined(commonIssue) && commonIssue.severity === 'error'}
-                onChange={(event) => handleCommonRadiusChange(event.currentTarget.value)}
-                type="text"
+            {typeof editable.radius === 'string' ? (
+              <NumberInput
+                issue={commonIssue}
+                lastValidValue={typeof component.radius === 'number' ? component.radius : undefined}
+                onChange={handleCommonRadiusChange}
+                step={1}
+                unit="mm"
                 value={commonRadius}
               />
             ) : (
               <div className={styles.customInputs}>
-                <Input
-                  className={styles.input}
-                  inputMode="decimal"
-                  aria-invalid={isDefined(customIssues.topLeft) && customIssues.topLeft.severity === 'error'}
-                  onChange={(event) => handleCustomRadiusChange('topLeft')(event.currentTarget.value)}
-                  type="text"
+                <NumberInput
+                  issue={customIssues.topLeft}
+                  lastValidValue={typeof component.radius === 'object' ? component.radius.topLeft : undefined}
+                  onChange={handleCustomRadiusChange('topLeft')}
+                  step={1}
+                  unit="mm"
                   value={customRadius.topLeft}
                 />
-                <Input
-                  className={styles.input}
-                  inputMode="decimal"
-                  aria-invalid={isDefined(customIssues.topRight) && customIssues.topRight.severity === 'error'}
-                  onChange={(event) => handleCustomRadiusChange('topRight')(event.currentTarget.value)}
-                  type="text"
+                <NumberInput
+                  issue={customIssues.topRight}
+                  lastValidValue={typeof component.radius === 'object' ? component.radius.topRight : undefined}
+                  onChange={handleCustomRadiusChange('topRight')}
+                  step={1}
+                  unit="mm"
                   value={customRadius.topRight}
                 />
-                <Input
-                  className={styles.input}
-                  inputMode="decimal"
-                  aria-invalid={isDefined(customIssues.bottomRight) && customIssues.bottomRight.severity === 'error'}
-                  onChange={(event) => handleCustomRadiusChange('bottomRight')(event.currentTarget.value)}
-                  type="text"
+                <NumberInput
+                  issue={customIssues.bottomRight}
+                  lastValidValue={typeof component.radius === 'object' ? component.radius.bottomRight : undefined}
+                  onChange={handleCustomRadiusChange('bottomRight')}
+                  step={1}
+                  unit="mm"
                   value={customRadius.bottomRight}
                 />
-                <Input
-                  className={styles.input}
-                  inputMode="decimal"
-                  aria-invalid={isDefined(customIssues.bottomLeft) && customIssues.bottomLeft.severity === 'error'}
-                  onChange={(event) => handleCustomRadiusChange('bottomLeft')(event.currentTarget.value)}
-                  type="text"
+                <NumberInput
+                  issue={customIssues.bottomLeft}
+                  lastValidValue={typeof component.radius === 'object' ? component.radius.bottomLeft : undefined}
+                  onChange={handleCustomRadiusChange('bottomLeft')}
+                  step={1}
+                  unit="mm"
                   value={customRadius.bottomLeft}
                 />
               </div>

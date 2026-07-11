@@ -1,60 +1,62 @@
-import { Input } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { isDefined } from '../../utils/isDefined'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
+import { NumberInput } from './NumberInput'
 type TPocketShapeSectionProps = {
-  component: EditableSchema<PocketClusterSchema>
+  component: PocketClusterSchema
+  editable: EditableSchema<PocketClusterSchema>
   issues: ValidationIssuesSchema<PocketClusterSchema>
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
-export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, issues, onChange }) => {
+export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ component, editable, issues, onChange }) => {
   const handleTPocketTabWidthChange = useCallback(
     (tPocketTabWidth: string) => {
       onChange({
-        ...component,
+        ...editable,
         tPocketTabWidth,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   const handleTPocketTaperChange = useCallback(
     (tPocketTaper: string) => {
       onChange({
-        ...component,
+        ...editable,
         tPocketTaper,
       })
     },
-    [component, onChange],
+    [editable, onChange],
   )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="T-fül szélessége">
-          <Input
-            inputMode="decimal"
-            aria-invalid={isDefined(issues.tPocketTabWidth) && issues.tPocketTabWidth.severity === 'error'}
-            onChange={(event) => handleTPocketTabWidthChange(event.currentTarget.value)}
-            type="text"
-            value={component.tPocketTabWidth}
+          <NumberInput
+            issue={issues.tPocketTabWidth}
+            lastValidValue={component.tPocketTabWidth}
+            onChange={handleTPocketTabWidthChange}
+            step={1}
+            unit="mm"
+            value={editable.tPocketTabWidth}
           />
         </EditorFieldRow>
 
         <EditorFieldRow label="T-zseb szűkülése">
-          <Input
-            inputMode="decimal"
-            aria-invalid={isDefined(issues.tPocketTaper) && issues.tPocketTaper.severity === 'error'}
-            onChange={(event) => handleTPocketTaperChange(event.currentTarget.value)}
-            type="text"
-            value={component.tPocketTaper}
+          <NumberInput
+            issue={issues.tPocketTaper}
+            lastValidValue={component.tPocketTaper}
+            onChange={handleTPocketTaperChange}
+            step={1}
+            unit="mm"
+            value={editable.tPocketTaper}
           />
         </EditorFieldRow>
       </EditorFieldGrid>
