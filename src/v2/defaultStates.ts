@@ -36,4 +36,8 @@ export const defaultProject: ProjectSchema = {
   components: {
     [defaultComponent.id]: defaultComponent,
   },
+  editingSettings: {
+    addComputedSizesToAutoSized: true,
+    adjustCornerRadiiToParent: true,
+  },
 }
