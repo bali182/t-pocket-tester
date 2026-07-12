@@ -1,9 +1,9 @@
 import { atom, createStore } from 'jotai'
 import type { SetStateAction } from 'react'
 
+import { getPatchedProject } from './component-patches/getPatchedProject'
 import { defaultProject } from './defaultStates'
 import { getComputedProject } from './logic/getComputedProject'
-import { getPatchedProject } from './logic/getPatchedProject'
 import type { ProjectSchema } from './schemas/project'
 
 export const appStore = createStore()
