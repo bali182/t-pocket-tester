@@ -23,9 +23,9 @@ export const PanelEditor: FC<PanelEditorProps> = ({ component, editable, issues,
     <>
       <ToolbarSection onAddChild={onAddChild} onRemoveComponent={onRemoveComponent} />
       <NameAndColorSection editable={editable} onChange={onChange} />
-      <FillableSizeSection component={component} editable={editable} issues={issues.size} onChange={onChange} />
+      <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
-      <LayoutSection component={component} editable={editable} issues={issues.layout} onChange={onChange} />
+      <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />
     </>
   )
 }

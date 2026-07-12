@@ -11,7 +11,7 @@ import { NumberInput } from './NumberInput'
 type WidthAndHeightSizeSectionProps = {
   component: RootPanelSchema
   editable: EditableSchema<RootPanelSchema>
-  issues: ValidationIssuesSchema<RootPanelSchema['size']>
+  issues: ValidationIssuesSchema<RootPanelSchema>
   onChange: (updated: EditableSchema<RootPanelSchema>) => void
 }
 
@@ -20,10 +20,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
     (width: string) => {
       onChange({
         ...editable,
-        size: {
-          ...editable.size,
-          width,
-        },
+        width,
       })
     },
     [editable, onChange],
@@ -33,10 +30,7 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
     (height: string) => {
       onChange({
         ...editable,
-        size: {
-          ...editable.size,
-          height,
-        },
+        height,
       })
     },
     [editable, onChange],
@@ -46,23 +40,11 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
     <EditorSection>
       <EditorFieldGrid>
         <EditorFieldRow label="Szélesség">
-          <NumberInput
-            issue={issues.width}
-            onChange={handleWidthChange}
-            step={1}
-            unit="mm"
-            value={editable.size.width}
-          />
+          <NumberInput issue={issues.width} onChange={handleWidthChange} step={1} unit="mm" value={editable.width} />
         </EditorFieldRow>
 
         <EditorFieldRow label="Magasság">
-          <NumberInput
-            issue={issues.height}
-            onChange={handleHeightChange}
-            step={1}
-            unit="mm"
-            value={editable.size.height}
-          />
+          <NumberInput issue={issues.height} onChange={handleHeightChange} step={1} unit="mm" value={editable.height} />
         </EditorFieldRow>
       </EditorFieldGrid>
     </EditorSection>

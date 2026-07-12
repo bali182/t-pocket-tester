@@ -22,9 +22,9 @@ export const RootPanelEditor: FC<RootPanelEditorProps> = ({ component, editable,
     <>
       <ToolbarSection onAddChild={onAddChild} />
       <NameAndColorSection editable={editable} onChange={onChange} />
-      <WidthAndHeightSizeSection component={component} editable={editable} issues={issues.size} onChange={onChange} />
+      <WidthAndHeightSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
-      <LayoutSection component={component} editable={editable} issues={issues.layout} onChange={onChange} />
+      <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />
     </>
   )
 }

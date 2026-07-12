@@ -1,10 +1,10 @@
-import { Grid, Select, Stack, createListCollection } from '@chakra-ui/react'
+import { Grid, Switch } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
+import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
 
-import type { CornerRadiusSchema, HasCornerRadiusSchema } from '../../schemas/components'
+import type { HasCornerRadiusSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
-import type { IssueSchema, ValidationIssuesSchema } from '../../schemas/validation'
-import { isDefined } from '../../utils/isDefined'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { EditorFieldGrid } from './EditorFieldGrid'
 import { EditorFieldRow } from './EditorFieldRow'
 import { EditorSection } from './EditorSection'
@@ -17,173 +17,107 @@ type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
   onChange: (updated: EditableSchema<T>) => void
 }
 
-type CornerRadiusMode = 'common' | 'custom'
-
-const cornerRadiusModeItems: { label: string; value: CornerRadiusMode }[] = [
-  { label: 'Közös', value: 'common' },
-  { label: 'Egyedi', value: 'custom' },
-]
-
-const cornerRadiusModeCollection = createListCollection({
-  items: cornerRadiusModeItems,
-})
+type IndividualRadiusKey = 'topLeftRadius' | 'topRightRadius' | 'bottomRightRadius' | 'bottomLeftRadius'
 
 export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   editable,
   issues,
   onChange,
 }: CornerRadiusSectionProps<T>): ReactNode {
-  const commonRadius = getCommonRadius(editable.radius)
-  const customRadius = getCustomRadius(editable.radius)
-
-  const handleModeChange = useCallback(
-    (details: Select.ValueChangeDetails) => {
-      const nextMode = details.value[0]
-
-      if (!isDefined(nextMode)) {
-        return
-      }
-
-      if (nextMode === 'common') {
-        if (typeof editable.radius === 'string') {
-          return
-        }
-        onChange({
-          ...editable,
-          radius: editable.radius.topLeft,
-        })
-        return
-      }
-
-      if (nextMode === 'custom' && typeof editable.radius !== 'string') {
-        return
-      }
-
-      if (nextMode === 'custom') {
-        onChange({
-          ...editable,
-          radius: getCustomRadius(editable.radius),
-        })
-      }
-    },
-    [editable, onChange],
-  )
-
-  const handleCommonRadiusChange = useCallback(
-    (radius: string) => {
+  const handleIndividualRadiiChange = useCallback(
+    (details: Switch.CheckedChangeDetails) => {
       onChange({
         ...editable,
-        radius,
+        individualRadii: details.checked,
       })
     },
     [editable, onChange],
   )
 
-  const handleCustomRadiusChange = useCallback(
-    (key: keyof CornerRadiusSchema) => (radius: string) => {
+  const handleBorderRadiusChange = useCallback(
+    (borderRadius: string) => {
       onChange({
         ...editable,
-        radius: {
-          ...customRadius,
-          [key]: radius,
-        },
+        borderRadius,
       })
     },
-    [editable, customRadius, onChange],
+    [editable, onChange],
   )
 
-  const commonIssue = issues.radius as IssueSchema | undefined
-  const customIssues = issues.radius as ValidationIssuesSchema<CornerRadiusSchema>
+  const handleIndividualRadiusChange = useCallback(
+    (key: IndividualRadiusKey) => (radius: string) => {
+      onChange({
+        ...editable,
+        [key]: radius,
+      })
+    },
+    [editable, onChange],
+  )
 
   return (
     <EditorSection>
       <EditorFieldGrid>
-        <EditorFieldRow label="Rádiusz">
-          <Stack gap="1" minWidth="0">
-            <Select.Root
-              collection={cornerRadiusModeCollection}
-              onValueChange={handleModeChange}
-              size="xs"
-              value={[typeof editable.radius === 'string' ? 'common' : 'custom']}
-              width="100%"
-            >
-              <Select.HiddenSelect />
-              <Select.Control>
-                <Select.Trigger>
-                  <Select.ValueText />
-                </Select.Trigger>
-                <Select.IndicatorGroup>
-                  <Select.Indicator />
-                </Select.IndicatorGroup>
-              </Select.Control>
-              <Select.Positioner>
-                <Select.Content>
-                  {cornerRadiusModeCollection.items.map((item) => (
-                    <Select.Item item={item} key={item.value}>
-                      <Select.ItemText>{item.label}</Select.ItemText>
-                      <Select.ItemIndicator />
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Positioner>
-            </Select.Root>
+        <EditorFieldRow label="Típus">
+          <Switch.Root checked={editable.individualRadii} onCheckedChange={handleIndividualRadiiChange} size="md">
+            <Switch.HiddenInput />
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Switch.Label>{editable.individualRadii ? 'Egyedi lekerekítések' : 'Egységes lekerekítés'}</Switch.Label>
+          </Switch.Root>
+        </EditorFieldRow>
 
-            {typeof editable.radius === 'string' ? (
+        {!editable.individualRadii && (
+          <EditorFieldRow label="Lekerekítés">
+            <NumberInput
+              issue={issues.borderRadius}
+              onChange={handleBorderRadiusChange}
+              step={1}
+              unit="mm"
+              value={editable.borderRadius}
+            />
+          </EditorFieldRow>
+        )}
+
+        {editable.individualRadii && (
+          <EditorFieldRow label="Lekerekítés">
+            <Grid columnGap="1" gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" rowGap="1">
               <NumberInput
-                issue={commonIssue}
-                onChange={handleCommonRadiusChange}
+                issue={issues.topLeftRadius}
+                onChange={handleIndividualRadiusChange('topLeftRadius')}
+                startAddon={<TbRadiusTopLeft />}
                 step={1}
                 unit="mm"
-                value={commonRadius}
+                value={editable.topLeftRadius}
               />
-            ) : (
-              <Grid columnGap="1" gridTemplateColumns="repeat(4, minmax(0, 1fr))" minWidth="0">
-                <NumberInput
-                  issue={customIssues.topLeft}
-                  onChange={handleCustomRadiusChange('topLeft')}
-                  step={1}
-                  value={customRadius.topLeft}
-                />
-                <NumberInput
-                  issue={customIssues.topRight}
-                  onChange={handleCustomRadiusChange('topRight')}
-                  step={1}
-                  value={customRadius.topRight}
-                />
-                <NumberInput
-                  issue={customIssues.bottomRight}
-                  onChange={handleCustomRadiusChange('bottomRight')}
-                  step={1}
-                  value={customRadius.bottomRight}
-                />
-                <NumberInput
-                  issue={customIssues.bottomLeft}
-                  onChange={handleCustomRadiusChange('bottomLeft')}
-                  step={1}
-                  value={customRadius.bottomLeft}
-                />
-              </Grid>
-            )}
-          </Stack>
-        </EditorFieldRow>
+              <NumberInput
+                issue={issues.topRightRadius}
+                onChange={handleIndividualRadiusChange('topRightRadius')}
+                startAddon={<TbRadiusTopRight />}
+                step={1}
+                unit="mm"
+                value={editable.topRightRadius}
+              />
+              <NumberInput
+                issue={issues.bottomLeftRadius}
+                onChange={handleIndividualRadiusChange('bottomLeftRadius')}
+                startAddon={<TbRadiusBottomLeft />}
+                step={1}
+                unit="mm"
+                value={editable.bottomLeftRadius}
+              />
+              <NumberInput
+                issue={issues.bottomRightRadius}
+                onChange={handleIndividualRadiusChange('bottomRightRadius')}
+                startAddon={<TbRadiusBottomRight />}
+                step={1}
+                unit="mm"
+                value={editable.bottomRightRadius}
+              />
+            </Grid>
+          </EditorFieldRow>
+        )}
       </EditorFieldGrid>
     </EditorSection>
   )
-}
-
-const getCommonRadius = (radius: EditableSchema<number | CornerRadiusSchema>): string => {
-  return typeof radius === 'string' ? radius : radius.topLeft
-}
-
-const getCustomRadius = (radius: EditableSchema<number | CornerRadiusSchema>): EditableSchema<CornerRadiusSchema> => {
-  if (typeof radius === 'string') {
-    return {
-      bottomLeft: radius,
-      bottomRight: radius,
-      topLeft: radius,
-      topRight: radius,
-    }
-  }
-
-  return radius
 }

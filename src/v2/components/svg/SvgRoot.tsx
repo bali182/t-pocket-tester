@@ -20,8 +20,8 @@ export const SvgRoot = () => {
 
   return (
     <svg
-      width={`${rootComponent.size.width}mm`}
-      height={`${rootComponent.size.height}mm`}
+      width={`${rootComponent.width}mm`}
+      height={`${rootComponent.height}mm`}
       style={{ display: 'block' }}
       viewBox={viewBox}
     >
