@@ -1,4 +1,4 @@
-import { Box, HStack, IconButton, Popover, Text, usePopover } from '@chakra-ui/react'
+import { HStack, IconButton, Popover, Text, usePopover } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { MouseEvent, useCallback, useEffect, useMemo, type FC } from 'react'
 import { LuX } from 'react-icons/lu'
@@ -12,6 +12,7 @@ import { isDefined } from '../../utils/isDefined'
 import { removeComponent } from '../../utils/removeComponent'
 import type { ChildComponentType } from '../AddChildComponentMenu'
 import { ComponentEditor } from './ComponentEditor'
+import { SectionGroup } from './SectionGroup'
 
 type FloatingEditorProps = {
   component: ComponentSchema
@@ -100,7 +101,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
               </IconButton>
             </HStack>
           </Popover.Header>
-          <Box>
+          <SectionGroup.Root>
             <ComponentEditor
               component={editedComponent}
               editable={editableComponent}
@@ -109,7 +110,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
               onChange={setComponent}
               onRemoveComponent={handleRemoveComponent}
             />
-          </Box>
+          </SectionGroup.Root>
         </Popover.Content>
       </Popover.Positioner>
     </Popover.RootProvider>

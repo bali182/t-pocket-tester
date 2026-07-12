@@ -5,10 +5,8 @@ import { PiArrowsHorizontal, PiArrowsVertical, PiRuler } from 'react-icons/pi'
 import type { HasFillableSizeSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
 import { NumberInput } from './NumberInput'
+import { SectionGroup } from './SectionGroup'
 
 type FillableSizeSectionProps<T extends HasFillableSizeSchema> = {
   component: T
@@ -63,9 +61,10 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
   )
 
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="Szélesség">
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>Méret</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>Szélesség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
           <HStack gap="2">
             <Switch.Root checked={!editable.autoWidth} onCheckedChange={handleAutoWidthChange} size="md">
               <Switch.HiddenInput />
@@ -88,9 +87,10 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
               />
             </Box>
           </HStack>
-        </EditorFieldRow>
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="Magasság">
+      <SectionGroup.SectionRowTitle>Magasság</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
           <HStack gap="2">
             <Switch.Root checked={!editable.autoHeight} onCheckedChange={handleAutoHeightChange} size="md">
               <Switch.HiddenInput />
@@ -113,8 +113,7 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
               />
             </Box>
           </HStack>
-        </EditorFieldRow>
-      </EditorFieldGrid>
-    </EditorSection>
+      </SectionGroup.SectionRowEditor>
+    </SectionGroup.Section>
   )
 }

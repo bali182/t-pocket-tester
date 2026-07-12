@@ -3,10 +3,8 @@ import { useCallback, type FC } from 'react'
 import type { RootPanelSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
 import { NumberInput } from './NumberInput'
+import { SectionGroup } from './SectionGroup'
 
 type WidthAndHeightSizeSectionProps = {
   component: RootPanelSchema
@@ -37,16 +35,17 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
   )
 
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="Szélesség">
-          <NumberInput issue={issues.width} onChange={handleWidthChange} step={1} unit="mm" value={editable.width} />
-        </EditorFieldRow>
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>Méret</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>Szélesség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <NumberInput issue={issues.width} onChange={handleWidthChange} step={1} unit="mm" value={editable.width} />
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="Magasság">
-          <NumberInput issue={issues.height} onChange={handleHeightChange} step={1} unit="mm" value={editable.height} />
-        </EditorFieldRow>
-      </EditorFieldGrid>
-    </EditorSection>
+      <SectionGroup.SectionRowTitle>Magasság</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <NumberInput issue={issues.height} onChange={handleHeightChange} step={1} unit="mm" value={editable.height} />
+      </SectionGroup.SectionRowEditor>
+    </SectionGroup.Section>
   )
 }

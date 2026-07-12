@@ -3,10 +3,8 @@ import { useCallback, type FC } from 'react'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
 import { NumberInput } from './NumberInput'
+import { SectionGroup } from './SectionGroup'
 type TPocketShapeSectionProps = {
   component: PocketClusterSchema
   editable: EditableSchema<PocketClusterSchema>
@@ -36,28 +34,29 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, is
   )
 
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="T-fül szélessége">
-          <NumberInput
-            issue={issues.tPocketTabWidth}
-            onChange={handleTPocketTabWidthChange}
-            step={1}
-            unit="mm"
-            value={editable.tPocketTabWidth}
-          />
-        </EditorFieldRow>
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>T-zsebek</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>Fül szélesség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <NumberInput
+          issue={issues.tPocketTabWidth}
+          onChange={handleTPocketTabWidthChange}
+          step={1}
+          unit="mm"
+          value={editable.tPocketTabWidth}
+        />
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="T-zseb szűkülése">
-          <NumberInput
-            issue={issues.tPocketTaper}
-            onChange={handleTPocketTaperChange}
-            step={1}
-            unit="mm"
-            value={editable.tPocketTaper}
-          />
-        </EditorFieldRow>
-      </EditorFieldGrid>
-    </EditorSection>
+      <SectionGroup.SectionRowTitle>Szűkülés</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <NumberInput
+          issue={issues.tPocketTaper}
+          onChange={handleTPocketTaperChange}
+          step={1}
+          unit="mm"
+          value={editable.tPocketTaper}
+        />
+      </SectionGroup.SectionRowEditor>
+    </SectionGroup.Section>
   )
 }

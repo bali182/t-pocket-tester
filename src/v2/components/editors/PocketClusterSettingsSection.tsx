@@ -5,10 +5,8 @@ import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/p
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
 import { NumberInput } from './NumberInput'
+import { SectionGroup } from './SectionGroup'
 
 type PocketClusterSettingsSectionProps = {
   component: PocketClusterSchema
@@ -17,11 +15,7 @@ type PocketClusterSettingsSectionProps = {
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
-export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({
-  editable,
-  issues,
-  onChange,
-}) => {
+export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({ editable, issues, onChange }) => {
   const handleOrientationChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails) => {
       if (details.value !== 'up' && details.value !== 'down' && details.value !== 'left' && details.value !== 'right') {
@@ -57,50 +51,52 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
   )
 
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="Nyílás iránya">
-          <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
-            <SegmentGroup.Indicator />
-            <SegmentGroup.Item aria-label="Felülről" value="up">
-              <SegmentGroup.ItemHiddenInput />
-              <PiCaretDown />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item aria-label="Alulról" value="down">
-              <SegmentGroup.ItemHiddenInput />
-              <PiCaretUp />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item aria-label="Balról" value="left">
-              <SegmentGroup.ItemHiddenInput />
-              <PiCaretRight />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item aria-label="Jobbról" value="right">
-              <SegmentGroup.ItemHiddenInput />
-              <PiCaretLeft />
-            </SegmentGroup.Item>
-          </SegmentGroup.Root>
-        </EditorFieldRow>
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>Zsebek</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>Nyílás</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
+          <SegmentGroup.Indicator />
+          <SegmentGroup.Item aria-label="Felülről" value="up">
+            <SegmentGroup.ItemHiddenInput />
+            <PiCaretDown />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item aria-label="Alulról" value="down">
+            <SegmentGroup.ItemHiddenInput />
+            <PiCaretUp />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item aria-label="Balról" value="left">
+            <SegmentGroup.ItemHiddenInput />
+            <PiCaretRight />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item aria-label="Jobbról" value="right">
+            <SegmentGroup.ItemHiddenInput />
+            <PiCaretLeft />
+          </SegmentGroup.Item>
+        </SegmentGroup.Root>
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="Zsebek száma">
-          <NumberInput
-            issue={issues.pocketCount}
-            onChange={handlePocketCountChange}
-            step={1}
-            unit="db"
-            value={editable.pocketCount}
-          />
-        </EditorFieldRow>
+      <SectionGroup.SectionRowTitle>Mennyiség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <NumberInput
+          issue={issues.pocketCount}
+          onChange={handlePocketCountChange}
+          step={1}
+          unit="db"
+          value={editable.pocketCount}
+        />
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="Zseb lépés">
-          <NumberInput
-            issue={issues.pocketStep}
-            onChange={handlePocketStepChange}
-            step={1}
-            unit="mm"
-            value={editable.pocketStep}
-          />
-        </EditorFieldRow>
-      </EditorFieldGrid>
-    </EditorSection>
+      <SectionGroup.SectionRowTitle>Köz</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <NumberInput
+          issue={issues.pocketStep}
+          onChange={handlePocketStepChange}
+          step={1}
+          unit="mm"
+          value={editable.pocketStep}
+        />
+      </SectionGroup.SectionRowEditor>
+    </SectionGroup.Section>
   )
 }

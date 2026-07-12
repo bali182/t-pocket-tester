@@ -5,10 +5,8 @@ import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRi
 import type { HasCornerRadiusSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
 import { NumberInput } from './NumberInput'
+import { SectionGroup } from './SectionGroup'
 
 type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
   component: T
@@ -55,20 +53,23 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   )
 
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="Típus">
-          <Switch.Root checked={editable.individualRadii} onCheckedChange={handleIndividualRadiiChange} size="md">
-            <Switch.HiddenInput />
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
-            <Switch.Label>{editable.individualRadii ? 'Egyedi lekerekítések' : 'Egységes lekerekítés'}</Switch.Label>
-          </Switch.Root>
-        </EditorFieldRow>
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>Lekerekítés</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>Típus</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <Switch.Root checked={editable.individualRadii} onCheckedChange={handleIndividualRadiiChange} size="md">
+          <Switch.HiddenInput />
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+          <Switch.Label>{editable.individualRadii ? 'Egyedi lekerekítések' : 'Egységes lekerekítés'}</Switch.Label>
+        </Switch.Root>
+      </SectionGroup.SectionRowEditor>
 
-        {!editable.individualRadii && (
-          <EditorFieldRow label="Lekerekítés">
+      {!editable.individualRadii && (
+        <>
+          <SectionGroup.SectionRowTitle>Mérték</SectionGroup.SectionRowTitle>
+          <SectionGroup.SectionRowEditor>
             <NumberInput
               issue={issues.borderRadius}
               onChange={handleBorderRadiusChange}
@@ -76,11 +77,14 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
               unit="mm"
               value={editable.borderRadius}
             />
-          </EditorFieldRow>
-        )}
+          </SectionGroup.SectionRowEditor>
+        </>
+      )}
 
-        {editable.individualRadii && (
-          <EditorFieldRow label="Lekerekítés">
+      {editable.individualRadii && (
+        <>
+          <SectionGroup.SectionRowTitle>Mérték</SectionGroup.SectionRowTitle>
+          <SectionGroup.SectionRowEditor>
             <Grid columnGap="1" gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" rowGap="1">
               <NumberInput
                 issue={issues.topLeftRadius}
@@ -115,9 +119,9 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
                 value={editable.bottomRightRadius}
               />
             </Grid>
-          </EditorFieldRow>
-        )}
-      </EditorFieldGrid>
-    </EditorSection>
+          </SectionGroup.SectionRowEditor>
+        </>
+      )}
+    </SectionGroup.Section>
   )
 }

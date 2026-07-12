@@ -4,9 +4,7 @@ import { PiPlus, PiTrash } from 'react-icons/pi'
 
 import { isDefined } from '../../utils/isDefined'
 import { AddChildComponentMenu, type ChildComponentType } from '../AddChildComponentMenu'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
+import { SectionGroup } from './SectionGroup'
 
 type ToolbarSectionProps = {
   onAddChild?: (type: ChildComponentType) => void
@@ -15,9 +13,10 @@ type ToolbarSectionProps = {
 
 export const ToolbarSection: FC<ToolbarSectionProps> = ({ onAddChild, onRemoveComponent }) => {
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="Akciók">
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>Akciók</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle></SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
           <HStack gap="1" justify="end">
             {isDefined(onAddChild) && (
               <Menu.Root>
@@ -41,8 +40,7 @@ export const ToolbarSection: FC<ToolbarSectionProps> = ({ onAddChild, onRemoveCo
               </Button>
             )}
           </HStack>
-        </EditorFieldRow>
-      </EditorFieldGrid>
-    </EditorSection>
+      </SectionGroup.SectionRowEditor>
+    </SectionGroup.Section>
   )
 }

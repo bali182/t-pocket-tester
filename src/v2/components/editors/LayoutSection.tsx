@@ -5,10 +5,8 @@ import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } 
 import type { HasLayoutSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
 import { NumberInput } from './NumberInput'
+import { SectionGroup } from './SectionGroup'
 
 type LayoutSectionProps<T extends HasLayoutSchema> = {
   component: T
@@ -44,46 +42,48 @@ export function LayoutSection<T extends HasLayoutSchema>({
   )
 
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="Elrendezés">
-          <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.layoutOrientation}>
-            <SegmentGroup.Indicator />
-            <SegmentGroup.Item aria-label="Vízszintes" value="horizontal">
-              <SegmentGroup.ItemHiddenInput />
-              <PiColumns />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item aria-label="Függőleges" value="vertical">
-              <SegmentGroup.ItemHiddenInput />
-              <PiRows />
-            </SegmentGroup.Item>
-          </SegmentGroup.Root>
-        </EditorFieldRow>
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>Elrendezés</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>Tájolás</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.layoutOrientation}>
+          <SegmentGroup.Indicator />
+          <SegmentGroup.Item aria-label="Vízszintes" value="horizontal">
+            <SegmentGroup.ItemHiddenInput />
+            <PiColumns />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item aria-label="Függőleges" value="vertical">
+            <SegmentGroup.ItemHiddenInput />
+            <PiRows />
+          </SegmentGroup.Item>
+        </SegmentGroup.Root>
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="Irány">
-          <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layoutOrder}>
-            <SegmentGroup.Indicator />
-            <SegmentGroup.Item aria-label="Alapértelmezett" value="default">
-              <SegmentGroup.ItemHiddenInput />
-              {editable.layoutOrientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
-            </SegmentGroup.Item>
-            <SegmentGroup.Item aria-label="Fordított" value="reverse">
-              <SegmentGroup.ItemHiddenInput />
-              {editable.layoutOrientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
-            </SegmentGroup.Item>
-          </SegmentGroup.Root>
-        </EditorFieldRow>
+      <SectionGroup.SectionRowTitle>Irány</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layoutOrder}>
+          <SegmentGroup.Indicator />
+          <SegmentGroup.Item aria-label="Alapértelmezett" value="default">
+            <SegmentGroup.ItemHiddenInput />
+            {editable.layoutOrientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
+          </SegmentGroup.Item>
+          <SegmentGroup.Item aria-label="Fordított" value="reverse">
+            <SegmentGroup.ItemHiddenInput />
+            {editable.layoutOrientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
+          </SegmentGroup.Item>
+        </SegmentGroup.Root>
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="Térköz">
-          <NumberInput
-            issue={issues.layoutGap}
-            onChange={handleGapChange}
-            step={1}
-            unit="mm"
-            value={editable.layoutGap}
-          />
-        </EditorFieldRow>
-      </EditorFieldGrid>
-    </EditorSection>
+      <SectionGroup.SectionRowTitle>Térköz</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <NumberInput
+          issue={issues.layoutGap}
+          onChange={handleGapChange}
+          step={1}
+          unit="mm"
+          value={editable.layoutGap}
+        />
+      </SectionGroup.SectionRowEditor>
+    </SectionGroup.Section>
   )
 }
