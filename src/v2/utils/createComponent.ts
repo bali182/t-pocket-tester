@@ -1,5 +1,12 @@
 import { LEATHER_BASE_COLOR } from '../constants/drawing'
-import { LayoutSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
+import {
+  HasCornerRadiusSchema,
+  HasFillableSizeSchema,
+  HasLayoutSchema,
+  PanelSchema,
+  PocketClusterSchema,
+  RootPanelSchema,
+} from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
 import { getComponentColor } from './getComponentColor'
 import { getUnusedComponentName } from './getUnusedComponentName'
@@ -22,38 +29,54 @@ export const createComponent = <T extends keyof ComponentByType>(
   name: getUnusedComponentName(type, project),
 })
 
-const DEFAULT_LAYOUT: LayoutSchema = {
-  gap: 0,
-  orientation: 'horizontal',
-  order: 'default',
+const defaultHasCornerRadius: HasCornerRadiusSchema = {
+  borderRadius: 0,
+  topLeftRadius: 0,
+  bottomLeftRadius: 0,
+  bottomRightRadius: 0,
+  topRightRadius: 0,
+  individualRadii: false,
+}
+
+const defaultHasLayout: HasLayoutSchema = {
+  layoutOrientation: 'horizontal',
+  layoutOrder: 'default',
+  layoutGap: 0,
+}
+
+const defaultHasFillableSize: HasFillableSizeSchema = {
+  width: 10,
+  height: 10,
+  autoHeight: true,
+  autoWidth: true,
 }
 
 const DEFAULT_ROOT_PANEL: RootPanelSchema = {
+  ...defaultHasLayout,
+  ...defaultHasCornerRadius,
   type: 'root-panel',
   id: '',
   name: '',
   color: LEATHER_BASE_COLOR,
   children: [],
-  layout: { ...DEFAULT_LAYOUT },
-  size: {
-    width: 170,
-    height: 100,
-  },
-  radius: 0,
+  width: 170,
+  height: 100,
 }
 
 const DEFAULT_PANEL: PanelSchema = {
+  ...defaultHasLayout,
+  ...defaultHasCornerRadius,
+  ...defaultHasFillableSize,
   type: 'panel',
   id: '',
   name: '',
   color: LEATHER_BASE_COLOR,
   children: [],
-  radius: 0,
-  size: { height: 'fill', width: 'fill' },
-  layout: { ...DEFAULT_LAYOUT },
 }
 
 const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
+  ...defaultHasCornerRadius,
+  ...defaultHasFillableSize,
   type: 'pocket-cluster',
   id: '',
   name: '',
@@ -63,9 +86,7 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   pocketStep: 12,
   tPocketTabWidth: 8,
   tPocketTaper: 20,
-  radius: 0,
   pocketRadius: 0,
-  size: { height: 'fill', width: 'fill' },
 }
 
 const DEFAULT_COMPONENT_BY_TYPE: ComponentByType = {

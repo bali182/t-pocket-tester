@@ -25,6 +25,13 @@ export type FillableSizeSchema = {
   height: number | 'fill'
 }
 
+export type CornerRadiusSchema = {
+  topLeft: number
+  topRight: number
+  bottomLeft: number
+  bottomRight: number
+}
+
 export type PathMoveToSchema = {
   type: 'moveTo'
   point: PointSchema

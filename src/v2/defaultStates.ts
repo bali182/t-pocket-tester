@@ -1,23 +1,32 @@
 import { LEATHER_BASE_COLOR } from './constants/drawing'
-import { RootPanelSchema } from './schemas/components'
+import { HasCornerRadiusSchema, HasLayoutSchema, RootPanelSchema } from './schemas/components'
 import { ProjectSchema } from './schemas/project'
 
+const defaultHasCornerRadius: HasCornerRadiusSchema = {
+  borderRadius: 0,
+  topLeftRadius: 0,
+  bottomLeftRadius: 0,
+  bottomRightRadius: 0,
+  topRightRadius: 0,
+  individualRadii: false,
+}
+
+const defaultHasLayout: HasLayoutSchema = {
+  layoutOrientation: 'horizontal',
+  layoutOrder: 'default',
+  layoutGap: 0,
+}
+
 export const defaultComponent: RootPanelSchema = {
+  ...defaultHasCornerRadius,
+  ...defaultHasLayout,
   type: 'root-panel',
   id: 'root',
   name: 'Alap',
-  radius: 0,
   color: LEATHER_BASE_COLOR,
   children: [],
-  layout: {
-    orientation: 'horizontal',
-    order: 'default',
-    gap: 0,
-  },
-  size: {
-    width: 170,
-    height: 100,
-  },
+  width: 170,
+  height: 100,
 }
 
 export const defaultProject: ProjectSchema = {
