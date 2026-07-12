@@ -29,8 +29,8 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
   const rootBoundingRect: RectSchema = {
     x: 0,
     y: 0,
-    width: rootComponent.size.width,
-    height: rootComponent.size.height,
+    width: rootComponent.width,
+    height: rootComponent.height,
   }
   const root = computeRootPanel(rootComponent, rootBoundingRect, project, computedComponents)
 
@@ -68,7 +68,7 @@ const computeRootPanel = (
     type: 'computed-root-panel',
     componentId: rootPanel.id,
     boundingRect,
-    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(rootPanel.radius)),
+    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(rootPanel)),
     children: computeLayoutChildren(rootPanel, boundingRect, project, computedComponents),
   }
 
@@ -87,7 +87,7 @@ const computePanel = (
     type: 'computed-panel',
     componentId: panel.id,
     boundingRect,
-    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(panel.radius)),
+    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(panel)),
     children: computeLayoutChildren(panel, boundingRect, project, computedComponents),
   }
 
@@ -106,7 +106,7 @@ const computePocketCluster = (
     type: 'computed-pocket-cluster',
     componentId: pocketCluster.id,
     boundingRect,
-    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(pocketCluster.radius)),
+    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(pocketCluster)),
     frontPocket: geometry.frontPocket,
     tPockets: geometry.tPockets,
   }

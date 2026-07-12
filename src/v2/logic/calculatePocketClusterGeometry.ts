@@ -1,6 +1,6 @@
-import type { CornerRadiusSchema, PocketClusterSchema } from '../schemas/components'
+import type { PocketClusterSchema } from '../schemas/components'
 import type { ComputedTPocketSchema, ComputedTopPocketSchema } from '../schemas/computed'
-import type { RectSchema } from '../schemas/geometry'
+import type { CornerRadiusSchema, RectSchema } from '../schemas/geometry'
 import { initial } from '../utils/initial'
 import { last } from '../utils/last'
 import { calculatePocketBoundingBox } from './calculatePocketBoundingBox'
@@ -21,7 +21,7 @@ const calculatePocketBoundingBoxes = (pocketCluster: PocketClusterSchema, rect: 
 }
 
 const calculateTopPocketRadius = (pocketCluster: PocketClusterSchema): CornerRadiusSchema => {
-  const clusterRadius = getNormalizedCornerRadius(pocketCluster.radius)
+  const clusterRadius = getNormalizedCornerRadius(pocketCluster)
   const pocketRadius = pocketCluster.pocketRadius
 
   switch (pocketCluster.orientation) {

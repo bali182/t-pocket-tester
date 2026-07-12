@@ -3,19 +3,17 @@ import { type FC } from 'react'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { CornerRadiusSection } from './CornerRadiusSection'
-import { FillableSizeSection } from './FillableSizeSection'
-import { NameAndColorSection } from './NameAndColorSection'
-import { PocketClusterSettingsSection } from './PocketClusterSettingsSection'
-import { ToolbarSection } from './ToolbarSection'
-import { TPocketShapeSection } from './TPocketShapeSection'
+import { CornerRadiusSection } from './sections/CornerRadiusSection'
+import { FillableSizeSection } from './sections/FillableSizeSection'
+import { NameAndColorSection } from './sections/NameAndColorSection'
+import { PocketClusterSettingsSection } from './sections/PocketClusterSettingsSection'
+import { TPocketShapeSection } from './sections/TPocketShapeSection'
 
 type PocketClusterEditorProps = {
   component: PocketClusterSchema
   editable: EditableSchema<PocketClusterSchema>
   issues: ValidationIssuesSchema<PocketClusterSchema>
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
-  onRemoveComponent: () => void
 }
 
 export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
@@ -23,13 +21,11 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
   editable,
   issues,
   onChange,
-  onRemoveComponent,
 }) => {
   return (
     <>
-      <ToolbarSection onRemoveComponent={onRemoveComponent} />
       <NameAndColorSection editable={editable} onChange={onChange} />
-      <FillableSizeSection component={component} editable={editable} issues={issues.size} onChange={onChange} />
+      <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <PocketClusterSettingsSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <TPocketShapeSection component={component} editable={editable} issues={issues} onChange={onChange} />

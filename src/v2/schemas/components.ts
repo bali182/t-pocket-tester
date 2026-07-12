@@ -1,5 +1,3 @@
-import { FillableSizeSchema, SizeSchema } from './geometry'
-
 export type BaseComponentSchema = {
   id: string
   name: string
@@ -11,41 +9,40 @@ export type HasChildrenSchema = {
 }
 
 export type HasLayoutSchema = {
-  layout: LayoutSchema
+  layoutOrientation: LayoutOrientationSchema
+  layoutOrder: LayoutOrderSchema
+  layoutGap: number
 }
 
 export type HasCornerRadiusSchema = {
-  radius: number | CornerRadiusSchema
+  individualRadii: boolean
+  borderRadius: number
+  topLeftRadius: number
+  topRightRadius: number
+  bottomLeftRadius: number
+  bottomRightRadius: number
 }
 
-export type HasFillableSizeSchema = {
-  /** The bounding rectangle of the cluster */
-  size: FillableSizeSchema
+export type HasSizeSchema = {
+  width: number
+  height: number
+}
+
+export type HasFillableSizeSchema = HasSizeSchema & {
+  autoWidth: boolean
+  autoHeight: boolean
 }
 
 export type LayoutOrientationSchema = 'horizontal' | 'vertical'
 export type LayoutOrderSchema = 'default' | 'reverse'
 
-export type CornerRadiusSchema = {
-  topLeft: number
-  topRight: number
-  bottomLeft: number
-  bottomRight: number
-}
-
-export type LayoutSchema = {
-  orientation: LayoutOrientationSchema
-  order: LayoutOrderSchema
-  gap: number
-}
-
 /** A plain panel. Can have children (stuff placed on top of it) */
 export type RootPanelSchema = BaseComponentSchema &
   HasLayoutSchema &
   HasChildrenSchema &
-  HasCornerRadiusSchema & {
+  HasCornerRadiusSchema &
+  HasSizeSchema & {
     type: 'root-panel'
-    size: SizeSchema
   }
 
 /** A plain panel. Can have children (stuff placed on top of it) */

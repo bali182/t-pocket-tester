@@ -1,24 +1,14 @@
-import type { CornerRadiusSchema } from '../schemas/components'
-import { isDefined } from '../utils/isDefined'
+import { HasCornerRadiusSchema } from '../schemas/components'
+import { CornerRadiusSchema } from '../schemas/geometry'
 
-export const getNormalizedCornerRadius = (radius?: number | CornerRadiusSchema): CornerRadiusSchema => {
-  if (!isDefined(radius)) {
-    return {
-      topLeft: 0,
-      topRight: 0,
-      bottomRight: 0,
-      bottomLeft: 0,
-    }
+export const getNormalizedCornerRadius = (component: HasCornerRadiusSchema): CornerRadiusSchema => {
+  const { individualRadii, borderRadius, bottomLeftRadius, bottomRightRadius, topLeftRadius, topRightRadius } =
+    component
+
+  return {
+    topLeft: individualRadii ? topLeftRadius : borderRadius,
+    topRight: individualRadii ? topRightRadius : borderRadius,
+    bottomRight: individualRadii ? bottomRightRadius : borderRadius,
+    bottomLeft: individualRadii ? bottomLeftRadius : borderRadius,
   }
-
-  if (typeof radius === 'number') {
-    return {
-      topLeft: radius,
-      topRight: radius,
-      bottomRight: radius,
-      bottomLeft: radius,
-    }
-  }
-
-  return radius
 }

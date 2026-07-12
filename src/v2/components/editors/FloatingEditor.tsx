@@ -1,7 +1,6 @@
-import { Box, HStack, IconButton, Popover, Text, usePopover } from '@chakra-ui/react'
+import { Popover, usePopover } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { MouseEvent, useCallback, useEffect, useMemo, type FC } from 'react'
-import { LuX } from 'react-icons/lu'
 
 import { useEditableComponent } from '../../hooks/useEditableComponent'
 import type { ComponentSchema } from '../../schemas/components'
@@ -12,6 +11,8 @@ import { isDefined } from '../../utils/isDefined'
 import { removeComponent } from '../../utils/removeComponent'
 import type { ChildComponentType } from '../AddChildComponentMenu'
 import { ComponentEditor } from './ComponentEditor'
+import { FloatingEditorHeader } from './FloatingEditorHeader'
+import { SectionGroup } from './SectionGroup'
 
 type FloatingEditorProps = {
   component: ComponentSchema
@@ -90,26 +91,19 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
       <Popover.Positioner>
         <Popover.Content onClick={captureClick} width="400px" zIndex="popover">
           <Popover.Arrow />
-          <Popover.Header pt="2" pb="2">
-            <HStack justify="space-between">
-              <Text fontWeight="semibold" textStyle="xs">
-                #{editedComponent.id}
-              </Text>
-              <IconButton aria-label="Bezárás" onClick={onClose} size="xs" variant="ghost">
-                <LuX />
-              </IconButton>
-            </HStack>
-          </Popover.Header>
-          <Box>
+          <FloatingEditorHeader
+            componentId={editedComponent.id}
+            onAddChild={editedComponent.type === 'pocket-cluster' ? undefined : handleAddChild}
+            onRemoveComponent={editedComponent.type === 'root-panel' ? undefined : handleRemoveComponent}
+          />
+          <SectionGroup.Root>
             <ComponentEditor
               component={editedComponent}
               editable={editableComponent}
               issues={validationIssues as ValidationIssuesSchema<ComponentSchema>}
-              onAddChild={handleAddChild}
               onChange={setComponent}
-              onRemoveComponent={handleRemoveComponent}
             />
-          </Box>
+          </SectionGroup.Root>
         </Popover.Content>
       </Popover.Positioner>
     </Popover.RootProvider>

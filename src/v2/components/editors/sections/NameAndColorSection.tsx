@@ -1,10 +1,8 @@
 import { Button, ColorPicker, Input, Text, parseColor } from '@chakra-ui/react'
 import { useCallback, useMemo, type ChangeEvent, type ReactNode } from 'react'
 
-import { BaseComponentSchema } from '../../schemas/components'
-import { EditorFieldGrid } from './EditorFieldGrid'
-import { EditorFieldRow } from './EditorFieldRow'
-import { EditorSection } from './EditorSection'
+import { BaseComponentSchema } from '../../../schemas/components'
+import { SectionGroup } from '../SectionGroup'
 
 type NameAndColorSectionProps<T> = {
   editable: T
@@ -41,13 +39,15 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
   )
 
   return (
-    <EditorSection>
-      <EditorFieldGrid>
-        <EditorFieldRow label="Név">
+    <SectionGroup.Section>
+      <SectionGroup.SectionHeader>Általános</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>Név</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
           <Input onChange={handleNameChange} size="xs" value={editable.name} />
-        </EditorFieldRow>
+      </SectionGroup.SectionRowEditor>
 
-        <EditorFieldRow label="Szín">
+      <SectionGroup.SectionRowTitle>Szín</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
           <ColorPicker.Root onValueChange={handleColorChange} size="xs" value={color}>
             <ColorPicker.Control>
               <ColorPicker.Trigger asChild>
@@ -74,8 +74,7 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
               </ColorPicker.Content>
             </ColorPicker.Positioner>
           </ColorPicker.Root>
-        </EditorFieldRow>
-      </EditorFieldGrid>
-    </EditorSection>
+      </SectionGroup.SectionRowEditor>
+    </SectionGroup.Section>
   )
 }
