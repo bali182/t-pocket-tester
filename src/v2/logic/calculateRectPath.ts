@@ -5,8 +5,8 @@ import type { CornerRadiusSchema, PathCommand, PathSchema, RectSchema } from '..
 const ZERO = new BigNumber(0)
 
 export const calculateRectPath = (rect: RectSchema, radius: CornerRadiusSchema): PathSchema => {
-  const left = new BigNumber(rect.x)
-  const top = new BigNumber(rect.y)
+  const left = rect.x
+  const top = rect.y
   const right = left.plus(rect.width)
   const bottom = top.plus(rect.height)
 
@@ -18,10 +18,7 @@ export const calculateRectPath = (rect: RectSchema, radius: CornerRadiusSchema):
   const commands: PathCommand[] = [
     {
       type: 'moveTo',
-      point: {
-        x: left.plus(topLeft).toNumber(),
-        y: top.toNumber(),
-      },
+      point: { x: left.plus(topLeft), y: top },
     },
   ]
 
@@ -29,84 +26,60 @@ export const calculateRectPath = (rect: RectSchema, radius: CornerRadiusSchema):
     commands.push(
       {
         type: 'lineTo',
-        point: {
-          x: right.minus(topRight).toNumber(),
-          y: top.toNumber(),
-        },
+        point: { x: right.minus(topRight), y: top },
       },
       {
         type: 'arcTo',
-        radius: topRight.toNumber(),
-        point: {
-          x: right.toNumber(),
-          y: top.plus(topRight).toNumber(),
-        },
+        radius: topRight,
+        point: { x: right, y: top.plus(topRight) },
       },
     )
   } else {
-    commands.push({ type: 'lineTo', point: { x: right.toNumber(), y: top.toNumber() } })
+    commands.push({ type: 'lineTo', point: { x: right, y: top } })
   }
 
   if (bottomRight.isGreaterThan(ZERO)) {
     commands.push(
       {
         type: 'lineTo',
-        point: {
-          x: right.toNumber(),
-          y: bottom.minus(bottomRight).toNumber(),
-        },
+        point: { x: right, y: bottom.minus(bottomRight) },
       },
       {
         type: 'arcTo',
-        radius: bottomRight.toNumber(),
-        point: {
-          x: right.minus(bottomRight).toNumber(),
-          y: bottom.toNumber(),
-        },
+        radius: bottomRight,
+        point: { x: right.minus(bottomRight), y: bottom },
       },
     )
   } else {
-    commands.push({ type: 'lineTo', point: { x: right.toNumber(), y: bottom.toNumber() } })
+    commands.push({ type: 'lineTo', point: { x: right, y: bottom } })
   }
 
   if (bottomLeft.isGreaterThan(ZERO)) {
     commands.push(
       {
         type: 'lineTo',
-        point: {
-          x: left.plus(bottomLeft).toNumber(),
-          y: bottom.toNumber(),
-        },
+        point: { x: left.plus(bottomLeft), y: bottom },
       },
       {
         type: 'arcTo',
-        radius: bottomLeft.toNumber(),
-        point: {
-          x: left.toNumber(),
-          y: bottom.minus(bottomLeft).toNumber(),
-        },
+        radius: bottomLeft,
+        point: { x: left, y: bottom.minus(bottomLeft) },
       },
     )
   } else {
-    commands.push({ type: 'lineTo', point: { x: left.toNumber(), y: bottom.toNumber() } })
+    commands.push({ type: 'lineTo', point: { x: left, y: bottom } })
   }
 
   if (topLeft.isGreaterThan(ZERO)) {
     commands.push(
       {
         type: 'lineTo',
-        point: {
-          x: left.toNumber(),
-          y: top.plus(topLeft).toNumber(),
-        },
+        point: { x: left, y: top.plus(topLeft) },
       },
       {
         type: 'arcTo',
-        radius: topLeft.toNumber(),
-        point: {
-          x: left.plus(topLeft).toNumber(),
-          y: top.toNumber(),
-        },
+        radius: topLeft,
+        point: { x: left.plus(topLeft), y: top },
       },
     )
   }

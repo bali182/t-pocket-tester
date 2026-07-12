@@ -56,16 +56,16 @@ const calculateHorizontalDefaultBoundingBoxes = (
 ): [LayoutChildComponent, RectSchema][] => {
   const widths = calculateMainAxisSizes(children, parentBoundingBox, parent)
   const gap = new BigNumber(parent.layoutGap)
-  let nextLeft = new BigNumber(parentBoundingBox.x)
+  let nextLeft = parentBoundingBox.x
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
     const width = widths[child.id]
     const height = calculateCrossAxisSize(child, parentBoundingBox, parent)
     const boundingBox: RectSchema = {
-      x: nextLeft.toNumber(),
+      x: nextLeft,
       y: parentBoundingBox.y,
-      width: width.toNumber(),
-      height: height.toNumber(),
+      width,
+      height,
     }
 
     nextLeft = nextLeft.plus(width).plus(gap)
@@ -81,17 +81,17 @@ const calculateHorizontalReverseBoundingBoxes = (
 ): [LayoutChildComponent, RectSchema][] => {
   const widths = calculateMainAxisSizes(children, parentBoundingBox, parent)
   const gap = new BigNumber(parent.layoutGap)
-  let nextRight = new BigNumber(parentBoundingBox.x).plus(parentBoundingBox.width)
+  let nextRight = parentBoundingBox.x.plus(parentBoundingBox.width)
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
     const width = widths[child.id]
     const height = calculateCrossAxisSize(child, parentBoundingBox, parent)
     const left = nextRight.minus(width)
     const boundingBox: RectSchema = {
-      x: left.toNumber(),
+      x: left,
       y: parentBoundingBox.y,
-      width: width.toNumber(),
-      height: height.toNumber(),
+      width,
+      height,
     }
 
     nextRight = left.minus(gap)
@@ -107,16 +107,16 @@ const calculateVerticalDefaultBoundingBoxes = (
 ): [LayoutChildComponent, RectSchema][] => {
   const heights = calculateMainAxisSizes(children, parentBoundingBox, parent)
   const gap = new BigNumber(parent.layoutGap)
-  let nextTop = new BigNumber(parentBoundingBox.y)
+  let nextTop = parentBoundingBox.y
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
     const width = calculateCrossAxisSize(child, parentBoundingBox, parent)
     const height = heights[child.id]
     const boundingBox: RectSchema = {
       x: parentBoundingBox.x,
-      y: nextTop.toNumber(),
-      width: width.toNumber(),
-      height: height.toNumber(),
+      y: nextTop,
+      width,
+      height,
     }
 
     nextTop = nextTop.plus(height).plus(gap)
@@ -132,7 +132,7 @@ const calculateVerticalReverseBoundingBoxes = (
 ): [LayoutChildComponent, RectSchema][] => {
   const heights = calculateMainAxisSizes(children, parentBoundingBox, parent)
   const gap = new BigNumber(parent.layoutGap)
-  let nextBottom = new BigNumber(parentBoundingBox.y).plus(parentBoundingBox.height)
+  let nextBottom = parentBoundingBox.y.plus(parentBoundingBox.height)
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
     const width = calculateCrossAxisSize(child, parentBoundingBox, parent)
@@ -140,9 +140,9 @@ const calculateVerticalReverseBoundingBoxes = (
     const top = nextBottom.minus(height)
     const boundingBox: RectSchema = {
       x: parentBoundingBox.x,
-      y: top.toNumber(),
-      width: width.toNumber(),
-      height: height.toNumber(),
+      y: top,
+      width,
+      height,
     }
 
     nextBottom = top.minus(gap)
@@ -156,9 +156,7 @@ const calculateMainAxisSizes = (
   parentBoundingBox: RectSchema,
   parent: LayoutComponent,
 ): Record<string, BigNumber> => {
-  const parentSpace = new BigNumber(
-    parent.layoutOrientation === 'horizontal' ? parentBoundingBox.width : parentBoundingBox.height,
-  )
+  const parentSpace = parent.layoutOrientation === 'horizontal' ? parentBoundingBox.width : parentBoundingBox.height
   const gapSpace = BigNumber.maximum(new BigNumber(children.length).minus(1), ZERO).times(
     new BigNumber(parent.layoutGap),
   )
@@ -198,9 +196,7 @@ const calculateCrossAxisSize = (
   parentBoundingBox: RectSchema,
   parent: LayoutComponent,
 ): BigNumber => {
-  const parentSpace = new BigNumber(
-    parent.layoutOrientation === 'horizontal' ? parentBoundingBox.height : parentBoundingBox.width,
-  )
+  const parentSpace = parent.layoutOrientation === 'horizontal' ? parentBoundingBox.height : parentBoundingBox.width
 
   if (isCrossAxisAuto(child, parent)) {
     return parentSpace

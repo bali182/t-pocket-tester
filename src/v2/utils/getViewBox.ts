@@ -1,9 +1,12 @@
+import BigNumber from 'bignumber.js'
+
 import type { RectSchema } from '../schemas/geometry'
 
 export const getViewBox = (boundingBox: RectSchema, padding: number): string => {
-  const minX = boundingBox.x - padding
-  const minY = boundingBox.y - padding
-  const width = boundingBox.width + padding * 2
-  const height = boundingBox.height + padding * 2
-  return `${minX} ${minY} ${width} ${height}`
+  const paddingValue = new BigNumber(padding)
+  const minX = boundingBox.x.minus(paddingValue)
+  const minY = boundingBox.y.minus(paddingValue)
+  const width = boundingBox.width.plus(paddingValue.times(2))
+  const height = boundingBox.height.plus(paddingValue.times(2))
+  return `${minX.toString()} ${minY.toString()} ${width.toString()} ${height.toString()}`
 }

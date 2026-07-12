@@ -15,7 +15,5 @@ export const getTPocketTabDepth = (pocketCluster: PocketClusterSchema, rect: Rec
 }
 
 const getStackLength = (pocketCluster: PocketClusterSchema, rect: RectSchema): BigNumber => {
-  return new BigNumber(
-    pocketCluster.orientation === 'up' || pocketCluster.orientation === 'down' ? rect.height : rect.width,
-  )
+  return pocketCluster.orientation === 'up' || pocketCluster.orientation === 'down' ? rect.height : rect.width
 }

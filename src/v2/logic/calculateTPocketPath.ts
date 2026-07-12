@@ -20,39 +20,36 @@ export const calculateTPocketPath = (rect: RectSchema, pocketCluster: PocketClus
 }
 
 const calculateUpTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
-  const left = new BigNumber(rect.x)
-  const top = new BigNumber(rect.y)
+  const left = rect.x
+  const top = rect.y
   const right = left.plus(rect.width)
   const bottom = top.plus(rect.height)
-
   const r = new BigNumber(pocketCluster.pocketRadius)
-
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const tPocketTabWidth = new BigNumber(pocketCluster.tPocketTabWidth)
   const tPocketTaper = new BigNumber(pocketCluster.tPocketTaper)
   const tabBottomY = top.plus(tPocketTabDepth)
-
   const commands: PathCommand[] = [
-    { type: 'moveTo', point: { x: left.plus(r).toNumber(), y: top.toNumber() } },
-    { type: 'lineTo', point: { x: right.minus(r).toNumber(), y: top.toNumber() } },
+    { type: 'moveTo', point: { x: left.plus(r), y: top } },
+    { type: 'lineTo', point: { x: right.minus(r), y: top } },
   ]
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: r.toNumber(), point: { x: right.toNumber(), y: top.plus(r).toNumber() } })
+    commands.push({ type: 'arcTo', radius: r, point: { x: right, y: top.plus(r) } })
   }
 
   commands.push(
-    { type: 'lineTo', point: { x: right.toNumber(), y: tabBottomY.toNumber() } },
-    { type: 'lineTo', point: { x: right.minus(tPocketTabWidth).toNumber(), y: tabBottomY.toNumber() } },
-    { type: 'lineTo', point: { x: right.minus(tPocketTaper).toNumber(), y: bottom.toNumber() } },
-    { type: 'lineTo', point: { x: left.plus(tPocketTaper).toNumber(), y: bottom.toNumber() } },
-    { type: 'lineTo', point: { x: left.plus(tPocketTabWidth).toNumber(), y: tabBottomY.toNumber() } },
-    { type: 'lineTo', point: { x: left.toNumber(), y: tabBottomY.toNumber() } },
-    { type: 'lineTo', point: { x: left.toNumber(), y: top.plus(r).toNumber() } },
+    { type: 'lineTo', point: { x: right, y: tabBottomY } },
+    { type: 'lineTo', point: { x: right.minus(tPocketTabWidth), y: tabBottomY } },
+    { type: 'lineTo', point: { x: right.minus(tPocketTaper), y: bottom } },
+    { type: 'lineTo', point: { x: left.plus(tPocketTaper), y: bottom } },
+    { type: 'lineTo', point: { x: left.plus(tPocketTabWidth), y: tabBottomY } },
+    { type: 'lineTo', point: { x: left, y: tabBottomY } },
+    { type: 'lineTo', point: { x: left, y: top.plus(r) } },
   )
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: r.toNumber(), point: { x: left.plus(r).toNumber(), y: top.toNumber() } })
+    commands.push({ type: 'arcTo', radius: r, point: { x: left.plus(r), y: top } })
   }
 
   commands.push({ type: 'close' })
@@ -61,41 +58,34 @@ const calculateUpTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSc
 }
 
 const calculateDownTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
-  const left = new BigNumber(rect.x)
-  const top = new BigNumber(rect.y)
+  const left = rect.x
+  const top = rect.y
   const right = left.plus(rect.width)
   const bottom = top.plus(rect.height)
-
   const r = new BigNumber(pocketCluster.pocketRadius)
-
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const tPocketTabWidth = new BigNumber(pocketCluster.tPocketTabWidth)
   const tPocketTaper = new BigNumber(pocketCluster.tPocketTaper)
   const tabTopY = bottom.minus(tPocketTabDepth)
-
   const commands: PathCommand[] = [
-    { type: 'moveTo', point: { x: left.toNumber(), y: bottom.minus(r).toNumber() } },
-    { type: 'lineTo', point: { x: left.toNumber(), y: tabTopY.toNumber() } },
-    { type: 'lineTo', point: { x: left.plus(tPocketTabWidth).toNumber(), y: tabTopY.toNumber() } },
-    { type: 'lineTo', point: { x: left.plus(tPocketTaper).toNumber(), y: top.toNumber() } },
-    { type: 'lineTo', point: { x: right.minus(tPocketTaper).toNumber(), y: top.toNumber() } },
-    { type: 'lineTo', point: { x: right.minus(tPocketTabWidth).toNumber(), y: tabTopY.toNumber() } },
-    { type: 'lineTo', point: { x: right.toNumber(), y: tabTopY.toNumber() } },
-    { type: 'lineTo', point: { x: right.toNumber(), y: bottom.minus(r).toNumber() } },
+    { type: 'moveTo', point: { x: left, y: bottom.minus(r) } },
+    { type: 'lineTo', point: { x: left, y: tabTopY } },
+    { type: 'lineTo', point: { x: left.plus(tPocketTabWidth), y: tabTopY } },
+    { type: 'lineTo', point: { x: left.plus(tPocketTaper), y: top } },
+    { type: 'lineTo', point: { x: right.minus(tPocketTaper), y: top } },
+    { type: 'lineTo', point: { x: right.minus(tPocketTabWidth), y: tabTopY } },
+    { type: 'lineTo', point: { x: right, y: tabTopY } },
+    { type: 'lineTo', point: { x: right, y: bottom.minus(r) } },
   ]
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({
-      type: 'arcTo',
-      radius: r.toNumber(),
-      point: { x: right.minus(r).toNumber(), y: bottom.toNumber() },
-    })
+    commands.push({ type: 'arcTo', radius: r, point: { x: right.minus(r), y: bottom } })
   }
 
-  commands.push({ type: 'lineTo', point: { x: left.plus(r).toNumber(), y: bottom.toNumber() } })
+  commands.push({ type: 'lineTo', point: { x: left.plus(r), y: bottom } })
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: r.toNumber(), point: { x: left.toNumber(), y: bottom.minus(r).toNumber() } })
+    commands.push({ type: 'arcTo', radius: r, point: { x: left, y: bottom.minus(r) } })
   }
 
   commands.push({ type: 'close' })
@@ -104,37 +94,34 @@ const calculateDownTPocketPath = (rect: RectSchema, pocketCluster: PocketCluster
 }
 
 const calculateLeftTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
-  const left = new BigNumber(rect.x)
-  const top = new BigNumber(rect.y)
+  const left = rect.x
+  const top = rect.y
   const right = left.plus(rect.width)
   const bottom = top.plus(rect.height)
-
   const r = new BigNumber(pocketCluster.pocketRadius)
-
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const tPocketTabWidth = new BigNumber(pocketCluster.tPocketTabWidth)
   const tPocketTaper = new BigNumber(pocketCluster.tPocketTaper)
   const tabRightX = left.plus(tPocketTabDepth)
-
   const commands: PathCommand[] = [
-    { type: 'moveTo', point: { x: left.plus(r).toNumber(), y: top.toNumber() } },
-    { type: 'lineTo', point: { x: tabRightX.toNumber(), y: top.toNumber() } },
-    { type: 'lineTo', point: { x: tabRightX.toNumber(), y: top.plus(tPocketTabWidth).toNumber() } },
-    { type: 'lineTo', point: { x: right.toNumber(), y: top.plus(tPocketTaper).toNumber() } },
-    { type: 'lineTo', point: { x: right.toNumber(), y: bottom.minus(tPocketTaper).toNumber() } },
-    { type: 'lineTo', point: { x: tabRightX.toNumber(), y: bottom.minus(tPocketTabWidth).toNumber() } },
-    { type: 'lineTo', point: { x: tabRightX.toNumber(), y: bottom.toNumber() } },
-    { type: 'lineTo', point: { x: left.plus(r).toNumber(), y: bottom.toNumber() } },
+    { type: 'moveTo', point: { x: left.plus(r), y: top } },
+    { type: 'lineTo', point: { x: tabRightX, y: top } },
+    { type: 'lineTo', point: { x: tabRightX, y: top.plus(tPocketTabWidth) } },
+    { type: 'lineTo', point: { x: right, y: top.plus(tPocketTaper) } },
+    { type: 'lineTo', point: { x: right, y: bottom.minus(tPocketTaper) } },
+    { type: 'lineTo', point: { x: tabRightX, y: bottom.minus(tPocketTabWidth) } },
+    { type: 'lineTo', point: { x: tabRightX, y: bottom } },
+    { type: 'lineTo', point: { x: left.plus(r), y: bottom } },
   ]
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: r.toNumber(), point: { x: left.toNumber(), y: bottom.minus(r).toNumber() } })
+    commands.push({ type: 'arcTo', radius: r, point: { x: left, y: bottom.minus(r) } })
   }
 
-  commands.push({ type: 'lineTo', point: { x: left.toNumber(), y: top.plus(r).toNumber() } })
+  commands.push({ type: 'lineTo', point: { x: left, y: top.plus(r) } })
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: r.toNumber(), point: { x: left.plus(r).toNumber(), y: top.toNumber() } })
+    commands.push({ type: 'arcTo', radius: r, point: { x: left.plus(r), y: top } })
   }
 
   commands.push({ type: 'close' })
@@ -143,43 +130,36 @@ const calculateLeftTPocketPath = (rect: RectSchema, pocketCluster: PocketCluster
 }
 
 const calculateRightTPocketPath = (rect: RectSchema, pocketCluster: PocketClusterSchema): PathSchema => {
-  const left = new BigNumber(rect.x)
-  const top = new BigNumber(rect.y)
+  const left = rect.x
+  const top = rect.y
   const right = left.plus(rect.width)
   const bottom = top.plus(rect.height)
-
   const r = new BigNumber(pocketCluster.pocketRadius)
-
   const tPocketTabDepth = getTPocketTabDepth(pocketCluster, rect)
   const tPocketTabWidth = new BigNumber(pocketCluster.tPocketTabWidth)
   const tPocketTaper = new BigNumber(pocketCluster.tPocketTaper)
   const tabLeftX = right.minus(tPocketTabDepth)
-
   const commands: PathCommand[] = [
-    { type: 'moveTo', point: { x: right.toNumber(), y: top.plus(r).toNumber() } },
-    { type: 'lineTo', point: { x: right.toNumber(), y: bottom.minus(r).toNumber() } },
+    { type: 'moveTo', point: { x: right, y: top.plus(r) } },
+    { type: 'lineTo', point: { x: right, y: bottom.minus(r) } },
   ]
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({
-      type: 'arcTo',
-      radius: r.toNumber(),
-      point: { x: right.minus(r).toNumber(), y: bottom.toNumber() },
-    })
+    commands.push({ type: 'arcTo', radius: r, point: { x: right.minus(r), y: bottom } })
   }
 
   commands.push(
-    { type: 'lineTo', point: { x: tabLeftX.toNumber(), y: bottom.toNumber() } },
-    { type: 'lineTo', point: { x: tabLeftX.toNumber(), y: bottom.minus(tPocketTabWidth).toNumber() } },
-    { type: 'lineTo', point: { x: left.toNumber(), y: bottom.minus(tPocketTaper).toNumber() } },
-    { type: 'lineTo', point: { x: left.toNumber(), y: top.plus(tPocketTaper).toNumber() } },
-    { type: 'lineTo', point: { x: tabLeftX.toNumber(), y: top.plus(tPocketTabWidth).toNumber() } },
-    { type: 'lineTo', point: { x: tabLeftX.toNumber(), y: top.toNumber() } },
-    { type: 'lineTo', point: { x: right.minus(r).toNumber(), y: top.toNumber() } },
+    { type: 'lineTo', point: { x: tabLeftX, y: bottom } },
+    { type: 'lineTo', point: { x: tabLeftX, y: bottom.minus(tPocketTabWidth) } },
+    { type: 'lineTo', point: { x: left, y: bottom.minus(tPocketTaper) } },
+    { type: 'lineTo', point: { x: left, y: top.plus(tPocketTaper) } },
+    { type: 'lineTo', point: { x: tabLeftX, y: top.plus(tPocketTabWidth) } },
+    { type: 'lineTo', point: { x: tabLeftX, y: top } },
+    { type: 'lineTo', point: { x: right.minus(r), y: top } },
   )
 
   if (r.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: r.toNumber(), point: { x: right.toNumber(), y: top.plus(r).toNumber() } })
+    commands.push({ type: 'arcTo', radius: r, point: { x: right, y: top.plus(r) } })
   }
 
   commands.push({ type: 'close' })

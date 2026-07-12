@@ -15,33 +15,29 @@ export const calculatePocketBoundingBox = (
     case 'up':
       return {
         x: rect.x,
-        y: new BigNumber(rect.y).plus(new BigNumber(index).times(pocketCluster.pocketStep)).toNumber(),
+        y: rect.y.plus(new BigNumber(index).times(pocketCluster.pocketStep)),
         width: rect.width,
-        height: pocketDepth.toNumber(),
+        height: pocketDepth,
       }
     case 'down':
       return {
         x: rect.x,
-        y: new BigNumber(rect.y)
-          .plus(new BigNumber(pocketCluster.pocketCount).minus(1).minus(index).times(pocketCluster.pocketStep))
-          .toNumber(),
+        y: rect.y.plus(new BigNumber(pocketCluster.pocketCount).minus(1).minus(index).times(pocketCluster.pocketStep)),
         width: rect.width,
-        height: pocketDepth.toNumber(),
+        height: pocketDepth,
       }
     case 'left':
       return {
-        x: new BigNumber(rect.x).plus(new BigNumber(index).times(pocketCluster.pocketStep)).toNumber(),
+        x: rect.x.plus(new BigNumber(index).times(pocketCluster.pocketStep)),
         y: rect.y,
-        width: pocketDepth.toNumber(),
+        width: pocketDepth,
         height: rect.height,
       }
     case 'right':
       return {
-        x: new BigNumber(rect.x)
-          .plus(new BigNumber(pocketCluster.pocketCount).minus(1).minus(index).times(pocketCluster.pocketStep))
-          .toNumber(),
+        x: rect.x.plus(new BigNumber(pocketCluster.pocketCount).minus(1).minus(index).times(pocketCluster.pocketStep)),
         y: rect.y,
-        width: pocketDepth.toNumber(),
+        width: pocketDepth,
         height: rect.height,
       }
   }

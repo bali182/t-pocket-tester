@@ -1,6 +1,8 @@
+import type BigNumber from 'bignumber.js'
+
 export type PointSchema = {
-  x: number
-  y: number
+  x: BigNumber
+  y: BigNumber
 }
 
 export type LineSchema = {
@@ -9,10 +11,10 @@ export type LineSchema = {
 }
 
 export type RectSchema = {
-  x: number
-  y: number
-  width: number
-  height: number
+  x: BigNumber
+  y: BigNumber
+  width: BigNumber
+  height: BigNumber
 }
 
 export type SizeSchema = {
@@ -44,7 +46,7 @@ export type PathLineToSchema = {
 
 export type PathArcToSchema = {
   type: 'arcTo'
-  radius: number
+  radius: BigNumber
   point: PointSchema
 }
 

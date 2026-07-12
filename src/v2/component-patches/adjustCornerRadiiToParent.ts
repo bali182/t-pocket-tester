@@ -20,10 +20,10 @@ export const adjustCornerRadiiToParent = (
     const parentBoundingRect = computedProject.components[parent.id].boundingRect
     const parentCorners = getNormalizedCornerRadius(parent)
 
-    const parentLeft = new BigNumber(parentBoundingRect.x)
-    const parentTop = new BigNumber(parentBoundingRect.y)
-    const parentWidth = new BigNumber(parentBoundingRect.width)
-    const parentHeight = new BigNumber(parentBoundingRect.height)
+    const parentLeft = parentBoundingRect.x
+    const parentTop = parentBoundingRect.y
+    const parentWidth = parentBoundingRect.width
+    const parentHeight = parentBoundingRect.height
     const parentRight = parentLeft.plus(parentWidth)
     const parentBottom = parentTop.plus(parentHeight)
 
@@ -41,10 +41,10 @@ export const adjustCornerRadiiToParent = (
 
       const childBoundingRect = computedProject.components[childId].boundingRect
 
-      const childLeft = new BigNumber(childBoundingRect.x)
-      const childTop = new BigNumber(childBoundingRect.y)
-      const childWidth = new BigNumber(childBoundingRect.width)
-      const childHeight = new BigNumber(childBoundingRect.height)
+      const childLeft = childBoundingRect.x
+      const childTop = childBoundingRect.y
+      const childWidth = childBoundingRect.width
+      const childHeight = childBoundingRect.height
       const childRight = childLeft.plus(childWidth)
       const childBottom = childTop.plus(childHeight)
 

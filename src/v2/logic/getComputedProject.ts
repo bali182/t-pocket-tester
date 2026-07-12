@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js'
+
 import type {
   ComponentSchema,
   PanelSchema,
@@ -27,10 +29,10 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
 
   const computedComponents: Record<string, ComputedComponentSchema> = {}
   const rootBoundingRect: RectSchema = {
-    x: 0,
-    y: 0,
-    width: rootComponent.width,
-    height: rootComponent.height,
+    x: new BigNumber(0),
+    y: new BigNumber(0),
+    width: new BigNumber(rootComponent.width),
+    height: new BigNumber(rootComponent.height),
   }
   const root = computeRootPanel(rootComponent, rootBoundingRect, project, computedComponents)
 
