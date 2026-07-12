@@ -1,5 +1,7 @@
-import { PocketClusterSchema } from '../schemas/components'
-import { RectSchema } from '../schemas/geometry'
+import BigNumber from 'bignumber.js'
+
+import type { PocketClusterSchema } from '../schemas/components'
+import type { RectSchema } from '../schemas/geometry'
 import { calculatePocketDepth } from './pocketUtils'
 
 export const calculatePocketBoundingBox = (
@@ -13,29 +15,33 @@ export const calculatePocketBoundingBox = (
     case 'up':
       return {
         x: rect.x,
-        y: rect.y + index * pocketCluster.pocketStep,
+        y: new BigNumber(rect.y).plus(new BigNumber(index).times(pocketCluster.pocketStep)).toNumber(),
         width: rect.width,
-        height: pocketDepth,
+        height: pocketDepth.toNumber(),
       }
     case 'down':
       return {
         x: rect.x,
-        y: rect.y + (pocketCluster.pocketCount - 1 - index) * pocketCluster.pocketStep,
+        y: new BigNumber(rect.y)
+          .plus(new BigNumber(pocketCluster.pocketCount).minus(1).minus(index).times(pocketCluster.pocketStep))
+          .toNumber(),
         width: rect.width,
-        height: pocketDepth,
+        height: pocketDepth.toNumber(),
       }
     case 'left':
       return {
-        x: rect.x + index * pocketCluster.pocketStep,
+        x: new BigNumber(rect.x).plus(new BigNumber(index).times(pocketCluster.pocketStep)).toNumber(),
         y: rect.y,
-        width: pocketDepth,
+        width: pocketDepth.toNumber(),
         height: rect.height,
       }
     case 'right':
       return {
-        x: rect.x + (pocketCluster.pocketCount - 1 - index) * pocketCluster.pocketStep,
+        x: new BigNumber(rect.x)
+          .plus(new BigNumber(pocketCluster.pocketCount).minus(1).minus(index).times(pocketCluster.pocketStep))
+          .toNumber(),
         y: rect.y,
-        width: pocketDepth,
+        width: pocketDepth.toNumber(),
         height: rect.height,
       }
   }

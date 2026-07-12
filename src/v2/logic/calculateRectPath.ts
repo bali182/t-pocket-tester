@@ -1,45 +1,113 @@
+import BigNumber from 'bignumber.js'
+
 import type { CornerRadiusSchema, PathCommand, PathSchema, RectSchema } from '../schemas/geometry'
 
-export const calculateRectPath = (
-  rect: RectSchema,
-  { topLeft, topRight, bottomRight, bottomLeft }: CornerRadiusSchema,
-): PathSchema => {
-  const right = rect.x + rect.width
-  const bottom = rect.y + rect.height
+const ZERO = new BigNumber(0)
 
-  const commands: PathCommand[] = [{ type: 'moveTo', point: { x: rect.x + topLeft, y: rect.y } }]
+export const calculateRectPath = (rect: RectSchema, radius: CornerRadiusSchema): PathSchema => {
+  const left = new BigNumber(rect.x)
+  const top = new BigNumber(rect.y)
+  const right = left.plus(rect.width)
+  const bottom = top.plus(rect.height)
 
-  if (topRight > 0) {
+  const topLeft = new BigNumber(radius.topLeft)
+  const topRight = new BigNumber(radius.topRight)
+  const bottomRight = new BigNumber(radius.bottomRight)
+  const bottomLeft = new BigNumber(radius.bottomLeft)
+
+  const commands: PathCommand[] = [
+    {
+      type: 'moveTo',
+      point: {
+        x: left.plus(topLeft).toNumber(),
+        y: top.toNumber(),
+      },
+    },
+  ]
+
+  if (topRight.isGreaterThan(ZERO)) {
     commands.push(
-      { type: 'lineTo', point: { x: right - topRight, y: rect.y } },
-      { type: 'arcTo', radius: topRight, point: { x: right, y: rect.y + topRight } },
+      {
+        type: 'lineTo',
+        point: {
+          x: right.minus(topRight).toNumber(),
+          y: top.toNumber(),
+        },
+      },
+      {
+        type: 'arcTo',
+        radius: topRight.toNumber(),
+        point: {
+          x: right.toNumber(),
+          y: top.plus(topRight).toNumber(),
+        },
+      },
     )
   } else {
-    commands.push({ type: 'lineTo', point: { x: right, y: rect.y } })
+    commands.push({ type: 'lineTo', point: { x: right.toNumber(), y: top.toNumber() } })
   }
 
-  if (bottomRight > 0) {
+  if (bottomRight.isGreaterThan(ZERO)) {
     commands.push(
-      { type: 'lineTo', point: { x: right, y: bottom - bottomRight } },
-      { type: 'arcTo', radius: bottomRight, point: { x: right - bottomRight, y: bottom } },
+      {
+        type: 'lineTo',
+        point: {
+          x: right.toNumber(),
+          y: bottom.minus(bottomRight).toNumber(),
+        },
+      },
+      {
+        type: 'arcTo',
+        radius: bottomRight.toNumber(),
+        point: {
+          x: right.minus(bottomRight).toNumber(),
+          y: bottom.toNumber(),
+        },
+      },
     )
   } else {
-    commands.push({ type: 'lineTo', point: { x: right, y: bottom } })
+    commands.push({ type: 'lineTo', point: { x: right.toNumber(), y: bottom.toNumber() } })
   }
 
-  if (bottomLeft > 0) {
+  if (bottomLeft.isGreaterThan(ZERO)) {
     commands.push(
-      { type: 'lineTo', point: { x: rect.x + bottomLeft, y: bottom } },
-      { type: 'arcTo', radius: bottomLeft, point: { x: rect.x, y: bottom - bottomLeft } },
+      {
+        type: 'lineTo',
+        point: {
+          x: left.plus(bottomLeft).toNumber(),
+          y: bottom.toNumber(),
+        },
+      },
+      {
+        type: 'arcTo',
+        radius: bottomLeft.toNumber(),
+        point: {
+          x: left.toNumber(),
+          y: bottom.minus(bottomLeft).toNumber(),
+        },
+      },
     )
   } else {
-    commands.push({ type: 'lineTo', point: { x: rect.x, y: bottom } })
+    commands.push({ type: 'lineTo', point: { x: left.toNumber(), y: bottom.toNumber() } })
   }
 
-  if (topLeft > 0) {
+  if (topLeft.isGreaterThan(ZERO)) {
     commands.push(
-      { type: 'lineTo', point: { x: rect.x, y: rect.y + topLeft } },
-      { type: 'arcTo', radius: topLeft, point: { x: rect.x + topLeft, y: rect.y } },
+      {
+        type: 'lineTo',
+        point: {
+          x: left.toNumber(),
+          y: top.plus(topLeft).toNumber(),
+        },
+      },
+      {
+        type: 'arcTo',
+        radius: topLeft.toNumber(),
+        point: {
+          x: left.plus(topLeft).toNumber(),
+          y: top.toNumber(),
+        },
+      },
     )
   }
 

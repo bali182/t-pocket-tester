@@ -14,6 +14,10 @@ export const getComponentColor = (baseColor: string, nestingLevel: number): stri
 
   return formatHex({
     ...color,
-    l: clamp(color.l + nestingLevel * COMPONENT_COLOR_LIGHTNESS_STEP, color.l, COMPONENT_COLOR_MAX_LIGHTNESS),
+    l: clamp(
+      color.l + nestingLevel * COMPONENT_COLOR_LIGHTNESS_STEP,
+      color.l,
+      COMPONENT_COLOR_MAX_LIGHTNESS,
+    ).toNumber(),
   })
 }
