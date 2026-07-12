@@ -3,11 +3,11 @@ import { type FC } from 'react'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { CornerRadiusSection } from './CornerRadiusSection'
-import { FillableSizeSection } from './FillableSizeSection'
-import { NameAndColorSection } from './NameAndColorSection'
-import { PocketClusterSettingsSection } from './PocketClusterSettingsSection'
-import { TPocketShapeSection } from './TPocketShapeSection'
+import { CornerRadiusSection } from './sections/CornerRadiusSection'
+import { FillableSizeSection } from './sections/FillableSizeSection'
+import { NameAndColorSection } from './sections/NameAndColorSection'
+import { PocketClusterSettingsSection } from './sections/PocketClusterSettingsSection'
+import { TPocketShapeSection } from './sections/TPocketShapeSection'
 
 type PocketClusterEditorProps = {
   component: PocketClusterSchema

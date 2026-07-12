@@ -1,8 +1,8 @@
 import { Button, ColorPicker, Input, Text, parseColor } from '@chakra-ui/react'
 import { useCallback, useMemo, type ChangeEvent, type ReactNode } from 'react'
 
-import { BaseComponentSchema } from '../../schemas/components'
-import { SectionGroup } from './SectionGroup'
+import { BaseComponentSchema } from '../../../schemas/components'
+import { SectionGroup } from '../SectionGroup'
 
 type NameAndColorSectionProps<T> = {
   editable: T

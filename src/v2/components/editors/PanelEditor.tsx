@@ -2,10 +2,10 @@ import { FC } from 'react'
 import type { PanelSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { CornerRadiusSection } from './CornerRadiusSection'
-import { FillableSizeSection } from './FillableSizeSection'
-import { LayoutSection } from './LayoutSection'
-import { NameAndColorSection } from './NameAndColorSection'
+import { CornerRadiusSection } from './sections/CornerRadiusSection'
+import { FillableSizeSection } from './sections/FillableSizeSection'
+import { LayoutSection } from './sections/LayoutSection'
+import { NameAndColorSection } from './sections/NameAndColorSection'
 
 type PanelEditorProps = {
   component: PanelSchema

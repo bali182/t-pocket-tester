@@ -2,11 +2,11 @@ import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/pi'
 
-import type { PocketClusterSchema } from '../../schemas/components'
-import type { EditableSchema } from '../../schemas/editable'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { NumberInput } from './NumberInput'
-import { SectionGroup } from './SectionGroup'
+import type { PocketClusterSchema } from '../../../schemas/components'
+import type { EditableSchema } from '../../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { NumberInput } from '../NumberInput'
+import { SectionGroup } from '../SectionGroup'
 
 type PocketClusterSettingsSectionProps = {
   component: PocketClusterSchema

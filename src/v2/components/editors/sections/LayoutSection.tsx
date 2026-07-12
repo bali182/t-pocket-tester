@@ -2,11 +2,11 @@ import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
 import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
 
-import type { HasLayoutSchema } from '../../schemas/components'
-import type { EditableSchema } from '../../schemas/editable'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { NumberInput } from './NumberInput'
-import { SectionGroup } from './SectionGroup'
+import type { HasLayoutSchema } from '../../../schemas/components'
+import type { EditableSchema } from '../../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { NumberInput } from '../NumberInput'
+import { SectionGroup } from '../SectionGroup'
 
 type LayoutSectionProps<T extends HasLayoutSchema> = {
   component: T

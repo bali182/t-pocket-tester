@@ -2,10 +2,10 @@ import { FC } from 'react'
 import type { RootPanelSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { CornerRadiusSection } from './CornerRadiusSection'
-import { LayoutSection } from './LayoutSection'
-import { NameAndColorSection } from './NameAndColorSection'
-import { WidthAndHeightSizeSection } from './WidthAndHeightSizeSection'
+import { CornerRadiusSection } from './sections/CornerRadiusSection'
+import { LayoutSection } from './sections/LayoutSection'
+import { NameAndColorSection } from './sections/NameAndColorSection'
+import { WidthAndHeightSizeSection } from './sections/WidthAndHeightSizeSection'
 
 type RootPanelEditorProps = {
   component: RootPanelSchema

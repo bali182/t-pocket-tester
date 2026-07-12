@@ -2,11 +2,11 @@ import { Grid, Switch } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
 import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
 
-import type { HasCornerRadiusSchema } from '../../schemas/components'
-import type { EditableSchema } from '../../schemas/editable'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { NumberInput } from './NumberInput'
-import { SectionGroup } from './SectionGroup'
+import type { HasCornerRadiusSchema } from '../../../schemas/components'
+import type { EditableSchema } from '../../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { NumberInput } from '../NumberInput'
+import { SectionGroup } from '../SectionGroup'
 
 type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
   component: T

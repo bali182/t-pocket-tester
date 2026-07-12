@@ -2,11 +2,11 @@ import { Box, HStack, Switch } from '@chakra-ui/react'
 import { useCallback } from 'react'
 import { PiArrowsHorizontal, PiArrowsVertical, PiRuler } from 'react-icons/pi'
 
-import type { HasFillableSizeSchema } from '../../schemas/components'
-import type { EditableSchema } from '../../schemas/editable'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { NumberInput } from './NumberInput'
-import { SectionGroup } from './SectionGroup'
+import type { HasFillableSizeSchema } from '../../../schemas/components'
+import type { EditableSchema } from '../../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { NumberInput } from '../NumberInput'
+import { SectionGroup } from '../SectionGroup'
 
 type FillableSizeSectionProps<T extends HasFillableSizeSchema> = {
   component: T
