@@ -1,5 +1,5 @@
 import { ComponentSchema } from './components'
-import { ComputedComponentSchema } from './computed'
+import { ComputedComponentSchema, ComputedStitchLineSchema } from './computed'
 import { ProjectEditingSettingSchema } from './editingSettings'
 import { StitchingSettingsSchema, StitchLineSchema } from './stitching'
 
@@ -18,4 +18,5 @@ export type ComputedProjectSchema = {
   name: string
   root: string
   components: Record<string, ComputedComponentSchema>
+  stitchLines: Record<string, ComputedStitchLineSchema>
 }

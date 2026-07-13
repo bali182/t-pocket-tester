@@ -1,11 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import type {
-  ComponentSchema,
-  PanelSchema,
-  PocketClusterSchema,
-  RootPanelSchema,
-} from '../schemas/components'
+import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type {
   ComputedComponentSchema,
   ComputedPanelSchema,
@@ -41,6 +36,8 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
     name: project.name,
     root: root.componentId,
     components: computedComponents,
+    // TODO
+    stitchLines: {},
   }
 }
 

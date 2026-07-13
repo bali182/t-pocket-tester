@@ -1,4 +1,5 @@
 import { PathSchema, RectSchema } from './geometry'
+import { StitchHoleSchema } from './stitching'
 
 type BaseComputedSchema = {
   componentId: string
@@ -37,3 +38,14 @@ export type ComputedPocketClusterSchema = BaseComputedSchema & {
 }
 
 export type ComputedComponentSchema = ComputedRootPanelSchema | ComputedPanelSchema | ComputedPocketClusterSchema
+
+export type ComputedStitchRouteSchema = {
+  path: PathSchema
+  holes: StitchHoleSchema[]
+}
+
+export type ComputedStitchLineSchema = {
+  stitchLineId: string
+  componentId: string
+  routes: ComputedStitchRouteSchema[]
+}
