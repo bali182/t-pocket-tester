@@ -74,11 +74,6 @@ export type PocketClusterSchema = BaseComponentSchema &
     tPocketTabWidth: number
     /** How much the t pockets taper from the 2 * tPocketTabWidth reduced width to the bottom of the pocket */
     tPocketTaper: number
-    /**
-     * The corner radius of pockets on the card insertion side (for example orientaton === up => top left and right radius)
-     * The top pockets other 2 exposed corners are specified by the clusters radius, not this radius.
-     */
-    pocketRadius: number
   }
 
 export type ComponentSchema = RootPanelSchema | PanelSchema | PocketClusterSchema

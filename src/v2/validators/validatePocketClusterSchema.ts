@@ -55,10 +55,6 @@ export const validatePocketClusterSchema = (
     min: 0,
     minInclusive: false,
   })
-  const pocketRadiusResult = validateNumber(input.pocketRadius, currentValue.pocketRadius, context, {
-    min: 0,
-    minInclusive: false,
-  })
   const issues: ValidationIssuesSchema<EditableSchema<PocketClusterSchema>> = {
     autoHeight: undefined,
     autoWidth: undefined,
@@ -72,7 +68,6 @@ export const validatePocketClusterSchema = (
     name: nameResult.issues,
     orientation: orientationResult.issues,
     pocketCount: pocketCountResult.issues,
-    pocketRadius: pocketRadiusResult.issues,
     pocketStep: pocketStepResult.issues,
     tPocketTabWidth: tPocketTabWidthResult.issues,
     tPocketTaper: tPocketTaperResult.issues,
@@ -95,7 +90,6 @@ export const validatePocketClusterSchema = (
     name: nameResult.committedValue,
     orientation: orientationResult.committedValue,
     pocketCount: pocketCountResult.committedValue,
-    pocketRadius: pocketRadiusResult.committedValue,
     pocketStep: pocketStepResult.committedValue,
     tPocketTabWidth: tPocketTabWidthResult.committedValue,
     tPocketTaper: tPocketTaperResult.committedValue,
@@ -119,8 +113,7 @@ export const validatePocketClusterSchema = (
     !pocketCountResult.isValid ||
     !pocketStepResult.isValid ||
     !tPocketTabWidthResult.isValid ||
-    !tPocketTaperResult.isValid ||
-    !pocketRadiusResult.isValid
+    !tPocketTaperResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }
@@ -140,7 +133,6 @@ export const validatePocketClusterSchema = (
       name: nameResult.value,
       orientation: orientationResult.value,
       pocketCount: pocketCountResult.value,
-      pocketRadius: pocketRadiusResult.value,
       pocketStep: pocketStepResult.value,
       tPocketTabWidth: tPocketTabWidthResult.value,
       tPocketTaper: tPocketTaperResult.value,

@@ -86,7 +86,6 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   pocketStep: 12,
   tPocketTabWidth: 8,
   tPocketTaper: 20,
-  pocketRadius: 0,
 }
 
 const DEFAULT_COMPONENT_BY_TYPE: ComponentByType = {
