@@ -8,6 +8,7 @@ import { usePath } from '../../hooks/usePath'
 import type { PanelSchema } from '../../schemas/components'
 import type { ComputedPanelSchema } from '../../schemas/computed'
 import { PocketCluster } from './PocketCluster'
+import { StitchLines } from './StitchLines'
 import { useSvgElementStyle } from './useSvgElementStyle'
 
 type PanelProps = {
@@ -47,6 +48,8 @@ export const Panel: FC<PanelProps> = ({ componentId }) => {
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}
         onClick={isInteractive ? handleClick : undefined}
       />
+
+      <StitchLines componentId={panel.id} />
 
       {computedPanel.children.map((component) => {
         switch (component.type) {

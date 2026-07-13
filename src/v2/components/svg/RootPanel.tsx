@@ -9,6 +9,7 @@ import type { RootPanelSchema } from '../../schemas/components'
 import type { ComputedRootPanelSchema } from '../../schemas/computed'
 import { Panel } from './Panel'
 import { PocketCluster } from './PocketCluster'
+import { StitchLines } from './StitchLines'
 import { useSvgElementStyle } from './useSvgElementStyle'
 
 type RootPanelProps = {
@@ -48,6 +49,8 @@ export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}
         onClick={isInteractive ? handleClick : undefined}
       />
+
+      <StitchLines componentId={rootPanel.id} />
 
       {computedRootPanel.children.map((component) => {
         switch (component.type) {

@@ -7,6 +7,7 @@ import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedPocketClusterSchema } from '../../schemas/computed'
+import { StitchLines } from './StitchLines'
 import { TPocket } from './TPocket'
 import { useSvgElementStyle } from './useSvgElementStyle'
 
@@ -60,6 +61,8 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
         d={frontPocketPathData}
         strokeWidth={STROKE_THICKNESS}
       />
+
+      <StitchLines componentId={pocketCluster.id} />
     </g>
   )
 }
