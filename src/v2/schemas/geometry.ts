@@ -10,6 +10,16 @@ export type LineSchema = {
   end: PointSchema
 }
 
+export type NumberPointSchema = {
+  x: number
+  y: number
+}
+
+export type NumberLineSchema = {
+  start: NumberPointSchema
+  end: NumberPointSchema
+}
+
 export type RectSchema = {
   x: BigNumber
   y: BigNumber

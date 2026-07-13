@@ -43,37 +43,44 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
       <SectionGroup.SectionHeader>Általános</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>Név</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-          <Input onChange={handleNameChange} size="xs" value={editable.name} />
+        <Input onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>Szín</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-          <ColorPicker.Root onValueChange={handleColorChange} size="xs" value={color}>
-            <ColorPicker.Control>
-              <ColorPicker.Trigger asChild>
-                <Button aria-label="Szín kiválasztása" justifyContent="start" minWidth="0" size="xs" variant="outline" width="100%">
-                  <ColorPicker.ValueSwatch />
-                  <Text truncate>{editable.color}</Text>
-                </Button>
-              </ColorPicker.Trigger>
-            </ColorPicker.Control>
-            <ColorPicker.Positioner>
-              <ColorPicker.Content>
-                <ColorPicker.Area>
-                  <ColorPicker.AreaBackground />
-                  <ColorPicker.AreaThumb />
-                </ColorPicker.Area>
-                <ColorPicker.ChannelSlider channel="hue">
-                  <ColorPicker.ChannelSliderTrack />
-                  <ColorPicker.ChannelSliderThumb />
-                </ColorPicker.ChannelSlider>
-                <ColorPicker.ChannelSlider channel="alpha">
-                  <ColorPicker.ChannelSliderTrack />
-                  <ColorPicker.ChannelSliderThumb />
-                </ColorPicker.ChannelSlider>
-              </ColorPicker.Content>
-            </ColorPicker.Positioner>
-          </ColorPicker.Root>
+        <ColorPicker.Root onValueChange={handleColorChange} size="xs" value={color}>
+          <ColorPicker.Control>
+            <ColorPicker.Trigger asChild>
+              <Button
+                aria-label="Szín kiválasztása"
+                justifyContent="start"
+                minWidth="0"
+                size="xs"
+                variant="outline"
+                width="100%"
+              >
+                <ColorPicker.ValueSwatch />
+                <Text truncate>{editable.color}</Text>
+              </Button>
+            </ColorPicker.Trigger>
+          </ColorPicker.Control>
+          <ColorPicker.Positioner>
+            <ColorPicker.Content>
+              <ColorPicker.Area>
+                <ColorPicker.AreaBackground />
+                <ColorPicker.AreaThumb />
+              </ColorPicker.Area>
+              <ColorPicker.ChannelSlider channel="hue">
+                <ColorPicker.ChannelSliderTrack />
+                <ColorPicker.ChannelSliderThumb />
+              </ColorPicker.ChannelSlider>
+              <ColorPicker.ChannelSlider channel="alpha">
+                <ColorPicker.ChannelSliderTrack />
+                <ColorPicker.ChannelSliderThumb />
+              </ColorPicker.ChannelSlider>
+            </ColorPicker.Content>
+          </ColorPicker.Positioner>
+        </ColorPicker.Root>
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

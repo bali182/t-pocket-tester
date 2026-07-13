@@ -1,4 +1,4 @@
-import { LEATHER_BASE_COLOR } from './constants/drawing'
+import { LEATHER_BASE_COLOR, STITCH_HOLE_COLOR, STITCH_THREAD_COLOR } from './constants/drawing'
 import { HasCornerRadiusSchema, HasLayoutSchema, RootPanelSchema } from './schemas/components'
 import { ProjectSchema } from './schemas/project'
 
@@ -36,8 +36,17 @@ export const defaultProject: ProjectSchema = {
   components: {
     [defaultComponent.id]: defaultComponent,
   },
+  stitchLines: {},
   editingSettings: {
     addComputedSizesToAutoSized: true,
     adjustCornerRadiiToParent: true,
+  },
+  stitchingSettings: {
+    stitchMargin: 4,
+    stitchHoleLength: 1.7,
+    stitchHoleDistance: 3.35,
+    stitchHoleThickness: 0.3,
+    stitchHoleColor: STITCH_HOLE_COLOR,
+    stitchThreadColor: STITCH_THREAD_COLOR,
   },
 }

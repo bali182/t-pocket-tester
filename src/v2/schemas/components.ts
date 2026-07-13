@@ -1,8 +1,14 @@
-export type BaseComponentSchema = {
+export type HasIdentitySchema = {
   id: string
   name: string
   color: string
 }
+
+export type HasColorSchema = {
+  color: string
+}
+
+export type BaseComponentSchema = HasIdentitySchema & HasColorSchema
 
 export type HasChildrenSchema = {
   children: string[]
