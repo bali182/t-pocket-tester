@@ -8,28 +8,57 @@ import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
 
 const ZERO = new BigNumber(0)
 
-type StitchSidePathFragment = {
+export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
+export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
+
+export type StitchSidePathFragment = {
   type: 'side'
-  isSelected: boolean
+  side: StitchSideSchema
   start: PointSchema
   end: PointSchema
 }
 
-type StitchCornerPathFragment = {
+export type StitchCornerPathFragment = {
   type: 'corner'
-  isSelected: boolean
+  corner: StitchCornerSchema
   start: PointSchema
   end: PointSchema
   radius: BigNumber
 }
 
-type StitchPathFragment = StitchSidePathFragment | StitchCornerPathFragment
+export type StitchPathFragment = StitchSidePathFragment | StitchCornerPathFragment
+
+export type CalculatedStitchLinePath = {
+  path: PathSchema
+  fragments: StitchPathFragment[]
+  isClosed: boolean
+}
+
+type SelectableStitchPathFragment = StitchPathFragment & {
+  isSelected: boolean
+}
 
 export const calculateStitchLinePaths = (
   stitchLine: StitchLineSchema,
   component: ComponentSchema,
   computedComponent: ComputedComponentSchema,
-): PathSchema[] => {
+): CalculatedStitchLinePath[] => {
+  const fragments = calculateStitchLinePathFragments(stitchLine, component, computedComponent)
+
+  return groupStitchLinePathFragments(fragments)
+    .map((routeFragments) => ({
+      path: createPathFromFragments(routeFragments),
+      fragments: routeFragments,
+      isClosed: arePointsEqual(routeFragments[0].start, routeFragments[routeFragments.length - 1].end),
+    }))
+    .filter((calculatedPath) => calculatedPath.path.commands.length > 1)
+}
+
+const calculateStitchLinePathFragments = (
+  stitchLine: StitchLineSchema,
+  component: ComponentSchema,
+  computedComponent: ComputedComponentSchema,
+): SelectableStitchPathFragment[] => {
   const { boundingRect } = computedComponent
   const margin = new BigNumber(stitchLine.stitchMargin)
   const cornerRadius = getNormalizedCornerRadius(component)
@@ -41,119 +70,168 @@ export const calculateStitchLinePaths = (
   const top = boundingRect.y.plus(margin)
   const right = boundingRect.x.plus(boundingRect.width).minus(margin)
   const bottom = boundingRect.y.plus(boundingRect.height).minus(margin)
-  const topStartOffset = new BigNumber(stitchLine.topStartOffset)
-  const topEndOffset = new BigNumber(stitchLine.topEndOffset)
-  const rightStartOffset = new BigNumber(stitchLine.rightStartOffset)
-  const rightEndOffset = new BigNumber(stitchLine.rightEndOffset)
-  const bottomStartOffset = new BigNumber(stitchLine.bottomStartOffset)
-  const bottomEndOffset = new BigNumber(stitchLine.bottomEndOffset)
-  const leftStartOffset = new BigNumber(stitchLine.leftStartOffset)
-  const leftEndOffset = new BigNumber(stitchLine.leftEndOffset)
+  const topLeftCorner = stitchLine.topLeftCorner && (stitchLine.top || stitchLine.left)
+  const topRightCorner = stitchLine.topRightCorner && (stitchLine.top || stitchLine.right)
+  const bottomRightCorner = stitchLine.bottomRightCorner && (stitchLine.right || stitchLine.bottom)
+  const bottomLeftCorner = stitchLine.bottomLeftCorner && (stitchLine.bottom || stitchLine.left)
 
-  const fragments: StitchPathFragment[] = [
+  return [
     {
       type: 'side',
+      side: 'top',
       isSelected: stitchLine.top,
-      start: { x: left.plus(topLeftRadius).minus(topStartOffset), y: top },
-      end: { x: right.minus(topRightRadius).plus(topEndOffset), y: top },
+      start: {
+        x: left.plus(topLeftRadius).minus(topLeftCorner ? ZERO : stitchLine.topStartOffset),
+        y: top,
+      },
+      end: {
+        x: right.minus(topRightRadius).plus(topRightCorner ? ZERO : stitchLine.topEndOffset),
+        y: top,
+      },
     },
     {
       type: 'corner',
-      isSelected: stitchLine.topRightCorner,
+      corner: 'top-right',
+      isSelected: topRightCorner,
       radius: topRightRadius,
-      start: { x: right.minus(topRightRadius), y: top },
-      end: { x: right, y: top.plus(topRightRadius) },
+      start: {
+        x: right.minus(topRightRadius),
+        y: top,
+      },
+      end: {
+        x: right,
+        y: top.plus(topRightRadius),
+      },
     },
     {
       type: 'side',
+      side: 'right',
       isSelected: stitchLine.right,
-      start: { x: right, y: top.plus(topRightRadius).minus(rightStartOffset) },
-      end: { x: right, y: bottom.minus(bottomRightRadius).plus(rightEndOffset) },
+      start: {
+        x: right,
+        y: top.plus(topRightRadius).minus(topRightCorner ? ZERO : stitchLine.rightStartOffset),
+      },
+      end: {
+        x: right,
+        y: bottom.minus(bottomRightRadius).plus(bottomRightCorner ? ZERO : stitchLine.rightEndOffset),
+      },
     },
     {
       type: 'corner',
-      isSelected: stitchLine.bottomRightCorner,
+      corner: 'bottom-right',
+      isSelected: bottomRightCorner,
       radius: bottomRightRadius,
-      start: { x: right, y: bottom.minus(bottomRightRadius) },
-      end: { x: right.minus(bottomRightRadius), y: bottom },
+      start: {
+        x: right,
+        y: bottom.minus(bottomRightRadius),
+      },
+      end: {
+        x: right.minus(bottomRightRadius),
+        y: bottom,
+      },
     },
     {
       type: 'side',
+      side: 'bottom',
       isSelected: stitchLine.bottom,
-      start: { x: right.minus(bottomRightRadius).plus(bottomStartOffset), y: bottom },
-      end: { x: left.plus(bottomLeftRadius).minus(bottomEndOffset), y: bottom },
+      start: {
+        x: right.minus(bottomRightRadius).plus(bottomRightCorner ? ZERO : stitchLine.bottomStartOffset),
+        y: bottom,
+      },
+      end: {
+        x: left.plus(bottomLeftRadius).minus(bottomLeftCorner ? ZERO : stitchLine.bottomEndOffset),
+        y: bottom,
+      },
     },
     {
       type: 'corner',
-      isSelected: stitchLine.bottomLeftCorner,
+      corner: 'bottom-left',
+      isSelected: bottomLeftCorner,
       radius: bottomLeftRadius,
-      start: { x: left.plus(bottomLeftRadius), y: bottom },
-      end: { x: left, y: bottom.minus(bottomLeftRadius) },
+      start: {
+        x: left.plus(bottomLeftRadius),
+        y: bottom,
+      },
+      end: {
+        x: left,
+        y: bottom.minus(bottomLeftRadius),
+      },
     },
     {
       type: 'side',
+      side: 'left',
       isSelected: stitchLine.left,
-      start: { x: left, y: bottom.minus(bottomLeftRadius).plus(leftStartOffset) },
-      end: { x: left, y: top.plus(topLeftRadius).minus(leftEndOffset) },
+      start: {
+        x: left,
+        y: bottom.minus(bottomLeftRadius).plus(bottomLeftCorner ? ZERO : stitchLine.leftStartOffset),
+      },
+      end: {
+        x: left,
+        y: top.plus(topLeftRadius).minus(topLeftCorner ? ZERO : stitchLine.leftEndOffset),
+      },
     },
     {
       type: 'corner',
-      isSelected: stitchLine.topLeftCorner,
+      corner: 'top-left',
+      isSelected: topLeftCorner,
       radius: topLeftRadius,
-      start: { x: left, y: top.plus(topLeftRadius) },
-      end: { x: left.plus(topLeftRadius), y: top },
+      start: {
+        x: left,
+        y: top.plus(topLeftRadius),
+      },
+      end: {
+        x: left.plus(topLeftRadius),
+        y: top,
+      },
     },
   ]
-
-  return calculatePaths(fragments)
 }
 
 const getInnerCornerRadius = (cornerRadius: number, margin: BigNumber): BigNumber => {
   return BigNumber.maximum(new BigNumber(cornerRadius).minus(margin), ZERO)
 }
 
-const calculatePaths = (fragments: StitchPathFragment[]): PathSchema[] => {
+const groupStitchLinePathFragments = (fragments: SelectableStitchPathFragment[]): StitchPathFragment[][] => {
   const firstUnselectedFragmentIndex = fragments.findIndex((fragment) => !fragment.isSelected)
   const orderedFragments =
     firstUnselectedFragmentIndex === -1
       ? fragments
       : [...fragments.slice(firstUnselectedFragmentIndex + 1), ...fragments.slice(0, firstUnselectedFragmentIndex + 1)]
-  const paths: PathSchema[] = []
-  let currentPath: PathSchema | undefined
-  let currentPathEnd: PointSchema | undefined
+  const routes: StitchPathFragment[][] = []
+  let currentRoute: StitchPathFragment[] | undefined
 
   for (const fragment of orderedFragments) {
     if (!fragment.isSelected) {
-      currentPath = undefined
-      currentPathEnd = undefined
+      currentRoute = undefined
       continue
     }
 
-    if (!isDefined(currentPath) || !isDefined(currentPathEnd) || !arePointsEqual(currentPathEnd, fragment.start)) {
-      currentPath = {
-        commands: [{ type: 'moveTo', point: fragment.start }],
-      }
-      paths.push(currentPath)
+    if (!isDefined(currentRoute)) {
+      currentRoute = []
+      routes.push(currentRoute)
     }
 
-    appendFragment(currentPath.commands, fragment)
-    currentPathEnd = fragment.end
+    currentRoute.push(fragment)
   }
 
-  return paths.filter((path) => path.commands.length > 1)
+  return routes
 }
 
-const appendFragment = (commands: PathCommand[], fragment: StitchPathFragment): void => {
-  switch (fragment.type) {
-    case 'side':
+const createPathFromFragments = (fragments: StitchPathFragment[]): PathSchema => {
+  const commands: PathCommand[] = [{ type: 'moveTo', point: fragments[0].start }]
+
+  for (const fragment of fragments) {
+    if (fragment.type === 'side') {
       commands.push({ type: 'lineTo', point: fragment.end })
-      return
-    case 'corner':
-      if (fragment.radius.isGreaterThan(ZERO)) {
-        commands.push({ type: 'arcTo', radius: fragment.radius, point: fragment.end })
-      }
-      return
+      continue
+    }
+
+    if (fragment.radius.isGreaterThan(ZERO)) {
+      commands.push({ type: 'arcTo', radius: fragment.radius, point: fragment.end })
+    }
   }
+
+  return { commands }
 }
 
 const arePointsEqual = (first: PointSchema, second: PointSchema): boolean => {

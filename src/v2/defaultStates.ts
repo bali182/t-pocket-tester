@@ -33,6 +33,9 @@ export const defaultComponent: RootPanelSchema = {
   children: [],
   width: 170,
   height: 100,
+  individualRadii: true,
+  bottomLeftRadius: 5,
+  bottomRightRadius: 5,
 }
 
 const testStitchLine: StitchLineSchema = {
@@ -44,6 +47,10 @@ const testStitchLine: StitchLineSchema = {
   right: true,
   bottom: true,
   left: true,
+  topStitchDirection: 'left-to-right',
+  rightStitchDirection: 'top-to-bottom',
+  bottomStitchDirection: 'right-to-left',
+  leftStitchDirection: 'bottom-to-top',
   topLeftCorner: false,
   topRightCorner: false,
   bottomRightCorner: true,
@@ -56,7 +63,7 @@ const testStitchLine: StitchLineSchema = {
   bottomEndOffset: 0,
   leftStartOffset: 0,
   leftEndOffset: 0,
-  stitchMargin: 4,
+  stitchMargin: 5,
   stitchHoleLength: 1.7,
   stitchHoleDistance: 3.35,
   stitchHoleThickness: 0.3,

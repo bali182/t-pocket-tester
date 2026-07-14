@@ -29,9 +29,9 @@ export const useEditableComponent = (componentId: string): UseEditableComponentR
   const [editableComponent, setEditableComponent] = useState<EditableSchema<ComponentSchema>>(() =>
     getEditableSchema(component, { language: LANGUAGE }),
   )
-  const [processedEditableComponent, setProcessedEditableComponent] = useState<EditableSchema<ComponentSchema> | undefined>(
-    undefined,
-  )
+  const [processedEditableComponent, setProcessedEditableComponent] = useState<
+    EditableSchema<ComponentSchema> | undefined
+  >(undefined)
 
   const validationContext = useMemo<ValidationContextSchema>(
     () => ({

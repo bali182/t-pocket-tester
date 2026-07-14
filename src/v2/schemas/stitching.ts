@@ -15,6 +15,9 @@ export type StitchingSettingsSchema = {
   stitchThreadColor: string
 }
 
+export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
+export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
+
 export type StitchLineSchema = HasIdentitySchema &
   StitchingSettingsSchema & {
     /** Which component's bounding box are we stitching? */
@@ -25,6 +28,11 @@ export type StitchLineSchema = HasIdentitySchema &
     right: boolean
     bottom: boolean
     left: boolean
+
+    topStitchDirection: HorizontalStitchDirectionSchema
+    rightStitchDirection: VerticalStitchDirectionSchema
+    bottomStitchDirection: HorizontalStitchDirectionSchema
+    leftStitchDirection: VerticalStitchDirectionSchema
 
     // Are we stitching the given corner (which may or may not have a radius)?
     topLeftCorner: boolean
