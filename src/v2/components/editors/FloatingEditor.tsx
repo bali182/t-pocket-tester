@@ -1,18 +1,22 @@
-import { Popover, usePopover } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
+import { Popover, Tabs, usePopover } from '@chakra-ui/react'
+import { useSetAtom } from 'jotai'
 import { MouseEvent, useCallback, useEffect, useMemo, type FC } from 'react'
+import { TbNeedleThread } from 'react-icons/tb'
 
+import { useComponentIcon } from '../../hooks/useComponentIcon'
 import { useEditableComponent } from '../../hooks/useEditableComponent'
 import type { ComponentSchema } from '../../schemas/components'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { projectAtom } from '../../state'
 import { addComponent } from '../../utils/addComponent'
+import { getComponentNameByType } from '../../utils/getComponentNameByType'
 import { isDefined } from '../../utils/isDefined'
 import { removeComponent } from '../../utils/removeComponent'
 import type { ChildComponentType } from '../AddChildComponentMenu'
 import { ComponentEditor } from './ComponentEditor'
 import { FloatingEditorHeader } from './FloatingEditorHeader'
 import { SectionGroup } from './SectionGroup'
+import { StitchingEditor } from './StitchingEditor'
 
 type FloatingEditorProps = {
   component: ComponentSchema
@@ -20,14 +24,28 @@ type FloatingEditorProps = {
   onClose: () => void
 }
 
+const tabContentStyles = {
+  gridArea: '1 / 1',
+  pointerEvents: 'none',
+  visibility: 'hidden',
+  '&[data-selected]': {
+    pointerEvents: 'auto',
+    visibility: 'visible',
+  },
+}
+
 export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorElement, onClose }) => {
-  const [, setProject] = useAtom(projectAtom)
+  const setProject = useSetAtom(projectAtom)
   const {
     component: editedComponent,
     editableComponent,
     setComponent,
     validationIssues,
   } = useEditableComponent(component.id)
+
+  const ComponentIcon = useComponentIcon(editedComponent.type)
+  const componentTabLabel = getComponentNameByType(editedComponent.type)
+
   const positioningTarget = useMemo(
     () => ({
       getBoundingClientRect: () => anchorElement.getBoundingClientRect(),
@@ -96,14 +114,33 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
             onAddChild={editedComponent.type === 'pocket-cluster' ? undefined : handleAddChild}
             onRemoveComponent={editedComponent.type === 'root-panel' ? undefined : handleRemoveComponent}
           />
-          <SectionGroup.Root>
-            <ComponentEditor
-              component={editedComponent}
-              editable={editableComponent}
-              issues={validationIssues as ValidationIssuesSchema<ComponentSchema>}
-              onChange={setComponent}
-            />
-          </SectionGroup.Root>
+          <Tabs.Root defaultValue="component">
+            <Tabs.List>
+              <Tabs.Trigger value="component">
+                <ComponentIcon />
+                {componentTabLabel}
+              </Tabs.Trigger>
+              <Tabs.Trigger value="stitching">
+                <TbNeedleThread />
+                Varrások
+              </Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.ContentGroup display="grid">
+              <Tabs.Content css={tabContentStyles} hidden={false} pt="0" value="component">
+                <SectionGroup.Root>
+                  <ComponentEditor
+                    component={editedComponent}
+                    editable={editableComponent}
+                    issues={validationIssues as ValidationIssuesSchema<ComponentSchema>}
+                    onChange={setComponent}
+                  />
+                </SectionGroup.Root>
+              </Tabs.Content>
+              <Tabs.Content css={tabContentStyles} hidden={false} pt="0" value="stitching">
+                <StitchingEditor />
+              </Tabs.Content>
+            </Tabs.ContentGroup>
+          </Tabs.Root>
         </Popover.Content>
       </Popover.Positioner>
     </Popover.RootProvider>

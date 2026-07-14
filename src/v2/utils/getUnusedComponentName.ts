@@ -1,5 +1,6 @@
 import type { ComponentSchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
+import { getComponentNameByType } from './getComponentNameByType'
 
 export const getUnusedComponentName = (type: ComponentSchema['type'], project: ProjectSchema): string => {
   const baseName = getComponentNameByType(type)
@@ -13,15 +14,4 @@ export const getUnusedComponentName = (type: ComponentSchema['type'], project: P
   }
 
   return name
-}
-
-const getComponentNameByType = (type: ComponentSchema['type']): string => {
-  switch (type) {
-    case 'root-panel':
-      return 'Fő panel'
-    case 'panel':
-      return 'Panel'
-    case 'pocket-cluster':
-      return 'Zsebek'
-  }
 }
