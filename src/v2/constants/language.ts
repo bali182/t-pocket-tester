@@ -1,1 +1,3 @@
-export const LANGUAGE = 'hu-HU'
+import { DecimalLocale } from 'validator'
+
+export const LANGUAGE: DecimalLocale = 'en-GB'
