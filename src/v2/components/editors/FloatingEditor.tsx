@@ -107,7 +107,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
   return (
     <Popover.RootProvider value={popover}>
       <Popover.Positioner>
-        <Popover.Content onClick={captureClick} width="400px" zIndex="popover">
+        <Popover.Content onClick={captureClick} width="450px" zIndex="popover">
           <Popover.Arrow />
           <FloatingEditorHeader
             componentId={editedComponent.id}
@@ -137,7 +137,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ component, anchorEleme
                 </SectionGroup.Root>
               </Tabs.Content>
               <Tabs.Content css={tabContentStyles} hidden={false} pt="0" value="stitching">
-                <StitchingEditor />
+                <StitchingEditor component={editedComponent} />
               </Tabs.Content>
             </Tabs.ContentGroup>
           </Tabs.Root>

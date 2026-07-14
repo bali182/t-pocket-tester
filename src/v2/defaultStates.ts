@@ -33,12 +33,9 @@ export const defaultComponent: RootPanelSchema = {
   children: [],
   width: 170,
   height: 100,
-  individualRadii: true,
-  bottomLeftRadius: 5,
-  bottomRightRadius: 5,
 }
 
-const testStitchLine: StitchLineSchema = {
+const _testStitchLine: StitchLineSchema = {
   id: 'test',
   name: 'Teszt line',
   color: STITCH_LINE_STORKE_COLOR,
@@ -64,8 +61,8 @@ const testStitchLine: StitchLineSchema = {
   leftStartOffset: 0,
   leftEndOffset: 0,
   stitchMargin: 5,
-  stitchHoleLength: 1.7,
-  stitchHoleDistance: 3.35,
+  stitchHoleLength: 2,
+  stitchHoleDistance: 3,
   stitchHoleThickness: 0.3,
   stitchHoleColor: STITCH_HOLE_COLOR,
   stitchThreadColor: STITCH_THREAD_COLOR,
@@ -79,7 +76,7 @@ export const defaultProject: ProjectSchema = {
     [defaultComponent.id]: defaultComponent,
   },
   stitchLines: {
-    [testStitchLine.id]: testStitchLine,
+    [_testStitchLine.id]: _testStitchLine,
   },
   editingSettings: {
     addComputedSizesToAutoSized: true,
