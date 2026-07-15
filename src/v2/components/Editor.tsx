@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Heading, Splitter, SplitterPanelData, SplitterResizeDetails } from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { useAtomValue } from 'jotai'
@@ -10,9 +10,12 @@ import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
 import { FloatingEditor } from './editors/FloatingEditor'
 
+const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
+
 export const Editor: FC = () => {
   const [componentId, setComponentId] = useState<string | undefined>()
   const [element, setElement] = useState<SVGGraphicsElement | undefined>()
+  const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const project = useAtomValue(projectAtom)
   const component = isDefined(componentId) ? project.components[componentId] : undefined
 
@@ -24,6 +27,10 @@ export const Editor: FC = () => {
   const handleFloatingEditorClose = useCallback((): void => {
     setComponentId(undefined)
     setElement(undefined)
+  }, [])
+
+  const handlePanelResize = useCallback((details: SplitterResizeDetails) => {
+    setSidebarPanelSizes(details.size)
   }, [])
 
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
@@ -53,8 +60,35 @@ export const Editor: FC = () => {
             <FloatingEditor component={component} anchorElement={element} onClose={handleFloatingEditorClose} />
           )}
         </Box>
-        <Box flexShrink={0} height="100%" overflow="auto" padding="4" width="400px" backgroundColor="bg.panel">
-          <ComponentTree selectedComponentId={componentId} />
+        <Box bg="bg.panel" flexShrink={0} height="100%" width="400px">
+          <Splitter.Root
+            height="100%"
+            onResize={handlePanelResize}
+            orientation="vertical"
+            panels={panels}
+            size={sidebarPanelSizes}
+            width="100%"
+          >
+            <Splitter.Panel display="flex" flexDirection="column" id="component" minHeight="0">
+              <Heading px="4" py="3" size="sm">
+                Bőr
+              </Heading>
+              <Box flex="1" minHeight="0" overflow="auto" padding="4">
+                <ComponentTree selectedComponentId={componentId} />
+              </Box>
+            </Splitter.Panel>
+
+            <Splitter.ResizeTrigger id="component:stitching">
+              <Splitter.ResizeTriggerSeparator />
+              <Splitter.ResizeTriggerIndicator />
+            </Splitter.ResizeTrigger>
+
+            <Splitter.Panel display="flex" flexDirection="column" id="stitching" minHeight="0">
+              <Heading px="4" py="3" size="sm">
+                Varrás
+              </Heading>
+            </Splitter.Panel>
+          </Splitter.Root>
         </Box>
       </Box>
     </DrawAreaContext.Provider>
