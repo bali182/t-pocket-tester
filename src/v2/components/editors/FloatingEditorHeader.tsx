@@ -14,7 +14,7 @@ type FloatingEditorHeaderProps = {
 export const FloatingEditorHeader: FC<FloatingEditorHeaderProps> = ({ componentId, onAddChild, onRemoveComponent }) => {
   return (
     <Popover.Header p="0">
-      <HStack justify="space-between" pl="4" pr="4" pt="3">
+      <HStack justify="space-between" pl="4" pr="4" pt="3" pb="3">
         <Text fontWeight="semibold" textStyle="xs">
           #{componentId}
         </Text>

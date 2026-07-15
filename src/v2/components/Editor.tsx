@@ -39,7 +39,14 @@ export const Editor: FC = () => {
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
       <Box display="flex" height="100%" overflow="hidden">
-        <Box flex="1" minHeight="0" minWidth="0" onClick={handleFloatingEditorClose} overflow="hidden" position="relative">
+        <Box
+          flex="1"
+          minHeight="0"
+          minWidth="0"
+          onClick={handleFloatingEditorClose}
+          overflow="hidden"
+          position="relative"
+        >
           <DrawArea />
 
           {isDefined(component) && isDefined(element) && (
