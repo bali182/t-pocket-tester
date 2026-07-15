@@ -17,6 +17,8 @@ export type StitchingSettingsSchema = {
 
 export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
 export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
+export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
+export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
 
 export type StitchLineSchema = HasIdentitySchema &
   StitchingSettingsSchema & {
@@ -29,16 +31,17 @@ export type StitchLineSchema = HasIdentitySchema &
     bottom: boolean
     left: boolean
 
-    topStitchDirection: HorizontalStitchDirectionSchema
-    rightStitchDirection: VerticalStitchDirectionSchema
-    bottomStitchDirection: HorizontalStitchDirectionSchema
-    leftStitchDirection: VerticalStitchDirectionSchema
-
     // Are we stitching the given corner (which may or may not have a radius)?
     topLeftCorner: boolean
     topRightCorner: boolean
     bottomRightCorner: boolean
     bottomLeftCorner: boolean
+
+    // Stitching direction for sides. Can only be changed if the sides are not connected by a corner.
+    topStitchDirection: HorizontalStitchDirectionSchema
+    rightStitchDirection: VerticalStitchDirectionSchema
+    bottomStitchDirection: HorizontalStitchDirectionSchema
+    leftStitchDirection: VerticalStitchDirectionSchema
 
     // Offsets of the sides we stitch. What are these used for?
     // For example when stitching the side of a panel to another (forming a pocket)

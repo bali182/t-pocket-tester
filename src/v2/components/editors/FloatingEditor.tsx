@@ -1,4 +1,4 @@
-import { Popover, Tabs, usePopover } from '@chakra-ui/react'
+import { Popover, SystemStyleObject, Tabs, usePopover } from '@chakra-ui/react'
 import { useSetAtom } from 'jotai'
 import { MouseEvent, useCallback, useEffect, useMemo, type FC } from 'react'
 import { TbNeedleThread } from 'react-icons/tb'
@@ -24,7 +24,7 @@ type FloatingEditorProps = {
   onClose: () => void
 }
 
-const tabContentStyles = {
+const tabContentStyles: SystemStyleObject = {
   gridArea: '1 / 1',
   pointerEvents: 'none',
   visibility: 'hidden',

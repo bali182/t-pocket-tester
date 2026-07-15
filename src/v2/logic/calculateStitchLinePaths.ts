@@ -3,13 +3,10 @@ import BigNumber from 'bignumber.js'
 import type { ComponentSchema } from '../schemas/components'
 import type { ComputedComponentSchema } from '../schemas/computed'
 import type { PathCommand, PathSchema, PointSchema } from '../schemas/geometry'
-import type { StitchLineSchema } from '../schemas/stitching'
+import type { StitchCornerSchema, StitchLineSchema, StitchSideSchema } from '../schemas/stitching'
 import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
 
 const ZERO = new BigNumber(0)
-
-export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
-export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
 
 export type StitchSidePathFragment = {
   type: 'side'
