@@ -75,9 +75,7 @@ export const defaultProject: ProjectSchema = {
   components: {
     [defaultComponent.id]: defaultComponent,
   },
-  stitchLines: {
-    [_testStitchLine.id]: _testStitchLine,
-  },
+  stitchLines: [_testStitchLine],
   editingSettings: {
     addComputedSizesToAutoSized: true,
     adjustCornerRadiiToParent: true,
