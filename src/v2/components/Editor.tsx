@@ -8,6 +8,7 @@ import { projectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
+import { StitchLineTree } from './StitchLineTree'
 import { FloatingEditor } from './editors/FloatingEditor'
 
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
@@ -87,6 +88,9 @@ export const Editor: FC = () => {
               <Heading px="4" py="3" size="sm">
                 Varrás
               </Heading>
+              <Box flex="1" minHeight="0" overflow="auto" padding="4">
+                <StitchLineTree />
+              </Box>
             </Splitter.Panel>
           </Splitter.Root>
         </Box>

@@ -1,6 +1,7 @@
 import {
   TreeView,
   createTreeCollection,
+  type TreeCollection,
   type TreeViewExpandedChangeDetails,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
@@ -45,7 +46,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
   const { onComponentClick } = useDrawAreaContext()
   const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])
 
-  const collection = useMemo(() => {
+  const collection = useMemo<TreeCollection<ComponentTreeNode>>(() => {
     const createNode = (component: ComponentSchema): ComponentTreeNode => {
       const childNodes: ComponentTreeNode[] = []
 
@@ -149,7 +150,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
       onSelectionChange={handleSelectionChange}
       selectedValue={selectedValue}
       selectionMode="single"
-      translations={{ treeLabel: 'Komponensek' }}
     >
       <TreeView.Tree>
         <TreeView.Node
