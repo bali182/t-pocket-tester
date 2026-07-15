@@ -53,7 +53,7 @@ export const Editor: FC = () => {
             <FloatingEditor component={component} anchorElement={element} onClose={handleFloatingEditorClose} />
           )}
         </Box>
-        <Box flexShrink={0} height="100%" overflow="auto" padding="4" width="400px">
+        <Box flexShrink={0} height="100%" overflow="auto" padding="4" width="400px" backgroundColor="bg.panel">
           <ComponentTree selectedComponentId={componentId} />
         </Box>
       </Box>
