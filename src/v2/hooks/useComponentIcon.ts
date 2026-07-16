@@ -1,4 +1,4 @@
-import { IconType } from 'react-icons/lib'
+import { IconType } from 'react-icons'
 import { PiCardsThree, PiFrameCorners, PiRectangle } from 'react-icons/pi'
 import { ComponentSchema } from '../schemas/components'
 

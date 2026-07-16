@@ -7,8 +7,8 @@ import {
 } from '@chakra-ui/react'
 import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
-import { LuChevronRight } from 'react-icons/lu'
 
+import { PiCaretRight } from 'react-icons/pi'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useComponent } from '../hooks/useComponent'
 import { useComponentIcon } from '../hooks/useComponentIcon'
@@ -164,7 +164,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
                 <TreeView.BranchControl>
                   <TreeView.BranchTrigger>
                     <TreeView.BranchIndicator asChild>
-                      <LuChevronRight />
+                      <PiCaretRight />
                     </TreeView.BranchIndicator>
                   </TreeView.BranchTrigger>
                   <ComponentTreeNodeIcon type={node.component.type} />

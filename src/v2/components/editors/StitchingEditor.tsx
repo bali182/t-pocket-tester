@@ -1,8 +1,8 @@
 import { EmptyState, IconButton, Listbox, Splitter, createListCollection } from '@chakra-ui/react'
 import { useEffect, useMemo, useState, type FC } from 'react'
-import { LuTrash } from 'react-icons/lu'
 import { TbNeedleThread } from 'react-icons/tb'
 
+import { PiTrash } from 'react-icons/pi'
 import { useStitchLines } from '../../hooks/useStitchLines'
 import type { ComponentSchema } from '../../schemas/components'
 import { isDefined } from '../../utils/isDefined'
@@ -52,7 +52,7 @@ export const StitchingEditor: FC<StitchingEditorProps> = ({ component }) => {
               <Listbox.Item item={stitchLine} key={stitchLine.id}>
                 <Listbox.ItemText>{stitchLine.name}</Listbox.ItemText>
                 <IconButton aria-label={`${stitchLine.name} törlése`} disabled size="2xs" variant="ghost">
-                  <LuTrash />
+                  <PiTrash />
                 </IconButton>
               </Listbox.Item>
             ))}
