@@ -1,7 +1,8 @@
-import { Box, Heading, Splitter, SplitterPanelData, SplitterResizeDetails } from '@chakra-ui/react'
+import { Box, Button, Heading, HStack, Splitter, SplitterPanelData, SplitterResizeDetails } from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { useAtomValue } from 'jotai'
+import { PiPlus } from 'react-icons/pi'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import type { ComponentSchema } from '../schemas/components'
 import { projectAtom } from '../state'
@@ -9,6 +10,7 @@ import { isDefined } from '../utils/isDefined'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
 import { StitchLineTree } from './StitchLineTree'
+import { AddStitchLineMenu } from './AddStitchLineMenu'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
@@ -89,9 +91,17 @@ export const Editor: FC = () => {
             </Splitter.ResizeTrigger>
 
             <Splitter.Panel display="flex" flexDirection="column" id="stitching" minHeight="0">
-              <Heading px="4" py="3" size="sm">
-                Varrás
-              </Heading>
+              <HStack justify="space-between" px="4" py="3">
+                <Heading size="sm">Varrás</Heading>
+                <AddStitchLineMenu
+                  trigger={
+                    <Button size="2xs" variant="subtle">
+                      <PiPlus />
+                      Új varrás
+                    </Button>
+                  }
+                />
+              </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
                 <StitchLineTree />
               </Box>

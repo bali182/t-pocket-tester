@@ -1,12 +1,14 @@
 import { Button, EmptyState, IconButton, TreeView, createTreeCollection, type TreeCollection } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
-import { useMemo, type FC } from 'react'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 
 import { PiNeedle, PiPlus, PiTrash } from 'react-icons/pi'
 import { TbNeedleThread } from 'react-icons/tb'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
+import { removeStitchLine } from '../utils/removeStitchLine'
+import { AddStitchLineMenu } from './AddStitchLineMenu'
 
 type StitchLineTreeNode = {
   children?: StitchLineTreeNode[]
@@ -17,6 +19,15 @@ type StitchLineTreeNode = {
 
 export const StitchLineTree: FC = () => {
   const project = useAtomValue(projectAtom)
+  const setProject = useSetAtom(projectAtom)
+
+  const handleDelete = useCallback(
+    (event: MouseEvent<HTMLButtonElement>, stitchLineId: string): void => {
+      event.stopPropagation()
+      setProject((project) => removeStitchLine(stitchLineId, project))
+    },
+    [setProject],
+  )
 
   const collection = useMemo<TreeCollection<StitchLineTreeNode>>(
     () =>
@@ -49,10 +60,14 @@ export const StitchLineTree: FC = () => {
             Adj hozzá egy varrást az általad kiválasztott komponenshez!
           </EmptyState.Description>
           <EmptyState.Description textAlign="center">
-            <Button variant="subtle">
-              <PiPlus />
-              Új varrás
-            </Button>
+            <AddStitchLineMenu
+              trigger={
+                <Button variant="subtle">
+                  <PiPlus />
+                  Új varrás
+                </Button>
+              }
+            />
           </EmptyState.Description>
         </EmptyState.Content>
       </EmptyState.Root>
@@ -72,7 +87,12 @@ export const StitchLineTree: FC = () => {
               <TreeView.Item>
                 <PiNeedle />
                 <TreeView.ItemText>{node.name}</TreeView.ItemText>
-                <IconButton aria-label={`${node.name} törlése`} disabled size="2xs" variant="ghost">
+                <IconButton
+                  aria-label={`${node.name} törlése`}
+                  onClick={(event) => handleDelete(event, node.stitchLine.id)}
+                  size="2xs"
+                  variant="ghost"
+                >
                   <PiTrash />
                 </IconButton>
               </TreeView.Item>
