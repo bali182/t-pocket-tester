@@ -9,7 +9,7 @@ import { isDefined } from '../utils/isDefined'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
 import { StitchLineTree } from './StitchLineTree'
-import { FloatingEditor } from './editors/FloatingEditor'
+import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 
@@ -58,7 +58,11 @@ export const Editor: FC = () => {
           <DrawArea />
 
           {isDefined(component) && isDefined(element) && (
-            <FloatingEditor component={component} anchorElement={element} onClose={handleFloatingEditorClose} />
+            <ComponentFloatingEditor
+              component={component}
+              anchorElement={element}
+              onClose={handleFloatingEditorClose}
+            />
           )}
         </Box>
         <Box bg="bg.panel" flexShrink={0} height="100%" width="400px">

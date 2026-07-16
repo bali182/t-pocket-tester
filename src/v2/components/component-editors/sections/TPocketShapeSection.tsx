@@ -3,8 +3,8 @@ import { useCallback, type FC } from 'react'
 import type { PocketClusterSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
-import { NumberInput } from '../NumberInput'
-import { SectionGroup } from '../SectionGroup'
+import { NumberInput } from '../../common/NumberInput'
+import { SectionGroup } from '../../common/SectionGroup'
 type TPocketShapeSectionProps = {
   component: PocketClusterSchema
   editable: EditableSchema<PocketClusterSchema>

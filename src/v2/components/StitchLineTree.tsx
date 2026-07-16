@@ -1,8 +1,9 @@
-import { IconButton, TreeView, createTreeCollection, type TreeCollection } from '@chakra-ui/react'
+import { Button, EmptyState, IconButton, TreeView, createTreeCollection, type TreeCollection } from '@chakra-ui/react'
 import { useAtomValue } from 'jotai'
 import { useMemo, type FC } from 'react'
 
-import { PiNeedle, PiTrash } from 'react-icons/pi'
+import { PiNeedle, PiPlus, PiTrash } from 'react-icons/pi'
+import { TbNeedleThread } from 'react-icons/tb'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
@@ -35,6 +36,28 @@ export const StitchLineTree: FC = () => {
       }),
     [project.stitchLines],
   )
+
+  if (project.stitchLines.length === 0) {
+    return (
+      <EmptyState.Root>
+        <EmptyState.Content>
+          <EmptyState.Indicator>
+            <TbNeedleThread />
+          </EmptyState.Indicator>
+          <EmptyState.Title>Nincs még varrás</EmptyState.Title>
+          <EmptyState.Description textAlign="center">
+            Adj hozzá egy varrást az általad kiválasztott komponenshez!
+          </EmptyState.Description>
+          <EmptyState.Description textAlign="center">
+            <Button variant="subtle">
+              <PiPlus />
+              Új varrás
+            </Button>
+          </EmptyState.Description>
+        </EmptyState.Content>
+      </EmptyState.Root>
+    )
+  }
 
   return (
     <TreeView.Root collection={collection} selectedValue={[]}>
