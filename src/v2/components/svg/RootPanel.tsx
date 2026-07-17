@@ -17,7 +17,7 @@ type RootPanelProps = {
 }
 
 export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
-  const { isInteractive, onComponentClick } = useDrawAreaContext()
+  const { isInteractive, selectComponent } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const rootPanel = useComponent<RootPanelSchema>(componentId)
   const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(componentId)
@@ -33,9 +33,9 @@ export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
   const handleClick = useCallback<MouseEventHandler<SVGPathElement>>(
     (event) => {
       event.stopPropagation()
-      onComponentClick(rootPanel, event.currentTarget)
+      selectComponent(rootPanel.id)
     },
-    [onComponentClick, rootPanel],
+    [rootPanel.id, selectComponent],
   )
 
   return (

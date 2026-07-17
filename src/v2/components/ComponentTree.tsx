@@ -43,7 +43,7 @@ const ComponentTreeNodeIcon: FC<ComponentTreeNodeIconProps> = ({ type }) => {
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
   const project = useAtomValue(projectAtom)
   const rootComponent = useComponent(project.root)
-  const { onComponentClick } = useDrawAreaContext()
+  const { selectComponent } = useDrawAreaContext()
   const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])
 
   const collection = useMemo<TreeCollection<ComponentTreeNode>>(() => {
@@ -118,23 +118,9 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
         return
       }
 
-      const component = project.components[selectedComponentId]
-
-      if (!isDefined(component)) {
-        return
-      }
-
-      const element = document.querySelector<SVGGraphicsElement>(
-        `[data-component-id="${CSS.escape(selectedComponentId)}"]`,
-      )
-
-      if (!isDefined(element)) {
-        return
-      }
-
-      onComponentClick(component, element)
+      selectComponent(selectedComponentId)
     },
-    [onComponentClick, project.components],
+    [selectComponent],
   )
 
   const handleAddChild = useCallback((parentId: string): void => {

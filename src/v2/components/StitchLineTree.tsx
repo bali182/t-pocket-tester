@@ -1,9 +1,18 @@
-import { Button, EmptyState, IconButton, TreeView, createTreeCollection, type TreeCollection } from '@chakra-ui/react'
+import {
+  Button,
+  EmptyState,
+  IconButton,
+  TreeView,
+  createTreeCollection,
+  type TreeCollection,
+  type TreeViewSelectionChangeDetails,
+} from '@chakra-ui/react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 
 import { PiNeedle, PiPlus, PiTrash } from 'react-icons/pi'
 import { TbNeedleThread } from 'react-icons/tb'
+import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
@@ -17,17 +26,34 @@ type StitchLineTreeNode = {
   stitchLine?: StitchLineSchema
 }
 
-export const StitchLineTree: FC = () => {
+type StitchLineTreeProps = {
+  selectedStitchLineId: string | undefined
+}
+
+export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }) => {
   const project = useAtomValue(projectAtom)
   const setProject = useSetAtom(projectAtom)
+  const { clearSelection, selectStitchLine } = useDrawAreaContext()
 
   const handleDelete = useCallback(
     (event: MouseEvent<HTMLButtonElement>, stitchLineId: string): void => {
       event.stopPropagation()
       setProject((project) => removeStitchLine(stitchLineId, project))
+
+      if (selectedStitchLineId === stitchLineId) {
+        clearSelection()
+      }
     },
-    [setProject],
+    [clearSelection, selectedStitchLineId, setProject],
   )
+
+  const selectedValue = useMemo((): string[] => {
+    if (!isDefined(selectedStitchLineId)) {
+      return []
+    }
+
+    return [selectedStitchLineId]
+  }, [selectedStitchLineId])
 
   const collection = useMemo<TreeCollection<StitchLineTreeNode>>(
     () =>
@@ -46,6 +72,19 @@ export const StitchLineTree: FC = () => {
         },
       }),
     [project.stitchLines],
+  )
+
+  const handleSelectionChange = useCallback(
+    (details: TreeViewSelectionChangeDetails<StitchLineTreeNode>): void => {
+      const stitchLineId = details.selectedValue[0]
+
+      if (!isDefined(stitchLineId)) {
+        return
+      }
+
+      selectStitchLine(stitchLineId)
+    },
+    [selectStitchLine],
   )
 
   if (project.stitchLines.length === 0) {
@@ -75,7 +114,12 @@ export const StitchLineTree: FC = () => {
   }
 
   return (
-    <TreeView.Root collection={collection} selectedValue={[]}>
+    <TreeView.Root
+      collection={collection}
+      onSelectionChange={handleSelectionChange}
+      selectedValue={selectedValue}
+      selectionMode="single"
+    >
       <TreeView.Tree>
         <TreeView.Node
           render={({ node }) => {

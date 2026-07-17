@@ -26,7 +26,7 @@ const addAlpha = (color: string): string => {
 }
 
 export const useSvgElementStyle = (component: ComponentSchema, isHovered: boolean): UseSvgElementStyleOutput => {
-  const { isInteractive, component: editedComponent } = useDrawAreaContext()
+  const { isComponentSelected, isInteractive } = useDrawAreaContext()
 
   const normal = useMemo<ElementColors>(
     () => ({
@@ -54,7 +54,7 @@ export const useSvgElementStyle = (component: ComponentSchema, isHovered: boolea
     }),
     [component],
   )
-  const isSelected = isInteractive && (component.id === editedComponent?.id || isHovered)
+  const isSelected = isInteractive && (isComponentSelected(component.id) || isHovered)
 
   return {
     isSelected,
