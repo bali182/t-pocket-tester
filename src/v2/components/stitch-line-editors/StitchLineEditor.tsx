@@ -20,7 +20,7 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, 
       <SectionGroup.Section>
         <SectionGroup.SectionHeader>Varratvonal</SectionGroup.SectionHeader>
         <SectionGroup.SectionFullWidthContent>
-          <StitchLineSidesAndCorners editable={editable} onChange={onChange} />
+          <StitchLineSidesAndCorners editable={editable} issues={issues} onChange={onChange} />
         </SectionGroup.SectionFullWidthContent>
       </SectionGroup.Section>
     </>
