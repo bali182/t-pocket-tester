@@ -4,6 +4,8 @@ import { useEditableStitchLine } from '../../hooks/useEditableStitchLine'
 import type { StitchLineSchema } from '../../schemas/stitching'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
+import { SectionGroup } from '../common/SectionGroup'
+import { StitchLineEditor } from './StitchLineEditor'
 import { StitchLineEditorHeaderMenu } from './StitchLineEditorHeaderMenu'
 
 type StitchLineFloatingEditorProps = {
@@ -13,7 +15,9 @@ type StitchLineFloatingEditorProps = {
 }
 
 export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ anchorElement, onClose, stitchLine }) => {
-  const { stitchLine: editedStitchLine } = useEditableStitchLine(stitchLine.id)
+  const { editableStitchLine, setStitchLine, stitchLine: editedStitchLine, validationIssues } = useEditableStitchLine(
+    stitchLine.id,
+  )
 
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
@@ -21,6 +25,9 @@ export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ an
         menu={<StitchLineEditorHeaderMenu onClose={onClose} stitchLine={editedStitchLine} />}
         title={`#${editedStitchLine.id}`}
       />
+      <SectionGroup.Root>
+        <StitchLineEditor editable={editableStitchLine} issues={validationIssues} onChange={setStitchLine} />
+      </SectionGroup.Root>
     </FloatingEditor>
   )
 }
