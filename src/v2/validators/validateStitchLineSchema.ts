@@ -27,7 +27,6 @@ export const validateStitchLineSchema = (
   context: ValidationContextSchema,
 ): ValidationResultSchema<StitchLineSchema> => {
   const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines)
-  const colorResult = validateHexColor(input.color, currentValue.color)
   const stitchMarginResult = validateNumber(input.stitchMargin, currentValue.stitchMargin, context, { min: 2 })
   const stitchHoleLengthResult = validateNumber(input.stitchHoleLength, currentValue.stitchHoleLength, context, {
     min: 0,
@@ -86,7 +85,6 @@ export const validateStitchLineSchema = (
     bottomRightCorner: undefined,
     bottomStartOffset: bottomStartOffsetResult.issues,
     bottomStitchDirection: bottomStitchDirectionResult.issues,
-    color: colorResult.issues,
     componentId: undefined,
     id: undefined,
     left: undefined,
@@ -119,7 +117,6 @@ export const validateStitchLineSchema = (
     bottomRightCorner: input.bottomRightCorner,
     bottomStartOffset: bottomStartOffsetResult.committedValue,
     bottomStitchDirection: bottomStitchDirectionResult.committedValue,
-    color: colorResult.committedValue,
     componentId: currentValue.componentId,
     id: currentValue.id,
     left: input.left,
@@ -147,7 +144,6 @@ export const validateStitchLineSchema = (
 
   if (
     !nameResult.isValid ||
-    !colorResult.isValid ||
     !stitchMarginResult.isValid ||
     !stitchHoleLengthResult.isValid ||
     !stitchHoleDistanceResult.isValid ||

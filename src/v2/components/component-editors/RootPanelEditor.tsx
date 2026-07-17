@@ -17,7 +17,7 @@ type RootPanelEditorProps = {
 export const RootPanelEditor: FC<RootPanelEditorProps> = ({ component, editable, issues, onChange }) => {
   return (
     <>
-      <NameAndColorSection editable={editable} onChange={onChange} />
+      <NameAndColorSection editable={editable} issues={issues} onChange={onChange} />
       <WidthAndHeightSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />

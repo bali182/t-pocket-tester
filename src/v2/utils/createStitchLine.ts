@@ -1,4 +1,3 @@
-import { STITCH_LINE_STORKE_COLOR } from '../constants/drawing'
 import type { ProjectSchema } from '../schemas/project'
 import type {
   StitchLineComponentReferencesSchema,
@@ -15,7 +14,6 @@ export const createStitchLine = (
   ...defaultStitchLine,
   ...project.stitchingSettings,
   ...componentReferences,
-  color: STITCH_LINE_STORKE_COLOR,
   id: id(),
   name: getUnusedStitchLineName(project),
 })

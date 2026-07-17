@@ -17,7 +17,7 @@ type PanelEditorProps = {
 export const PanelEditor: FC<PanelEditorProps> = ({ component, editable, issues, onChange }) => {
   return (
     <>
-      <NameAndColorSection editable={editable} onChange={onChange} />
+      <NameAndColorSection editable={editable} issues={issues} onChange={onChange} />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />

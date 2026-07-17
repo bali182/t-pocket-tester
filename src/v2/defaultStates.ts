@@ -1,9 +1,4 @@
-import {
-  LEATHER_BASE_COLOR,
-  STITCH_HOLE_COLOR,
-  STITCH_LINE_STORKE_COLOR,
-  STITCH_THREAD_COLOR,
-} from './constants/drawing'
+import { LEATHER_BASE_COLOR, STITCH_HOLE_COLOR, STITCH_THREAD_COLOR } from './constants/drawing'
 import { HasCornerRadiusSchema, HasLayoutSchema, RootPanelSchema } from './schemas/components'
 import { ProjectSchema } from './schemas/project'
 import { StitchLineSchema } from './schemas/stitching'
@@ -38,7 +33,6 @@ export const defaultComponent: RootPanelSchema = {
 const _testStitchLine: StitchLineSchema = {
   id: 'test',
   name: 'Teszt line',
-  color: STITCH_LINE_STORKE_COLOR,
   componentId: defaultComponent.id,
   top: false,
   right: true,

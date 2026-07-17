@@ -1,4 +1,4 @@
-import { HasColorSchema, HasIdentitySchema } from './components'
+import { HasIdentitySchema } from './components'
 import { PointSchema } from './geometry'
 
 export type StitchHoleSchema = {
@@ -61,7 +61,6 @@ export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
 export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
 
 export type StitchLineSchema = HasIdentitySchema &
-  HasColorSchema &
   StitchingSettingsSchema &
   StitchLineConfigSchema &
   StitchLineComponentReferencesSchema
