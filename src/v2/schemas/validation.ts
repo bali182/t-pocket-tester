@@ -15,32 +15,24 @@ export type ValidationIssuesSchema<T> = T extends readonly unknown[]
     ? { [K in keyof T]-?: ValidationIssuesSchema<Exclude<T[K], undefined>> }
     : IssueSchema | undefined
 
-export type ValidationResultValidSchema<I, O> = {
+export type ValidationResultValidSchema<T> = {
   isValid: true
-  issues: ValidationIssuesSchema<I>
-  value: O
-  committedValue: O
+  issues: ValidationIssuesSchema<T>
+  value: T
+  committedValue: T
 }
 
-export type ValidationResultInvalidSchema<I, O> = {
+export type ValidationResultInvalidSchema<T> = {
   isValid: false
-  issues: ValidationIssuesSchema<I>
+  issues: ValidationIssuesSchema<T>
   value: undefined
-  committedValue: O
+  committedValue: T
 }
 
-export type ValidationResultSchema<I, O> =
-  | ValidationResultValidSchema<I, O>
-  | ValidationResultInvalidSchema<I, O>
+export type ValidationResultSchema<T> = ValidationResultValidSchema<T> | ValidationResultInvalidSchema<T>
 
 export type ValidationContextSchema = {
   project: ProjectSchema
   computedProject: ComputedProjectSchema
   language: DecimalLocale
 }
-
-export type ValidatorSchema<I, O, Args extends readonly unknown[] = []> = (
-  input: I,
-  currentValue: O,
-  ...args: Args
-) => ValidationResultSchema<I, O>

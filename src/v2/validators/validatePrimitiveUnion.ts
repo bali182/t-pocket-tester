@@ -1,4 +1,4 @@
-import type { ValidationResultSchema } from '../schemas/validation'
+import type { ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
@@ -7,27 +7,27 @@ export function validatePrimitiveUnion<T extends string>(
   currentValue: T,
   allowedValues: Record<T, boolean>,
   allowUndefined?: false,
-): ValidationResultSchema<string | undefined, T>
+): ValidationResultSchema<T>
 
 export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T | undefined,
   allowedValues: Record<T, boolean>,
   allowUndefined: true,
-): ValidationResultSchema<string | undefined, T | undefined>
+): ValidationResultSchema<T | undefined>
 
 export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T | undefined,
   allowedValues: Record<T, boolean>,
   allowUndefined = false,
-): ValidationResultSchema<string | undefined, T | undefined> {
+): ValidationResultSchema<T | undefined> {
   if (!isDefined(value)) {
     if (allowUndefined) {
-      return createValidValidationResult<string | undefined, undefined>(undefined, undefined)
+      return createValidValidationResult<undefined>(undefined, undefined)
     }
 
-    return createInvalidValidationResult<string | undefined, T | undefined>(
+    return createInvalidValidationResult<T | undefined>(
       {
         message: 'Kötelező érték.',
         severity: 'error',
@@ -37,7 +37,7 @@ export function validatePrimitiveUnion<T extends string>(
   }
 
   if (!isAllowedPrimitiveUnionValue(value, allowedValues)) {
-    return createInvalidValidationResult<string | undefined, T | undefined>(
+    return createInvalidValidationResult<T | undefined>(
       {
         message: 'Érvénytelen érték.',
         severity: 'error',
@@ -46,7 +46,7 @@ export function validatePrimitiveUnion<T extends string>(
     )
   }
 
-  return createValidValidationResult<string | undefined, T>(undefined, value)
+  return createValidValidationResult<T>(undefined as ValidationIssuesSchema<T>, value)
 }
 
 const isAllowedPrimitiveUnionValue = <T extends string>(

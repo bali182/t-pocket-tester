@@ -11,7 +11,7 @@ import { SectionGroup } from '../../common/SectionGroup'
 type LayoutSectionProps<T extends HasLayoutSchema> = {
   component: T
   editable: EditableSchema<T>
-  issues: ValidationIssuesSchema<EditableSchema<T>>
+  issues: ValidationIssuesSchema<T>
   onChange: (updated: EditableSchema<T>) => void
 }
 

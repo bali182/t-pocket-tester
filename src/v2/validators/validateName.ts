@@ -1,14 +1,9 @@
-import type { ValidationContextSchema, ValidatorSchema } from '../schemas/validation'
+import type { HasIdentitySchema } from '../schemas/components'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
-export const validateName: ValidatorSchema<string, string, [componentId: string, context: ValidationContextSchema]> = (
-  input,
-  currentValue,
-  componentId,
-  context,
-) => {
+export const validateName = (input: string, currentValue: string, id: string, values: readonly HasIdentitySchema[]) => {
   if (input === '') {
-    return createInvalidValidationResult<string, string>(
+    return createInvalidValidationResult<string>(
       {
         message: 'A név nem lehet üres.',
         severity: 'error',
@@ -17,12 +12,10 @@ export const validateName: ValidatorSchema<string, string, [componentId: string,
     )
   }
 
-  const hasDuplicateName = Object.values(context.project.components).some(
-    (component) => component.id !== componentId && component.name === input,
-  )
+  const hasDuplicateName = values.some((value) => value.id !== id && value.name === input)
 
   if (hasDuplicateName) {
-    return createInvalidValidationResult<string, string>(
+    return createInvalidValidationResult<string>(
       {
         message: 'Ez a név már foglalt.',
         severity: 'error',
@@ -31,5 +24,5 @@ export const validateName: ValidatorSchema<string, string, [componentId: string,
     )
   }
 
-  return createValidValidationResult<string, string>(undefined, input)
+  return createValidValidationResult<string>(undefined, input)
 }

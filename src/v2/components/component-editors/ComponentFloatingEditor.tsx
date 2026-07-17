@@ -2,7 +2,6 @@ import { type FC } from 'react'
 
 import { useEditableComponent } from '../../hooks/useEditableComponent'
 import type { ComponentSchema } from '../../schemas/components'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
@@ -33,7 +32,7 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
         <ComponentEditor
           component={editedComponent}
           editable={editableComponent}
-          issues={validationIssues as ValidationIssuesSchema<ComponentSchema>}
+          issues={validationIssues}
           onChange={setComponent}
         />
       </SectionGroup.Root>

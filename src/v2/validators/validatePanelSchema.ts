@@ -21,8 +21,8 @@ export const validatePanelSchema = (
   input: EditableSchema<PanelSchema>,
   currentValue: PanelSchema,
   context: ValidationContextSchema,
-): ValidationResultSchema<EditableSchema<PanelSchema>, PanelSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, context)
+): ValidationResultSchema<PanelSchema> => {
+  const nameResult = validateName(input.name, currentValue.name, input.id, Object.values(context.project.components))
   const colorResult = validateHexColor(input.color, currentValue.color)
   const layoutOrientationResult = validatePrimitiveUnion(
     input.layoutOrientation,
@@ -43,7 +43,7 @@ export const validatePanelSchema = (
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 0, minInclusive: false })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 0, minInclusive: false })
 
-  const issues: ValidationIssuesSchema<EditableSchema<PanelSchema>> = {
+  const issues: ValidationIssuesSchema<PanelSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
     borderRadius: borderRadiusResult.issues,
