@@ -1,65 +1,128 @@
-import { Box } from '@chakra-ui/react'
-import { ComponentProps, FC, useMemo } from 'react'
-import { EditableSchema } from '../../schemas/editable'
-import { StitchCornerSchema, StitchLineSchema } from '../../schemas/stitching'
+import { Box, Grid } from '@chakra-ui/react'
+import { useCallback, type FC } from 'react'
+
+import type { EditableSchema } from '../../schemas/editable'
+import type { StitchLineSchema } from '../../schemas/stitching'
+import { StitchLineCornerToggle } from './StitchLineCornerToggle'
+import { StitchLineEdgeToggle } from './StitchLineEdgeToggle'
 
 type StitchLineSidesAndCornersProps = {
-  stitchLine?: StitchLineSchema
-  editable?: EditableSchema<StitchLineSchema>
+  editable: EditableSchema<StitchLineSchema>
+  onChange: (updated: EditableSchema<StitchLineSchema>) => void
 }
 
-export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = () => {
-  return (
-    <Box>
-      <Corner corner="top-left" isSelected={true} />
-      <Corner corner="top-right" isSelected={true} />
-      <Corner corner="bottom-left" isSelected={true} />
-      <Corner corner="bottom-right" isSelected={true} />
-    </Box>
+type StitchLineSideFields = 'top' | 'right' | 'bottom' | 'left'
+type StitchLineCornerFields = 'topLeftCorner' | 'topRightCorner' | 'bottomRightCorner' | 'bottomLeftCorner'
+type StitchLineSideOrCornerFields = StitchLineCornerFields | StitchLineSideFields
+
+type CornerSidesSchema = {
+  first: StitchLineSideFields
+  second: StitchLineSideFields
+}
+
+const cornerSides: Record<StitchLineCornerFields, CornerSidesSchema> = {
+  bottomLeftCorner: { first: 'bottom', second: 'left' },
+  bottomRightCorner: { first: 'bottom', second: 'right' },
+  topLeftCorner: { first: 'top', second: 'left' },
+  topRightCorner: { first: 'top', second: 'right' },
+}
+
+export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ editable, onChange }) => {
+  const toggle = useCallback(
+    (field: StitchLineSideOrCornerFields): void => {
+      onChange({ ...editable, [field]: !editable[field] })
+    },
+    [editable, onChange],
   )
-}
 
-type CornerProps = {
-  corner: StitchCornerSchema
-  isSelected: boolean
-}
+  const isCornerDisabled = useCallback(
+    (corner: StitchLineCornerFields): boolean => {
+      const sides = cornerSides[corner]
 
-const Corner: FC<CornerProps> = ({ corner, isSelected }) => {
-  const borderRadiusProps = useMemo<ComponentProps<typeof Box>>(() => {
-    return {
-      borderTopLeftRadius: corner === 'top-left' ? 'md' : 0,
-      borderTopRightRadius: corner === 'top-right' ? 'md' : 0,
-      borderBottomLeftRadius: corner === 'bottom-left' ? 'md' : 0,
-      borderBottomRightRadius: corner === 'bottom-right' ? 'md' : 0,
-    }
-  }, [corner])
-
-  const marginProps = useMemo<ComponentProps<typeof Box>>(() => {
-    return {
-      marginTop: corner === 'top-left' || corner === 'top-right' ? 'md' : 0,
-      marginLeft: corner === 'top-left' || corner === 'bottom-left' ? 'md' : 0,
-      marginBottom: corner === 'bottom-left' || corner === 'bottom-right' ? 'md' : 0,
-      marginRight: corner === 'bottom-right' || corner === 'top-right' ? 'md' : 0,
-    }
-  }, [corner])
-
-  const borderWidthProps = useMemo<ComponentProps<typeof Box>>(() => {
-    return {
-      borderTopWidth: corner === 'top-left' || corner === 'top-right' ? 'medium' : 0,
-      borderLeftWidth: corner === 'top-left' || corner === 'bottom-left' ? 'medium' : 0,
-      borderBottomWidth: corner === 'bottom-left' || corner === 'bottom-right' ? 'medium' : 0,
-      borderRightWidth: corner === 'bottom-right' || corner === 'top-right' ? 'medium' : 0,
-    }
-  }, [corner])
+      return !editable[sides.first] || !editable[sides.second]
+    },
+    [editable],
+  )
 
   return (
-    <Box
-      {...borderRadiusProps}
-      {...marginProps}
-      {...borderWidthProps}
-      borderColor={isSelected ? 'border.info' : 'border.emphasized'}
-      width={10}
-      height={10}
-    />
+    <Grid
+      gap="2"
+      gridTemplateAreas={`
+        "left-start-offset top-direction right-start-offset"
+        "top-start-offset canvas top-end-offset"
+        "left-direction canvas right-direction"
+        "bottom-start-offset canvas bottom-end-offset"
+        "left-end-offset bottom-direction right-end-offset"
+      `}
+      gridTemplateColumns="auto minmax(0, 1fr) auto"
+      gridTemplateRows="auto auto auto auto auto"
+    >
+      <Grid
+        aspectRatio="4 / 3"
+        gap="0"
+        gridArea="canvas"
+        gridTemplateAreas={`
+          "top-left top top-right"
+          "left center right"
+          "bottom-left bottom bottom-right"
+        `}
+        gridTemplateColumns="auto minmax(0, 1fr) auto"
+        gridTemplateRows="auto minmax(0, 1fr) auto"
+      >
+        <StitchLineCornerToggle
+          label="Bal felső sarok"
+          corner="top-left"
+          disabled={isCornerDisabled('topLeftCorner')}
+          selected={editable.topLeftCorner}
+          onClick={() => toggle('topLeftCorner')}
+        />
+        <StitchLineEdgeToggle
+          label="Felső oldal"
+          selected={editable.top}
+          side="top"
+          onClick={() => toggle('top')}
+        />
+        <StitchLineCornerToggle
+          label="Jobb felső sarok"
+          corner="top-right"
+          disabled={isCornerDisabled('topRightCorner')}
+          selected={editable.topRightCorner}
+          onClick={() => toggle('topRightCorner')}
+        />
+        <StitchLineEdgeToggle
+          label="Bal oldal"
+          selected={editable.left}
+          side="left"
+          onClick={() => toggle('left')}
+        />
+        <Box gridArea="center" />
+        <StitchLineEdgeToggle
+          label="Jobb oldal"
+          selected={editable.right}
+          side="right"
+          onClick={() => toggle('right')}
+        />
+        <StitchLineCornerToggle
+          label="Bal alsó sarok"
+          corner="bottom-left"
+          disabled={isCornerDisabled('bottomLeftCorner')}
+          selected={editable.bottomLeftCorner}
+          onClick={() => toggle('bottomLeftCorner')}
+        />
+        <StitchLineEdgeToggle
+          label="Alsó oldal"
+          selected={editable.bottom}
+          side="bottom"
+          onClick={() => toggle('bottom')}
+        />
+        <StitchLineCornerToggle
+          label="Jobb alsó sarok"
+          corner="bottom-right"
+          disabled={isCornerDisabled('bottomRightCorner')}
+          selected={editable.bottomRightCorner}
+          onClick={() => toggle('bottomRightCorner')}
+        />
+      </Grid>
+    </Grid>
   )
 }

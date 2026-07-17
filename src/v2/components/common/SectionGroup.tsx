@@ -21,6 +21,10 @@ type SectionGroupSectionRowEditorProps = {
   children: ReactNode
 }
 
+type SectionGroupSectionFullWidthContentProps = {
+  children: ReactNode
+}
+
 const SectionGroupRoot: FC<SectionGroupRootProps> = ({ children }) => {
   return (
     <Grid gridTemplateColumns="max-content minmax(0, 1fr)" pb="3" rowGap="3">
@@ -63,9 +67,18 @@ const SectionGroupSectionRowEditor: FC<SectionGroupSectionRowEditorProps> = ({ c
   )
 }
 
+const SectionGroupSectionFullWidthContent: FC<SectionGroupSectionFullWidthContentProps> = ({ children }) => {
+  return (
+    <chakra.div gridColumn="1 / -1" minWidth="0" px="4">
+      {children}
+    </chakra.div>
+  )
+}
+
 export const SectionGroup = {
   Root: SectionGroupRoot,
   Section: SectionGroupSection,
+  SectionFullWidthContent: SectionGroupSectionFullWidthContent,
   SectionHeader: SectionGroupSectionHeader,
   SectionRowTitle: SectionGroupSectionRowTitle,
   SectionRowEditor: SectionGroupSectionRowEditor,
