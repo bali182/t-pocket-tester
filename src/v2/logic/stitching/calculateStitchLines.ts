@@ -1,7 +1,7 @@
-import type { ComponentSchema } from '../schemas/components'
-import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../schemas/computed'
-import type { StitchLineSchema } from '../schemas/stitching'
-import { isDefined } from '../utils/isDefined'
+import type { ComponentSchema } from '../../schemas/components'
+import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../../schemas/computed'
+import type { StitchLineSchema } from '../../schemas/stitching'
+import { isDefined } from '../../utils/isDefined'
 import { calculateStitchLine } from './calculateStitchLine'
 
 export const calculateStitchLines = (

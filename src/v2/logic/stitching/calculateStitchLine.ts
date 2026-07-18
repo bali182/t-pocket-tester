@@ -1,6 +1,6 @@
-import type { ComponentSchema } from '../schemas/components'
-import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../schemas/computed'
-import type { StitchLineSchema } from '../schemas/stitching'
+import type { ComponentSchema } from '../../schemas/components'
+import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../../schemas/computed'
+import type { StitchLineSchema } from '../../schemas/stitching'
 import { calculateStitchLineHoles } from './calculateStitchLineHoles'
 import { calculateStitchLinePaths } from './calculateStitchLinePaths'
 

@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 
-import type { PointSchema } from '../schemas/geometry'
-import type { StitchHoleSchema, StitchLineSchema } from '../schemas/stitching'
+import { PointSchema } from '../../schemas/geometry'
+import type { StitchHoleSchema, StitchLineSchema } from '../../schemas/stitching'
 import type { CalculatedStitchLinePath, StitchPathFragment, StitchSidePathFragment } from './calculateStitchLinePaths'
 import {
   createStitchHoleSegments,
@@ -122,10 +122,7 @@ const appendTraversal = (
   })
 }
 
-const calculateTraversalHoles = (
-  traversal: StitchHoleTraversal,
-  stitchHoleDistance: BigNumber,
-): StitchHoleSchema[] => {
+const calculateTraversalHoles = (traversal: StitchHoleTraversal, stitchHoleDistance: BigNumber): StitchHoleSchema[] => {
   const firstSegment = traversal.segments[0]
   if (!isDefined(firstSegment)) {
     return []

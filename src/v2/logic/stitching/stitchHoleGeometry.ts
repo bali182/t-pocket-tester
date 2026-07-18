@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import type { PointSchema } from '../schemas/geometry'
+import type { PointSchema } from '../../schemas/geometry'
 import type { StitchCornerPathFragment, StitchPathFragment } from './calculateStitchLinePaths'
 
 const ZERO = new BigNumber(0)
