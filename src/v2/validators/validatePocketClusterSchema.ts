@@ -18,8 +18,8 @@ export const validatePocketClusterSchema = (
   input: EditableSchema<PocketClusterSchema>,
   currentValue: PocketClusterSchema,
   context: ValidationContextSchema,
-): ValidationResultSchema<EditableSchema<PocketClusterSchema>, PocketClusterSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, context)
+): ValidationResultSchema<PocketClusterSchema> => {
+  const nameResult = validateName(input.name, currentValue.name, input.id, Object.values(context.project.components))
   const colorResult = validateHexColor(input.color, currentValue.color)
   const borderRadiusResult = validateNumber(input.borderRadius, currentValue.borderRadius, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
@@ -55,7 +55,7 @@ export const validatePocketClusterSchema = (
     min: 0,
     minInclusive: false,
   })
-  const issues: ValidationIssuesSchema<EditableSchema<PocketClusterSchema>> = {
+  const issues: ValidationIssuesSchema<PocketClusterSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
     borderRadius: borderRadiusResult.issues,

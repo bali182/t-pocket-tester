@@ -9,7 +9,7 @@ export function validateComponentSchema(
   input: EditableSchema<ComponentSchema>,
   currentValue: ComponentSchema,
   context: ValidationContextSchema,
-): ValidationResultSchema<EditableSchema<ComponentSchema>, ComponentSchema> {
+): ValidationResultSchema<ComponentSchema> {
   switch (input.type) {
     case 'root-panel':
       return validateRootPanelSchema(input, currentValue as RootPanelSchema, context)

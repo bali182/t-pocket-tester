@@ -8,7 +8,7 @@ export type ProjectSchema = {
   name: string
   root: string
   components: Record<string, ComponentSchema>
-  stitchLines: Record<string, StitchLineSchema>
+  stitchLines: StitchLineSchema[]
   editingSettings: ProjectEditingSettingSchema
   stitchingSettings: StitchingSettingsSchema
 }
@@ -18,5 +18,5 @@ export type ComputedProjectSchema = {
   name: string
   root: string
   components: Record<string, ComputedComponentSchema>
-  stitchLines: Record<string, ComputedStitchLineSchema>
+  stitchLines: ComputedStitchLineSchema[]
 }

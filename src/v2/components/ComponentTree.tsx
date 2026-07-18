@@ -1,13 +1,14 @@
 import {
   TreeView,
   createTreeCollection,
+  type TreeCollection,
   type TreeViewExpandedChangeDetails,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
 import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
-import { LuChevronRight } from 'react-icons/lu'
 
+import { PiCaretRight } from 'react-icons/pi'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useComponent } from '../hooks/useComponent'
 import { useComponentIcon } from '../hooks/useComponentIcon'
@@ -42,10 +43,10 @@ const ComponentTreeNodeIcon: FC<ComponentTreeNodeIconProps> = ({ type }) => {
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
   const project = useAtomValue(projectAtom)
   const rootComponent = useComponent(project.root)
-  const { onComponentClick } = useDrawAreaContext()
+  const { selectComponent } = useDrawAreaContext()
   const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])
 
-  const collection = useMemo(() => {
+  const collection = useMemo<TreeCollection<ComponentTreeNode>>(() => {
     const createNode = (component: ComponentSchema): ComponentTreeNode => {
       const childNodes: ComponentTreeNode[] = []
 
@@ -117,23 +118,9 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
         return
       }
 
-      const component = project.components[selectedComponentId]
-
-      if (!isDefined(component)) {
-        return
-      }
-
-      const element = document.querySelector<SVGGraphicsElement>(
-        `[data-component-id="${CSS.escape(selectedComponentId)}"]`,
-      )
-
-      if (!isDefined(element)) {
-        return
-      }
-
-      onComponentClick(component, element)
+      selectComponent(selectedComponentId)
     },
-    [onComponentClick, project.components],
+    [selectComponent],
   )
 
   const handleAddChild = useCallback((parentId: string): void => {
@@ -149,7 +136,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
       onSelectionChange={handleSelectionChange}
       selectedValue={selectedValue}
       selectionMode="single"
-      translations={{ treeLabel: 'Komponensek' }}
     >
       <TreeView.Tree>
         <TreeView.Node
@@ -164,7 +150,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
                 <TreeView.BranchControl>
                   <TreeView.BranchTrigger>
                     <TreeView.BranchIndicator asChild>
-                      <LuChevronRight />
+                      <PiCaretRight />
                     </TreeView.BranchIndicator>
                   </TreeView.BranchTrigger>
                   <ComponentTreeNodeIcon type={node.component.type} />

@@ -1,8 +1,9 @@
 import { HStack, IconButton, Menu } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
-import { LuChevronDown, LuChevronUp, LuPlus, LuTrash } from 'react-icons/lu'
+import { PiCaretDown, PiCaretUp } from 'react-icons/pi'
 
+import { PiPlus, PiTrash } from 'react-icons/pi'
 import type { ComponentSchema } from '../schemas/components'
 import { projectAtom } from '../state'
 import { addComponent } from '../utils/addComponent'
@@ -86,7 +87,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
         size="2xs"
         variant="ghost"
       >
-        <LuChevronUp />
+        <PiCaretUp />
       </IconButton>
       <IconButton
         aria-label="Elem mozgatása le"
@@ -95,12 +96,12 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
         size="2xs"
         variant="ghost"
       >
-        <LuChevronDown />
+        <PiCaretDown />
       </IconButton>
       <Menu.Root>
         <Menu.Trigger asChild>
           <IconButton aria-label="Elem hozzáadása" disabled={!canAdd} size="2xs" variant="ghost">
-            <LuPlus />
+            <PiPlus />
           </IconButton>
         </Menu.Trigger>
         <Menu.Positioner>
@@ -110,7 +111,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
         </Menu.Positioner>
       </Menu.Root>
       <IconButton aria-label="Elem törlése" disabled={!canDelete} onClick={handleDelete} size="2xs" variant="ghost">
-        <LuTrash />
+        <PiTrash />
       </IconButton>
     </HStack>
   )

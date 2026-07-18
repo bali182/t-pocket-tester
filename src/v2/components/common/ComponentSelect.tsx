@@ -1,0 +1,93 @@
+import {
+  HStack,
+  Select,
+  Text,
+  createListCollection,
+  type ListCollection,
+  type SelectValueChangeDetails,
+} from '@chakra-ui/react'
+import { useAtomValue } from 'jotai'
+import { useCallback, useMemo, type FC } from 'react'
+
+import { useComponent } from '../../hooks/useComponent'
+import { useComponentIcon } from '../../hooks/useComponentIcon'
+import type { ComponentSchema } from '../../schemas/components'
+import { projectAtom } from '../../state'
+import { isDefined } from '../../utils/isDefined'
+
+type ComponentSelectProps = {
+  componentId: string
+  onChange: (componentId: string) => void
+}
+
+export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, onChange }) => {
+  const project = useAtomValue(projectAtom)
+  const component = useComponent(componentId)
+  const Icon = useComponentIcon(component.type)
+  const collection = useMemo<ListCollection<ComponentSchema>>(
+    () =>
+      createListCollection<ComponentSchema>({
+        itemToString: (item) => item.name,
+        itemToValue: (item) => item.id,
+        items: Object.values(project.components),
+      }),
+    [project.components],
+  )
+
+  const handleValueChange = useCallback(
+    (details: SelectValueChangeDetails<ComponentSchema>): void => {
+      const nextComponentId = details.value[0]
+
+      if (!isDefined(nextComponentId)) {
+        return
+      }
+
+      onChange(nextComponentId)
+    },
+    [onChange],
+  )
+
+  return (
+    <Select.Root collection={collection} onValueChange={handleValueChange} size="xs" value={[componentId]}>
+      <Select.HiddenSelect />
+      <Select.Control>
+        <Select.Trigger>
+          <Select.ValueText asChild>
+            <HStack gap="1">
+              <Icon />
+              <Text>{component.name}</Text>
+              <Text color="fg.muted">(#{component.id})</Text>
+            </HStack>
+          </Select.ValueText>
+        </Select.Trigger>
+        <Select.IndicatorGroup>
+          <Select.Indicator />
+        </Select.IndicatorGroup>
+      </Select.Control>
+      <Select.Positioner>
+        <Select.Content maxHeight="400px" overflowY="auto">
+          {collection.items.map((item) => (
+            <ComponentSelectItem component={item} key={item.id} />
+          ))}
+        </Select.Content>
+      </Select.Positioner>
+    </Select.Root>
+  )
+}
+
+type ComponentSelectItemProps = {
+  component: ComponentSchema
+}
+
+const ComponentSelectItem: FC<ComponentSelectItemProps> = ({ component }) => {
+  const Icon = useComponentIcon(component.type)
+
+  return (
+    <Select.Item item={component}>
+      <Icon />
+      <Select.ItemText>{component.name}</Select.ItemText>
+      <Text color="fg.muted">(#{component.id})</Text>
+      <Select.ItemIndicator />
+    </Select.Item>
+  )
+}

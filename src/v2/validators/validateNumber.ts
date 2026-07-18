@@ -2,7 +2,7 @@ import { NumberFormatter, NumberParser } from '@internationalized/number'
 import BigNumber from 'bignumber.js'
 import isDecimal from 'validator/es/lib/isDecimal'
 
-import type { ValidationContextSchema, ValidatorSchema } from '../schemas/validation'
+import type { ValidationContextSchema } from '../schemas/validation'
 import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
@@ -15,13 +15,14 @@ export type NumberValidationConfigSchema = {
   multipleOf?: number
 }
 
-export const validateNumber: ValidatorSchema<
-  string,
-  number,
-  [context: ValidationContextSchema, config: NumberValidationConfigSchema]
-> = (input, currentValue, context, config) => {
+export const validateNumber = (
+  input: string,
+  currentValue: number,
+  context: ValidationContextSchema,
+  config: NumberValidationConfigSchema = {},
+) => {
   if (!isDecimal(input, { locale: context.language })) {
-    return createInvalidValidationResult<string, number>(
+    return createInvalidValidationResult<number>(
       {
         message: 'Érvénytelen számformátum.',
         severity: 'error',
@@ -38,7 +39,7 @@ export const validateNumber: ValidatorSchema<
   })
 
   if (!Number.isFinite(value)) {
-    return createInvalidValidationResult<string, number>(
+    return createInvalidValidationResult<number>(
       {
         message: 'Érvénytelen számformátum.',
         severity: 'error',
@@ -48,7 +49,7 @@ export const validateNumber: ValidatorSchema<
   }
 
   if (config.allowFraction === false && !Number.isInteger(value)) {
-    return createInvalidValidationResult<string, number>(
+    return createInvalidValidationResult<number>(
       {
         message: 'Csak egész érték adható meg.',
         severity: 'error',
@@ -61,7 +62,7 @@ export const validateNumber: ValidatorSchema<
     const isBelowMinimum = config.minInclusive === false ? value <= config.min : value < config.min
 
     if (isBelowMinimum) {
-      return createInvalidValidationResult<string, number>(
+      return createInvalidValidationResult<number>(
         {
           message:
             config.minInclusive === false
@@ -78,7 +79,7 @@ export const validateNumber: ValidatorSchema<
     const isAboveMaximum = config.maxInclusive === false ? value >= config.max : value > config.max
 
     if (isAboveMaximum) {
-      return createInvalidValidationResult<string, number>(
+      return createInvalidValidationResult<number>(
         {
           message:
             config.maxInclusive === false
@@ -92,7 +93,7 @@ export const validateNumber: ValidatorSchema<
   }
 
   if (isDefined(config.multipleOf) && !new BigNumber(value).mod(config.multipleOf).isZero()) {
-    return createInvalidValidationResult<string, number>(
+    return createInvalidValidationResult<number>(
       {
         message: `Lépték: ${formatter.format(config.multipleOf)}.`,
         severity: 'error',
@@ -101,5 +102,5 @@ export const validateNumber: ValidatorSchema<
     )
   }
 
-  return createValidValidationResult<string, number>(undefined, value)
+  return createValidValidationResult<number>(undefined, value)
 }

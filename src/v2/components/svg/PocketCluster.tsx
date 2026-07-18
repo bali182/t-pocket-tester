@@ -16,7 +16,7 @@ type PocketClusterProps = {
 }
 
 export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
-  const { isInteractive, onComponentClick } = useDrawAreaContext()
+  const { isInteractive, selectComponent } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const pocketCluster = useComponent<PocketClusterSchema>(componentId)
   const computedPocketCluster = useComputedComponent<ComputedPocketClusterSchema>(componentId)
@@ -33,9 +33,9 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
   const handleClick = useCallback<MouseEventHandler<SVGGElement>>(
     (event) => {
       event.stopPropagation()
-      onComponentClick(pocketCluster, event.currentTarget)
+      selectComponent(pocketCluster.id)
     },
-    [onComponentClick, pocketCluster],
+    [pocketCluster.id, selectComponent],
   )
 
   return (

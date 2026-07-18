@@ -12,12 +12,14 @@ type StitchLinesProps = {
 export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
   const project = useAtomValue(projectAtom)
   const computedProject = useAtomValue(computedProjectAtom)
-  const stitchLines = Object.values(project.stitchLines).filter((stitchLine) => stitchLine.componentId === componentId)
+  const stitchLines = project.stitchLines.filter((stitchLine) => stitchLine.componentId === componentId)
 
   return (
     <>
       {stitchLines.map((stitchLine) => {
-        const computedStitchLine = computedProject.stitchLines[stitchLine.id]
+        const computedStitchLine = computedProject.stitchLines.find(
+          (computedStitchLine) => computedStitchLine.stitchLineId === stitchLine.id,
+        )
 
         if (!isDefined(computedStitchLine)) {
           throw new Error(`Computed stitch line not found: ${stitchLine.id}`)

@@ -24,7 +24,7 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
 }) => {
   return (
     <>
-      <NameAndColorSection editable={editable} onChange={onChange} />
+      <NameAndColorSection editable={editable} issues={issues} onChange={onChange} />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <PocketClusterSettingsSection component={component} editable={editable} issues={issues} onChange={onChange} />

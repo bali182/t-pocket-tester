@@ -8,7 +8,7 @@ export const useStitchLines = (componentId: string): StitchLineSchema[] => {
   const project = useAtomValue(projectAtom)
 
   return useMemo(
-    () => Object.values(project.stitchLines).filter((stitchLine) => stitchLine.componentId === componentId),
+    () => project.stitchLines.filter((stitchLine) => stitchLine.componentId === componentId),
     [componentId, project.stitchLines],
   )
 }

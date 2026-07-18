@@ -1,9 +1,5 @@
-import {
-  LEATHER_BASE_COLOR,
-  STITCH_HOLE_COLOR,
-  STITCH_LINE_STORKE_COLOR,
-  STITCH_THREAD_COLOR,
-} from './constants/drawing'
+import { STROKE_THICKNESS } from '../v1/constants'
+import { LEATHER_BASE_COLOR, STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR } from './constants/drawing'
 import { HasCornerRadiusSchema, HasLayoutSchema, RootPanelSchema } from './schemas/components'
 import { ProjectSchema } from './schemas/project'
 import { StitchLineSchema } from './schemas/stitching'
@@ -38,7 +34,6 @@ export const defaultComponent: RootPanelSchema = {
 const _testStitchLine: StitchLineSchema = {
   id: 'test',
   name: 'Teszt line',
-  color: STITCH_LINE_STORKE_COLOR,
   componentId: defaultComponent.id,
   top: false,
   right: true,
@@ -65,7 +60,8 @@ const _testStitchLine: StitchLineSchema = {
   stitchHoleDistance: 3,
   stitchHoleThickness: 0.3,
   stitchHoleColor: STITCH_HOLE_COLOR,
-  stitchThreadColor: STITCH_THREAD_COLOR,
+  stitchLineColor: STITCH_LINE_STORKE_COLOR,
+  stitchLineThickness: STROKE_THICKNESS,
 }
 
 export const defaultProject: ProjectSchema = {
@@ -75,9 +71,9 @@ export const defaultProject: ProjectSchema = {
   components: {
     [defaultComponent.id]: defaultComponent,
   },
-  stitchLines: {
-    [_testStitchLine.id]: _testStitchLine,
-  },
+  stitchLines: [
+    //  _testStitchLine
+  ],
   editingSettings: {
     addComputedSizesToAutoSized: true,
     adjustCornerRadiiToParent: true,
@@ -88,6 +84,7 @@ export const defaultProject: ProjectSchema = {
     stitchHoleDistance: 3.35,
     stitchHoleThickness: 0.3,
     stitchHoleColor: STITCH_HOLE_COLOR,
-    stitchThreadColor: STITCH_THREAD_COLOR,
+    stitchLineColor: STITCH_LINE_STORKE_COLOR,
+    stitchLineThickness: STROKE_THICKNESS,
   },
 }

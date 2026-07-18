@@ -5,24 +5,22 @@ import { isDefined } from '../utils/isDefined'
 import { calculateStitchLine } from './calculateStitchLine'
 
 export const calculateStitchLines = (
-  stitchLines: Record<string, StitchLineSchema>,
+  stitchLines: StitchLineSchema[],
   components: Record<string, ComponentSchema>,
   computedComponents: Record<string, ComputedComponentSchema>,
-): Record<string, ComputedStitchLineSchema> => {
-  return Object.fromEntries(
-    Object.values(stitchLines).map((stitchLine) => {
-      const component = components[stitchLine.componentId]
-      const computedComponent = computedComponents[stitchLine.componentId]
+): ComputedStitchLineSchema[] => {
+  return stitchLines.map((stitchLine) => {
+    const component = components[stitchLine.componentId]
+    const computedComponent = computedComponents[stitchLine.componentId]
 
-      if (!isDefined(component)) {
-        throw new Error(`Stitch line component not found: ${stitchLine.componentId}`)
-      }
+    if (!isDefined(component)) {
+      throw new Error(`Stitch line component not found: ${stitchLine.componentId}`)
+    }
 
-      if (!isDefined(computedComponent)) {
-        throw new Error(`Computed stitch line component not found: ${stitchLine.componentId}`)
-      }
+    if (!isDefined(computedComponent)) {
+      throw new Error(`Computed stitch line component not found: ${stitchLine.componentId}`)
+    }
 
-      return [stitchLine.id, calculateStitchLine(stitchLine, component, computedComponent)]
-    }),
-  )
+    return calculateStitchLine(stitchLine, component, computedComponent)
+  })
 }

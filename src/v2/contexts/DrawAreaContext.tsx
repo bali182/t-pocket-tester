@@ -1,20 +1,21 @@
 import { createContext, useContext } from 'react'
 
-import type { ComponentSchema } from '../schemas/components'
 import { noop } from '../utils/noop'
 
 export type DrawAreaContextValue = {
-  component: ComponentSchema | undefined
-  element: SVGGraphicsElement | undefined
+  clearSelection: () => void
+  isComponentSelected: (componentId: string) => boolean
   isInteractive: boolean
-  onComponentClick: (component: ComponentSchema, element: SVGGraphicsElement) => void
+  selectComponent: (componentId: string) => void
+  selectStitchLine: (stitchLineId: string) => void
 }
 
 export const DrawAreaContext = createContext<DrawAreaContextValue>({
-  component: undefined,
-  element: undefined,
+  clearSelection: noop,
+  isComponentSelected: () => false,
   isInteractive: false,
-  onComponentClick: noop,
+  selectComponent: noop,
+  selectStitchLine: noop,
 })
 
 export const useDrawAreaContext = (): DrawAreaContextValue => {
