@@ -1,3 +1,5 @@
-import { nanoid } from 'nanoid'
+import { customAlphabet } from 'nanoid'
 
-export const id = (): string => nanoid(5)
+const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+export const id = customAlphabet(alphabet, 5)
