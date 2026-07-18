@@ -6,7 +6,7 @@ import { PiPlus } from 'react-icons/pi'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import type { ComponentSchema } from '../schemas/components'
 import { EditorSelectionSchema } from '../schemas/selection'
-import type { StitchLineSchema } from '../schemas/stitching'
+import type { ProjectStitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
 import { createStitchLine } from '../utils/createStitchLine'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
@@ -60,7 +60,7 @@ export const Editor: FC = () => {
     return project.components[selection.componentId]
   }, [project.components, selection])
 
-  const selectedStitchLine = useMemo<StitchLineSchema | undefined>(() => {
+  const selectedStitchLine = useMemo<ProjectStitchLineSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'stitch-line') {
       return undefined
     }
@@ -133,7 +133,7 @@ export const Editor: FC = () => {
               onClose={clearSelection}
             />
           )}
-          {isDefined(selectedStitchLine) && isDefined(anchorElement) && (
+          {isDefined(selectedStitchLine) && selectedStitchLine.type === 'rectangular-stitch-line' && isDefined(anchorElement) && (
             <StitchLineFloatingEditor
               stitchLine={selectedStitchLine}
               anchorElement={anchorElement}

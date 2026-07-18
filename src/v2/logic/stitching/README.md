@@ -1,8 +1,12 @@
 # Stitch lines
 
-This document describes the computed geometry behind a `StitchLineSchema`.
-The schema is editor-facing; the computed output is a set of SVG routes, each
-with its own path and stitch-hole list.
+This document describes the computed geometry behind project stitch lines. The
+editor-facing schemas share one computed output: a set of SVG routes, each with
+its own path and stitch-hole list.
+
+`StitchLineSchema` describes rectangle perimeter stitching. A
+`PocketClusterStitchLineSchema` describes independent stitching along the
+closed edge of each T-pocket in a pocket cluster.
 
 The schema has boolean flags for each component side and corner. In this
 document, an **enabled side** means one of `StitchLineSchema.top`, `.right`,
@@ -106,3 +110,20 @@ For a closed route without sharp corners, the final hole is also checked against
 the route start using the same minimum-distance factor. Too-close final holes
 are removed so the closing point does not create a duplicate or nearly
 overlapping hole.
+
+## T-pocket stitch lines
+
+A pocket-cluster stitch line creates one independent open route for every
+computed T-pocket. It never targets the front pocket and does not connect
+routes between T-pockets.
+
+The canonical direction is left-to-right for `up` and `down` clusters, and
+top-to-bottom for `left` and `right` clusters. The route follows the closed
+edge opposite the pocket opening, inset by `stitchMargin`. Its endpoints come
+from the inset line's intersections with the tapered pocket sides and are
+clamped to the T-pocket bounding rect before offsets are applied.
+
+Positive `startOffset` and `endOffset` extend the canonical route beyond those
+endpoints; negative offsets shorten it. `stitchDirection` chooses whether the
+first hole starts at the canonical start or end. Holes are calculated separately
+for every T-pocket route.

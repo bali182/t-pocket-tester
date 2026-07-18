@@ -34,6 +34,7 @@ export const defaultComponent: RootPanelSchema = {
 const _testStitchLine: StitchLineSchema = {
   id: 'test',
   name: 'Teszt line',
+  type: 'rectangular-stitch-line',
   componentId: defaultComponent.id,
   top: false,
   right: true,

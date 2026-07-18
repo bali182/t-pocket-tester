@@ -18,6 +18,11 @@ export type UseEditableStitchLineResult = {
 
 export const useEditableStitchLine = (stitchLineId: string): UseEditableStitchLineResult => {
   const stitchLine = useStitchLine(stitchLineId)
+
+  if (stitchLine.type !== 'rectangular-stitch-line') {
+    throw new Error('Expected a rectangular stitch line')
+  }
+
   const setProject = useSetAtom(projectAtom)
 
   const commit = useCallback(

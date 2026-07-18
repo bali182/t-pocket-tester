@@ -16,6 +16,7 @@ export const createStitchLine = (
   ...componentReferences,
   id: id(),
   name: getUnusedStitchLineName(project),
+  type: 'rectangular-stitch-line',
 })
 
 const defaultStitchLine: StitchLineConfigSchema = {

@@ -45,22 +45,12 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
       onPointerEnter={isInteractive ? handlePointerEnter : undefined}
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
-      {svgStyles.isSelected && (
-        <path
-          {...svgStyles.element}
-          d={pathData}
-          strokeWidth={STROKE_THICKNESS}
-        />
-      )}
+      {svgStyles.isSelected && <path {...svgStyles.element} d={pathData} strokeWidth={STROKE_THICKNESS} />}
       {computedPocketCluster.tPockets.map((pocket) => (
         <TPocket {...svgStyles.child} key={pocket.id} path={pocket.path} strokeWidth={STROKE_THICKNESS} />
       ))}
 
-      <path
-        {...svgStyles.child}
-        d={frontPocketPathData}
-        strokeWidth={STROKE_THICKNESS}
-      />
+      <path {...svgStyles.child} d={frontPocketPathData} strokeWidth={STROKE_THICKNESS} />
 
       <StitchLines componentId={pocketCluster.id} />
     </g>

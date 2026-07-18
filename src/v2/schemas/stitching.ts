@@ -56,12 +56,29 @@ export type StitchLineComponentReferencesSchema = {
   componentId: string
 }
 
+export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
 export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
 export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
 export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
 export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
 
-export type StitchLineSchema = HasIdentitySchema &
-  StitchingSettingsSchema &
-  StitchLineConfigSchema &
-  StitchLineComponentReferencesSchema
+export type BaseStitchLineSchema = HasIdentitySchema & StitchingSettingsSchema & StitchLineComponentReferencesSchema
+
+export type StitchLineSchema = BaseStitchLineSchema &
+  StitchLineConfigSchema & {
+    type: 'rectangular-stitch-line'
+  }
+
+export type PocketClusterStitchLineConfigSchema = {
+  enabled: boolean
+  startOffset: number
+  endOffset: number
+  stitchDirection: StitchDirectionSchema
+}
+
+export type PocketClusterStitchLineSchema = BaseStitchLineSchema &
+  PocketClusterStitchLineConfigSchema & {
+    type: 'pocket-cluster-stitch-line'
+  }
+
+export type ProjectStitchLineSchema = StitchLineSchema | PocketClusterStitchLineSchema

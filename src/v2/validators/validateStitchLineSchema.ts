@@ -103,6 +103,7 @@ export const validateStitchLineSchema = (
     stitchLineThickness: stitchLineThicknessResult.issues,
     stitchMargin: stitchMarginResult.issues,
     stitchLineColor: stitchThreadColorResult.issues,
+    type: undefined,
     top: undefined,
     topEndOffset: topEndOffsetResult.issues,
     topLeftCorner: undefined,
@@ -142,6 +143,7 @@ export const validateStitchLineSchema = (
     topRightCorner: input.topRightCorner,
     topStartOffset: topStartOffsetResult.committedValue,
     topStitchDirection: topStitchDirectionResult.committedValue,
+    type: currentValue.type,
   }
 
   if (
