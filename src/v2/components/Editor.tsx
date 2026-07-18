@@ -1,16 +1,17 @@
 import { Box, Button, Heading, HStack, Splitter, SplitterPanelData, SplitterResizeDetails } from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { PiPlus } from 'react-icons/pi'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import type { ComponentSchema } from '../schemas/components'
 import { EditorSelectionSchema } from '../schemas/selection'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
+import { createStitchLine } from '../utils/createStitchLine'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
-import { AddStitchLineMenu } from './AddStitchLineMenu'
+import { ComponentMenu } from './ComponentMenu'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
@@ -23,6 +24,17 @@ export const Editor: FC = () => {
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const project = useAtomValue(projectAtom)
+  const setProject = useSetAtom(projectAtom)
+
+  const handleAddStitchLine = useCallback(
+    (componentId: string): void => {
+      setProject((project) => ({
+        ...project,
+        stitchLines: [...project.stitchLines, createStitchLine(project, { componentId })],
+      }))
+    },
+    [setProject],
+  )
 
   const selectComponent = useCallback((componentId: string): void => {
     setSelection({ componentId, type: 'component' })
@@ -155,13 +167,14 @@ export const Editor: FC = () => {
             <Splitter.Panel display="flex" flexDirection="column" id="stitching" minHeight="0">
               <HStack justify="space-between" px="4" py="3">
                 <Heading size="sm">Varrás</Heading>
-                <AddStitchLineMenu
+                <ComponentMenu
                   trigger={
                     <Button size="2xs" variant="subtle">
                       <PiPlus />
                       Új varrás
                     </Button>
                   }
+                  onSelect={handleAddStitchLine}
                 />
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">

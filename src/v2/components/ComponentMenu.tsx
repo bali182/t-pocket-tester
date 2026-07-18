@@ -1,13 +1,13 @@
 import { Menu, Text } from '@chakra-ui/react'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { useCallback, useMemo, type FC, type ReactElement } from 'react'
 
 import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
 import { projectAtom } from '../state'
-import { createStitchLine } from '../utils/createStitchLine'
 
-type AddStitchLineMenuProps = {
+type ComponentMenuProps = {
+  onSelect: (componentId: string) => void
   trigger: ReactElement
 }
 
@@ -32,20 +32,9 @@ const ComponentMenuItem: FC<ComponentMenuItemProps> = ({ component, onSelect }) 
   )
 }
 
-export const AddStitchLineMenu: FC<AddStitchLineMenuProps> = ({ trigger }) => {
+export const ComponentMenu: FC<ComponentMenuProps> = ({ onSelect, trigger }) => {
   const project = useAtomValue(projectAtom)
-  const setProject = useSetAtom(projectAtom)
   const components = useMemo<ComponentSchema[]>(() => Object.values(project.components), [project.components])
-
-  const handleComponentSelect = useCallback(
-    (componentId: string): void => {
-      setProject((project) => ({
-        ...project,
-        stitchLines: [...project.stitchLines, createStitchLine(project, { componentId })],
-      }))
-    },
-    [setProject],
-  )
 
   return (
     <Menu.Root>
@@ -53,7 +42,7 @@ export const AddStitchLineMenu: FC<AddStitchLineMenuProps> = ({ trigger }) => {
       <Menu.Positioner>
         <Menu.Content maxHeight="400px" overflowY="auto">
           {components.map((component) => (
-            <ComponentMenuItem component={component} key={component.id} onSelect={handleComponentSelect} />
+            <ComponentMenuItem component={component} key={component.id} onSelect={onSelect} />
           ))}
         </Menu.Content>
       </Menu.Positioner>

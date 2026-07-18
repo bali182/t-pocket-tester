@@ -118,7 +118,7 @@ export const validateStitchLineSchema = (
     bottomRightCorner: input.bottomRightCorner,
     bottomStartOffset: bottomStartOffsetResult.committedValue,
     bottomStitchDirection: bottomStitchDirectionResult.committedValue,
-    componentId: currentValue.componentId,
+    componentId: input.componentId,
     id: currentValue.id,
     left: input.left,
     leftEndOffset: leftEndOffsetResult.committedValue,
