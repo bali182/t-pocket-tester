@@ -27,7 +27,7 @@ type SectionGroupSectionFullWidthContentProps = {
 
 const SectionGroupRoot: FC<SectionGroupRootProps> = ({ children }) => {
   return (
-    <Grid gridTemplateColumns="max-content minmax(0, 1fr)" pb="3" rowGap="3">
+    <Grid flex="1" gridTemplateColumns="max-content minmax(0, 1fr)" minH="0" overflowY="auto" pb="3" rowGap="3">
       {children}
     </Grid>
   )
