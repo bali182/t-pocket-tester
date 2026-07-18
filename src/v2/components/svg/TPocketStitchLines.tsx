@@ -1,19 +1,22 @@
 import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 
+import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { computedProjectAtom, projectAtom } from '../../state'
 import { isDefined } from '../../utils/isDefined'
-import { StitchLine } from './StitchLine'
+import { StitchLineRoute } from './StitchLineRoute'
 
-type StitchLinesProps = {
+type TPocketStitchLinesProps = {
   componentId: string
+  pocketIndex: number
 }
 
-export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
+export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ componentId, pocketIndex }) => {
   const project = useAtomValue(projectAtom)
   const computedProject = useAtomValue(computedProjectAtom)
   const stitchLines = project.stitchLines.filter(
-    (stitchLine) => stitchLine.componentId === componentId && stitchLine.type === 'component-bounds-stitch-line',
+    (stitchLine): stitchLine is PocketClusterStitchLineSchema =>
+      stitchLine.componentId === componentId && stitchLine.type === 'pocket-cluster-stitch-line',
   )
 
   return (
@@ -27,7 +30,13 @@ export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
           throw new Error(`Computed stitch line not found: ${stitchLine.id}`)
         }
 
-        return <StitchLine key={stitchLine.id} stitchLine={stitchLine} computedStitchLine={computedStitchLine} />
+        const route = computedStitchLine.routes[pocketIndex]
+
+        if (!isDefined(route)) {
+          return null
+        }
+
+        return <StitchLineRoute key={stitchLine.id} route={route} settings={stitchLine} />
       })}
     </>
   )

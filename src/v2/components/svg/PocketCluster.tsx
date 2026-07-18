@@ -1,4 +1,4 @@
-import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
+import { Fragment, useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
 import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
@@ -9,6 +9,7 @@ import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedPocketClusterSchema } from '../../schemas/computed'
 import { StitchLines } from './StitchLines'
 import { TPocket } from './TPocket'
+import { TPocketStitchLines } from './TPocketStitchLines'
 import { useSvgElementStyle } from './useSvgElementStyle'
 
 type PocketClusterProps = {
@@ -46,8 +47,11 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
       {svgStyles.isSelected && <path {...svgStyles.element} d={pathData} strokeWidth={STROKE_THICKNESS} />}
-      {computedPocketCluster.tPockets.map((pocket) => (
-        <TPocket {...svgStyles.child} key={pocket.id} path={pocket.path} strokeWidth={STROKE_THICKNESS} />
+      {computedPocketCluster.tPockets.map((pocket, pocketIndex) => (
+        <Fragment key={pocket.id}>
+          <TPocket {...svgStyles.child} path={pocket.path} strokeWidth={STROKE_THICKNESS} />
+          <TPocketStitchLines componentId={pocketCluster.id} pocketIndex={pocketIndex} />
+        </Fragment>
       ))}
 
       <path {...svgStyles.child} d={frontPocketPathData} strokeWidth={STROKE_THICKNESS} />
