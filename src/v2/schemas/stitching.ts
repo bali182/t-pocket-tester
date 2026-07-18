@@ -11,8 +11,9 @@ export type StitchingSettingsSchema = {
   stitchHoleLength: number
   stitchHoleDistance: number
   stitchHoleThickness: number
+  stitchLineThickness: number
   stitchHoleColor: string
-  stitchThreadColor: string
+  stitchLineColor: string
 }
 
 export type StitchLineConfigSchema = {

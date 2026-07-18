@@ -41,8 +41,14 @@ export const validateStitchLineSchema = (
     context,
     { min: 0, minInclusive: false },
   )
+  const stitchLineThicknessResult = validateNumber(
+    input.stitchHoleThickness,
+    currentValue.stitchHoleThickness,
+    context,
+    { min: 0, minInclusive: false },
+  )
   const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor)
-  const stitchThreadColorResult = validateHexColor(input.stitchThreadColor, currentValue.stitchThreadColor)
+  const stitchThreadColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor)
   const topStitchDirectionResult = validatePrimitiveUnion(
     input.topStitchDirection,
     currentValue.topStitchDirection,
@@ -63,20 +69,14 @@ export const validateStitchLineSchema = (
     currentValue.leftStitchDirection,
     verticalStitchDirectionValues,
   )
-  const topStartOffsetResult = validateNumber(input.topStartOffset, currentValue.topStartOffset, context, { min: 0 })
-  const topEndOffsetResult = validateNumber(input.topEndOffset, currentValue.topEndOffset, context, { min: 0 })
-  const rightStartOffsetResult = validateNumber(input.rightStartOffset, currentValue.rightStartOffset, context, {
-    min: 0,
-  })
-  const rightEndOffsetResult = validateNumber(input.rightEndOffset, currentValue.rightEndOffset, context, { min: 0 })
-  const bottomStartOffsetResult = validateNumber(input.bottomStartOffset, currentValue.bottomStartOffset, context, {
-    min: 0,
-  })
-  const bottomEndOffsetResult = validateNumber(input.bottomEndOffset, currentValue.bottomEndOffset, context, {
-    min: 0,
-  })
-  const leftStartOffsetResult = validateNumber(input.leftStartOffset, currentValue.leftStartOffset, context, { min: 0 })
-  const leftEndOffsetResult = validateNumber(input.leftEndOffset, currentValue.leftEndOffset, context, { min: 0 })
+  const topStartOffsetResult = validateNumber(input.topStartOffset, currentValue.topStartOffset, context)
+  const topEndOffsetResult = validateNumber(input.topEndOffset, currentValue.topEndOffset, context)
+  const rightStartOffsetResult = validateNumber(input.rightStartOffset, currentValue.rightStartOffset, context)
+  const rightEndOffsetResult = validateNumber(input.rightEndOffset, currentValue.rightEndOffset, context)
+  const bottomStartOffsetResult = validateNumber(input.bottomStartOffset, currentValue.bottomStartOffset, context)
+  const bottomEndOffsetResult = validateNumber(input.bottomEndOffset, currentValue.bottomEndOffset, context)
+  const leftStartOffsetResult = validateNumber(input.leftStartOffset, currentValue.leftStartOffset, context)
+  const leftEndOffsetResult = validateNumber(input.leftEndOffset, currentValue.leftEndOffset, context)
 
   const issues: ValidationIssuesSchema<StitchLineSchema> = {
     bottom: undefined,
@@ -100,8 +100,9 @@ export const validateStitchLineSchema = (
     stitchHoleDistance: stitchHoleDistanceResult.issues,
     stitchHoleLength: stitchHoleLengthResult.issues,
     stitchHoleThickness: stitchHoleThicknessResult.issues,
+    stitchLineThickness: stitchLineThicknessResult.issues,
     stitchMargin: stitchMarginResult.issues,
-    stitchThreadColor: stitchThreadColorResult.issues,
+    stitchLineColor: stitchThreadColorResult.issues,
     top: undefined,
     topEndOffset: topEndOffsetResult.issues,
     topLeftCorner: undefined,
@@ -132,8 +133,9 @@ export const validateStitchLineSchema = (
     stitchHoleDistance: stitchHoleDistanceResult.committedValue,
     stitchHoleLength: stitchHoleLengthResult.committedValue,
     stitchHoleThickness: stitchHoleThicknessResult.committedValue,
+    stitchLineThickness: stitchLineThicknessResult.committedValue,
     stitchMargin: stitchMarginResult.committedValue,
-    stitchThreadColor: stitchThreadColorResult.committedValue,
+    stitchLineColor: stitchThreadColorResult.committedValue,
     top: input.top,
     topEndOffset: topEndOffsetResult.committedValue,
     topLeftCorner: input.topLeftCorner,
@@ -148,6 +150,7 @@ export const validateStitchLineSchema = (
     !stitchHoleLengthResult.isValid ||
     !stitchHoleDistanceResult.isValid ||
     !stitchHoleThicknessResult.isValid ||
+    !stitchLineThicknessResult.isValid ||
     !stitchHoleColorResult.isValid ||
     !stitchThreadColorResult.isValid ||
     !topStitchDirectionResult.isValid ||

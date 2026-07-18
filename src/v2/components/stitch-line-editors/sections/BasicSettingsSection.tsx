@@ -1,24 +1,20 @@
 import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 
-import { ColorInput } from '../../common/ColorInput'
-import { SectionGroup } from '../../common/SectionGroup'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { StitchLineSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { isDefined } from '../../../utils/isDefined'
+import { ColorInput } from '../../common/ColorInput'
+import { SectionGroup } from '../../common/SectionGroup'
 
-type NameAndColorsSectionProps = {
+type BasicSettingsSectionProps = {
   editable: EditableSchema<StitchLineSchema>
   issues: ValidationIssuesSchema<StitchLineSchema>
   onChange: (updated: EditableSchema<StitchLineSchema>) => void
 }
 
-export const NameAndColorsSection = ({
-  editable,
-  issues,
-  onChange,
-}: NameAndColorsSectionProps): ReactNode => {
+export const BasicSettingsSection = ({ editable, issues, onChange }: BasicSettingsSectionProps): ReactNode => {
   const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
 
   const handleNameChange = useCallback(
@@ -33,9 +29,9 @@ export const NameAndColorsSection = ({
     },
     [editable, onChange],
   )
-  const handleStitchThreadColorChange = useCallback(
+  const handleStitchLineColorChange = useCallback(
     (stitchThreadColor: string): void => {
-      onChange({ ...editable, stitchThreadColor })
+      onChange({ ...editable, stitchLineColor: stitchThreadColor })
     },
     [editable, onChange],
   )
@@ -51,15 +47,19 @@ export const NameAndColorsSection = ({
 
       <SectionGroup.SectionRowTitle>Lyuk színe</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <ColorInput issue={issues.stitchHoleColor} onChange={handleStitchHoleColorChange} value={editable.stitchHoleColor} />
+        <ColorInput
+          issue={issues.stitchHoleColor}
+          onChange={handleStitchHoleColorChange}
+          value={editable.stitchHoleColor}
+        />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Cérna színe</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>Vonal színe</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ColorInput
-          issue={issues.stitchThreadColor}
-          onChange={handleStitchThreadColorChange}
-          value={editable.stitchThreadColor}
+          issue={issues.stitchLineColor}
+          onChange={handleStitchLineColorChange}
+          value={editable.stitchLineColor}
         />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>

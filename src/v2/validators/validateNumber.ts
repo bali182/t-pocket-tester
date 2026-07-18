@@ -19,7 +19,7 @@ export const validateNumber = (
   input: string,
   currentValue: number,
   context: ValidationContextSchema,
-  config: NumberValidationConfigSchema,
+  config: NumberValidationConfigSchema = {},
 ) => {
   if (!isDecimal(input, { locale: context.language })) {
     return createInvalidValidationResult<number>(
