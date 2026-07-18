@@ -4,12 +4,13 @@ This document describes the computed geometry behind project stitch lines. The
 editor-facing schemas share one computed output: a set of SVG routes, each with
 its own path and stitch-hole list.
 
-`StitchLineSchema` describes rectangle perimeter stitching. A
-`PocketClusterStitchLineSchema` describes independent stitching along the
-closed edge of each T-pocket in a pocket cluster.
+`ComponentBoundsStitchLineSchema` describes stitching around selected portions
+of a component boundary. A `PocketClusterStitchLineSchema` describes
+independent stitching along the closed edge of each T-pocket in a pocket
+cluster.
 
 The schema has boolean flags for each component side and corner. In this
-document, an **enabled side** means one of `StitchLineSchema.top`, `.right`,
+document, an **enabled side** means one of `ComponentBoundsStitchLineSchema.top`, `.right`,
 `.bottom`, or `.left` is `true`. An **enabled corner** means the corresponding
 `topLeftCorner`, `topRightCorner`, `bottomRightCorner`, or `bottomLeftCorner`
 field is `true`. These terms do not refer to UI selection.
@@ -45,7 +46,7 @@ An explicitly enabled corner is the only thing that connects its two sides.
 Two sides that merely meet at a zero-radius point remain separate routes when
 that corner is not enabled.
 
-The `StitchLineSchema` `...StartOffset` and `...EndOffset` fields control the
+The `ComponentBoundsStitchLineSchema` `...StartOffset` and `...EndOffset` fields control the
 two ends of a side when that end is not attached to an enabled corner. A
 positive offset extends the side at that end; a negative offset shortens it.
 At an end attached to an enabled corner the offset is ignored, so the side and

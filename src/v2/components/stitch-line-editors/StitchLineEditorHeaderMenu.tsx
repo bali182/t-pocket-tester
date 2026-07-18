@@ -3,13 +3,13 @@ import { useSetAtom } from 'jotai'
 import { useCallback, type FC } from 'react'
 import { PiTrash } from 'react-icons/pi'
 
-import type { ComponentBoundsStitchLineSchema } from '../../schemas/stitching'
+import type { StitchLineSchema } from '../../schemas/stitching'
 import { projectAtom } from '../../state'
 import { removeStitchLine } from '../../utils/removeStitchLine'
 
 type StitchLineEditorHeaderMenuProps = {
   onClose: () => void
-  stitchLine: ComponentBoundsStitchLineSchema
+  stitchLine: StitchLineSchema
 }
 
 export const StitchLineEditorHeaderMenu: FC<StitchLineEditorHeaderMenuProps> = ({ onClose, stitchLine }) => {

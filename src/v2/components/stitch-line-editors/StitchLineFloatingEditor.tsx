@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 
 import { useEditableStitchLine } from '../../hooks/useEditableStitchLine'
-import type { ComponentBoundsStitchLineSchema } from '../../schemas/stitching'
+import type { StitchLineSchema } from '../../schemas/stitching'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
@@ -11,7 +11,7 @@ import { StitchLineEditorHeaderMenu } from './StitchLineEditorHeaderMenu'
 type StitchLineFloatingEditorProps = {
   anchorElement: SVGGraphicsElement
   onClose: () => void
-  stitchLine: ComponentBoundsStitchLineSchema
+  stitchLine: StitchLineSchema
 }
 
 export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ anchorElement, onClose, stitchLine }) => {
@@ -26,7 +26,12 @@ export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ an
         title={`#${editedStitchLine.id}`}
       />
       <SectionGroup.Root>
-        <StitchLineEditor editable={editableStitchLine} issues={validationIssues} onChange={setStitchLine} />
+        <StitchLineEditor
+          editable={editableStitchLine}
+          issues={validationIssues}
+          onChange={setStitchLine}
+          stitchLine={editedStitchLine}
+        />
       </SectionGroup.Root>
     </FloatingEditor>
   )

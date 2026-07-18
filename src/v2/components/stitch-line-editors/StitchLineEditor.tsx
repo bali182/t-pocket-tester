@@ -1,24 +1,28 @@
 import { type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { ComponentBoundsStitchLineSchema } from '../../schemas/stitching'
+import type { ComponentBoundsStitchLineSchema, StitchLineSchema } from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { BasicSettingsSection } from './sections/BasicSettingsSection'
-import { StitchSidesAndCornersSection } from './sections/StitchSidesAndCornersSection'
-import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
+import { ComponentBoundsStitchLineEditor } from './ComponentBoundsStitchLineEditor'
 
 type StitchLineEditorProps = {
-  editable: EditableSchema<ComponentBoundsStitchLineSchema>
-  issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
-  onChange: (updated: EditableSchema<ComponentBoundsStitchLineSchema>) => void
+  editable: EditableSchema<StitchLineSchema>
+  issues: ValidationIssuesSchema<StitchLineSchema>
+  onChange: (updated: EditableSchema<StitchLineSchema>) => void
+  stitchLine: StitchLineSchema
 }
 
-export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, onChange }) => {
-  return (
-    <>
-      <BasicSettingsSection editable={editable} issues={issues} onChange={onChange} />
-      <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
-      <StitchingSettingsSection editable={editable} issues={issues} onChange={onChange} />
-    </>
-  )
+export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, onChange, stitchLine }) => {
+  switch (stitchLine.type) {
+    case 'component-bounds-stitch-line':
+      return (
+        <ComponentBoundsStitchLineEditor
+          editable={editable as EditableSchema<ComponentBoundsStitchLineSchema>}
+          issues={issues as ValidationIssuesSchema<ComponentBoundsStitchLineSchema>}
+          onChange={onChange}
+        />
+      )
+    case 'pocket-cluster-stitch-line':
+      return null
+  }
 }

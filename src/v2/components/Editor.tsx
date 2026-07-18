@@ -133,7 +133,7 @@ export const Editor: FC = () => {
               onClose={clearSelection}
             />
           )}
-          {isDefined(selectedStitchLine) && selectedStitchLine.type === 'component-bounds-stitch-line' && isDefined(anchorElement) && (
+          {isDefined(selectedStitchLine) && isDefined(anchorElement) && (
             <StitchLineFloatingEditor
               stitchLine={selectedStitchLine}
               anchorElement={anchorElement}
