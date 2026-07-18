@@ -71,7 +71,7 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
     (corner: StitchLineCornerFields): boolean => {
       const sides = cornerSides[corner]
 
-      return !editable[sides.first] || !editable[sides.second]
+      return !editable[sides.first] && !editable[sides.second]
     },
     [editable],
   )
