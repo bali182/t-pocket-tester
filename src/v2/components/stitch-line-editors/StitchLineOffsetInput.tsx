@@ -40,25 +40,26 @@ type StitchLineOffsetInputConfiguration = {
   label: string
 }
 
+// First 4 have start/end swapped because rendering logic is going cannonical, so start and end are different on bottom and left.,
 const OFFSET_INPUT_CONFIGURATIONS: Record<StitchLineOffsetField, StitchLineOffsetInputConfiguration> = {
   bottomEndOffset: {
-    gridArea: 'bottom-end-offset',
-    icon: PiArrowLineRight,
+    gridArea: 'bottom-start-offset',
+    icon: PiArrowLineLeft,
     label: 'Alsó oldal végpontjának eltolása',
   },
   bottomStartOffset: {
-    gridArea: 'bottom-start-offset',
-    icon: PiArrowLineLeft,
+    gridArea: 'bottom-end-offset',
+    icon: PiArrowLineRight,
     label: 'Alsó oldal kezdőpontjának eltolása',
   },
   leftEndOffset: {
-    gridArea: 'left-end-offset',
-    icon: PiArrowLineDown,
+    gridArea: 'left-start-offset',
+    icon: PiArrowLineUp,
     label: 'Bal oldal végpontjának eltolása',
   },
   leftStartOffset: {
-    gridArea: 'left-start-offset',
-    icon: PiArrowLineUp,
+    gridArea: 'left-end-offset',
+    icon: PiArrowLineDown,
     label: 'Bal oldal kezdőpontjának eltolása',
   },
   rightEndOffset: {
