@@ -5,6 +5,7 @@ import type { StitchLineSchema } from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { BasicSettingsSection } from './sections/BasicSettingsSection'
 import { StitchSidesAndCornersSection } from './sections/StitchSidesAndCornersSection'
+import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
 
 type StitchLineEditorProps = {
   editable: EditableSchema<StitchLineSchema>
@@ -17,6 +18,7 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, 
     <>
       <BasicSettingsSection editable={editable} issues={issues} onChange={onChange} />
       <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
+      <StitchingSettingsSection editable={editable} issues={issues} onChange={onChange} />
     </>
   )
 }

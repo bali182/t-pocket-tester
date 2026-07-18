@@ -42,8 +42,8 @@ export const validateStitchLineSchema = (
     { min: 0, minInclusive: false },
   )
   const stitchLineThicknessResult = validateNumber(
-    input.stitchHoleThickness,
-    currentValue.stitchHoleThickness,
+    input.stitchLineThickness,
+    currentValue.stitchLineThickness,
     context,
     { min: 0, minInclusive: false },
   )
