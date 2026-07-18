@@ -64,9 +64,9 @@ export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bo
 
 export type BaseStitchLineSchema = HasIdentitySchema & StitchingSettingsSchema & StitchLineComponentReferencesSchema
 
-export type StitchLineSchema = BaseStitchLineSchema &
+export type ComponentBoundsStitchLineSchema = BaseStitchLineSchema &
   StitchLineConfigSchema & {
-    type: 'rectangular-stitch-line'
+    type: 'component-bounds-stitch-line'
   }
 
 export type PocketClusterStitchLineConfigSchema = {
@@ -81,4 +81,4 @@ export type PocketClusterStitchLineSchema = BaseStitchLineSchema &
     type: 'pocket-cluster-stitch-line'
   }
 
-export type ProjectStitchLineSchema = StitchLineSchema | PocketClusterStitchLineSchema
+export type StitchLineSchema = ComponentBoundsStitchLineSchema | PocketClusterStitchLineSchema

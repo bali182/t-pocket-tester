@@ -2,7 +2,7 @@ import { STROKE_THICKNESS } from '../v1/constants'
 import { LEATHER_BASE_COLOR, STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR } from './constants/drawing'
 import { HasCornerRadiusSchema, HasLayoutSchema, RootPanelSchema } from './schemas/components'
 import { ProjectSchema } from './schemas/project'
-import { StitchLineSchema } from './schemas/stitching'
+import { ComponentBoundsStitchLineSchema } from './schemas/stitching'
 
 const defaultHasCornerRadius: HasCornerRadiusSchema = {
   borderRadius: 0,
@@ -31,10 +31,10 @@ export const defaultComponent: RootPanelSchema = {
   height: 100,
 }
 
-const _testStitchLine: StitchLineSchema = {
+const _testStitchLine: ComponentBoundsStitchLineSchema = {
   id: 'test',
   name: 'Teszt line',
-  type: 'rectangular-stitch-line',
+  type: 'component-bounds-stitch-line',
   componentId: defaultComponent.id,
   top: false,
   right: true,

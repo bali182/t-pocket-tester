@@ -1,10 +1,10 @@
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 
-import type { ProjectStitchLineSchema } from '../schemas/stitching'
+import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
 
-export const useStitchLines = (componentId: string): ProjectStitchLineSchema[] => {
+export const useStitchLines = (componentId: string): StitchLineSchema[] => {
   const project = useAtomValue(projectAtom)
 
   return useMemo(

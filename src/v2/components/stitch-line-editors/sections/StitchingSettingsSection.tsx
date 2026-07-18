@@ -1,16 +1,16 @@
 import { useCallback, type ReactNode } from 'react'
 
 import type { EditableSchema } from '../../../schemas/editable'
-import type { StitchLineSchema } from '../../../schemas/stitching'
+import type { ComponentBoundsStitchLineSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { ColorInput } from '../../common/ColorInput'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
 type StitchingSettingsSectionProps = {
-  editable: EditableSchema<StitchLineSchema>
-  issues: ValidationIssuesSchema<StitchLineSchema>
-  onChange: (updated: EditableSchema<StitchLineSchema>) => void
+  editable: EditableSchema<ComponentBoundsStitchLineSchema>
+  issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
+  onChange: (updated: EditableSchema<ComponentBoundsStitchLineSchema>) => void
 }
 
 export const StitchingSettingsSection = ({ editable, issues, onChange }: StitchingSettingsSectionProps): ReactNode => {

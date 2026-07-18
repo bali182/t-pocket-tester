@@ -2,7 +2,7 @@ import type { ProjectSchema } from '../schemas/project'
 import type {
   StitchLineComponentReferencesSchema,
   StitchLineConfigSchema,
-  StitchLineSchema,
+  ComponentBoundsStitchLineSchema,
 } from '../schemas/stitching'
 import { getUnusedStitchLineName } from './getUnusedStitchLineName'
 import { id } from './id'
@@ -10,13 +10,13 @@ import { id } from './id'
 export const createStitchLine = (
   project: ProjectSchema,
   componentReferences: StitchLineComponentReferencesSchema,
-): StitchLineSchema => ({
+): ComponentBoundsStitchLineSchema => ({
   ...defaultStitchLine,
   ...project.stitchingSettings,
   ...componentReferences,
   id: id(),
   name: getUnusedStitchLineName(project),
-  type: 'rectangular-stitch-line',
+  type: 'component-bounds-stitch-line',
 })
 
 const defaultStitchLine: StitchLineConfigSchema = {

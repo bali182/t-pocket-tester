@@ -13,7 +13,7 @@ import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiNeedle, PiPlus, PiTrash } from 'react-icons/pi'
 import { TbNeedleThread } from 'react-icons/tb'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
-import type { ProjectStitchLineSchema } from '../schemas/stitching'
+import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
 import { createStitchLine } from '../utils/createStitchLine'
 import { isDefined } from '../utils/isDefined'
@@ -24,7 +24,7 @@ type StitchLineTreeNode = {
   children?: StitchLineTreeNode[]
   id: string
   name: string
-  stitchLine?: ProjectStitchLineSchema
+  stitchLine?: StitchLineSchema
 }
 
 type StitchLineTreeProps = {

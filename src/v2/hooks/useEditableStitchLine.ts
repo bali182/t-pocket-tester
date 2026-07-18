@@ -2,7 +2,7 @@ import { useSetAtom } from 'jotai'
 import { useCallback } from 'react'
 
 import type { EditableSchema } from '../schemas/editable'
-import type { StitchLineSchema } from '../schemas/stitching'
+import type { ComponentBoundsStitchLineSchema } from '../schemas/stitching'
 import type { ValidationIssuesSchema } from '../schemas/validation'
 import { projectAtom } from '../state'
 import { validateStitchLineSchema } from '../validators/validateStitchLineSchema'
@@ -10,23 +10,23 @@ import { useEditableModel } from './useEditableModel'
 import { useStitchLine } from './useStitchLine'
 
 export type UseEditableStitchLineResult = {
-  editableStitchLine: EditableSchema<StitchLineSchema>
-  setStitchLine: (stitchLine: EditableSchema<StitchLineSchema>) => void
-  stitchLine: StitchLineSchema
-  validationIssues: ValidationIssuesSchema<StitchLineSchema>
+  editableStitchLine: EditableSchema<ComponentBoundsStitchLineSchema>
+  setStitchLine: (stitchLine: EditableSchema<ComponentBoundsStitchLineSchema>) => void
+  stitchLine: ComponentBoundsStitchLineSchema
+  validationIssues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
 }
 
 export const useEditableStitchLine = (stitchLineId: string): UseEditableStitchLineResult => {
   const stitchLine = useStitchLine(stitchLineId)
 
-  if (stitchLine.type !== 'rectangular-stitch-line') {
+  if (stitchLine.type !== 'component-bounds-stitch-line') {
     throw new Error('Expected a rectangular stitch line')
   }
 
   const setProject = useSetAtom(projectAtom)
 
   const commit = useCallback(
-    (updatedStitchLine: StitchLineSchema): void => {
+    (updatedStitchLine: ComponentBoundsStitchLineSchema): void => {
       setProject((project) => ({
         ...project,
         stitchLines: project.stitchLines.map((candidate) =>

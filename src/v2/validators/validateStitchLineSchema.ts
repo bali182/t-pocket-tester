@@ -1,7 +1,7 @@
 import type { EditableSchema } from '../schemas/editable'
 import type {
   HorizontalStitchDirectionSchema,
-  StitchLineSchema,
+  ComponentBoundsStitchLineSchema,
   VerticalStitchDirectionSchema,
 } from '../schemas/stitching'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
@@ -22,10 +22,10 @@ const verticalStitchDirectionValues: Record<VerticalStitchDirectionSchema, boole
 }
 
 export const validateStitchLineSchema = (
-  input: EditableSchema<StitchLineSchema>,
-  currentValue: StitchLineSchema,
+  input: EditableSchema<ComponentBoundsStitchLineSchema>,
+  currentValue: ComponentBoundsStitchLineSchema,
   context: ValidationContextSchema,
-): ValidationResultSchema<StitchLineSchema> => {
+): ValidationResultSchema<ComponentBoundsStitchLineSchema> => {
   const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines)
   const stitchMarginResult = validateNumber(input.stitchMargin, currentValue.stitchMargin, context, { min: 2 })
   const stitchHoleLengthResult = validateNumber(input.stitchHoleLength, currentValue.stitchHoleLength, context, {
@@ -78,7 +78,7 @@ export const validateStitchLineSchema = (
   const leftStartOffsetResult = validateNumber(input.leftStartOffset, currentValue.leftStartOffset, context)
   const leftEndOffsetResult = validateNumber(input.leftEndOffset, currentValue.leftEndOffset, context)
 
-  const issues: ValidationIssuesSchema<StitchLineSchema> = {
+  const issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema> = {
     bottom: undefined,
     bottomEndOffset: bottomEndOffsetResult.issues,
     bottomLeftCorner: undefined,
@@ -112,7 +112,7 @@ export const validateStitchLineSchema = (
     topStitchDirection: topStitchDirectionResult.issues,
   }
 
-  const committedValue: StitchLineSchema = {
+  const committedValue: ComponentBoundsStitchLineSchema = {
     bottom: input.bottom,
     bottomEndOffset: bottomEndOffsetResult.committedValue,
     bottomLeftCorner: input.bottomLeftCorner,

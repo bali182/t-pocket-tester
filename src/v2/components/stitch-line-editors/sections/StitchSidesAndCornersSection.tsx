@@ -1,13 +1,13 @@
 import { EditableSchema } from '../../../schemas/editable'
-import { StitchLineSchema } from '../../../schemas/stitching'
+import { ComponentBoundsStitchLineSchema } from '../../../schemas/stitching'
 import { ValidationIssuesSchema } from '../../../schemas/validation'
 import { SectionGroup } from '../../common/SectionGroup'
 import { StitchLineSidesAndCorners } from '../StitchLineSidesAndCorners'
 
 type StitchSidesAndCornersSectionProps = {
-  editable: EditableSchema<StitchLineSchema>
-  issues: ValidationIssuesSchema<StitchLineSchema>
-  onChange: (updated: EditableSchema<StitchLineSchema>) => void
+  editable: EditableSchema<ComponentBoundsStitchLineSchema>
+  issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
+  onChange: (updated: EditableSchema<ComponentBoundsStitchLineSchema>) => void
 }
 
 export const StitchSidesAndCornersSection = ({ editable, issues, onChange }: StitchSidesAndCornersSectionProps) => {
