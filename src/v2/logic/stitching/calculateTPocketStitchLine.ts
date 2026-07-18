@@ -4,8 +4,8 @@ import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedTPocketSchema } from '../../schemas/computed'
 import type { LineSchema, PathSchema } from '../../schemas/geometry'
 import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
-import { getTPocketTabDepth } from '../pocketUtils'
 import { clamp } from '../../utils/clamp'
+import { getTPocketTabDepth } from '../pocketUtils'
 
 export type CalculatedTPocketStitchLine = {
   line: LineSchema
@@ -25,9 +25,10 @@ export const calculateTPocketStitchLine = (
   const stitchMargin = new BigNumber(stitchLine.stitchMargin)
   const taper = new BigNumber(normalizedPocketCluster.tPocketTaper)
   const tabDepth = getTPocketTabDepth(normalizedPocketCluster, boundingRect)
-  const stackLength = normalizedPocketCluster.orientation === 'up' || normalizedPocketCluster.orientation === 'down'
-    ? boundingRect.height
-    : boundingRect.width
+  const stackLength =
+    normalizedPocketCluster.orientation === 'up' || normalizedPocketCluster.orientation === 'down'
+      ? boundingRect.height
+      : boundingRect.width
   const taperLength = stackLength.minus(tabDepth)
   const taperProgress = taperLength.isZero() ? new BigNumber(0) : stitchMargin.dividedBy(taperLength)
   const startInset = taper.minus(taper.times(taperProgress))

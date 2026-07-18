@@ -10,17 +10,17 @@ export const calculateStitchLine = (
   computedComponent: ComputedComponentSchema,
 ): ComputedStitchLineSchema => {
   switch (stitchLine.type) {
-    case 'component-bounds-stitch-line':
+    case 'component-bounds-stitch-line': {
       return calculateComponentBoundsStitchLine(stitchLine, component, computedComponent)
-    case 'pocket-cluster-stitch-line':
+    }
+    case 'pocket-cluster-stitch-line': {
       if (component.type !== 'pocket-cluster') {
         throw new Error('Pocket cluster stitch line requires a pocket cluster component')
       }
-
       if (computedComponent.type !== 'computed-pocket-cluster') {
         throw new Error('Pocket cluster stitch line requires a computed pocket cluster component')
       }
-
       return calculatePocketClusterStitchLine(stitchLine, component, computedComponent)
+    }
   }
 }

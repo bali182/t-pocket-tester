@@ -1,7 +1,8 @@
 import BigNumber from 'bignumber.js'
 
 import { PointSchema } from '../../schemas/geometry'
-import type { StitchHoleSchema, ComponentBoundsStitchLineSchema } from '../../schemas/stitching'
+import type { ComponentBoundsStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
+import { isDefined } from '../../utils/isDefined'
 import type { CalculatedStitchLinePath, StitchPathFragment, StitchSidePathFragment } from './calculateStitchLinePaths'
 import {
   createStitchHoleSegments,
@@ -71,7 +72,10 @@ const calculateStitchHoleTraversals = (
   return traversals
 }
 
-const orientFragments = (stitchLine: ComponentBoundsStitchLineSchema, fragments: StitchPathFragment[]): StitchPathFragment[] => {
+const orientFragments = (
+  stitchLine: ComponentBoundsStitchLineSchema,
+  fragments: StitchPathFragment[],
+): StitchPathFragment[] => {
   if (fragments.some((fragment) => fragment.type === 'corner')) {
     return fragments
   }
@@ -207,8 +211,4 @@ const isSharpCorner = (fragment: StitchPathFragment): boolean => {
 
 const hasSharpCorner = (fragments: StitchPathFragment[]): boolean => {
   return fragments.some(isSharpCorner)
-}
-
-const isDefined = <T>(value: T | undefined): value is T => {
-  return value !== undefined
 }
