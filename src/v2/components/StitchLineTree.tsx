@@ -15,10 +15,9 @@ import { TbNeedleThread } from 'react-icons/tb'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
-import { createStitchLine } from '../utils/createStitchLine'
 import { isDefined } from '../utils/isDefined'
 import { removeStitchLine } from '../utils/removeStitchLine'
-import { ComponentMenu } from './ComponentMenu'
+import { AddStitchLinePopover } from './AddStitchLinePopover'
 
 type StitchLineTreeNode = {
   children?: StitchLineTreeNode[]
@@ -46,16 +45,6 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
       }
     },
     [clearSelection, selectedStitchLineId, setProject],
-  )
-
-  const handleAddStitchLine = useCallback(
-    (componentId: string): void => {
-      setProject((project) => ({
-        ...project,
-        stitchLines: [...project.stitchLines, createStitchLine(project, { componentId })],
-      }))
-    },
-    [setProject],
   )
 
   const selectedValue = useMemo((): string[] => {
@@ -110,14 +99,13 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
             Adj hozzá egy varrást az általad kiválasztott komponenshez!
           </EmptyState.Description>
           <EmptyState.Description textAlign="center">
-            <ComponentMenu
+            <AddStitchLinePopover
               trigger={
                 <Button variant="subtle">
                   <PiPlus />
                   Új varrás
                 </Button>
               }
-              onSelect={handleAddStitchLine}
             />
           </EmptyState.Description>
         </EmptyState.Content>
