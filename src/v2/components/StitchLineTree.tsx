@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   EmptyState,
   IconButton,
@@ -98,7 +99,7 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
           <EmptyState.Description textAlign="center">
             Adj hozzá egy varrást az általad kiválasztott komponenshez!
           </EmptyState.Description>
-          <EmptyState.Description textAlign="center">
+          <Box textAlign="center">
             <AddStitchLinePopover
               trigger={
                 <Button variant="subtle">
@@ -107,7 +108,7 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
                 </Button>
               }
             />
-          </EmptyState.Description>
+          </Box>
         </EmptyState.Content>
       </EmptyState.Root>
     )

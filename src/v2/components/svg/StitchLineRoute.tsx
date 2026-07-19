@@ -2,12 +2,12 @@ import type { FC } from 'react'
 
 import { usePath } from '../../hooks/usePath'
 import type { ComputedStitchRouteSchema } from '../../schemas/computed'
-import type { StitchingSettingsSchema } from '../../schemas/stitching'
+import type { StitchLineCommonConfigSchema } from '../../schemas/stitching'
 import { StitchHole } from './StitchHole'
 
 type StitchLineRouteProps = {
   route: ComputedStitchRouteSchema
-  settings: StitchingSettingsSchema
+  settings: StitchLineCommonConfigSchema
 }
 
 export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, settings }) => {

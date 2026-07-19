@@ -1,12 +1,18 @@
 import { HasIdentitySchema } from './components'
 import { PointSchema } from './geometry'
 
+export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
+export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
+export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
+export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
+export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
+
 export type StitchHoleSchema = {
   center: PointSchema
   rotation: number
 }
 
-export type StitchingSettingsSchema = {
+export type StitchLineCommonConfigSchema = {
   stitchMargin: number
   stitchHoleLength: number
   stitchHoleDistance: number
@@ -16,7 +22,16 @@ export type StitchingSettingsSchema = {
   stitchLineColor: string
 }
 
-export type StitchLineConfigSchema = {
+export type StitchLineComponentReferencesSchema = {
+  /** Which component's bounding box are we stitching? */
+  componentId: string
+}
+
+export type BaseStitchLineSchema = HasIdentitySchema &
+  StitchLineCommonConfigSchema &
+  StitchLineComponentReferencesSchema
+
+export type ComponentBoundsStitchLineOwnSchema = {
   // Are we stitching the given side?
   top: boolean
   right: boolean
@@ -51,25 +66,12 @@ export type StitchLineConfigSchema = {
   leftEndOffset: number
 }
 
-export type StitchLineComponentReferencesSchema = {
-  /** Which component's bounding box are we stitching? */
-  componentId: string
-}
-
-export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
-export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
-export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
-export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
-export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
-
-export type BaseStitchLineSchema = HasIdentitySchema & StitchingSettingsSchema & StitchLineComponentReferencesSchema
-
 export type ComponentBoundsStitchLineSchema = BaseStitchLineSchema &
-  StitchLineConfigSchema & {
+  ComponentBoundsStitchLineOwnSchema & {
     type: 'component-bounds-stitch-line'
   }
 
-export type PocketClusterStitchLineConfigSchema = {
+export type PocketClusterStitchLineOwnSchema = {
   enabled: boolean
   startOffset: number
   endOffset: number
@@ -77,7 +79,7 @@ export type PocketClusterStitchLineConfigSchema = {
 }
 
 export type PocketClusterStitchLineSchema = BaseStitchLineSchema &
-  PocketClusterStitchLineConfigSchema & {
+  PocketClusterStitchLineOwnSchema & {
     type: 'pocket-cluster-stitch-line'
   }
 

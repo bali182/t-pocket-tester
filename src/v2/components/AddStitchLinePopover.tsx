@@ -15,7 +15,6 @@ import { PiPlus } from 'react-icons/pi'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { projectAtom } from '../state'
-import { createPocketClusterStitchLine } from '../utils/createPocketClusterStitchLine'
 import { createStitchLine } from '../utils/createStitchLine'
 import { isDefined } from '../utils/isDefined'
 import { ComponentSelect } from './common/ComponentSelect'
@@ -44,7 +43,9 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
   const setProject = useSetAtom(projectAtom)
   const [isOpen, setIsOpen] = useState(false)
   const [componentId, setComponentId] = useState<string | undefined>(undefined)
-  const [stitchLineType, setStitchLineType] = useState<StitchLineSchema['type'] | undefined>(undefined)
+  const [stitchLineType, setStitchLineType] = useState<StitchLineSchema['type'] | undefined>(
+    'component-bounds-stitch-line',
+  )
   const component = isDefined(componentId) ? project.components[componentId] : undefined
   const stitchLineTypeOptions = useMemo<StitchLineTypeOption[]>(() => getStitchLineTypeOptions(component), [component])
   const isStitchLineTypeDisabled = !isDefined(component) || component.type !== 'pocket-cluster'
@@ -78,24 +79,19 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
   const handleComponentChange = useCallback(
     (nextComponentId: string): void => {
       const nextComponent = project.components[nextComponentId]
-
       if (!isDefined(nextComponent)) {
         return
       }
-
       setComponentId(nextComponentId)
-      setStitchLineType(nextComponent.type === 'pocket-cluster' ? undefined : 'component-bounds-stitch-line')
     },
     [project.components],
   )
 
   const handleStitchLineTypeChange = useCallback((details: SelectValueChangeDetails<StitchLineTypeOption>): void => {
     const nextStitchLineType = details.value[0]
-
     if (!isDefined(nextStitchLineType)) {
       return
     }
-
     setStitchLineType(nextStitchLineType as StitchLineSchema['type'])
   }, [])
 
@@ -105,12 +101,7 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
     }
 
     setProject((currentProject) => {
-      const componentReferences = { componentId }
-      const stitchLine =
-        stitchLineType === 'component-bounds-stitch-line'
-          ? createStitchLine(currentProject, componentReferences)
-          : createPocketClusterStitchLine(currentProject, componentReferences)
-
+      const stitchLine = createStitchLine(stitchLineType, currentProject, componentId)
       return {
         ...currentProject,
         stitchLines: [...currentProject.stitchLines, stitchLine],
@@ -125,55 +116,55 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Positioner>
         <Popover.Content width="400px">
-            <Popover.Header>
-              <Popover.Title>Varrás hozzáadása</Popover.Title>
-            </Popover.Header>
-            <Popover.Body>
-              <Stack gap="3">
-                <Field.Root>
-                  <Field.Label>Komponens</Field.Label>
-                  <ComponentSelect componentId={componentId} onChange={handleComponentChange} />
-                </Field.Root>
-                <Field.Root disabled={isStitchLineTypeDisabled}>
-                  <Field.Label>Varrás típusa</Field.Label>
-                  <Select.Root
-                    collection={stitchLineTypeCollection}
-                    disabled={isStitchLineTypeDisabled}
-                    onValueChange={handleStitchLineTypeChange}
-                    size="xs"
-                    value={isDefined(stitchLineType) ? [stitchLineType] : []}
-                  >
-                    <Select.HiddenSelect />
-                    <Select.Control>
-                      <Select.Trigger>
-                        <Select.ValueText placeholder="Varrás típusának kiválasztása" />
-                      </Select.Trigger>
-                      <Select.IndicatorGroup>
-                        <Select.Indicator />
-                      </Select.IndicatorGroup>
-                    </Select.Control>
-                    <Select.Positioner>
-                      <Select.Content>
-                        {stitchLineTypeCollection.items.map((item) => (
-                          <Select.Item item={item} key={item.value}>
-                            <Select.ItemText>{item.label}</Select.ItemText>
-                            <Select.ItemIndicator />
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select.Positioner>
-                  </Select.Root>
-                </Field.Root>
-              </Stack>
-            </Popover.Body>
-            <Popover.Footer>
-              <HStack justify="flex-end" width="100%">
-                <Button disabled={!canAdd} onClick={handleAdd} size="xs">
-                  <PiPlus />
-                  Hozzáadás
-                </Button>
-              </HStack>
-            </Popover.Footer>
+          <Popover.Header>
+            <Popover.Title>Varrás hozzáadása</Popover.Title>
+          </Popover.Header>
+          <Popover.Body>
+            <Stack gap="3">
+              <Field.Root>
+                <Field.Label>Komponens</Field.Label>
+                <ComponentSelect componentId={componentId} onChange={handleComponentChange} />
+              </Field.Root>
+              <Field.Root disabled={isStitchLineTypeDisabled}>
+                <Field.Label>Varrás típusa</Field.Label>
+                <Select.Root
+                  collection={stitchLineTypeCollection}
+                  disabled={isStitchLineTypeDisabled}
+                  onValueChange={handleStitchLineTypeChange}
+                  size="xs"
+                  value={isDefined(stitchLineType) ? [stitchLineType] : []}
+                >
+                  <Select.HiddenSelect />
+                  <Select.Control>
+                    <Select.Trigger>
+                      <Select.ValueText placeholder="Varrás típusának kiválasztása" />
+                    </Select.Trigger>
+                    <Select.IndicatorGroup>
+                      <Select.Indicator />
+                    </Select.IndicatorGroup>
+                  </Select.Control>
+                  <Select.Positioner>
+                    <Select.Content>
+                      {stitchLineTypeCollection.items.map((item) => (
+                        <Select.Item item={item} key={item.value}>
+                          <Select.ItemText>{item.label}</Select.ItemText>
+                          <Select.ItemIndicator />
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Positioner>
+                </Select.Root>
+              </Field.Root>
+            </Stack>
+          </Popover.Body>
+          <Popover.Footer>
+            <HStack justify="flex-end" width="100%">
+              <Button disabled={!canAdd} onClick={handleAdd} size="xs">
+                <PiPlus />
+                Hozzáadás
+              </Button>
+            </HStack>
+          </Popover.Footer>
         </Popover.Content>
       </Popover.Positioner>
     </Popover.Root>

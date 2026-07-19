@@ -1,25 +1,38 @@
+import { defaultStitchingSettings } from '../defaultStates'
+import { HasIdentitySchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
 import type {
-  StitchLineComponentReferencesSchema,
-  StitchLineConfigSchema,
+  ComponentBoundsStitchLineOwnSchema,
   ComponentBoundsStitchLineSchema,
+  PocketClusterStitchLineOwnSchema,
+  PocketClusterStitchLineSchema,
+  StitchLineComponentReferencesSchema,
 } from '../schemas/stitching'
 import { getUnusedStitchLineName } from './getUnusedStitchLineName'
 import { id } from './id'
 
-export const createStitchLine = (
-  project: ProjectSchema,
-  componentReferences: StitchLineComponentReferencesSchema,
-): ComponentBoundsStitchLineSchema => ({
-  ...defaultStitchLine,
-  ...project.stitchingSettings,
-  ...componentReferences,
-  id: id(),
-  name: getUnusedStitchLineName(project),
-  type: 'component-bounds-stitch-line',
-})
+type StitchLineByTypeName = {
+  'component-bounds-stitch-line': ComponentBoundsStitchLineSchema
+  'pocket-cluster-stitch-line': PocketClusterStitchLineSchema
+}
 
-const defaultStitchLine: StitchLineConfigSchema = {
+export const createStitchLine = <T extends keyof StitchLineByTypeName>(
+  type: T,
+  project: ProjectSchema,
+  componentId: string,
+): StitchLineByTypeName[T] => {
+  const defaults = DEFAULT_STITCH_LINES[type]
+  return {
+    ...defaults,
+    ...project.stitchingSettings,
+    id: id(),
+    type,
+    componentId,
+    name: getUnusedStitchLineName(project),
+  }
+}
+
+const defaultStitchLine: ComponentBoundsStitchLineOwnSchema = {
   top: false,
   right: false,
   bottom: false,
@@ -40,4 +53,32 @@ const defaultStitchLine: StitchLineConfigSchema = {
   bottomEndOffset: 0,
   leftStartOffset: 0,
   leftEndOffset: 0,
+}
+
+const defaultPocketClusterStitchLine: PocketClusterStitchLineOwnSchema = {
+  enabled: true,
+  endOffset: 0,
+  startOffset: 0,
+  stitchDirection: 'start-to-end',
+}
+
+const junkIdentityProps: HasIdentitySchema & StitchLineComponentReferencesSchema = {
+  componentId: '',
+  id: '',
+  name: '',
+}
+
+const DEFAULT_STITCH_LINES: StitchLineByTypeName = {
+  'component-bounds-stitch-line': {
+    ...defaultStitchingSettings,
+    ...defaultStitchLine,
+    ...junkIdentityProps,
+    type: 'component-bounds-stitch-line',
+  },
+  'pocket-cluster-stitch-line': {
+    ...defaultStitchingSettings,
+    ...defaultPocketClusterStitchLine,
+    ...junkIdentityProps,
+    type: 'pocket-cluster-stitch-line',
+  },
 }
