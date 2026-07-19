@@ -4,6 +4,7 @@ import { LANGUAGE } from '../constants/language'
 import type { EditableSchema } from '../schemas/editable'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { getEditableSchema } from '../utils/getEditableSchema'
+import { useTranslation } from '../translations/translation'
 import { useProject } from './useProject'
 
 export type EditableModelValidatorSchema<T> = (
@@ -27,6 +28,7 @@ type UseEditableModelOptions<T> = {
 
 export const useEditableModel = <T>({ commit, validate, value }: UseEditableModelOptions<T>): UseEditableModelResult<T> => {
   const { project, computedProject } = useProject()
+  const t = useTranslation()
   const [isDirty, setIsDirty] = useState(false)
   const [locallyCommittedValue, setLocallyCommittedValue] = useState<T | undefined>(undefined)
   const [lastObservedValue, setLastObservedValue] = useState(value)
@@ -34,13 +36,10 @@ export const useEditableModel = <T>({ commit, validate, value }: UseEditableMode
   const [processedEditableValue, setProcessedEditableValue] = useState<EditableSchema<T> | undefined>(undefined)
 
   const validationContext = useMemo<ValidationContextSchema>(
-    () => ({ computedProject, language: LANGUAGE, project }),
-    [computedProject, project],
+    () => ({ computedProject, language: LANGUAGE, project, t }),
+    [computedProject, project, t],
   )
-  const validationResult = useMemo(
-    () => validate(editableValue, value, validationContext),
-    [editableValue, validationContext, validate, value],
-  )
+  const validationResult = validate(editableValue, value, validationContext)
 
   useEffect(() => {
     if (value === lastObservedValue) {

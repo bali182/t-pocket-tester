@@ -1,13 +1,14 @@
 import type { ProjectSchema } from '../schemas/project'
+import type { TranslationSchema } from '../translations/translation'
 
-export const getUnusedStitchLineName = (project: ProjectSchema): string => {
+export const getUnusedStitchLineName = (project: ProjectSchema, t: TranslationSchema): string => {
   const usedNames = new Set(project.stitchLines.map((stitchLine) => stitchLine.name))
   let counter = 1
-  let name = `Varrás ${counter}`
+  let name = t.defaults.stitchLineName({ number: counter })
 
   while (usedNames.has(name)) {
     counter += 1
-    name = `Varrás ${counter}`
+    name = t.defaults.stitchLineName({ number: counter })
   }
 
   return name

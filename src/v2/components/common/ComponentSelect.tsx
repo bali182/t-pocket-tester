@@ -12,6 +12,7 @@ import { useComponentIcon } from '../../hooks/useComponentIcon'
 import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
 import { isDefined } from '../../utils/isDefined'
+import { useTranslation } from '../../translations/translation'
 
 type ComponentSelectProps = {
   componentId: string | undefined
@@ -20,6 +21,7 @@ type ComponentSelectProps = {
 }
 
 export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, componentTypes, onChange }) => {
+  const t = useTranslation()
   const { project } = useProject()
   const component = isDefined(componentId) ? project.components[componentId] : undefined
   const Icon = useComponentIcon(component?.type ?? 'panel')
@@ -67,7 +69,7 @@ export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, compone
               </HStack>
             </Select.ValueText>
           ) : (
-            <Select.ValueText placeholder="Komponens kiválasztása" />
+            <Select.ValueText placeholder={t.common.placeholders.selectComponent()} />
           )}
         </Select.Trigger>
         <Select.IndicatorGroup>

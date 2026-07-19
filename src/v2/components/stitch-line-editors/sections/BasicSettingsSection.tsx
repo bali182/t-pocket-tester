@@ -6,6 +6,7 @@ import type { BaseStitchLineSchema } from '../../../schemas/stitching'
 import type { ComponentSchema } from '../../../schemas/components'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { isDefined } from '../../../utils/isDefined'
+import { useTranslation } from '../../../translations/translation'
 import { ComponentSelect } from '../../common/ComponentSelect'
 import { SectionGroup } from '../../common/SectionGroup'
 
@@ -22,6 +23,7 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
   issues,
   onChange,
 }: BasicSettingsSectionProps<T>): ReactNode => {
+  const t = useTranslation()
   const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
 
   const handleNameChange = useCallback(
@@ -39,14 +41,14 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>Általános</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader>{t.common.labels.general()}</SectionGroup.SectionHeader>
 
-      <SectionGroup.SectionRowTitle>Név</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.name()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Input aria-invalid={isNameInvalid} onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Komponens</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.component()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ComponentSelect componentId={editable.componentId} componentTypes={componentTypes} onChange={handleComponentChange} />
       </SectionGroup.SectionRowEditor>

@@ -19,8 +19,8 @@ export const validatePocketClusterSchema = (
   currentValue: PocketClusterSchema,
   context: ValidationContextSchema,
 ): ValidationResultSchema<PocketClusterSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, Object.values(context.project.components))
-  const colorResult = validateHexColor(input.color, currentValue.color)
+  const nameResult = validateName(input.name, currentValue.name, input.id, Object.values(context.project.components), context)
+  const colorResult = validateHexColor(input.color, currentValue.color, context)
   const borderRadiusResult = validateNumber(input.borderRadius, currentValue.borderRadius, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
@@ -38,7 +38,7 @@ export const validatePocketClusterSchema = (
   )
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 0, minInclusive: false })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 0, minInclusive: false })
-  const orientationResult = validatePrimitiveUnion(input.orientation, currentValue.orientation, pocketOrientationValues)
+  const orientationResult = validatePrimitiveUnion(input.orientation, currentValue.orientation, pocketOrientationValues, context)
   const pocketCountResult = validateNumber(input.pocketCount, currentValue.pocketCount, context, {
     allowFraction: false,
     min: 1,

@@ -2,9 +2,10 @@ import { Button, HStack, Menu } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import { PiPlus, PiTrash } from 'react-icons/pi'
 
-import { type ChildComponentType, AddChildComponentMenu } from '../AddChildComponentMenu'
 import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
+import { useTranslation } from '../../translations/translation'
+import { AddChildComponentMenu, type ChildComponentType } from '../AddChildComponentMenu'
 
 type ComponentEditorHeaderMenuProps = {
   component: ComponentSchema
@@ -12,6 +13,7 @@ type ComponentEditorHeaderMenuProps = {
 }
 
 export const ComponentEditorHeaderMenu: FC<ComponentEditorHeaderMenuProps> = ({ component, onClose }) => {
+  const t = useTranslation()
   const { addComponent, deleteComponent } = useProject()
   const canAddChild = component.type !== 'pocket-cluster'
   const canDelete = component.type !== 'root-panel'
@@ -35,7 +37,7 @@ export const ComponentEditorHeaderMenu: FC<ComponentEditorHeaderMenuProps> = ({ 
           <Menu.Trigger asChild>
             <Button size="2xs" variant="subtle">
               <PiPlus />
-              Elem hozzáadása
+              {t.component.editor.actions.addChild()}
             </Button>
           </Menu.Trigger>
           <Menu.Positioner>
@@ -48,7 +50,7 @@ export const ComponentEditorHeaderMenu: FC<ComponentEditorHeaderMenuProps> = ({ 
       {canDelete && (
         <Button colorPalette="red" onClick={handleDelete} size="2xs" variant="subtle">
           <PiTrash />
-          Törlés
+          {t.common.actions.remove()}
         </Button>
       )}
     </HStack>

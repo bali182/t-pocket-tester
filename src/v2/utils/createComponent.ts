@@ -8,6 +8,7 @@ import {
   RootPanelSchema,
 } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
+import type { TranslationSchema } from '../translations/translation'
 import { getComponentColor } from './getComponentColor'
 import { getUnusedComponentName } from './getUnusedComponentName'
 import { id } from './id'
@@ -21,12 +22,13 @@ type ComponentByType = {
 export const createComponent = <T extends keyof ComponentByType>(
   type: T,
   project: ProjectSchema,
+  t: TranslationSchema,
   nestingLevel = 0,
 ): ComponentByType[T] => ({
   ...DEFAULT_COMPONENT_BY_TYPE[type],
   color: getComponentColor(LEATHER_BASE_COLOR, nestingLevel),
   id: id(),
-  name: getUnusedComponentName(type, project),
+  name: getUnusedComponentName(type, project, t),
 })
 
 const defaultHasCornerRadius: HasCornerRadiusSchema = {

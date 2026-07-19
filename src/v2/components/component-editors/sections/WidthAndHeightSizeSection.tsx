@@ -3,6 +3,7 @@ import { useCallback, type FC } from 'react'
 import type { RootPanelSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
@@ -14,6 +15,7 @@ type WidthAndHeightSizeSectionProps = {
 }
 
 export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ editable, issues, onChange }) => {
+  const t = useTranslation()
   const handleWidthChange = useCallback(
     (width: string) => {
       onChange({
@@ -36,13 +38,13 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>Méret</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>Szélesség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.common.labels.size()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.common.labels.width()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.width} onChange={handleWidthChange} step={1} unit="mm" value={editable.width} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Magasság</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.height()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.height} onChange={handleHeightChange} step={1} unit="mm" value={editable.height} />
       </SectionGroup.SectionRowEditor>

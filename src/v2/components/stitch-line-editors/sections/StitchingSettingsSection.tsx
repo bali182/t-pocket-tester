@@ -3,6 +3,7 @@ import { useCallback, type ReactNode } from 'react'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { StitchLineCommonConfigSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { useTranslation } from '../../../translations/translation'
 import { ColorInput } from '../../common/ColorInput'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
@@ -18,6 +19,7 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
   issues,
   onChange,
 }: StitchingSettingsSectionProps<T>): ReactNode => {
+  const t = useTranslation()
   const handleStitchHoleColorChange = useCallback(
     (stitchHoleColor: string): void => {
       onChange({ ...editable, stitchHoleColor })
@@ -63,24 +65,24 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>Varrás</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader>{t.stitchLine.editor.stitching.title()}</SectionGroup.SectionHeader>
 
-      <SectionGroup.SectionRowTitle>Lyuk színe</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeColor()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ColorInput issue={issues.stitchHoleColor} onChange={handleStitchHoleColorChange} value={editable.stitchHoleColor} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Vonal színe</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineColor()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ColorInput issue={issues.stitchLineColor} onChange={handleStitchLineColorChange} value={editable.stitchLineColor} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Margó</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.margin()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.stitchMargin} onChange={handleStitchMarginChange} step={1} unit="mm" value={editable.stitchMargin} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Lyuk hossza</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeLength()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchHoleLength}
@@ -91,7 +93,7 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Lyuktávolság</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeDistance()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchHoleDistance}
@@ -102,7 +104,7 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Lyuk vastagsága</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeThickness()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchHoleThickness}
@@ -113,7 +115,7 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Vonal vastagsága</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineThickness()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchLineThickness}

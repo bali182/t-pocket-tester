@@ -26,7 +26,7 @@ export const validateComponentBoundsStitchLineSchema = (
   currentValue: ComponentBoundsStitchLineSchema,
   context: ValidationContextSchema,
 ): ValidationResultSchema<ComponentBoundsStitchLineSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines)
+  const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
   const stitchMarginResult = validateNumber(input.stitchMargin, currentValue.stitchMargin, context, { min: 2 })
   const stitchHoleLengthResult = validateNumber(input.stitchHoleLength, currentValue.stitchHoleLength, context, {
     min: 0,
@@ -47,27 +47,31 @@ export const validateComponentBoundsStitchLineSchema = (
     context,
     { min: 0, minInclusive: false },
   )
-  const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor)
-  const stitchThreadColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor)
+  const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor, context)
+  const stitchThreadColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor, context)
   const topStitchDirectionResult = validatePrimitiveUnion(
     input.topStitchDirection,
     currentValue.topStitchDirection,
     horizontalStitchDirectionValues,
+    context,
   )
   const rightStitchDirectionResult = validatePrimitiveUnion(
     input.rightStitchDirection,
     currentValue.rightStitchDirection,
     verticalStitchDirectionValues,
+    context,
   )
   const bottomStitchDirectionResult = validatePrimitiveUnion(
     input.bottomStitchDirection,
     currentValue.bottomStitchDirection,
     horizontalStitchDirectionValues,
+    context,
   )
   const leftStitchDirectionResult = validatePrimitiveUnion(
     input.leftStitchDirection,
     currentValue.leftStitchDirection,
     verticalStitchDirectionValues,
+    context,
   )
   const topStartOffsetResult = validateNumber(input.topStartOffset, currentValue.topStartOffset, context)
   const topEndOffsetResult = validateNumber(input.topEndOffset, currentValue.topEndOffset, context)

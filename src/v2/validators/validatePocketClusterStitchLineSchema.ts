@@ -17,7 +17,7 @@ export const validatePocketClusterStitchLineSchema = (
   currentValue: PocketClusterStitchLineSchema,
   context: ValidationContextSchema,
 ): ValidationResultSchema<PocketClusterStitchLineSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines)
+  const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
   const stitchMarginResult = validateNumber(input.stitchMargin, currentValue.stitchMargin, context, { min: 2 })
   const stitchHoleLengthResult = validateNumber(input.stitchHoleLength, currentValue.stitchHoleLength, context, {
     min: 0,
@@ -38,14 +38,15 @@ export const validatePocketClusterStitchLineSchema = (
     context,
     { min: 0, minInclusive: false },
   )
-  const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor)
-  const stitchLineColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor)
+  const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor, context)
+  const stitchLineColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor, context)
   const startOffsetResult = validateNumber(input.startOffset, currentValue.startOffset, context)
   const endOffsetResult = validateNumber(input.endOffset, currentValue.endOffset, context)
   const stitchDirectionResult = validatePrimitiveUnion(
     input.stitchDirection,
     currentValue.stitchDirection,
     stitchDirectionValues,
+    context,
   )
 
   const issues: ValidationIssuesSchema<PocketClusterStitchLineSchema> = {

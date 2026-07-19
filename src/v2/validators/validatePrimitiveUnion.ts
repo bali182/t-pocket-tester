@@ -1,4 +1,4 @@
-import type { ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
@@ -6,6 +6,7 @@ export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T,
   allowedValues: Record<T, boolean>,
+  context: ValidationContextSchema,
   allowUndefined?: false,
 ): ValidationResultSchema<T>
 
@@ -13,6 +14,7 @@ export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T | undefined,
   allowedValues: Record<T, boolean>,
+  context: ValidationContextSchema,
   allowUndefined: true,
 ): ValidationResultSchema<T | undefined>
 
@@ -20,6 +22,7 @@ export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T | undefined,
   allowedValues: Record<T, boolean>,
+  context: ValidationContextSchema,
   allowUndefined = false,
 ): ValidationResultSchema<T | undefined> {
   if (!isDefined(value)) {
@@ -29,7 +32,7 @@ export function validatePrimitiveUnion<T extends string>(
 
     return createInvalidValidationResult<T | undefined>(
       {
-        message: 'Kötelező érték.',
+        message: context.t.validation.primitive.required(),
         severity: 'error',
       },
       currentValue,
@@ -39,7 +42,7 @@ export function validatePrimitiveUnion<T extends string>(
   if (!isAllowedPrimitiveUnionValue(value, allowedValues)) {
     return createInvalidValidationResult<T | undefined>(
       {
-        message: 'Érvénytelen érték.',
+        message: context.t.validation.primitive.invalid(),
         severity: 'error',
       },
       currentValue,

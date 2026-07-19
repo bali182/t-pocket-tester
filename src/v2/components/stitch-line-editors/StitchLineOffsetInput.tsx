@@ -5,6 +5,7 @@ import { PiArrowLineDown, PiArrowLineLeft, PiArrowLineRight, PiArrowLineUp } fro
 
 import type { IssueSchema } from '../../schemas/validation'
 import { NumberInput } from '../common/NumberInput'
+import { useTranslation, type TranslationSchema } from '../../translations/translation'
 
 export type StitchLineOffsetField =
   | 'leftStartOffset'
@@ -37,7 +38,6 @@ type StitchLineOffsetGridArea =
 type StitchLineOffsetInputConfiguration = {
   gridArea: StitchLineOffsetGridArea
   icon: IconType
-  label: string
 }
 
 // First 4 have start/end swapped because rendering logic is going cannonical, so start and end are different on bottom and left.,
@@ -45,51 +45,44 @@ const OFFSET_INPUT_CONFIGURATIONS: Record<StitchLineOffsetField, StitchLineOffse
   bottomEndOffset: {
     gridArea: 'bottom-start-offset',
     icon: PiArrowLineLeft,
-    label: 'Alsó oldal végpontjának eltolása',
   },
   bottomStartOffset: {
     gridArea: 'bottom-end-offset',
     icon: PiArrowLineRight,
-    label: 'Alsó oldal kezdőpontjának eltolása',
   },
   leftEndOffset: {
     gridArea: 'left-start-offset',
     icon: PiArrowLineUp,
-    label: 'Bal oldal végpontjának eltolása',
   },
   leftStartOffset: {
     gridArea: 'left-end-offset',
     icon: PiArrowLineDown,
-    label: 'Bal oldal kezdőpontjának eltolása',
   },
   rightEndOffset: {
     gridArea: 'right-end-offset',
     icon: PiArrowLineDown,
-    label: 'Jobb oldal végpontjának eltolása',
   },
   rightStartOffset: {
     gridArea: 'right-start-offset',
     icon: PiArrowLineUp,
-    label: 'Jobb oldal kezdőpontjának eltolása',
   },
   topEndOffset: {
     gridArea: 'top-end-offset',
     icon: PiArrowLineRight,
-    label: 'Felső oldal végpontjának eltolása',
   },
   topStartOffset: {
     gridArea: 'top-start-offset',
     icon: PiArrowLineLeft,
-    label: 'Felső oldal kezdőpontjának eltolása',
   },
 }
 
 export const StitchLineOffsetInput: FC<StitchLineOffsetInputProps> = ({ disabled, field, issue, onChange, value }) => {
+  const t = useTranslation()
   const configuration = OFFSET_INPUT_CONFIGURATIONS[field]
   const Icon = configuration.icon
 
   return (
-    <Box aria-label={configuration.label} gridArea={configuration.gridArea} role="group" width="20">
+    <Box aria-label={getOffsetInputLabel(field, t)} gridArea={configuration.gridArea} role="group" width="20">
       <NumberInput
         disabled={disabled}
         issue={issue}
@@ -101,4 +94,25 @@ export const StitchLineOffsetInput: FC<StitchLineOffsetInputProps> = ({ disabled
       />
     </Box>
   )
+}
+
+const getOffsetInputLabel = (field: StitchLineOffsetField, t: TranslationSchema): string => {
+  switch (field) {
+    case 'bottomEndOffset':
+      return t.stitchLine.editor.offsets.bottomEnd()
+    case 'bottomStartOffset':
+      return t.stitchLine.editor.offsets.bottomStart()
+    case 'leftEndOffset':
+      return t.stitchLine.editor.offsets.leftEnd()
+    case 'leftStartOffset':
+      return t.stitchLine.editor.offsets.leftStart()
+    case 'rightEndOffset':
+      return t.stitchLine.editor.offsets.rightEnd()
+    case 'rightStartOffset':
+      return t.stitchLine.editor.offsets.rightStart()
+    case 'topEndOffset':
+      return t.stitchLine.editor.offsets.topEnd()
+    case 'topStartOffset':
+      return t.stitchLine.editor.offsets.topStart()
+  }
 }

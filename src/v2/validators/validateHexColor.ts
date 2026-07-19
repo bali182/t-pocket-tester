@@ -1,13 +1,17 @@
-import { ValidationResultSchema } from '../schemas/validation'
+import type { ValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
 const hexColorPattern = /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/
 
-export const validateHexColor = (input: string, currentValue: string): ValidationResultSchema<string> => {
+export const validateHexColor = (
+  input: string,
+  currentValue: string,
+  context: ValidationContextSchema,
+): ValidationResultSchema<string> => {
   if (!hexColorPattern.test(input)) {
     return createInvalidValidationResult<string>(
       {
-        message: 'Érvénytelen hex szín.',
+        message: context.t.validation.hexColor.invalid(),
         severity: 'error',
       },
       currentValue,

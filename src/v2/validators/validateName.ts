@@ -1,11 +1,18 @@
 import type { HasIdentitySchema } from '../schemas/components'
+import type { ValidationContextSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
-export const validateName = (input: string, currentValue: string, id: string, values: readonly HasIdentitySchema[]) => {
+export const validateName = (
+  input: string,
+  currentValue: string,
+  id: string,
+  values: readonly HasIdentitySchema[],
+  context: ValidationContextSchema,
+) => {
   if (input === '') {
     return createInvalidValidationResult<string>(
       {
-        message: 'A név nem lehet üres.',
+        message: context.t.validation.name.empty(),
         severity: 'error',
       },
       currentValue,
@@ -17,7 +24,7 @@ export const validateName = (input: string, currentValue: string, id: string, va
   if (hasDuplicateName) {
     return createInvalidValidationResult<string>(
       {
-        message: 'Ez a név már foglalt.',
+        message: context.t.validation.name.duplicate(),
         severity: 'error',
       },
       currentValue,

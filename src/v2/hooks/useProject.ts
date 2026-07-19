@@ -12,10 +12,12 @@ import { getDescendants } from '../utils/getDescendants'
 import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
+import { useTranslation } from '../translations/translation'
 
 export const useProject = () => {
   const project = useAtomValue(projectAtom)
   const computedProject = useAtomValue(computedProjectAtom)
+  const t = useTranslation()
 
   const addComponent = useAtomCallback(
     useCallback((get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {
@@ -26,7 +28,7 @@ export const useProject = () => {
         throw new Error('Missing parent or cannot have child elements')
       }
 
-      const component = createComponent(type, project, getComponentNestingLevel(parent.id, project) + 1)
+      const component = createComponent(type, project, t, getComponentNestingLevel(parent.id, project) + 1)
 
       set(projectAtom, {
         ...project,
@@ -42,20 +44,20 @@ export const useProject = () => {
       set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
 
       return component
-    }, []),
+    }, [t]),
   )
 
   const addStitchLine = useAtomCallback(
     useCallback((get, set, componentId: string, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
       const project = get(projectAtom)
-      const stitchLine = createStitchLine(stitchLineType, project, componentId)
+      const stitchLine = createStitchLine(stitchLineType, project, componentId, t)
 
       set(projectAtom, {
         ...project,
         stitchLines: [...project.stitchLines, stitchLine],
       })
       return stitchLine
-    }, []),
+    }, [t]),
   )
 
   const deleteComponent = useAtomCallback(

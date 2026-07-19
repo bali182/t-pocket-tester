@@ -16,6 +16,7 @@ import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useProject } from '../hooks/useProject'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { isDefined } from '../utils/isDefined'
+import { useTranslation } from '../translations/translation'
 import { AddStitchLinePopover } from './AddStitchLinePopover'
 
 type StitchLineTreeNode = {
@@ -30,6 +31,7 @@ type StitchLineTreeProps = {
 }
 
 export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }) => {
+  const t = useTranslation()
   const { project, deleteStitchLine } = useProject()
   const { clearSelection, selectStitchLine } = useDrawAreaContext()
 
@@ -92,16 +94,16 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
           <EmptyState.Indicator>
             <TbNeedleThread />
           </EmptyState.Indicator>
-          <EmptyState.Title>Nincs még varrás</EmptyState.Title>
+          <EmptyState.Title>{t.stitchLine.tree.empty.title()}</EmptyState.Title>
           <EmptyState.Description textAlign="center">
-            Adj hozzá egy varrást az általad kiválasztott komponenshez!
+            {t.stitchLine.tree.empty.description()}
           </EmptyState.Description>
           <Box textAlign="center">
             <AddStitchLinePopover
               trigger={
                 <Button variant="subtle">
                   <PiPlus />
-                  Új varrás
+                  {t.common.actions.addStitchLine()}
                 </Button>
               }
             />
@@ -130,7 +132,7 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
                 <PiNeedle />
                 <TreeView.ItemText>{node.name}</TreeView.ItemText>
                 <IconButton
-                  aria-label={`${node.name} törlése`}
+                  aria-label={t.stitchLine.tree.accessibility.deleteNamed({ name: node.name })}
                   onClick={(event) => handleDelete(event, node.stitchLine.id)}
                   size="2xs"
                   variant="ghost"

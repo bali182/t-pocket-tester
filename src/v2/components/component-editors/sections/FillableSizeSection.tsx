@@ -5,6 +5,7 @@ import { PiArrowsHorizontal, PiArrowsVertical, PiRuler } from 'react-icons/pi'
 import type { HasFillableSizeSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
@@ -20,6 +21,7 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
   issues,
   onChange,
 }: FillableSizeSectionProps<T>) {
+  const t = useTranslation()
   const handleAutoWidthChange = useCallback(
     (details: Switch.CheckedChangeDetails) => {
       onChange({
@@ -62,8 +64,8 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>Méret</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>Szélesség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.common.labels.size()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.common.labels.width()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
           <HStack gap="2">
             <Switch.Root checked={!editable.autoWidth} onCheckedChange={handleAutoWidthChange} size="md">
@@ -89,7 +91,7 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
           </HStack>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Magasság</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.height()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
           <HStack gap="2">
             <Switch.Root checked={!editable.autoHeight} onCheckedChange={handleAutoHeightChange} size="md">

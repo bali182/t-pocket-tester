@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { App } from './components/App'
 import { appStore } from './state/store'
+import { translation } from './translations/translation'
 
 const rootElement = document.getElementById('root')
 
@@ -13,10 +14,12 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <JotaiProvider store={appStore}>
-    <ChakraProvider value={defaultSystem}>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <App />
-      </BrowserRouter>
-    </ChakraProvider>
+    <translation.TranslationProvider>
+      <ChakraProvider value={defaultSystem}>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <App />
+        </BrowserRouter>
+      </ChakraProvider>
+    </translation.TranslationProvider>
   </JotaiProvider>,
 )

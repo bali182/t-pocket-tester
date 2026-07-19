@@ -3,6 +3,7 @@ import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 
 import type { BaseComponentSchema } from '../../../schemas/components'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { useTranslation } from '../../../translations/translation'
 import { isDefined } from '../../../utils/isDefined'
 import { ColorInput } from '../../common/ColorInput'
 import { SectionGroup } from '../../common/SectionGroup'
@@ -18,6 +19,7 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
   issues,
   onChange,
 }: NameAndColorSectionProps<T>): ReactNode {
+  const t = useTranslation()
   const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
   const isColorInvalid = isDefined(issues.color) && issues.color.severity === 'error'
 
@@ -43,15 +45,15 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>Általános</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>Név</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.common.labels.general()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.common.labels.name()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Field.Root invalid={isNameInvalid}>
           <Input onChange={handleNameChange} size="xs" value={editable.name} />
         </Field.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Szín</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.color()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Field.Root invalid={isColorInvalid} alignItems="stretch">
           <ColorInput issue={issues.color} onChange={handleColorChange} value={editable.color} />

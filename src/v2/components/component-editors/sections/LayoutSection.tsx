@@ -5,6 +5,7 @@ import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } 
 import type { HasLayoutSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
@@ -20,6 +21,7 @@ export function LayoutSection<T extends HasLayoutSchema>({
   issues,
   onChange,
 }: LayoutSectionProps<T>): ReactNode {
+  const t = useTranslation()
   const handleOrientationChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails) => {
       onChange({ ...editable, layoutOrientation: details.value })
@@ -43,38 +45,38 @@ export function LayoutSection<T extends HasLayoutSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>Elrendezés</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>Tájolás</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.component.editor.layout.title()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.component.editor.layout.orientation()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.layoutOrientation}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label="Vízszintes" value="horizontal">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.horizontal()} value="horizontal">
             <SegmentGroup.ItemHiddenInput />
             <PiColumns />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label="Függőleges" value="vertical">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.vertical()} value="vertical">
             <SegmentGroup.ItemHiddenInput />
             <PiRows />
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Irány</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.component.editor.layout.order()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layoutOrder}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label="Alapértelmezett" value="default">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.defaultOrder()} value="default">
             <SegmentGroup.ItemHiddenInput />
             {editable.layoutOrientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label="Fordított" value="reverse">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.reverseOrder()} value="reverse">
             <SegmentGroup.ItemHiddenInput />
             {editable.layoutOrientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Térköz</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.component.editor.layout.gap()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.layoutGap}

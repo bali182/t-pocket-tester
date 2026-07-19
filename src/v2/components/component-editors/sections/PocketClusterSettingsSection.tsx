@@ -5,6 +5,7 @@ import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/p
 import type { PocketClusterSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
@@ -16,6 +17,7 @@ type PocketClusterSettingsSectionProps = {
 }
 
 export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps> = ({ editable, issues, onChange }) => {
+  const t = useTranslation()
   const handleOrientationChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails) => {
       if (details.value !== 'up' && details.value !== 'down' && details.value !== 'left' && details.value !== 'right') {
@@ -52,31 +54,31 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>Zsebek</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>Nyílás</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.component.editor.pocketCluster.title()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.component.editor.pocketCluster.opening()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label="Felülről" value="up">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromTop()} value="up">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretDown />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label="Alulról" value="down">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromBottom()} value="down">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretUp />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label="Balról" value="left">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromLeft()} value="left">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretRight />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label="Jobbról" value="right">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromRight()} value="right">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretLeft />
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Mennyiség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.amount()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.pocketCount}
@@ -87,7 +89,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Köz</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.spacing()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.pocketStep}

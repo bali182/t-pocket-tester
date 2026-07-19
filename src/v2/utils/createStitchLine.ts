@@ -1,6 +1,7 @@
 import { defaultStitchingSettings } from '../defaultStates'
 import { HasIdentitySchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
+import type { TranslationSchema } from '../translations/translation'
 import type {
   ComponentBoundsStitchLineOwnSchema,
   ComponentBoundsStitchLineSchema,
@@ -20,6 +21,7 @@ export const createStitchLine = <T extends keyof StitchLineByTypeName>(
   type: T,
   project: ProjectSchema,
   componentId: string,
+  t: TranslationSchema,
 ): StitchLineByTypeName[T] => {
   const defaults = DEFAULT_STITCH_LINES[type]
   return {
@@ -28,7 +30,7 @@ export const createStitchLine = <T extends keyof StitchLineByTypeName>(
     id: id(),
     type,
     componentId,
-    name: getUnusedStitchLineName(project),
+    name: getUnusedStitchLineName(project, t),
   }
 }
 

@@ -24,7 +24,7 @@ export const validateNumber = (
   if (!isDecimal(input, { locale: context.language })) {
     return createInvalidValidationResult<number>(
       {
-        message: 'Érvénytelen számformátum.',
+        message: context.t.validation.number.invalidFormat(),
         severity: 'error',
       },
       currentValue,
@@ -41,7 +41,7 @@ export const validateNumber = (
   if (!Number.isFinite(value)) {
     return createInvalidValidationResult<number>(
       {
-        message: 'Érvénytelen számformátum.',
+        message: context.t.validation.number.invalidFormat(),
         severity: 'error',
       },
       currentValue,
@@ -51,7 +51,7 @@ export const validateNumber = (
   if (config.allowFraction === false && !Number.isInteger(value)) {
     return createInvalidValidationResult<number>(
       {
-        message: 'Csak egész érték adható meg.',
+        message: context.t.validation.number.integerOnly(),
         severity: 'error',
       },
       currentValue,
@@ -66,8 +66,8 @@ export const validateNumber = (
         {
           message:
             config.minInclusive === false
-              ? `Az értéknek a minimum felett kell lennie (${formatter.format(config.min)}).`
-              : `Minimum érték: ${formatter.format(config.min)}.`,
+              ? context.t.validation.number.minimumExclusive({ value: formatter.format(config.min) })
+              : context.t.validation.number.minimumInclusive({ value: formatter.format(config.min) }),
           severity: 'error',
         },
         currentValue,
@@ -83,8 +83,8 @@ export const validateNumber = (
         {
           message:
             config.maxInclusive === false
-              ? `Az értéknek a maximum alatt kell lennie (${formatter.format(config.max)}).`
-              : `Maximum érték: ${formatter.format(config.max)}.`,
+              ? context.t.validation.number.maximumExclusive({ value: formatter.format(config.max) })
+              : context.t.validation.number.maximumInclusive({ value: formatter.format(config.max) }),
           severity: 'error',
         },
         currentValue,
@@ -95,7 +95,7 @@ export const validateNumber = (
   if (isDefined(config.multipleOf) && !new BigNumber(value).mod(config.multipleOf).isZero()) {
     return createInvalidValidationResult<number>(
       {
-        message: `Lépték: ${formatter.format(config.multipleOf)}.`,
+        message: context.t.validation.number.step({ value: formatter.format(config.multipleOf) }),
         severity: 'error',
       },
       currentValue,

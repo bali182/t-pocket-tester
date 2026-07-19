@@ -15,6 +15,7 @@
     "@internationalized/number": "3.6.7",
     "bignumber.js": "11.1.5",
     "culori": "4.0.2",
+    "intl-t": "^1.1.0",
     "jotai": "2.20.1",
     "nanoid": "5.1.16",
     "react": "19.1.0",

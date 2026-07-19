@@ -16,6 +16,7 @@ import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
+import { useTranslation, type TranslationSchema } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
 import { ComponentSelect } from './common/ComponentSelect'
 
@@ -28,17 +29,8 @@ type AddStitchLinePopoverProps = {
   trigger: ReactElement
 }
 
-const componentBoundsStitchLineOption: StitchLineTypeOption = {
-  label: 'Komponens határvonala',
-  value: 'component-bounds-stitch-line',
-}
-
-const pocketClusterStitchLineOption: StitchLineTypeOption = {
-  label: 'T-zsebek aljának varrása',
-  value: 'pocket-cluster-stitch-line',
-}
-
 export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger }) => {
+  const t = useTranslation()
   const { project, addStitchLine } = useProject()
   const lastTouchedComponent = useAtomValue(lastTouchedComponentAtom)
   const defaultComponentId = useMemo((): string => {
@@ -56,7 +48,10 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
   const [componentId, setComponentId] = useState<string>(defaultComponentId)
   const [stitchLineType, setStitchLineType] = useState<StitchLineSchema['type']>('component-bounds-stitch-line')
   const component = isDefined(componentId) ? project.components[componentId] : undefined
-  const stitchLineTypeOptions = useMemo<StitchLineTypeOption[]>(() => getStitchLineTypeOptions(component), [component])
+  const stitchLineTypeOptions = useMemo<StitchLineTypeOption[]>(
+    () => getStitchLineTypeOptions(component, t),
+    [component, t],
+  )
   const stitchLineTypeCollection = useMemo(
     () =>
       createListCollection<StitchLineTypeOption>({
@@ -117,16 +112,16 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
       <Popover.Positioner>
         <Popover.Content width="400px">
           <Popover.Header>
-            <Popover.Title>Varrás hozzáadása</Popover.Title>
+            <Popover.Title>{t.stitchLine.add.title()}</Popover.Title>
           </Popover.Header>
           <Popover.Body>
             <Stack gap="3">
               <Field.Root>
-                <Field.Label>Komponens</Field.Label>
+                <Field.Label>{t.common.labels.component()}</Field.Label>
                 <ComponentSelect componentId={componentId} onChange={handleComponentChange} />
               </Field.Root>
               <Field.Root>
-                <Field.Label>Varrás típusa</Field.Label>
+                <Field.Label>{t.stitchLine.add.type()}</Field.Label>
                 <Select.Root
                   collection={stitchLineTypeCollection}
                   onValueChange={handleStitchLineTypeChange}
@@ -136,7 +131,7 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
                   <Select.HiddenSelect />
                   <Select.Control>
                     <Select.Trigger>
-                      <Select.ValueText placeholder="Varrás típusának kiválasztása" />
+                      <Select.ValueText placeholder={t.stitchLine.add.typePlaceholder()} />
                     </Select.Trigger>
                     <Select.IndicatorGroup>
                       <Select.Indicator />
@@ -160,7 +155,7 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
             <HStack justify="flex-end" width="100%">
               <Button disabled={!canAdd} onClick={handleAdd} size="xs">
                 <PiPlus />
-                Hozzáadás
+                {t.common.actions.add()}
               </Button>
             </HStack>
           </Popover.Footer>
@@ -170,14 +165,20 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
   )
 }
 
-const getStitchLineTypeOptions = (component: ComponentSchema | undefined): StitchLineTypeOption[] => {
+const getStitchLineTypeOptions = (
+  component: ComponentSchema | undefined,
+  t: TranslationSchema,
+): StitchLineTypeOption[] => {
   if (!isDefined(component)) {
     return []
   }
 
   if (component.type === 'pocket-cluster') {
-    return [componentBoundsStitchLineOption, pocketClusterStitchLineOption]
+    return [
+      { label: t.stitchLine.add.types.componentBounds(), value: 'component-bounds-stitch-line' },
+      { label: t.stitchLine.add.types.pocketCluster(), value: 'pocket-cluster-stitch-line' },
+    ]
   }
 
-  return [componentBoundsStitchLineOption]
+  return [{ label: t.stitchLine.add.types.componentBounds(), value: 'component-bounds-stitch-line' }]
 }

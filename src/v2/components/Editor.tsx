@@ -8,6 +8,7 @@ import { EditorSelectionSchema } from '../schemas/selection'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
+import { useTranslation } from '../translations/translation'
 import { AddStitchLinePopover } from './AddStitchLinePopover'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
@@ -18,6 +19,7 @@ import { StitchLineTree } from './StitchLineTree'
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 
 export const Editor: FC = () => {
+  const t = useTranslation()
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const { project, touchComponent } = useProject()
@@ -138,7 +140,7 @@ export const Editor: FC = () => {
           >
             <Splitter.Panel display="flex" flexDirection="column" id="component" minHeight="0">
               <Heading px="4" py="3" size="sm">
-                Bőr
+                {t.editor.panels.leather()}
               </Heading>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
                 <ComponentTree selectedComponentId={selectedComponentId} />
@@ -152,11 +154,11 @@ export const Editor: FC = () => {
 
             <Splitter.Panel display="flex" flexDirection="column" id="stitching" minHeight="0">
               <HStack justify="space-between" px="4" py="3">
-                <Heading size="sm">Varrás</Heading>
+                <Heading size="sm">{t.editor.panels.stitching()}</Heading>
                 <AddStitchLinePopover
                   trigger={
                     <Button size="2xs" variant="subtle">
-                      Új varrás
+                      {t.common.actions.addStitchLine()}
                     </Button>
                   }
                 />

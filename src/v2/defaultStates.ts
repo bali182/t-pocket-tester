@@ -3,6 +3,7 @@ import { LEATHER_BASE_COLOR, STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR } from 
 import { HasCornerRadiusSchema, HasLayoutSchema, RootPanelSchema } from './schemas/components'
 import { ProjectSchema } from './schemas/project'
 import { StitchLineCommonConfigSchema } from './schemas/stitching'
+import { translation } from './translations/translation'
 
 const defaultHasCornerRadius: HasCornerRadiusSchema = {
   borderRadius: 0,
@@ -24,7 +25,7 @@ export const defaultComponent: RootPanelSchema = {
   ...defaultHasLayout,
   type: 'root-panel',
   id: 'root',
-  name: 'Alap',
+  name: translation.defaults.rootComponentName.toString(),
   color: LEATHER_BASE_COLOR,
   children: [],
   width: 170,
@@ -43,7 +44,7 @@ export const defaultStitchingSettings: StitchLineCommonConfigSchema = {
 
 export const defaultProject: ProjectSchema = {
   id: 'project 1',
-  name: 'Új projekt',
+  name: translation.defaults.projectName.toString(),
   root: defaultComponent.id,
   components: {
     [defaultComponent.id]: defaultComponent,

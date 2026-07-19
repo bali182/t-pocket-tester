@@ -3,6 +3,7 @@ import { useCallback, type FC } from 'react'
 import type { PocketClusterSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 type TPocketShapeSectionProps = {
@@ -13,6 +14,7 @@ type TPocketShapeSectionProps = {
 }
 
 export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, issues, onChange }) => {
+  const t = useTranslation()
   const handleTPocketTabWidthChange = useCallback(
     (tPocketTabWidth: string) => {
       onChange({
@@ -35,8 +37,8 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, is
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>T-zsebek</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>Fül szélesség</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.component.editor.tPocket.title()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.component.editor.tPocket.flapWidth()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.tPocketTabWidth}
@@ -47,7 +49,7 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, is
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>Szűkülés</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.component.editor.tPocket.taper()}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.tPocketTaper}

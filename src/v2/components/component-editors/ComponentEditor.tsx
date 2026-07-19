@@ -4,6 +4,7 @@ import { FC } from 'react'
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { useTranslation } from '../../translations/translation'
 import { PanelEditor } from './PanelEditor'
 import { PocketClusterEditor } from './PocketClusterEditor'
 import { RootPanelEditor } from './RootPanelEditor'
@@ -16,6 +17,7 @@ type ComponentEditorProps = {
 }
 
 export const ComponentEditor: FC<ComponentEditorProps> = (props) => {
+  const t = useTranslation()
   switch (props.editable.type) {
     case 'root-panel':
       return (
@@ -48,8 +50,8 @@ export const ComponentEditor: FC<ComponentEditorProps> = (props) => {
       return (
         <Alert.Root status="error">
           <Alert.Content>
-            <Alert.Title>Hiba</Alert.Title>
-            <Alert.Description>Ehhez a komponenshez még nincs szerkesztő!</Alert.Description>
+            <Alert.Title>{t.component.editor.missing.title()}</Alert.Title>
+            <Alert.Description>{t.component.editor.missing.description()}</Alert.Description>
           </Alert.Content>
         </Alert.Root>
       )

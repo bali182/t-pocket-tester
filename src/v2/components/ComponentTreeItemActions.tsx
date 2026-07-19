@@ -5,6 +5,7 @@ import { PiCaretDown, PiCaretUp } from 'react-icons/pi'
 import { PiPlus, PiTrash } from 'react-icons/pi'
 import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
+import { useTranslation } from '../translations/translation'
 import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
@@ -16,6 +17,7 @@ type ComponentTreeItemActionsProps = {
 }
 
 export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ component, onAddChild }) => {
+  const t = useTranslation()
   const { project, addComponent, deleteComponent, moveComponent } = useProject()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasChildren(component), [component])
@@ -77,7 +79,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
   return (
     <HStack gap="0.5" onClick={handleActionsClick}>
       <IconButton
-        aria-label="Elem mozgatása fel"
+        aria-label={t.common.accessibility.componentTree.moveUp()}
         disabled={!siblingMoveState.canMoveUp}
         onClick={handleMoveUp}
         size="2xs"
@@ -86,7 +88,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
         <PiCaretUp />
       </IconButton>
       <IconButton
-        aria-label="Elem mozgatása le"
+        aria-label={t.common.accessibility.componentTree.moveDown()}
         disabled={!siblingMoveState.canMoveDown}
         onClick={handleMoveDown}
         size="2xs"
@@ -96,7 +98,12 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
       </IconButton>
       <Menu.Root>
         <Menu.Trigger asChild>
-          <IconButton aria-label="Elem hozzáadása" disabled={!canAdd} size="2xs" variant="ghost">
+          <IconButton
+            aria-label={t.common.accessibility.componentTree.add()}
+            disabled={!canAdd}
+            size="2xs"
+            variant="ghost"
+          >
             <PiPlus />
           </IconButton>
         </Menu.Trigger>
@@ -106,7 +113,13 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
           </Menu.Content>
         </Menu.Positioner>
       </Menu.Root>
-      <IconButton aria-label="Elem törlése" disabled={!canDelete} onClick={handleDelete} size="2xs" variant="ghost">
+      <IconButton
+        aria-label={t.common.accessibility.componentTree.remove()}
+        disabled={!canDelete}
+        onClick={handleDelete}
+        size="2xs"
+        variant="ghost"
+      >
         <PiTrash />
       </IconButton>
     </HStack>
