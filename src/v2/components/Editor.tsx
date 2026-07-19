@@ -20,10 +20,11 @@ const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 export const Editor: FC = () => {
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
-  const { project } = useProject()
+  const { project, touchComponent } = useProject()
   const selectComponent = useCallback((componentId: string): void => {
+    touchComponent(componentId)
     setSelection({ componentId, type: 'component' })
-  }, [])
+  }, [touchComponent])
 
   const selectStitchLine = useCallback((stitchLineId: string): void => {
     setSelection({ stitchLineId, type: 'stitch-line' })

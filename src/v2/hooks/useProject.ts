@@ -1,8 +1,9 @@
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
 import { ComponentSchema } from '../schemas/components'
 import { StitchLineSchema } from '../schemas/stitching'
+import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
 import { computedProjectAtom, projectAtom } from '../state/projectAtom'
 import { createComponent } from '../utils/createComponent'
 import { createStitchLine } from '../utils/createStitchLine'
@@ -13,7 +14,7 @@ import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
 
 export const useProject = () => {
-  const [p, setProject] = useAtom(projectAtom)
+  const project = useAtomValue(projectAtom)
   const computedProject = useAtomValue(computedProjectAtom)
 
   const addComponent = useAtomCallback(
@@ -38,6 +39,8 @@ export const useProject = () => {
           [component.id]: component,
         },
       })
+      set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
+
       return component
     }, []),
   )
@@ -55,112 +58,124 @@ export const useProject = () => {
     }, []),
   )
 
-  const deleteComponent = useCallback(
-    (componentId: string): void => {
-      setProject((project) => {
-        const component = project.components[componentId]
+  const deleteComponent = useAtomCallback(
+    useCallback((get, set, componentId: string): void => {
+      const project = get(projectAtom)
+      const component = project.components[componentId]
 
-        if (!isDefined(component) || component.type === 'root-panel') {
-          return project
-        }
+      if (!isDefined(component) || component.type === 'root-panel') {
+        return
+      }
 
-        const deletedIds = new Set([componentId, ...getDescendants(component, project)])
+      const deletedIds = new Set([componentId, ...getDescendants(component, project)])
 
-        return {
-          ...project,
-          components: Object.fromEntries(
-            Object.entries(project.components)
-              .filter(([id]) => !deletedIds.has(id))
-              .map((tuple) => {
-                const [id, component] = tuple
-                if (!hasChildren(component) || !component.children.some((child) => deletedIds.has(child))) {
-                  return tuple
-                }
-                return [id, { ...component, children: component.children.filter((child) => !deletedIds.has(child)) }]
-              }),
-          ),
-        }
+      set(projectAtom, {
+        ...project,
+        components: Object.fromEntries(
+          Object.entries(project.components)
+            .filter(([id]) => !deletedIds.has(id))
+            .map((tuple) => {
+              const [id, component] = tuple
+              if (!hasChildren(component) || !component.children.some((child) => deletedIds.has(child))) {
+                return tuple
+              }
+              return [id, { ...component, children: component.children.filter((child) => !deletedIds.has(child)) }]
+            }),
+        ),
       })
-    },
-    [setProject],
+    }, []),
   )
 
-  const deleteStitchLine = useCallback(
-    (stitchLineId: string): void => {
-      setProject((project) => ({
+  const deleteStitchLine = useAtomCallback(
+    useCallback((get, set, stitchLineId: string): void => {
+      const project = get(projectAtom)
+
+      set(projectAtom, {
         ...project,
         stitchLines: project.stitchLines.filter((stitchLine) => stitchLine.id !== stitchLineId),
-      }))
-    },
-    [setProject],
-  )
-
-  const moveComponent = useCallback(
-    (componentId: string, direction: 'up' | 'down'): void => {
-      setProject((project) => {
-        const component = project.components[componentId]
-
-        if (!isDefined(component)) {
-          return project
-        }
-
-        const parent = getParent(componentId, project)
-
-        if (!isDefined(parent)) {
-          return project
-        }
-
-        const currentIndex = parent.children.indexOf(componentId)
-        const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
-
-        if (targetIndex < 0 || targetIndex >= parent.children.length) {
-          return project
-        }
-
-        const children = parent.children.slice()
-        const [movedChildId] = children.splice(currentIndex, 1)
-        children.splice(targetIndex, 0, movedChildId)
-
-        return {
-          ...project,
-          components: {
-            ...project.components,
-            [parent.id]: {
-              ...parent,
-              children,
-            },
-          },
-        }
       })
-    },
-    [setProject],
+    }, []),
   )
 
-  const updateComponent = useCallback(
-    (component: ComponentSchema): void => {
-      setProject((project) => ({
+  const moveComponent = useAtomCallback(
+    useCallback((get, set, componentId: string, direction: 'up' | 'down'): void => {
+      const project = get(projectAtom)
+      const component = project.components[componentId]
+
+      if (!isDefined(component)) {
+        return
+      }
+
+      const parent = getParent(componentId, project)
+
+      if (!isDefined(parent)) {
+        return
+      }
+
+      const currentIndex = parent.children.indexOf(componentId)
+      const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+
+      if (targetIndex < 0 || targetIndex >= parent.children.length) {
+        return
+      }
+
+      const children = parent.children.slice()
+      const [movedChildId] = children.splice(currentIndex, 1)
+      children.splice(targetIndex, 0, movedChildId)
+
+      set(projectAtom, {
+        ...project,
+        components: {
+          ...project.components,
+          [parent.id]: {
+            ...parent,
+            children,
+          },
+        },
+      })
+    }, []),
+  )
+
+  const updateComponent = useAtomCallback(
+    useCallback((get, set, component: ComponentSchema): void => {
+      const project = get(projectAtom)
+
+      set(projectAtom, {
         ...project,
         components: {
           ...project.components,
           [component.id]: component,
         },
-      }))
-    },
-    [setProject],
+      })
+      set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
+    }, []),
   )
 
-  const updateStitchLine = useCallback(
-    (stitchLine: StitchLineSchema): void => {
-      setProject((project) => ({
+  const touchComponent = useAtomCallback(
+    useCallback((get, set, componentId: string): void => {
+      const project = get(projectAtom)
+
+      if (!isDefined(project.components[componentId])) {
+        return
+      }
+
+      set(lastTouchedComponentAtom, { projectId: project.id, componentId })
+    }, []),
+  )
+
+  const updateStitchLine = useAtomCallback(
+    useCallback((get, set, stitchLine: StitchLineSchema): void => {
+      const project = get(projectAtom)
+
+      set(projectAtom, {
         ...project,
         stitchLines: project.stitchLines.map((s) => (s.id === stitchLine.id ? stitchLine : s)),
-      }))
-    },
-    [setProject],
+      })
+    }, []),
   )
 
   return {
-    project: p,
+    project,
     computedProject,
     addComponent,
     addStitchLine,
@@ -168,6 +183,7 @@ export const useProject = () => {
     deleteStitchLine,
     moveComponent,
     updateComponent,
+    touchComponent,
     updateStitchLine,
   }
 }

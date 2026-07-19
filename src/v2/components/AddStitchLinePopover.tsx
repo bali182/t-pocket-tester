@@ -8,12 +8,14 @@ import {
   createListCollection,
   type SelectValueChangeDetails,
 } from '@chakra-ui/react'
+import { useAtomValue } from 'jotai'
 import { useCallback, useMemo, useState, type FC, type ReactElement } from 'react'
 import { PiPlus } from 'react-icons/pi'
 
+import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
-import { useProject } from '../hooks/useProject'
+import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
 import { isDefined } from '../utils/isDefined'
 import { ComponentSelect } from './common/ComponentSelect'
 
@@ -38,14 +40,23 @@ const pocketClusterStitchLineOption: StitchLineTypeOption = {
 
 export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger }) => {
   const { project, addStitchLine } = useProject()
+  const lastTouchedComponent = useAtomValue(lastTouchedComponentAtom)
+  const defaultComponentId = useMemo((): string => {
+    if (
+      isDefined(lastTouchedComponent) &&
+      lastTouchedComponent.projectId === project.id &&
+      isDefined(project.components[lastTouchedComponent.componentId])
+    ) {
+      return lastTouchedComponent.componentId
+    }
+
+    return project.root
+  }, [lastTouchedComponent, project.components, project.id, project.root])
   const [isOpen, setIsOpen] = useState(false)
-  const [componentId, setComponentId] = useState<string | undefined>(undefined)
-  const [stitchLineType, setStitchLineType] = useState<StitchLineSchema['type'] | undefined>(
-    'component-bounds-stitch-line',
-  )
+  const [componentId, setComponentId] = useState<string>(defaultComponentId)
+  const [stitchLineType, setStitchLineType] = useState<StitchLineSchema['type']>('component-bounds-stitch-line')
   const component = isDefined(componentId) ? project.components[componentId] : undefined
   const stitchLineTypeOptions = useMemo<StitchLineTypeOption[]>(() => getStitchLineTypeOptions(component), [component])
-  const isStitchLineTypeDisabled = !isDefined(component) || component.type !== 'pocket-cluster'
   const stitchLineTypeCollection = useMemo(
     () =>
       createListCollection<StitchLineTypeOption>({
@@ -58,17 +69,15 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
   const canAdd = isDefined(component) && isDefined(stitchLineType)
 
   const reset = useCallback((): void => {
-    setComponentId(undefined)
-    setStitchLineType(undefined)
-  }, [])
+    setComponentId(defaultComponentId)
+    setStitchLineType('component-bounds-stitch-line')
+  }, [defaultComponentId])
 
   const handleOpenChange = useCallback(
     (details: Popover.OpenChangeDetails): void => {
       setIsOpen(details.open)
 
-      if (!details.open) {
-        reset()
-      }
+      reset()
     },
     [reset],
   )
@@ -116,11 +125,10 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
                 <Field.Label>Komponens</Field.Label>
                 <ComponentSelect componentId={componentId} onChange={handleComponentChange} />
               </Field.Root>
-              <Field.Root disabled={isStitchLineTypeDisabled}>
+              <Field.Root>
                 <Field.Label>Varrás típusa</Field.Label>
                 <Select.Root
                   collection={stitchLineTypeCollection}
-                  disabled={isStitchLineTypeDisabled}
                   onValueChange={handleStitchLineTypeChange}
                   size="xs"
                   value={isDefined(stitchLineType) ? [stitchLineType] : []}
