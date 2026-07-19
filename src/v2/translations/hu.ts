@@ -184,4 +184,4 @@ export const HU = {
     rootComponentName: 'Alap',
     stitchLineName: 'Varrás {number}',
   },
-} as const
+}
