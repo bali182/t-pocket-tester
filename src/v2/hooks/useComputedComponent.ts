@@ -1,11 +1,9 @@
-import { useAtomValue } from 'jotai'
-
 import type { ComputedComponentSchema } from '../schemas/computed'
-import { computedProjectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
+import { useProject } from './useProject'
 
 export const useComputedComponent = <T extends ComputedComponentSchema = ComputedComponentSchema>(id: string): T => {
-  const computedProject = useAtomValue(computedProjectAtom)
+  const { computedProject } = useProject()
   const computedComponent = computedProject.components[id]
 
   if (!isDefined(computedComponent)) {

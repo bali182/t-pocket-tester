@@ -1,11 +1,9 @@
-import { useAtomValue } from 'jotai'
-
 import type { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state'
 import { isDefined } from '../utils/isDefined'
+import { useProject } from './useProject'
 
 export const useStitchLine = (id: string): StitchLineSchema => {
-  const project = useAtomValue(projectAtom)
+  const { project } = useProject()
   const stitchLine = project.stitchLines.find((candidate) => candidate.id === id)
 
   if (!isDefined(stitchLine)) {

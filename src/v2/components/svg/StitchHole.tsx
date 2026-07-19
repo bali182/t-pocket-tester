@@ -1,11 +1,11 @@
 import BigNumber from 'bignumber.js'
 import { useMemo, type FC } from 'react'
 import { NumberLineSchema } from '../../schemas/geometry'
-import { StitchHoleSchema, StitchingSettingsSchema } from '../../schemas/stitching'
+import { StitchHoleSchema, StitchLineCommonConfigSchema } from '../../schemas/stitching'
 
 type StitchHoleProps = {
   hole: StitchHoleSchema
-  settings: StitchingSettingsSchema
+  settings: StitchLineCommonConfigSchema
 }
 
 export const StitchHole: FC<StitchHoleProps> = (props) => {

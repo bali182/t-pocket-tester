@@ -2,7 +2,7 @@ import { Box, Grid } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { StitchLineSchema } from '../../schemas/stitching'
+import type { ComponentBoundsStitchLineSchema } from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { StitchLineCornerToggle } from './StitchLineCornerToggle'
 import { StitchLineDirectionSwitch } from './StitchLineDirectionSwitch'
@@ -10,9 +10,9 @@ import { StitchLineEdgeToggle } from './StitchLineEdgeToggle'
 import { StitchLineOffsetInput, type StitchLineOffsetField } from './StitchLineOffsetInput'
 
 type StitchLineSidesAndCornersProps = {
-  editable: EditableSchema<StitchLineSchema>
-  issues: ValidationIssuesSchema<StitchLineSchema>
-  onChange: (updated: EditableSchema<StitchLineSchema>) => void
+  editable: EditableSchema<ComponentBoundsStitchLineSchema>
+  issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
+  onChange: (updated: EditableSchema<ComponentBoundsStitchLineSchema>) => void
 }
 
 type StitchLineSideFields = 'top' | 'right' | 'bottom' | 'left'

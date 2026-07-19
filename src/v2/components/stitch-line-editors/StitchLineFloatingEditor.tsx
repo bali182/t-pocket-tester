@@ -26,7 +26,12 @@ export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ an
         title={`#${editedStitchLine.id}`}
       />
       <SectionGroup.Root>
-        <StitchLineEditor editable={editableStitchLine} issues={validationIssues} onChange={setStitchLine} />
+        <StitchLineEditor
+          editable={editableStitchLine}
+          issues={validationIssues}
+          onChange={setStitchLine}
+          stitchLine={editedStitchLine}
+        />
       </SectionGroup.Root>
     </FloatingEditor>
   )

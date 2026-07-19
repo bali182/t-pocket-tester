@@ -1,7 +1,6 @@
-import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 
-import { computedProjectAtom, projectAtom } from '../../state'
+import { useProject } from '../../hooks/useProject'
 import { isDefined } from '../../utils/isDefined'
 import { StitchLine } from './StitchLine'
 
@@ -10,9 +9,10 @@ type StitchLinesProps = {
 }
 
 export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
-  const project = useAtomValue(projectAtom)
-  const computedProject = useAtomValue(computedProjectAtom)
-  const stitchLines = project.stitchLines.filter((stitchLine) => stitchLine.componentId === componentId)
+  const { project, computedProject } = useProject()
+  const stitchLines = project.stitchLines.filter(
+    (stitchLine) => stitchLine.componentId === componentId && stitchLine.type === 'component-bounds-stitch-line',
+  )
 
   return (
     <>

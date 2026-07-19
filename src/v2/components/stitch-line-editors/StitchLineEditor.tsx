@@ -1,24 +1,39 @@
 import { type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { StitchLineSchema } from '../../schemas/stitching'
+import type {
+  ComponentBoundsStitchLineSchema,
+  PocketClusterStitchLineSchema,
+  StitchLineSchema,
+} from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { BasicSettingsSection } from './sections/BasicSettingsSection'
-import { StitchSidesAndCornersSection } from './sections/StitchSidesAndCornersSection'
-import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
+import { ComponentBoundsStitchLineEditor } from './ComponentBoundsStitchLineEditor'
+import { PocketClusterStitchLineEditor } from './PocketClusterStitchLineEditor'
 
 type StitchLineEditorProps = {
   editable: EditableSchema<StitchLineSchema>
   issues: ValidationIssuesSchema<StitchLineSchema>
   onChange: (updated: EditableSchema<StitchLineSchema>) => void
+  stitchLine: StitchLineSchema
 }
 
-export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, onChange }) => {
-  return (
-    <>
-      <BasicSettingsSection editable={editable} issues={issues} onChange={onChange} />
-      <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
-      <StitchingSettingsSection editable={editable} issues={issues} onChange={onChange} />
-    </>
-  )
+export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, onChange, stitchLine }) => {
+  switch (stitchLine.type) {
+    case 'component-bounds-stitch-line':
+      return (
+        <ComponentBoundsStitchLineEditor
+          editable={editable as EditableSchema<ComponentBoundsStitchLineSchema>}
+          issues={issues as ValidationIssuesSchema<ComponentBoundsStitchLineSchema>}
+          onChange={onChange}
+        />
+      )
+    case 'pocket-cluster-stitch-line':
+      return (
+        <PocketClusterStitchLineEditor
+          editable={editable as EditableSchema<PocketClusterStitchLineSchema>}
+          issues={issues as ValidationIssuesSchema<PocketClusterStitchLineSchema>}
+          onChange={onChange}
+        />
+      )
+  }
 }

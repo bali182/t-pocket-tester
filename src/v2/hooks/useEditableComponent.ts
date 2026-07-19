@@ -1,13 +1,12 @@
-import { useSetAtom } from 'jotai'
 import { useCallback } from 'react'
 
 import type { ComponentSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
 import type { ValidationIssuesSchema } from '../schemas/validation'
-import { projectAtom } from '../state'
 import { validateComponentSchema } from '../validators/validateComponentSchema'
 import { useComponent } from './useComponent'
 import { useEditableModel } from './useEditableModel'
+import { useProject } from './useProject'
 
 export type UseEditableComponentResult = {
   component: ComponentSchema
@@ -19,19 +18,13 @@ export type UseEditableComponentResult = {
 export const useEditableComponent = (componentId: string): UseEditableComponentResult => {
   const component = useComponent(componentId)
 
-  const setProject = useSetAtom(projectAtom)
+  const { updateComponent } = useProject()
 
   const commit = useCallback(
     (updatedComponent: ComponentSchema): void => {
-      setProject((project) => ({
-        ...project,
-        components: {
-          ...project.components,
-          [componentId]: updatedComponent,
-        },
-      }))
+      updateComponent(updatedComponent)
     },
-    [componentId, setProject],
+    [updateComponent],
   )
 
   const { editableValue, setValue, validationIssues } = useEditableModel({

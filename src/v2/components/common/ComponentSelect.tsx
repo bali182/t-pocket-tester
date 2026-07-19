@@ -6,32 +6,33 @@ import {
   type ListCollection,
   type SelectValueChangeDetails,
 } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
 import { useCallback, useMemo, type FC } from 'react'
 
-import { useComponent } from '../../hooks/useComponent'
 import { useComponentIcon } from '../../hooks/useComponentIcon'
+import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
-import { projectAtom } from '../../state'
 import { isDefined } from '../../utils/isDefined'
 
 type ComponentSelectProps = {
-  componentId: string
+  componentId: string | undefined
+  componentTypes?: ComponentSchema['type'][]
   onChange: (componentId: string) => void
 }
 
-export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, onChange }) => {
-  const project = useAtomValue(projectAtom)
-  const component = useComponent(componentId)
-  const Icon = useComponentIcon(component.type)
+export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, componentTypes, onChange }) => {
+  const { project } = useProject()
+  const component = isDefined(componentId) ? project.components[componentId] : undefined
+  const Icon = useComponentIcon(component?.type ?? 'panel')
   const collection = useMemo<ListCollection<ComponentSchema>>(
     () =>
       createListCollection<ComponentSchema>({
         itemToString: (item) => item.name,
         itemToValue: (item) => item.id,
-        items: Object.values(project.components),
+        items: Object.values(project.components).filter(
+          (component) => !isDefined(componentTypes) || componentTypes.includes(component.type),
+        ),
       }),
-    [project.components],
+    [componentTypes, project.components],
   )
 
   const handleValueChange = useCallback(
@@ -48,17 +49,26 @@ export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, onChang
   )
 
   return (
-    <Select.Root collection={collection} onValueChange={handleValueChange} size="xs" value={[componentId]}>
+    <Select.Root
+      collection={collection}
+      onValueChange={handleValueChange}
+      size="xs"
+      value={isDefined(componentId) ? [componentId] : []}
+    >
       <Select.HiddenSelect />
       <Select.Control>
         <Select.Trigger>
-          <Select.ValueText asChild>
-            <HStack gap="1">
-              <Icon />
-              <Text>{component.name}</Text>
-              <Text color="fg.muted">(#{component.id})</Text>
-            </HStack>
-          </Select.ValueText>
+          {isDefined(component) ? (
+            <Select.ValueText asChild>
+              <HStack gap="1">
+                <Icon />
+                <Text>{component.name}</Text>
+                <Text color="fg.muted">(#{component.id})</Text>
+              </HStack>
+            </Select.ValueText>
+          ) : (
+            <Select.ValueText placeholder="Komponens kiválasztása" />
+          )}
         </Select.Trigger>
         <Select.IndicatorGroup>
           <Select.Indicator />

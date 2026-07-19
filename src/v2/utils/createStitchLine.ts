@@ -1,32 +1,46 @@
+import { defaultStitchingSettings } from '../defaultStates'
+import { HasIdentitySchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
 import type {
+  ComponentBoundsStitchLineOwnSchema,
+  ComponentBoundsStitchLineSchema,
+  PocketClusterStitchLineOwnSchema,
+  PocketClusterStitchLineSchema,
   StitchLineComponentReferencesSchema,
-  StitchLineConfigSchema,
-  StitchLineSchema,
 } from '../schemas/stitching'
 import { getUnusedStitchLineName } from './getUnusedStitchLineName'
 import { id } from './id'
 
-export const createStitchLine = (
-  project: ProjectSchema,
-  componentReferences: StitchLineComponentReferencesSchema,
-): StitchLineSchema => ({
-  ...defaultStitchLine,
-  ...project.stitchingSettings,
-  ...componentReferences,
-  id: id(),
-  name: getUnusedStitchLineName(project),
-})
+type StitchLineByTypeName = {
+  'component-bounds-stitch-line': ComponentBoundsStitchLineSchema
+  'pocket-cluster-stitch-line': PocketClusterStitchLineSchema
+}
 
-const defaultStitchLine: StitchLineConfigSchema = {
-  top: false,
-  right: false,
-  bottom: false,
-  left: false,
-  topLeftCorner: false,
-  topRightCorner: false,
-  bottomRightCorner: false,
-  bottomLeftCorner: false,
+export const createStitchLine = <T extends keyof StitchLineByTypeName>(
+  type: T,
+  project: ProjectSchema,
+  componentId: string,
+): StitchLineByTypeName[T] => {
+  const defaults = DEFAULT_STITCH_LINES[type]
+  return {
+    ...defaults,
+    ...project.stitchingSettings,
+    id: id(),
+    type,
+    componentId,
+    name: getUnusedStitchLineName(project),
+  }
+}
+
+const defaultStitchLine: ComponentBoundsStitchLineOwnSchema = {
+  top: true,
+  right: true,
+  bottom: true,
+  left: true,
+  topLeftCorner: true,
+  topRightCorner: true,
+  bottomRightCorner: true,
+  bottomLeftCorner: true,
   topStitchDirection: 'left-to-right',
   rightStitchDirection: 'top-to-bottom',
   bottomStitchDirection: 'right-to-left',
@@ -39,4 +53,32 @@ const defaultStitchLine: StitchLineConfigSchema = {
   bottomEndOffset: 0,
   leftStartOffset: 0,
   leftEndOffset: 0,
+}
+
+const defaultPocketClusterStitchLine: PocketClusterStitchLineOwnSchema = {
+  enabled: true,
+  endOffset: 0,
+  startOffset: 0,
+  stitchDirection: 'start-to-end',
+}
+
+const junkIdentityProps: HasIdentitySchema & StitchLineComponentReferencesSchema = {
+  componentId: '',
+  id: '',
+  name: '',
+}
+
+const DEFAULT_STITCH_LINES: StitchLineByTypeName = {
+  'component-bounds-stitch-line': {
+    ...defaultStitchingSettings,
+    ...defaultStitchLine,
+    ...junkIdentityProps,
+    type: 'component-bounds-stitch-line',
+  },
+  'pocket-cluster-stitch-line': {
+    ...defaultStitchingSettings,
+    ...defaultPocketClusterStitchLine,
+    ...junkIdentityProps,
+    type: 'pocket-cluster-stitch-line',
+  },
 }

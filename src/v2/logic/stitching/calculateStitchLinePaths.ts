@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import type { ComponentSchema } from '../../schemas/components'
 import type { ComputedComponentSchema } from '../../schemas/computed'
 import type { PathCommand, PathSchema, PointSchema } from '../../schemas/geometry'
-import type { StitchCornerSchema, StitchLineSchema, StitchSideSchema } from '../../schemas/stitching'
+import type { ComponentBoundsStitchLineSchema, StitchCornerSchema, StitchSideSchema } from '../../schemas/stitching'
 import { getNormalizedCornerRadius } from '../getNormalizedCornerRadius'
 
 const ZERO = new BigNumber(0)
@@ -36,7 +36,7 @@ type SelectableStitchPathFragment = StitchPathFragment & {
 }
 
 export const calculateStitchLinePaths = (
-  stitchLine: StitchLineSchema,
+  stitchLine: ComponentBoundsStitchLineSchema,
   component: ComponentSchema,
   computedComponent: ComputedComponentSchema,
 ): CalculatedStitchLinePath[] => {
@@ -52,7 +52,7 @@ export const calculateStitchLinePaths = (
 }
 
 const calculateStitchLinePathFragments = (
-  stitchLine: StitchLineSchema,
+  stitchLine: ComponentBoundsStitchLineSchema,
   component: ComponentSchema,
   computedComponent: ComputedComponentSchema,
 ): SelectableStitchPathFragment[] => {

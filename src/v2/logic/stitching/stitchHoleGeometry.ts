@@ -42,13 +42,15 @@ export const createStitchHoleSegments = (fragments: StitchPathFragment[]): Stitc
     }
 
     if (fragment.radius.isGreaterThan(ZERO)) {
-      return [{
-        type: 'arc',
-        start: fragment.start,
-        end: fragment.end,
-        center: getCornerCenter(fragment),
-        radius: fragment.radius,
-      }]
+      return [
+        {
+          type: 'arc',
+          start: fragment.start,
+          end: fragment.end,
+          center: getCornerCenter(fragment),
+          radius: fragment.radius,
+        },
+      ]
     }
 
     return []
@@ -65,7 +67,9 @@ export const findNextStitchHole = (
     const segment = segments[segmentIndex]
     const minimumProgress = segmentIndex === cursor.segmentIndex ? getSegmentProgress(segment, cursor.point) : ZERO
     const intersections = getSegmentCircleIntersections(segment, previousHoleCenter, stitchHoleDistance)
-    const nextIntersection = intersections.find(({ progress }) => progress.isGreaterThan(minimumProgress.plus(PARAMETER_EPSILON)))
+    const nextIntersection = intersections.find(({ progress }) =>
+      progress.isGreaterThan(minimumProgress.plus(PARAMETER_EPSILON)),
+    )
 
     if (isDefined(nextIntersection)) {
       return {
@@ -238,7 +242,7 @@ const normalizeAngle = (angle: number): number => {
 
 const getRotationFromVector = (x: BigNumber, y: BigNumber): number => {
   const lineAngle = (Math.atan2(y.toNumber(), x.toNumber()) * 180) / Math.PI
-  return ((lineAngle - 90) % 180 + 180) % 180
+  return (((lineAngle - 90) % 180) + 180) % 180
 }
 
 const areNumberPointsEqual = (first: { x: number; y: number }, second: { x: number; y: number }): boolean => {

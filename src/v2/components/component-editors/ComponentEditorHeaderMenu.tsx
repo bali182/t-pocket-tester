@@ -1,13 +1,10 @@
 import { Button, HStack, Menu } from '@chakra-ui/react'
-import { useSetAtom } from 'jotai'
 import { useCallback, type FC } from 'react'
 import { PiPlus, PiTrash } from 'react-icons/pi'
 
 import { type ChildComponentType, AddChildComponentMenu } from '../AddChildComponentMenu'
+import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
-import { projectAtom } from '../../state'
-import { addComponent } from '../../utils/addComponent'
-import { removeComponent } from '../../utils/removeComponent'
 
 type ComponentEditorHeaderMenuProps = {
   component: ComponentSchema
@@ -15,21 +12,21 @@ type ComponentEditorHeaderMenuProps = {
 }
 
 export const ComponentEditorHeaderMenu: FC<ComponentEditorHeaderMenuProps> = ({ component, onClose }) => {
-  const setProject = useSetAtom(projectAtom)
+  const { addComponent, deleteComponent } = useProject()
   const canAddChild = component.type !== 'pocket-cluster'
   const canDelete = component.type !== 'root-panel'
 
   const handleAddChild = useCallback(
     (type: ChildComponentType): void => {
-      setProject((project) => addComponent(component.id, type, project))
+      addComponent(component.id, type)
     },
-    [component.id, setProject],
+    [addComponent, component.id],
   )
 
   const handleDelete = useCallback((): void => {
     onClose()
-    setProject((project) => removeComponent(component.id, project))
-  }, [component.id, onClose, setProject])
+    deleteComponent(component.id)
+  }, [component.id, deleteComponent, onClose])
 
   return (
     <HStack gap="1">
