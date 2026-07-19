@@ -1,9 +1,9 @@
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
 import { ComponentSchema } from '../schemas/components'
 import { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state/projectAtom'
+import { computedProjectAtom, projectAtom } from '../state/projectAtom'
 import { createComponent } from '../utils/createComponent'
 import { createStitchLine } from '../utils/createStitchLine'
 import { getComponentNestingLevel } from '../utils/getComponentNestingLevel'
@@ -14,6 +14,7 @@ import { isDefined } from '../utils/isDefined'
 
 export const useProject = () => {
   const [p, setProject] = useAtom(projectAtom)
+  const [computedProject] = useAtomValue(computedProjectAtom)
 
   const addComponent = useAtomCallback(
     useCallback((get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {
@@ -160,6 +161,7 @@ export const useProject = () => {
 
   return {
     project: p,
+    computedProject,
     addComponent,
     addStitchLine,
     deleteComponent,
