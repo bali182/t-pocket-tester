@@ -4,7 +4,7 @@ import { useCallback, useMemo, type FC, type ReactElement } from 'react'
 
 import { useComponentIcon } from '../hooks/useComponentIcon'
 import type { ComponentSchema } from '../schemas/components'
-import { projectAtom } from '../state/state'
+import { projectAtom } from '../state/projectAtom'
 
 type ComponentMenuProps = {
   onSelect: (componentId: string) => void

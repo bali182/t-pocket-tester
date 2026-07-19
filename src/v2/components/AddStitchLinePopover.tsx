@@ -14,7 +14,7 @@ import { PiPlus } from 'react-icons/pi'
 
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state/state'
+import { projectAtom } from '../state/projectAtom'
 import { createStitchLine } from '../utils/createStitchLine'
 import { isDefined } from '../utils/isDefined'
 import { ComponentSelect } from './common/ComponentSelect'

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { LANGUAGE } from '../constants/language'
 import type { EditableSchema } from '../schemas/editable'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
-import { computedProjectAtom, projectAtom } from '../state/state'
+import { computedProjectAtom, projectAtom } from '../state/projectAtom'
 import { getEditableSchema } from '../utils/getEditableSchema'
 
 export type EditableModelValidatorSchema<T> = (

@@ -5,7 +5,7 @@ import { PiCaretDown, PiCaretUp } from 'react-icons/pi'
 
 import { PiPlus, PiTrash } from 'react-icons/pi'
 import type { ComponentSchema } from '../schemas/components'
-import { projectAtom } from '../state/state'
+import { projectAtom } from '../state/projectAtom'
 import { addComponent } from '../utils/addComponent'
 import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'

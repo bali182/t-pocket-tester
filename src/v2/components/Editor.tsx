@@ -6,7 +6,7 @@ import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawArea
 import type { ComponentSchema } from '../schemas/components'
 import { EditorSelectionSchema } from '../schemas/selection'
 import type { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state/state'
+import { projectAtom } from '../state/projectAtom'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
 import { AddStitchLinePopover } from './AddStitchLinePopover'

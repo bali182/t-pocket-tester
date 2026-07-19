@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 
 import type { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state/state'
+import { projectAtom } from '../state/projectAtom'
 import { isDefined } from '../utils/isDefined'
 
 export const useStitchLine = (id: string): StitchLineSchema => {

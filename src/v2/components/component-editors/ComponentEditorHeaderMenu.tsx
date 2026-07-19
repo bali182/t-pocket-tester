@@ -5,7 +5,7 @@ import { PiPlus, PiTrash } from 'react-icons/pi'
 
 import { type ChildComponentType, AddChildComponentMenu } from '../AddChildComponentMenu'
 import type { ComponentSchema } from '../../schemas/components'
-import { projectAtom } from '../../state/state'
+import { projectAtom } from '../../state/projectAtom'
 import { addComponent } from '../../utils/addComponent'
 import { removeComponent } from '../../utils/removeComponent'
 

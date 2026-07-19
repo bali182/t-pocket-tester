@@ -1,12 +1,10 @@
-import { atom, createStore } from 'jotai'
+import { atom } from 'jotai'
 import type { SetStateAction } from 'react'
 
 import { getPatchedProject } from '../component-patches/getPatchedProject'
 import { defaultProject } from '../defaultStates'
 import { getComputedProject } from '../logic/getComputedProject'
 import type { ProjectSchema } from '../schemas/project'
-
-export const appStore = createStore()
 
 // Stores the final project model after automatic patches have been applied.
 const projectStorageAtom = atom<ProjectSchema>(getPatchedProject(defaultProject, getComputedProject(defaultProject)))

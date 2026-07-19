@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 
 import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
-import { computedProjectAtom, projectAtom } from '../../state/state'
+import { computedProjectAtom, projectAtom } from '../../state/projectAtom'
 import { isDefined } from '../../utils/isDefined'
 import { StitchLineRoute } from './StitchLineRoute'
 
