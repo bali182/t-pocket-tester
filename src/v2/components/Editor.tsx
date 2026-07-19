@@ -1,12 +1,11 @@
 import { Box, Button, Heading, HStack, Splitter, SplitterPanelData, SplitterResizeDetails } from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
-import { useAtomValue } from 'jotai'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
+import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import { EditorSelectionSchema } from '../schemas/selection'
 import type { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state/projectAtom'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
 import { AddStitchLinePopover } from './AddStitchLinePopover'
@@ -21,7 +20,7 @@ const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 export const Editor: FC = () => {
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
-  const project = useAtomValue(projectAtom)
+  const { project } = useProject()
   const selectComponent = useCallback((componentId: string): void => {
     setSelection({ componentId, type: 'component' })
   }, [])

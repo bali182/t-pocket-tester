@@ -1,11 +1,10 @@
-import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { LANGUAGE } from '../constants/language'
 import type { EditableSchema } from '../schemas/editable'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
-import { computedProjectAtom, projectAtom } from '../state/projectAtom'
 import { getEditableSchema } from '../utils/getEditableSchema'
+import { useProject } from './useProject'
 
 export type EditableModelValidatorSchema<T> = (
   input: EditableSchema<T>,
@@ -27,8 +26,7 @@ type UseEditableModelOptions<T> = {
 }
 
 export const useEditableModel = <T>({ commit, validate, value }: UseEditableModelOptions<T>): UseEditableModelResult<T> => {
-  const project = useAtomValue(projectAtom)
-  const computedProject = useAtomValue(computedProjectAtom)
+  const { project, computedProject } = useProject()
   const [isDirty, setIsDirty] = useState(false)
   const [locallyCommittedValue, setLocallyCommittedValue] = useState<T | undefined>(undefined)
   const [lastObservedValue, setLastObservedValue] = useState(value)

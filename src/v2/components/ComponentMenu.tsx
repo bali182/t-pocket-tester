@@ -1,10 +1,9 @@
 import { Menu, Text } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
 import { useCallback, useMemo, type FC, type ReactElement } from 'react'
 
 import { useComponentIcon } from '../hooks/useComponentIcon'
+import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
-import { projectAtom } from '../state/projectAtom'
 
 type ComponentMenuProps = {
   onSelect: (componentId: string) => void
@@ -33,7 +32,7 @@ const ComponentMenuItem: FC<ComponentMenuItemProps> = ({ component, onSelect }) 
 }
 
 export const ComponentMenu: FC<ComponentMenuProps> = ({ onSelect, trigger }) => {
-  const project = useAtomValue(projectAtom)
+  const { project } = useProject()
   const components = useMemo<ComponentSchema[]>(() => Object.values(project.components), [project.components])
 
   return (

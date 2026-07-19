@@ -1,17 +1,15 @@
-import { useAtomValue } from 'jotai'
-
 import { STROKE_THICKNESS, VIEWBOX_PADDING } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
+import { useProject } from '../../hooks/useProject'
 import type { RootPanelSchema } from '../../schemas/components'
 import type { ComputedRootPanelSchema } from '../../schemas/computed'
-import { computedProjectAtom } from '../../state/projectAtom'
 import { getViewBox } from '../../utils/getViewBox'
 import { RootPanel } from './RootPanel'
 
 export const SvgRoot = () => {
-  const computedProject = useAtomValue(computedProjectAtom)
+  const { computedProject } = useProject()
   const rootComponent = useComponent<RootPanelSchema>(computedProject.root)
   const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(computedProject.root)
   const { isInteractive } = useDrawAreaContext()

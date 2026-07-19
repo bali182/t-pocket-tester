@@ -8,16 +8,14 @@ import {
   type TreeCollection,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
-import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 
 import { PiNeedle, PiPlus, PiTrash } from 'react-icons/pi'
 import { TbNeedleThread } from 'react-icons/tb'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
+import { useProject } from '../hooks/useProject'
 import type { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state/projectAtom'
 import { isDefined } from '../utils/isDefined'
-import { removeStitchLine } from '../utils/removeStitchLine'
 import { AddStitchLinePopover } from './AddStitchLinePopover'
 
 type StitchLineTreeNode = {
@@ -32,20 +30,19 @@ type StitchLineTreeProps = {
 }
 
 export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }) => {
-  const project = useAtomValue(projectAtom)
-  const setProject = useSetAtom(projectAtom)
+  const { project, deleteStitchLine } = useProject()
   const { clearSelection, selectStitchLine } = useDrawAreaContext()
 
   const handleDelete = useCallback(
     (event: MouseEvent<HTMLButtonElement>, stitchLineId: string): void => {
       event.stopPropagation()
-      setProject((project) => removeStitchLine(stitchLineId, project))
+      deleteStitchLine(stitchLineId)
 
       if (selectedStitchLineId === stitchLineId) {
         clearSelection()
       }
     },
-    [clearSelection, selectedStitchLineId, setProject],
+    [clearSelection, deleteStitchLine, selectedStitchLineId],
   )
 
   const selectedValue = useMemo((): string[] => {

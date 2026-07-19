@@ -1,12 +1,11 @@
-import { useSetAtom } from 'jotai'
 import { useCallback } from 'react'
 
 import type { EditableSchema } from '../schemas/editable'
 import type { StitchLineSchema } from '../schemas/stitching'
 import type { ValidationIssuesSchema } from '../schemas/validation'
-import { projectAtom } from '../state/projectAtom'
 import { validateStitchLineSchema } from '../validators/validateStitchLineSchema'
 import { useEditableModel } from './useEditableModel'
+import { useProject } from './useProject'
 import { useStitchLine } from './useStitchLine'
 
 export type UseEditableStitchLineResult = {
@@ -19,18 +18,13 @@ export type UseEditableStitchLineResult = {
 export const useEditableStitchLine = (stitchLineId: string): UseEditableStitchLineResult => {
   const stitchLine = useStitchLine(stitchLineId)
 
-  const setProject = useSetAtom(projectAtom)
+  const { updateStitchLine } = useProject()
 
   const commit = useCallback(
     (updatedStitchLine: StitchLineSchema): void => {
-      setProject((project) => ({
-        ...project,
-        stitchLines: project.stitchLines.map((candidate) =>
-          candidate.id === stitchLineId ? updatedStitchLine : candidate,
-        ),
-      }))
+      updateStitchLine(updatedStitchLine)
     },
-    [setProject, stitchLineId],
+    [updateStitchLine],
   )
 
   const { editableValue, setValue, validationIssues } = useEditableModel({

@@ -5,15 +5,14 @@ import {
   type TreeViewExpandedChangeDetails,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
 
 import { PiCaretRight } from 'react-icons/pi'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useComponent } from '../hooks/useComponent'
 import { useComponentIcon } from '../hooks/useComponentIcon'
+import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
-import { projectAtom } from '../state/projectAtom'
 import { getComponentAncestorIds } from '../utils/getComponentAncestorIds'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
@@ -41,7 +40,7 @@ const ComponentTreeNodeIcon: FC<ComponentTreeNodeIconProps> = ({ type }) => {
 }
 
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
-  const project = useAtomValue(projectAtom)
+  const { project } = useProject()
   const rootComponent = useComponent(project.root)
   const { selectComponent } = useDrawAreaContext()
   const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])

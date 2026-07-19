@@ -8,14 +8,12 @@ import {
   createListCollection,
   type SelectValueChangeDetails,
 } from '@chakra-ui/react'
-import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useMemo, useState, type FC, type ReactElement } from 'react'
 import { PiPlus } from 'react-icons/pi'
 
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
-import { projectAtom } from '../state/projectAtom'
-import { createStitchLine } from '../utils/createStitchLine'
+import { useProject } from '../hooks/useProject'
 import { isDefined } from '../utils/isDefined'
 import { ComponentSelect } from './common/ComponentSelect'
 
@@ -39,8 +37,7 @@ const pocketClusterStitchLineOption: StitchLineTypeOption = {
 }
 
 export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger }) => {
-  const project = useAtomValue(projectAtom)
-  const setProject = useSetAtom(projectAtom)
+  const { project, addStitchLine } = useProject()
   const [isOpen, setIsOpen] = useState(false)
   const [componentId, setComponentId] = useState<string | undefined>(undefined)
   const [stitchLineType, setStitchLineType] = useState<StitchLineSchema['type'] | undefined>(
@@ -100,16 +97,10 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
       return
     }
 
-    setProject((currentProject) => {
-      const stitchLine = createStitchLine(stitchLineType, currentProject, componentId)
-      return {
-        ...currentProject,
-        stitchLines: [...currentProject.stitchLines, stitchLine],
-      }
-    })
+    addStitchLine(componentId, stitchLineType)
     reset()
     setIsOpen(false)
-  }, [canAdd, componentId, reset, setProject, stitchLineType])
+  }, [addStitchLine, canAdd, componentId, reset, stitchLineType])
 
   return (
     <Popover.Root onOpenChange={handleOpenChange} open={isOpen}>

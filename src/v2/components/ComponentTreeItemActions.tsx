@@ -1,17 +1,13 @@
 import { HStack, IconButton, Menu } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiCaretDown, PiCaretUp } from 'react-icons/pi'
 
 import { PiPlus, PiTrash } from 'react-icons/pi'
+import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
-import { projectAtom } from '../state/projectAtom'
-import { addComponent } from '../utils/addComponent'
 import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
-import { moveComponentWithinParent } from '../utils/moveComponentWithinParent'
-import { removeComponent } from '../utils/removeComponent'
 import { AddChildComponentMenu, type ChildComponentType } from './AddChildComponentMenu'
 
 type ComponentTreeItemActionsProps = {
@@ -20,7 +16,7 @@ type ComponentTreeItemActionsProps = {
 }
 
 export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ component, onAddChild }) => {
-  const [project, setProject] = useAtom(projectAtom)
+  const { project, addComponent, deleteComponent, moveComponent } = useProject()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasChildren(component), [component])
   const siblingMoveState = useMemo(() => {
@@ -51,32 +47,32 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
       if (!canAdd) {
         return
       }
-      setProject((project) => addComponent(component.id, type, project))
+      addComponent(component.id, type)
       onAddChild(component.id)
     },
-    [canAdd, component.id, onAddChild, setProject],
+    [addComponent, canAdd, component.id, onAddChild],
   )
 
   const handleDelete = useCallback((): void => {
     if (!canDelete) {
       return
     }
-    setProject((project) => removeComponent(component.id, project))
-  }, [canDelete, component.id, setProject])
+    deleteComponent(component.id)
+  }, [canDelete, component.id, deleteComponent])
 
   const handleMoveUp = useCallback((): void => {
     if (!siblingMoveState.canMoveUp) {
       return
     }
-    setProject((project) => moveComponentWithinParent(component.id, 'up', project))
-  }, [component.id, setProject, siblingMoveState.canMoveUp])
+    moveComponent(component.id, 'up')
+  }, [component.id, moveComponent, siblingMoveState.canMoveUp])
 
   const handleMoveDown = useCallback((): void => {
     if (!siblingMoveState.canMoveDown) {
       return
     }
-    setProject((project) => moveComponentWithinParent(component.id, 'down', project))
-  }, [component.id, setProject, siblingMoveState.canMoveDown])
+    moveComponent(component.id, 'down')
+  }, [component.id, moveComponent, siblingMoveState.canMoveDown])
 
   return (
     <HStack gap="0.5" onClick={handleActionsClick}>

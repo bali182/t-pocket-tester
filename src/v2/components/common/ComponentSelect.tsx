@@ -6,12 +6,11 @@ import {
   type ListCollection,
   type SelectValueChangeDetails,
 } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
 import { useCallback, useMemo, type FC } from 'react'
 
 import { useComponentIcon } from '../../hooks/useComponentIcon'
+import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
-import { projectAtom } from '../../state/projectAtom'
 import { isDefined } from '../../utils/isDefined'
 
 type ComponentSelectProps = {
@@ -20,7 +19,7 @@ type ComponentSelectProps = {
 }
 
 export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, onChange }) => {
-  const project = useAtomValue(projectAtom)
+  const { project } = useProject()
   const component = isDefined(componentId) ? project.components[componentId] : undefined
   const Icon = useComponentIcon(component?.type ?? 'panel')
   const collection = useMemo<ListCollection<ComponentSchema>>(

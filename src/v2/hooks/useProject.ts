@@ -14,7 +14,7 @@ import { isDefined } from '../utils/isDefined'
 
 export const useProject = () => {
   const [p, setProject] = useAtom(projectAtom)
-  const [computedProject] = useAtomValue(computedProjectAtom)
+  const computedProject = useAtomValue(computedProjectAtom)
 
   const addComponent = useAtomCallback(
     useCallback((get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {

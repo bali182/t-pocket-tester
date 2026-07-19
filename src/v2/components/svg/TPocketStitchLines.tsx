@@ -1,8 +1,7 @@
-import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 
+import { useProject } from '../../hooks/useProject'
 import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
-import { computedProjectAtom, projectAtom } from '../../state/projectAtom'
 import { isDefined } from '../../utils/isDefined'
 import { StitchLineRoute } from './StitchLineRoute'
 
@@ -12,8 +11,7 @@ type TPocketStitchLinesProps = {
 }
 
 export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ componentId, pocketIndex }) => {
-  const project = useAtomValue(projectAtom)
-  const computedProject = useAtomValue(computedProjectAtom)
+  const { project, computedProject } = useProject()
   const stitchLines = project.stitchLines.filter(
     (stitchLine): stitchLine is PocketClusterStitchLineSchema =>
       stitchLine.componentId === componentId && stitchLine.type === 'pocket-cluster-stitch-line',
