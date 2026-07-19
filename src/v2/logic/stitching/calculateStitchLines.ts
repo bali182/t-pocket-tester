@@ -9,18 +9,17 @@ export const calculateStitchLines = (
   components: Record<string, ComponentSchema>,
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedStitchLineSchema[] => {
-  return stitchLines.map((stitchLine) => {
+  const computedStitchLines: ComputedStitchLineSchema[] = []
+
+  for (const stitchLine of stitchLines) {
     const component = components[stitchLine.componentId]
     const computedComponent = computedComponents[stitchLine.componentId]
 
-    if (!isDefined(component)) {
-      throw new Error(`Stitch line component not found: ${stitchLine.componentId}`)
+    if (!isDefined(component) || !isDefined(computedComponent)) {
+      continue
     }
+    computedStitchLines.push(calculateStitchLine(stitchLine, component, computedComponent))
+  }
 
-    if (!isDefined(computedComponent)) {
-      throw new Error(`Computed stitch line component not found: ${stitchLine.componentId}`)
-    }
-
-    return calculateStitchLine(stitchLine, component, computedComponent)
-  })
+  return computedStitchLines
 }
