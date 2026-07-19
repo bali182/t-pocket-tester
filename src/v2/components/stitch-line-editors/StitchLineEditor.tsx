@@ -1,9 +1,14 @@
 import { type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { ComponentBoundsStitchLineSchema, StitchLineSchema } from '../../schemas/stitching'
+import type {
+  ComponentBoundsStitchLineSchema,
+  PocketClusterStitchLineSchema,
+  StitchLineSchema,
+} from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { ComponentBoundsStitchLineEditor } from './ComponentBoundsStitchLineEditor'
+import { PocketClusterStitchLineEditor } from './PocketClusterStitchLineEditor'
 
 type StitchLineEditorProps = {
   editable: EditableSchema<StitchLineSchema>
@@ -23,6 +28,12 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, 
         />
       )
     case 'pocket-cluster-stitch-line':
-      return null
+      return (
+        <PocketClusterStitchLineEditor
+          editable={editable as EditableSchema<PocketClusterStitchLineSchema>}
+          issues={issues as ValidationIssuesSchema<PocketClusterStitchLineSchema>}
+          onChange={onChange}
+        />
+      )
   }
 }

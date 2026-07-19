@@ -16,9 +16,9 @@ type ComponentBoundsStitchLineEditorProps = {
 export const ComponentBoundsStitchLineEditor: FC<ComponentBoundsStitchLineEditorProps> = ({ editable, issues, onChange }) => {
   return (
     <>
-      <BasicSettingsSection editable={editable} issues={issues} onChange={onChange} />
+      <BasicSettingsSection<ComponentBoundsStitchLineSchema> editable={editable} issues={issues} onChange={onChange} />
       <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
-      <StitchingSettingsSection editable={editable} issues={issues} onChange={onChange} />
+      <StitchingSettingsSection<ComponentBoundsStitchLineSchema> editable={editable} issues={issues} onChange={onChange} />
     </>
   )
 }

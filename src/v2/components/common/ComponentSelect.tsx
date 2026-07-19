@@ -15,10 +15,11 @@ import { isDefined } from '../../utils/isDefined'
 
 type ComponentSelectProps = {
   componentId: string | undefined
+  componentTypes?: ComponentSchema['type'][]
   onChange: (componentId: string) => void
 }
 
-export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, onChange }) => {
+export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, componentTypes, onChange }) => {
   const { project } = useProject()
   const component = isDefined(componentId) ? project.components[componentId] : undefined
   const Icon = useComponentIcon(component?.type ?? 'panel')
@@ -27,9 +28,11 @@ export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, onChang
       createListCollection<ComponentSchema>({
         itemToString: (item) => item.name,
         itemToValue: (item) => item.id,
-        items: Object.values(project.components),
+        items: Object.values(project.components).filter(
+          (component) => !isDefined(componentTypes) || componentTypes.includes(component.type),
+        ),
       }),
-    [project.components],
+    [componentTypes, project.components],
   )
 
   const handleValueChange = useCallback(
