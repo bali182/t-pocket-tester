@@ -25,7 +25,7 @@ export const defaultComponent: RootPanelSchema = {
   ...defaultHasLayout,
   type: 'root-panel',
   id: 'root',
-  name: translation.defaults.rootComponentName.toString(),
+  name: 'Alap',
   color: LEATHER_BASE_COLOR,
   children: [],
   width: 170,
