@@ -33,14 +33,14 @@ export const createStitchLine = <T extends keyof StitchLineByTypeName>(
 }
 
 const defaultStitchLine: ComponentBoundsStitchLineOwnSchema = {
-  top: false,
-  right: false,
-  bottom: false,
-  left: false,
-  topLeftCorner: false,
-  topRightCorner: false,
-  bottomRightCorner: false,
-  bottomLeftCorner: false,
+  top: true,
+  right: true,
+  bottom: true,
+  left: true,
+  topLeftCorner: true,
+  topRightCorner: true,
+  bottomRightCorner: true,
+  bottomLeftCorner: true,
   topStitchDirection: 'left-to-right',
   rightStitchDirection: 'top-to-bottom',
   bottomStitchDirection: 'right-to-left',
