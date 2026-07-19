@@ -3,7 +3,7 @@ import { Provider as JotaiProvider } from 'jotai'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { App } from './components/App'
-import { appStore } from './state'
+import { appStore } from './state/state'
 
 const rootElement = document.getElementById('root')
 

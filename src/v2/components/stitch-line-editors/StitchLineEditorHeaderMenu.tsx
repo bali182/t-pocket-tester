@@ -4,7 +4,7 @@ import { useCallback, type FC } from 'react'
 import { PiTrash } from 'react-icons/pi'
 
 import type { StitchLineSchema } from '../../schemas/stitching'
-import { projectAtom } from '../../state'
+import { projectAtom } from '../../state/state'
 import { removeStitchLine } from '../../utils/removeStitchLine'
 
 type StitchLineEditorHeaderMenuProps = {

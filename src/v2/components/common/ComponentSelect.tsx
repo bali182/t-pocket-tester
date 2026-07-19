@@ -11,7 +11,7 @@ import { useCallback, useMemo, type FC } from 'react'
 
 import { useComponentIcon } from '../../hooks/useComponentIcon'
 import type { ComponentSchema } from '../../schemas/components'
-import { projectAtom } from '../../state'
+import { projectAtom } from '../../state/state'
 import { isDefined } from '../../utils/isDefined'
 
 type ComponentSelectProps = {

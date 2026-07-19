@@ -6,7 +6,7 @@ import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
 import type { RootPanelSchema } from '../../schemas/components'
 import type { ComputedRootPanelSchema } from '../../schemas/computed'
-import { computedProjectAtom } from '../../state'
+import { computedProjectAtom } from '../../state/state'
 import { getViewBox } from '../../utils/getViewBox'
 import { RootPanel } from './RootPanel'
 

@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 
-import { computedProjectAtom, projectAtom } from '../../state'
+import { computedProjectAtom, projectAtom } from '../../state/state'
 import { isDefined } from '../../utils/isDefined'
 import { StitchLine } from './StitchLine'
 

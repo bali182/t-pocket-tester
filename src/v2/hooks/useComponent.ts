@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 
 import type { ComponentSchema } from '../schemas/components'
-import { projectAtom } from '../state'
+import { projectAtom } from '../state/state'
 import { isDefined } from '../utils/isDefined'
 
 export const useComponent = <T extends ComponentSchema = ComponentSchema>(id: string): T => {
