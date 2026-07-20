@@ -1,10 +1,12 @@
-import { useAtomValue } from 'jotai'
+import { useAtomValue, type Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
 import { ComponentSchema } from '../schemas/components'
+import type { ProjectSchema } from '../schemas/project'
 import { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
 import { computedProjectAtom, projectAtom } from '../state/projectAtom'
+import { useTranslation } from '../translations/translation'
 import { createComponent } from '../utils/createComponent'
 import { createStitchLine } from '../utils/createStitchLine'
 import { getComponentNestingLevel } from '../utils/getComponentNestingLevel'
@@ -12,57 +14,66 @@ import { getDescendants } from '../utils/getDescendants'
 import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
-import { useTranslation } from '../translations/translation'
 
 export const useProject = () => {
   const project = useAtomValue(projectAtom)
   const computedProject = useAtomValue(computedProjectAtom)
   const t = useTranslation()
 
+  if (!isDefined(project) || !isDefined(computedProject)) {
+    throw new Error('useProject requires an opened project')
+  }
+
   const addComponent = useAtomCallback(
-    useCallback((get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {
-      const project = get(projectAtom)
-      const parent = project.components[parentId]
+    useCallback(
+      (get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {
+        const project = getRequiredProject(get)
+        const parent = project.components[parentId]
 
-      if (!isDefined(parent) || !hasChildren(parent)) {
-        throw new Error('Missing parent or cannot have child elements')
-      }
+        if (!isDefined(parent) || !hasChildren(parent)) {
+          throw new Error('Missing parent or cannot have child elements')
+        }
 
-      const component = createComponent(type, project, t, getComponentNestingLevel(parent.id, project) + 1)
+        const component = createComponent(type, project, t, getComponentNestingLevel(parent.id, project) + 1)
 
-      set(projectAtom, {
-        ...project,
-        components: {
-          ...project.components,
-          [parent.id]: {
-            ...parent,
-            children: [...parent.children, component.id],
+        set(projectAtom, {
+          ...project,
+          components: {
+            ...project.components,
+            [parent.id]: {
+              ...parent,
+              children: [...parent.children, component.id],
+            },
+            [component.id]: component,
           },
-          [component.id]: component,
-        },
-      })
-      set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
+        })
+        set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
 
-      return component
-    }, [t]),
+        return component
+      },
+      [t],
+    ),
   )
 
   const addStitchLine = useAtomCallback(
-    useCallback((get, set, componentId: string, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
-      const project = get(projectAtom)
-      const stitchLine = createStitchLine(stitchLineType, project, componentId, t)
+    useCallback(
+      (get, set, componentId: string, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
+        const project = getRequiredProject(get)
+        const stitchLine = createStitchLine(stitchLineType, project, componentId, t)
 
-      set(projectAtom, {
-        ...project,
-        stitchLines: [...project.stitchLines, stitchLine],
-      })
-      return stitchLine
-    }, [t]),
+        set(projectAtom, {
+          ...project,
+          stitchLines: [...project.stitchLines, stitchLine],
+        })
+        return stitchLine
+      },
+      [t],
+    ),
   )
 
   const deleteComponent = useAtomCallback(
     useCallback((get, set, componentId: string): void => {
-      const project = get(projectAtom)
+      const project = getRequiredProject(get)
       const component = project.components[componentId]
 
       if (!isDefined(component) || component.type === 'root-panel') {
@@ -90,7 +101,7 @@ export const useProject = () => {
 
   const deleteStitchLine = useAtomCallback(
     useCallback((get, set, stitchLineId: string): void => {
-      const project = get(projectAtom)
+      const project = getRequiredProject(get)
 
       set(projectAtom, {
         ...project,
@@ -101,7 +112,7 @@ export const useProject = () => {
 
   const moveComponent = useAtomCallback(
     useCallback((get, set, componentId: string, direction: 'up' | 'down'): void => {
-      const project = get(projectAtom)
+      const project = getRequiredProject(get)
       const component = project.components[componentId]
 
       if (!isDefined(component)) {
@@ -140,7 +151,7 @@ export const useProject = () => {
 
   const updateComponent = useAtomCallback(
     useCallback((get, set, component: ComponentSchema): void => {
-      const project = get(projectAtom)
+      const project = getRequiredProject(get)
 
       set(projectAtom, {
         ...project,
@@ -155,7 +166,7 @@ export const useProject = () => {
 
   const touchComponent = useAtomCallback(
     useCallback((get, set, componentId: string): void => {
-      const project = get(projectAtom)
+      const project = getRequiredProject(get)
 
       if (!isDefined(project.components[componentId])) {
         return
@@ -167,7 +178,7 @@ export const useProject = () => {
 
   const updateStitchLine = useAtomCallback(
     useCallback((get, set, stitchLine: StitchLineSchema): void => {
-      const project = get(projectAtom)
+      const project = getRequiredProject(get)
 
       set(projectAtom, {
         ...project,
@@ -188,4 +199,14 @@ export const useProject = () => {
     touchComponent,
     updateStitchLine,
   }
+}
+
+const getRequiredProject = (get: Getter): ProjectSchema => {
+  const project = get(projectAtom)
+
+  if (!isDefined(project)) {
+    throw new Error('An opened project is required')
+  }
+
+  return project
 }

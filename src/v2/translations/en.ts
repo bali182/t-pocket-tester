@@ -3,11 +3,13 @@ import { HU } from './hu'
 export const EN: typeof HU = {
   navigation: {
     home: 'Home',
+    project: 'Project',
   },
   common: {
     actions: {
       add: 'Add',
       addStitchLine: 'Add stitch line',
+      cancel: 'Cancel',
       remove: 'Delete',
     },
     labels: {
@@ -51,6 +53,22 @@ export const EN: typeof HU = {
     panels: {
       leather: 'Leather',
       stitching: 'Stitching',
+    },
+  },
+  projects: {
+    title: 'Projects',
+    actions: {
+      create: 'New project',
+    },
+    createDialog: {
+      title: 'Create new project',
+      actions: {
+        create: 'Create',
+      },
+    },
+    notFound: {
+      title: 'Project not found',
+      description: 'The project you want to open does not exist.',
     },
   },
   component: {

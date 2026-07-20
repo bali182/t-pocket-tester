@@ -1,11 +1,13 @@
 export const HU = {
   navigation: {
     home: 'Kezdőlap',
+    project: 'Projekt',
   },
   common: {
     actions: {
       add: 'Hozzáadás',
       addStitchLine: 'Új varrás',
+      cancel: 'Mégse',
       remove: 'Törlés',
     },
     labels: {
@@ -49,6 +51,22 @@ export const HU = {
     panels: {
       leather: 'Bőr',
       stitching: 'Varrás',
+    },
+  },
+  projects: {
+    title: 'Projektek',
+    actions: {
+      create: 'Új projekt',
+    },
+    createDialog: {
+      title: 'Új projekt létrehozása',
+      actions: {
+        create: 'Létrehozás',
+      },
+    },
+    notFound: {
+      title: 'A projekt nem található',
+      description: 'A megnyitni kívánt projekt nem létezik.',
     },
   },
   component: {
