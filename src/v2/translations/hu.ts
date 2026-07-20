@@ -32,7 +32,7 @@ export const HU = {
       componentTree: {
         moveUp: 'Elem mozgatása fel',
         moveDown: 'Elem mozgatása le',
-        add: 'Elem hozzáadása',
+        add: 'Gyerek hozzáadása',
         remove: 'Elem törlése',
       },
     },
@@ -200,6 +200,6 @@ export const HU = {
   defaults: {
     projectName: 'Új projekt',
     rootComponentName: 'Alap',
-    stitchLineName: 'Varrás {number}',
+    stitchLineName: 'Varrás',
   },
 }

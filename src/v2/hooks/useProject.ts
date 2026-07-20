@@ -24,6 +24,8 @@ export const useProject = () => {
     throw new Error('useProject requires an opened project')
   }
 
+  console.log(project)
+
   const addComponent = useAtomCallback(
     useCallback(
       (get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {

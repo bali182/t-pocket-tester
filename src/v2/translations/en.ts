@@ -34,7 +34,7 @@ export const EN: typeof HU = {
       componentTree: {
         moveUp: 'Move item up',
         moveDown: 'Move item down',
-        add: 'Add item',
+        add: 'Add child',
         remove: 'Delete item',
       },
     },
