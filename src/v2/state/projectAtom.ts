@@ -5,6 +5,7 @@ import { getPatchedProject } from '../component-patches/getPatchedProject'
 import { getComputedProject } from '../logic/getComputedProject'
 import type { ProjectSchema } from '../schemas/project'
 import { isDefined } from '../utils/isDefined'
+import { projectsAtom } from './projectsAtom'
 
 // Stores the final project model after automatic patches have been applied.
 const projectStorageAtom = atom<ProjectSchema | undefined>(undefined)
@@ -25,6 +26,9 @@ export const projectAtom = atom(
     const patchedProject = getPatchedProject(updatedProject, computedProject)
 
     set(projectStorageAtom, patchedProject)
+    set(projectsAtom, (projects) =>
+      projects.map((project) => (project.id === patchedProject.id ? patchedProject : project)),
+    )
 
     return patchedProject
   },
