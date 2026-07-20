@@ -65,24 +65,24 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.stitchLine.editor.stitching.title()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader>{t.stitchLine.editor.stitching.title}</SectionGroup.SectionHeader>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeColor()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeColor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ColorInput issue={issues.stitchHoleColor} onChange={handleStitchHoleColorChange} value={editable.stitchHoleColor} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineColor()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineColor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ColorInput issue={issues.stitchLineColor} onChange={handleStitchLineColorChange} value={editable.stitchLineColor} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.margin()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.margin}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.stitchMargin} onChange={handleStitchMarginChange} step={1} unit="mm" value={editable.stitchMargin} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeLength()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeLength}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchHoleLength}
@@ -93,7 +93,7 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeDistance()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeDistance}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchHoleDistance}
@@ -104,7 +104,7 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeThickness()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeThickness}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchHoleThickness}
@@ -115,7 +115,7 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineThickness()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineThickness}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.stitchLineThickness}

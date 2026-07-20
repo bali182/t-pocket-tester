@@ -94,16 +94,16 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
           <EmptyState.Indicator>
             <TbNeedleThread />
           </EmptyState.Indicator>
-          <EmptyState.Title>{t.stitchLine.tree.empty.title()}</EmptyState.Title>
+          <EmptyState.Title>{t.stitchLine.tree.empty.title}</EmptyState.Title>
           <EmptyState.Description textAlign="center">
-            {t.stitchLine.tree.empty.description()}
+            {t.stitchLine.tree.empty.description}
           </EmptyState.Description>
           <Box textAlign="center">
             <AddStitchLinePopover
               trigger={
                 <Button variant="subtle">
                   <PiPlus />
-                  {t.common.actions.addStitchLine()}
+                  {t.common.actions.addStitchLine}
                 </Button>
               }
             />
@@ -132,7 +132,7 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
                 <PiNeedle />
                 <TreeView.ItemText>{node.name}</TreeView.ItemText>
                 <IconButton
-                  aria-label={t.stitchLine.tree.accessibility.deleteNamed({ name: node.name })}
+                  aria-label={t.stitchLine.tree.accessibility.deleteNamed(node.name)}
                   onClick={(event) => handleDelete(event, node.stitchLine.id)}
                   size="2xs"
                   variant="ghost"

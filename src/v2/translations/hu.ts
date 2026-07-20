@@ -132,7 +132,7 @@ export const HU = {
         description: 'Adj hozzá egy varrást az általad kiválasztott komponenshez!',
       },
       accessibility: {
-        deleteNamed: '{name} törlése',
+        deleteNamed: (name: string) => `${name} törlése`,
       },
     },
     editor: {
@@ -183,11 +183,11 @@ export const HU = {
     number: {
       invalidFormat: 'Érvénytelen számformátum.',
       integerOnly: 'Csak egész érték adható meg.',
-      minimumExclusive: 'Az értéknek a minimum felett kell lennie ({value}).',
-      minimumInclusive: 'Minimum érték: {value}.',
-      maximumExclusive: 'Az értéknek a maximum alatt kell lennie ({value}).',
-      maximumInclusive: 'Maximum érték: {value}.',
-      step: 'Lépték: {value}.',
+      minimumExclusive: (value: string) => `Az értéknek a minimum felett kell lennie (${value}).`,
+      minimumInclusive: (value: string) => `Minimum érték: ${value}.`,
+      maximumExclusive: (value: string) => `Az értéknek a maximum alatt kell lennie (${value}).`,
+      maximumInclusive: (value: string) => `Maximum érték: ${value}.`,
+      step: (value: string) => `Lépték: ${value}.`,
     },
     primitive: {
       required: 'Kötelező érték.',
@@ -200,6 +200,6 @@ export const HU = {
   defaults: {
     projectName: 'Új projekt',
     rootComponentName: 'Alap',
-    stitchLineName: 'Varrás',
+    stitchLineName: (number: number) => `Varrás ${number}`,
   },
 }

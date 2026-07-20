@@ -64,8 +64,8 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.common.labels.size()}</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>{t.common.labels.width()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.common.labels.size}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.common.labels.width}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
           <HStack gap="2">
             <Switch.Root checked={!editable.autoWidth} onCheckedChange={handleAutoWidthChange} size="md">
@@ -91,7 +91,7 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
           </HStack>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.height()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.height}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
           <HStack gap="2">
             <Switch.Root checked={!editable.autoHeight} onCheckedChange={handleAutoHeightChange} size="md">

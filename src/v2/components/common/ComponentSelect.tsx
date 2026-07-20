@@ -69,7 +69,7 @@ export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, compone
               </HStack>
             </Select.ValueText>
           ) : (
-            <Select.ValueText placeholder={t.common.placeholders.selectComponent()} />
+            <Select.ValueText placeholder={t.common.placeholders.selectComponent} />
           )}
         </Select.Trigger>
         <Select.IndicatorGroup>

@@ -107,16 +107,16 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
       <Popover.Positioner>
         <Popover.Content width="400px">
           <Popover.Header>
-            <Popover.Title>{t.stitchLine.add.title()}</Popover.Title>
+            <Popover.Title>{t.stitchLine.add.title}</Popover.Title>
           </Popover.Header>
           <Popover.Body>
             <Stack gap="3">
               <Field.Root>
-                <Field.Label>{t.common.labels.component()}</Field.Label>
+                <Field.Label>{t.common.labels.component}</Field.Label>
                 <ComponentSelect componentId={componentId} onChange={handleComponentChange} />
               </Field.Root>
               <Field.Root>
-                <Field.Label>{t.stitchLine.add.type()}</Field.Label>
+                <Field.Label>{t.stitchLine.add.type}</Field.Label>
                 <Select.Root
                   collection={stitchLineTypeCollection}
                   onValueChange={handleStitchLineTypeChange}
@@ -126,7 +126,7 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
                   <Select.HiddenSelect />
                   <Select.Control>
                     <Select.Trigger>
-                      <Select.ValueText placeholder={t.stitchLine.add.typePlaceholder()} />
+                      <Select.ValueText placeholder={t.stitchLine.add.typePlaceholder} />
                     </Select.Trigger>
                     <Select.IndicatorGroup>
                       <Select.Indicator />
@@ -150,7 +150,7 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
             <HStack justify="flex-end" width="100%">
               <Button disabled={!canAdd} onClick={handleAdd} size="xs">
                 <PiPlus />
-                {t.common.actions.add()}
+                {t.common.actions.add}
               </Button>
             </HStack>
           </Popover.Footer>

@@ -31,8 +31,8 @@ export const ProjectRoute: FC = () => {
           <EmptyState.Indicator>
             <PiWarningCircle />
           </EmptyState.Indicator>
-          <EmptyState.Title>{t.projects.notFound.title()}</EmptyState.Title>
-          <EmptyState.Description textAlign="center">{t.projects.notFound.description()}</EmptyState.Description>
+          <EmptyState.Title>{t.projects.notFound.title}</EmptyState.Title>
+          <EmptyState.Description textAlign="center">{t.projects.notFound.description}</EmptyState.Description>
         </EmptyState.Content>
       </EmptyState.Root>
     )

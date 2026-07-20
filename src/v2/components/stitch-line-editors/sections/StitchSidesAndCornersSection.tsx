@@ -15,7 +15,7 @@ export const StitchSidesAndCornersSection = ({ editable, issues, onChange }: Sti
   const t = useTranslation()
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.stitchLine.editor.seamLine.title()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader>{t.stitchLine.editor.seamLine.title}</SectionGroup.SectionHeader>
       <SectionGroup.SectionFullWidthContent>
         <StitchLineSidesAndCorners editable={editable} issues={issues} onChange={onChange} />
       </SectionGroup.SectionFullWidthContent>

@@ -19,12 +19,12 @@ export const useRoutes = (): UseRoutesOutput => {
   const routes = useMemo<RouteConfig[]>(() => {
     return [
       {
-        label: t.navigation.home(),
+        label: t.navigation.home,
         path: '/projects',
         Component: ProjectsRoute,
       },
       {
-        label: t.navigation.project(),
+        label: t.navigation.project,
         path: '/projects/:projectId',
         Component: ProjectRoute,
       },

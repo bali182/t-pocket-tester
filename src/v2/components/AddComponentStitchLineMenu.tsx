@@ -44,7 +44,7 @@ export const AddComponentStitchLineMenu: FC<AddComponentStitchLineMenuProps> = (
   if (stitchLineTypeOptions.length === 1 && isDefined(stitchLineTypeOption)) {
     return (
       <AddComponentStitchLineMenuItem
-        label={t.common.actions.addStitchLine()}
+        label={t.common.actions.addStitchLine}
         onAddStitchLine={onAddStitchLine}
         type={stitchLineTypeOption.value}
       />
@@ -55,7 +55,7 @@ export const AddComponentStitchLineMenu: FC<AddComponentStitchLineMenuProps> = (
     <Menu.Root positioning={{ placement: 'right-start' }}>
       <Menu.TriggerItem>
         <PiNeedle />
-        <Menu.ItemText>{t.common.actions.addStitchLine()}</Menu.ItemText>
+        <Menu.ItemText>{t.common.actions.addStitchLine}</Menu.ItemText>
         <Menu.ItemCommand>
           <PiCaretRight />
         </Menu.ItemCommand>

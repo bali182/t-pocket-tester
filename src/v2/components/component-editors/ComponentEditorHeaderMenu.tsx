@@ -37,7 +37,7 @@ export const ComponentEditorHeaderMenu: FC<ComponentEditorHeaderMenuProps> = ({ 
           <Menu.Trigger asChild>
             <Button size="2xs" variant="subtle">
               <PiPlus />
-              {t.component.editor.actions.addChild()}
+              {t.component.editor.actions.addChild}
             </Button>
           </Menu.Trigger>
           <Menu.Positioner>
@@ -50,7 +50,7 @@ export const ComponentEditorHeaderMenu: FC<ComponentEditorHeaderMenuProps> = ({ 
       {canDelete && (
         <Button colorPalette="red" onClick={handleDelete} size="2xs" variant="subtle">
           <PiTrash />
-          {t.common.actions.remove()}
+          {t.common.actions.remove}
         </Button>
       )}
     </HStack>

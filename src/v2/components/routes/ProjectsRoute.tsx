@@ -20,13 +20,13 @@ export const ProjectsRoute: FC = () => {
   return (
     <Box height="100%" overflow="auto" padding="8">
       <Heading mb="6" size="lg">
-        {t.projects.title()}
+        {t.projects.title}
       </Heading>
       <Grid gap="4" gridTemplateColumns="repeat(auto-fill, minmax(220px, 280px))" justifyContent="start">
         <Card.Root borderStyle="dashed" cursor="pointer" variant="outline">
           <Button height="100%" minHeight="160px" onClick={openCreateDialog} variant="ghost">
             <PiPlus />
-            {t.projects.actions.create()}
+            {t.projects.actions.create}
           </Button>
         </Card.Root>
         {projects.map((project) => (

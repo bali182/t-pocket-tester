@@ -38,13 +38,13 @@ export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ 
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.common.labels.size()}</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>{t.common.labels.width()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.common.labels.size}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.common.labels.width}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.width} onChange={handleWidthChange} step={1} unit="mm" value={editable.width} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.height()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.height}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.height} onChange={handleHeightChange} step={1} unit="mm" value={editable.height} />
       </SectionGroup.SectionRowEditor>

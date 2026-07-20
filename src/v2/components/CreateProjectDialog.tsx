@@ -45,21 +45,21 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
         <Dialog.Content>
           <form onSubmit={handleSubmit}>
             <Dialog.Header>
-              <Dialog.Title>{t.projects.createDialog.title()}</Dialog.Title>
+              <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <Stack gap="3">
                 <Field.Root>
-                  <Field.Label>{t.common.labels.name()}</Field.Label>
+                  <Field.Label>{t.common.labels.name}</Field.Label>
                   <Input autoFocus onChange={(event) => setName(event.target.value)} value={name} />
                 </Field.Root>
               </Stack>
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline">{t.common.actions.cancel()}</Button>
+                <Button variant="outline">{t.common.actions.cancel}</Button>
               </Dialog.ActionTrigger>
-              <Button type="submit">{t.projects.createDialog.actions.create()}</Button>
+              <Button type="submit">{t.projects.createDialog.actions.create}</Button>
             </Dialog.Footer>
           </form>
         </Dialog.Content>

@@ -1,4 +1,4 @@
-import { HU } from './hu'
+import type { HU } from './hu'
 
 export const EN: typeof HU = {
   navigation: {
@@ -134,7 +134,7 @@ export const EN: typeof HU = {
         description: 'Add a stitch line to the selected component.',
       },
       accessibility: {
-        deleteNamed: 'Delete {name}',
+        deleteNamed: (name: string) => `Delete ${name}`,
       },
     },
     editor: {
@@ -185,11 +185,11 @@ export const EN: typeof HU = {
     number: {
       invalidFormat: 'Invalid number format.',
       integerOnly: 'Only whole numbers are allowed.',
-      minimumExclusive: 'Value must be greater than {value}.',
-      minimumInclusive: 'Minimum value: {value}.',
-      maximumExclusive: 'Value must be less than {value}.',
-      maximumInclusive: 'Maximum value: {value}.',
-      step: 'Step: {value}.',
+      minimumExclusive: (value: string) => `Value must be greater than ${value}.`,
+      minimumInclusive: (value: string) => `Minimum value: ${value}.`,
+      maximumExclusive: (value: string) => `Value must be less than ${value}.`,
+      maximumInclusive: (value: string) => `Maximum value: ${value}.`,
+      step: (value: string) => `Step: ${value}.`,
     },
     primitive: {
       required: 'This value is required.',
@@ -202,6 +202,6 @@ export const EN: typeof HU = {
   defaults: {
     projectName: 'New project',
     rootComponentName: 'Base',
-    stitchLineName: 'Stitch line {number}',
+    stitchLineName: (number: number) => `Stitch line ${number}`,
   },
 }

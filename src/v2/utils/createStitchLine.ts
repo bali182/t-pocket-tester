@@ -1,7 +1,6 @@
 import { defaultStitchingSettings } from '../defaultStates'
 import { HasIdentitySchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
-import type { TranslationSchema } from '../translations/translation'
 import type {
   ComponentBoundsStitchLineOwnSchema,
   ComponentBoundsStitchLineSchema,
@@ -9,6 +8,7 @@ import type {
   PocketClusterStitchLineSchema,
   StitchLineComponentReferencesSchema,
 } from '../schemas/stitching'
+import type { TranslationSchema } from '../translations/translationSchema'
 import { getUnusedStitchLineName } from './getUnusedStitchLineName'
 import { id } from './id'
 

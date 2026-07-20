@@ -56,8 +56,8 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.component.editor.cornerRadius.title()}</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.type()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.component.editor.cornerRadius.title}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.type}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Switch.Root checked={editable.individualRadii} onCheckedChange={handleIndividualRadiiChange} size="md">
           <Switch.HiddenInput />
@@ -66,15 +66,15 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
           </Switch.Control>
           <Switch.Label>
             {editable.individualRadii
-              ? t.component.editor.cornerRadius.individual()
-              : t.component.editor.cornerRadius.uniform()}
+              ? t.component.editor.cornerRadius.individual
+              : t.component.editor.cornerRadius.uniform}
           </Switch.Label>
         </Switch.Root>
       </SectionGroup.SectionRowEditor>
 
       {!editable.individualRadii && (
         <>
-          <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.uniformMeasure()}</SectionGroup.SectionRowTitle>
+          <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.uniformMeasure}</SectionGroup.SectionRowTitle>
           <SectionGroup.SectionRowEditor>
             <NumberInput
               issue={issues.borderRadius}
@@ -89,7 +89,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
 
       {editable.individualRadii && (
         <>
-          <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.individualMeasure()}</SectionGroup.SectionRowTitle>
+          <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.individualMeasure}</SectionGroup.SectionRowTitle>
           <SectionGroup.SectionRowEditor>
             <Grid columnGap="1" gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" rowGap="1">
               <NumberInput

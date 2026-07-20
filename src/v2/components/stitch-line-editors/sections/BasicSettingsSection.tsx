@@ -41,14 +41,14 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.common.labels.general()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader>{t.common.labels.general}</SectionGroup.SectionHeader>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.name()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.name}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Input aria-invalid={isNameInvalid} onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.component()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.component}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ComponentSelect componentId={editable.componentId} componentTypes={componentTypes} onChange={handleComponentChange} />
       </SectionGroup.SectionRowEditor>

@@ -1,6 +1,6 @@
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
-import type { TranslationSchema } from '../translations/translation'
+import type { TranslationSchema } from '../translations/translationSchema'
 import { isDefined } from './isDefined'
 
 export type StitchLineTypeOption = {
@@ -18,10 +18,10 @@ export const getStitchLineTypeOptions = (
 
   if (component.type === 'pocket-cluster') {
     return [
-      { label: t.stitchLine.add.types.componentBounds(), value: 'component-bounds-stitch-line' },
-      { label: t.stitchLine.add.types.pocketCluster(), value: 'pocket-cluster-stitch-line' },
+      { label: t.stitchLine.add.types.componentBounds, value: 'component-bounds-stitch-line' },
+      { label: t.stitchLine.add.types.pocketCluster, value: 'pocket-cluster-stitch-line' },
     ]
   }
 
-  return [{ label: t.stitchLine.add.types.componentBounds(), value: 'component-bounds-stitch-line' }]
+  return [{ label: t.stitchLine.add.types.componentBounds, value: 'component-bounds-stitch-line' }]
 }

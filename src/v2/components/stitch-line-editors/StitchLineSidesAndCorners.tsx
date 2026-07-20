@@ -129,43 +129,43 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
         gridTemplateRows="auto minmax(0, 1fr) auto"
       >
         <StitchLineCornerToggle
-          label={t.common.directions.topLeft()}
+          label={t.common.directions.topLeft}
           corner="top-left"
           disabled={isCornerDisabled('topLeftCorner')}
           selected={editable.topLeftCorner}
           onClick={() => toggle('topLeftCorner')}
         />
-        <StitchLineEdgeToggle label={t.common.directions.top()} selected={editable.top} side="top" onClick={() => toggle('top')} />
+        <StitchLineEdgeToggle label={t.common.directions.top} selected={editable.top} side="top" onClick={() => toggle('top')} />
         <StitchLineCornerToggle
-          label={t.common.directions.topRight()}
+          label={t.common.directions.topRight}
           corner="top-right"
           disabled={isCornerDisabled('topRightCorner')}
           selected={editable.topRightCorner}
           onClick={() => toggle('topRightCorner')}
         />
-        <StitchLineEdgeToggle label={t.common.directions.left()} selected={editable.left} side="left" onClick={() => toggle('left')} />
+        <StitchLineEdgeToggle label={t.common.directions.left} selected={editable.left} side="left" onClick={() => toggle('left')} />
         <Box gridArea="center" />
         <StitchLineEdgeToggle
-          label={t.common.directions.right()}
+          label={t.common.directions.right}
           selected={editable.right}
           side="right"
           onClick={() => toggle('right')}
         />
         <StitchLineCornerToggle
-          label={t.common.directions.bottomLeft()}
+          label={t.common.directions.bottomLeft}
           corner="bottom-left"
           disabled={isCornerDisabled('bottomLeftCorner')}
           selected={editable.bottomLeftCorner}
           onClick={() => toggle('bottomLeftCorner')}
         />
         <StitchLineEdgeToggle
-          label={t.common.directions.bottom()}
+          label={t.common.directions.bottom}
           selected={editable.bottom}
           side="bottom"
           onClick={() => toggle('bottom')}
         />
         <StitchLineCornerToggle
-          label={t.common.directions.bottomRight()}
+          label={t.common.directions.bottomRight}
           corner="bottom-right"
           disabled={isCornerDisabled('bottomRightCorner')}
           selected={editable.bottomRightCorner}
@@ -175,7 +175,7 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
       <StitchLineDirectionSwitch
         checked={editable.topStitchDirection === 'left-to-right'}
         disabled={isDirectionDisabled('top')}
-        label={t.stitchLine.editor.sidesAndCorners.topDirection()}
+        label={t.stitchLine.editor.sidesAndCorners.topDirection}
         side="top"
         onCheckedChange={(checked) =>
           onChange({ ...editable, topStitchDirection: checked ? 'left-to-right' : 'right-to-left' })
@@ -184,7 +184,7 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
       <StitchLineDirectionSwitch
         checked={editable.rightStitchDirection === 'top-to-bottom'}
         disabled={isDirectionDisabled('right')}
-        label={t.stitchLine.editor.sidesAndCorners.rightDirection()}
+        label={t.stitchLine.editor.sidesAndCorners.rightDirection}
         side="right"
         onCheckedChange={(checked) =>
           onChange({ ...editable, rightStitchDirection: checked ? 'top-to-bottom' : 'bottom-to-top' })
@@ -193,7 +193,7 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
       <StitchLineDirectionSwitch
         checked={editable.bottomStitchDirection === 'right-to-left'}
         disabled={isDirectionDisabled('bottom')}
-        label={t.stitchLine.editor.sidesAndCorners.bottomDirection()}
+        label={t.stitchLine.editor.sidesAndCorners.bottomDirection}
         side="bottom"
         onCheckedChange={(checked) =>
           onChange({ ...editable, bottomStitchDirection: checked ? 'right-to-left' : 'left-to-right' })
@@ -202,7 +202,7 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
       <StitchLineDirectionSwitch
         checked={editable.leftStitchDirection === 'bottom-to-top'}
         disabled={isDirectionDisabled('left')}
-        label={t.stitchLine.editor.sidesAndCorners.leftDirection()}
+        label={t.stitchLine.editor.sidesAndCorners.leftDirection}
         side="left"
         onCheckedChange={(checked) =>
           onChange({ ...editable, leftStitchDirection: checked ? 'bottom-to-top' : 'top-to-bottom' })

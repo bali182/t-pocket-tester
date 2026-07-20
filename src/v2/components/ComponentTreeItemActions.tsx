@@ -87,7 +87,7 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
     <Box onClick={handleActionsClick}>
       <Menu.Root>
         <Menu.Trigger asChild>
-          <IconButton aria-label={t.common.accessibility.componentTree.add()} size="2xs" variant="ghost">
+          <IconButton aria-label={t.common.accessibility.componentTree.add} size="2xs" variant="ghost">
             <PiDotsThreeVertical />
           </IconButton>
         </Menu.Trigger>
@@ -96,13 +96,13 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
             <Menu.Content>
               <Menu.Item disabled={!canDelete} onClick={handleDelete} value="delete">
                 <PiTrash />
-                <Menu.ItemText>{t.common.accessibility.componentTree.remove()}</Menu.ItemText>
+                <Menu.ItemText>{t.common.accessibility.componentTree.remove}</Menu.ItemText>
               </Menu.Item>
               {canAdd ? (
                 <Menu.Root positioning={{ placement: 'right-start' }}>
                   <Menu.TriggerItem>
                     <PiPlus />
-                    <Menu.ItemText>{t.common.accessibility.componentTree.add()}</Menu.ItemText>
+                    <Menu.ItemText>{t.common.accessibility.componentTree.add}</Menu.ItemText>
                     <Menu.ItemCommand>
                       <PiCaretRight />
                     </Menu.ItemCommand>
@@ -118,18 +118,18 @@ export const ComponentTreeItemActions: FC<ComponentTreeItemActionsProps> = ({ co
               ) : (
                 <Menu.Item disabled value="add">
                   <PiPlus />
-                  <Menu.ItemText>{t.common.accessibility.componentTree.add()}</Menu.ItemText>
+                  <Menu.ItemText>{t.common.accessibility.componentTree.add}</Menu.ItemText>
                 </Menu.Item>
               )}
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
               <Menu.Separator />
               <Menu.Item disabled={!siblingMoveState.canMoveUp} onClick={handleMoveUp} value="move-up">
                 <PiCaretUp />
-                <Menu.ItemText>{t.common.accessibility.componentTree.moveUp()}</Menu.ItemText>
+                <Menu.ItemText>{t.common.accessibility.componentTree.moveUp}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item disabled={!siblingMoveState.canMoveDown} onClick={handleMoveDown} value="move-down">
                 <PiCaretDown />
-                <Menu.ItemText>{t.common.accessibility.componentTree.moveDown()}</Menu.ItemText>
+                <Menu.ItemText>{t.common.accessibility.componentTree.moveDown}</Menu.ItemText>
               </Menu.Item>
             </Menu.Content>
           </Menu.Positioner>
