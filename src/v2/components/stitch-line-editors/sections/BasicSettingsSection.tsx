@@ -1,14 +1,18 @@
 import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 
+import type { ComponentSchema, HasIdentitySchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
-import type { BaseStitchLineSchema } from '../../../schemas/stitching'
-import type { ComponentSchema } from '../../../schemas/components'
+import type { StitchLineCommonConfigSchema, StitchLineComponentReferencesSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
-import { isDefined } from '../../../utils/isDefined'
 import { useTranslation } from '../../../translations/translation'
+import { isDefined } from '../../../utils/isDefined'
 import { ComponentSelect } from '../../common/ComponentSelect'
 import { SectionGroup } from '../../common/SectionGroup'
+
+export type BaseStitchLineSchema = HasIdentitySchema &
+  StitchLineCommonConfigSchema &
+  StitchLineComponentReferencesSchema
 
 type BasicSettingsSectionProps<T extends BaseStitchLineSchema> = {
   editable: EditableSchema<T>
@@ -41,16 +45,20 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.common.labels.general()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader>{t.common.labels.general}</SectionGroup.SectionHeader>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.name()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.name}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Input aria-invalid={isNameInvalid} onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.component()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.component}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <ComponentSelect componentId={editable.componentId} componentTypes={componentTypes} onChange={handleComponentChange} />
+        <ComponentSelect
+          componentId={editable.componentId}
+          componentTypes={componentTypes}
+          onChange={handleComponentChange}
+        />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

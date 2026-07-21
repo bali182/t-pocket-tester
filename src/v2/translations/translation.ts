@@ -1,16 +1,14 @@
-import { Translation } from 'intl-t/react'
-
 import { EN } from './en'
 import { HU } from './hu'
+import type { TranslationSchema } from './translationSchema'
 
-export const translation = new Translation({
-  locales: {
-    hu: HU,
-    en: EN,
-  },
-  defaultLocale: 'en',
-})
+export const useTranslation = (): TranslationSchema => {
+  const language = new Intl.Locale(navigator.language).language
 
-export const useTranslation = translation.useTranslation
-
-export type TranslationSchema = typeof translation.current
+  switch (language) {
+    case 'hu':
+      return HU
+    default:
+      return EN
+  }
+}

@@ -1,10 +1,10 @@
 import { Box } from '@chakra-ui/react'
 import type { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-
-import { baseRoute, routes } from '../routes'
+import { useRoutes } from '../useRoutes'
 
 export const App: FC = () => {
+  const { routes, baseRoute } = useRoutes()
   return (
     <Box as="main" display="flex" flexDirection="column" height="100dvh" overflow="hidden">
       <Box flex="1" minHeight="0" overflow="hidden">

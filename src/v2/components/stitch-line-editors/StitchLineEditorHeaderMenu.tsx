@@ -24,7 +24,7 @@ export const StitchLineEditorHeaderMenu: FC<StitchLineEditorHeaderMenuProps> = (
     <HStack gap="1">
       <Button colorPalette="red" onClick={handleDelete} size="2xs" variant="subtle">
         <PiTrash />
-        {t.common.actions.remove()}
+        {t.common.actions.remove}
       </Button>
     </HStack>
   )

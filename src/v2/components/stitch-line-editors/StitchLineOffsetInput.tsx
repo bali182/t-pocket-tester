@@ -4,8 +4,9 @@ import type { IconType } from 'react-icons'
 import { PiArrowLineDown, PiArrowLineLeft, PiArrowLineRight, PiArrowLineUp } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
+import { useTranslation } from '../../translations/translation'
+import { TranslationSchema } from '../../translations/translationSchema'
 import { NumberInput } from '../common/NumberInput'
-import { useTranslation, type TranslationSchema } from '../../translations/translation'
 
 export type StitchLineOffsetField =
   | 'leftStartOffset'
@@ -99,20 +100,20 @@ export const StitchLineOffsetInput: FC<StitchLineOffsetInputProps> = ({ disabled
 const getOffsetInputLabel = (field: StitchLineOffsetField, t: TranslationSchema): string => {
   switch (field) {
     case 'bottomEndOffset':
-      return t.stitchLine.editor.offsets.bottomEnd()
+      return t.stitchLine.editor.offsets.bottomEnd
     case 'bottomStartOffset':
-      return t.stitchLine.editor.offsets.bottomStart()
+      return t.stitchLine.editor.offsets.bottomStart
     case 'leftEndOffset':
-      return t.stitchLine.editor.offsets.leftEnd()
+      return t.stitchLine.editor.offsets.leftEnd
     case 'leftStartOffset':
-      return t.stitchLine.editor.offsets.leftStart()
+      return t.stitchLine.editor.offsets.leftStart
     case 'rightEndOffset':
-      return t.stitchLine.editor.offsets.rightEnd()
+      return t.stitchLine.editor.offsets.rightEnd
     case 'rightStartOffset':
-      return t.stitchLine.editor.offsets.rightStart()
+      return t.stitchLine.editor.offsets.rightStart
     case 'topEndOffset':
-      return t.stitchLine.editor.offsets.topEnd()
+      return t.stitchLine.editor.offsets.topEnd
     case 'topStartOffset':
-      return t.stitchLine.editor.offsets.topStart()
+      return t.stitchLine.editor.offsets.topStart
   }
 }

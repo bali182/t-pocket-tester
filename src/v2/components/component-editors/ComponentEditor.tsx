@@ -50,8 +50,8 @@ export const ComponentEditor: FC<ComponentEditorProps> = (props) => {
       return (
         <Alert.Root status="error">
           <Alert.Content>
-            <Alert.Title>{t.component.editor.missing.title()}</Alert.Title>
-            <Alert.Description>{t.component.editor.missing.description()}</Alert.Description>
+            <Alert.Title>{t.component.editor.missing.title}</Alert.Title>
+            <Alert.Description>{t.component.editor.missing.description}</Alert.Description>
           </Alert.Content>
         </Alert.Root>
       )

@@ -37,8 +37,8 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, is
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.component.editor.tPocket.title()}</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>{t.component.editor.tPocket.flapWidth()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.component.editor.tPocket.title}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.component.editor.tPocket.flapWidth}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.tPocketTabWidth}
@@ -49,7 +49,7 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, is
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.component.editor.tPocket.taper()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.component.editor.tPocket.taper}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.tPocketTaper}

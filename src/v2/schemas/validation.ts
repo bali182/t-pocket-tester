@@ -1,7 +1,7 @@
 import type { DecimalLocale } from 'validator/es/lib/isDecimal'
 
 import type { ComputedProjectSchema, ProjectSchema } from './project'
-import type { TranslationSchema } from '../translations/translation'
+import type { TranslationSchema } from '../translations/translationSchema'
 
 export type SeveritySchema = 'error' | 'warning' | 'info'
 

@@ -27,10 +27,6 @@ export type StitchLineComponentReferencesSchema = {
   componentId: string
 }
 
-export type BaseStitchLineSchema = HasIdentitySchema &
-  StitchLineCommonConfigSchema &
-  StitchLineComponentReferencesSchema
-
 export type ComponentBoundsStitchLineOwnSchema = {
   // Are we stitching the given side?
   top: boolean
@@ -66,7 +62,9 @@ export type ComponentBoundsStitchLineOwnSchema = {
   leftEndOffset: number
 }
 
-export type ComponentBoundsStitchLineSchema = BaseStitchLineSchema &
+export type ComponentBoundsStitchLineSchema = HasIdentitySchema &
+  StitchLineCommonConfigSchema &
+  StitchLineComponentReferencesSchema &
   ComponentBoundsStitchLineOwnSchema & {
     type: 'component-bounds-stitch-line'
   }
@@ -78,7 +76,9 @@ export type PocketClusterStitchLineOwnSchema = {
   stitchDirection: StitchDirectionSchema
 }
 
-export type PocketClusterStitchLineSchema = BaseStitchLineSchema &
+export type PocketClusterStitchLineSchema = HasIdentitySchema &
+  StitchLineCommonConfigSchema &
+  StitchLineComponentReferencesSchema &
   PocketClusterStitchLineOwnSchema & {
     type: 'pocket-cluster-stitch-line'
   }

@@ -54,31 +54,31 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.component.editor.pocketCluster.title()}</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>{t.component.editor.pocketCluster.opening()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.component.editor.pocketCluster.title}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.component.editor.pocketCluster.opening}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromTop()} value="up">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromTop} value="up">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretDown />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromBottom()} value="down">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromBottom} value="down">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretUp />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromLeft()} value="left">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromLeft} value="left">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretRight />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromRight()} value="right">
+          <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromRight} value="right">
             <SegmentGroup.ItemHiddenInput />
             <PiCaretLeft />
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.amount()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.amount}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.pocketCount}
@@ -89,7 +89,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
         />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.spacing()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.spacing}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.pocketStep}

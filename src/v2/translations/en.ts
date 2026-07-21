@@ -1,13 +1,15 @@
-import { HU } from './hu'
+import type { HU } from './hu'
 
 export const EN: typeof HU = {
   navigation: {
     home: 'Home',
+    project: 'Project',
   },
   common: {
     actions: {
       add: 'Add',
       addStitchLine: 'Add stitch line',
+      cancel: 'Cancel',
       remove: 'Delete',
     },
     labels: {
@@ -29,12 +31,12 @@ export const EN: typeof HU = {
     },
     accessibility: {
       selectColor: 'Select color',
-      componentTree: {
-        moveUp: 'Move item up',
-        moveDown: 'Move item down',
-        add: 'Add item',
-        remove: 'Delete item',
-      },
+    },
+    componentActions: {
+      moveUp: 'Move item up',
+      moveDown: 'Move item down',
+      add: (name: string) => `Add ${name.toLowerCase()}`,
+      remove: 'Delete item',
     },
     directions: {
       top: 'Top edge',
@@ -51,6 +53,22 @@ export const EN: typeof HU = {
     panels: {
       leather: 'Leather',
       stitching: 'Stitching',
+    },
+  },
+  projects: {
+    title: 'Projects',
+    actions: {
+      create: 'New project',
+    },
+    createDialog: {
+      title: 'Create new project',
+      actions: {
+        create: 'Create',
+      },
+    },
+    notFound: {
+      title: 'Project not found',
+      description: 'The project you want to open does not exist.',
     },
   },
   component: {
@@ -101,14 +119,14 @@ export const EN: typeof HU = {
     },
   },
   stitchLine: {
+    types: {
+      componentBounds: 'Outline stitching',
+      pocketCluster: 'Pocket-bottom stitching',
+    },
     add: {
       title: 'Add stitch line',
       type: 'Stitch line type',
       typePlaceholder: 'Select a stitch line type',
-      types: {
-        componentBounds: 'Component outline',
-        pocketCluster: 'T-pocket bottom stitch',
-      },
     },
     tree: {
       empty: {
@@ -116,7 +134,7 @@ export const EN: typeof HU = {
         description: 'Add a stitch line to the selected component.',
       },
       accessibility: {
-        deleteNamed: 'Delete {name}',
+        deleteNamed: (name: string) => `Delete ${name}`,
       },
     },
     editor: {
@@ -167,11 +185,11 @@ export const EN: typeof HU = {
     number: {
       invalidFormat: 'Invalid number format.',
       integerOnly: 'Only whole numbers are allowed.',
-      minimumExclusive: 'Value must be greater than {value}.',
-      minimumInclusive: 'Minimum value: {value}.',
-      maximumExclusive: 'Value must be less than {value}.',
-      maximumInclusive: 'Maximum value: {value}.',
-      step: 'Step: {value}.',
+      minimumExclusive: (value: string) => `Value must be greater than ${value}.`,
+      minimumInclusive: (value: string) => `Minimum value: ${value}.`,
+      maximumExclusive: (value: string) => `Value must be less than ${value}.`,
+      maximumInclusive: (value: string) => `Maximum value: ${value}.`,
+      step: (value: string) => `Step: ${value}.`,
     },
     primitive: {
       required: 'This value is required.',
@@ -184,6 +202,6 @@ export const EN: typeof HU = {
   defaults: {
     projectName: 'New project',
     rootComponentName: 'Base',
-    stitchLineName: 'Stitch line {number}',
+    stitchLineName: (number: number) => `Stitch line ${number}`,
   },
 }

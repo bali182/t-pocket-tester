@@ -8,7 +8,7 @@ import {
   RootPanelSchema,
 } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
-import type { TranslationSchema } from '../translations/translation'
+import type { TranslationSchema } from '../translations/translationSchema'
 import { getComponentColor } from './getComponentColor'
 import { getUnusedComponentName } from './getUnusedComponentName'
 import { id } from './id'

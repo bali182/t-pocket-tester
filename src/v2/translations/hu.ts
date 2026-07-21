@@ -1,11 +1,13 @@
 export const HU = {
   navigation: {
     home: 'Kezdőlap',
+    project: 'Projekt',
   },
   common: {
     actions: {
       add: 'Hozzáadás',
       addStitchLine: 'Új varrás',
+      cancel: 'Mégse',
       remove: 'Törlés',
     },
     labels: {
@@ -27,12 +29,12 @@ export const HU = {
     },
     accessibility: {
       selectColor: 'Szín kiválasztása',
-      componentTree: {
-        moveUp: 'Elem mozgatása fel',
-        moveDown: 'Elem mozgatása le',
-        add: 'Elem hozzáadása',
-        remove: 'Elem törlése',
-      },
+    },
+    componentActions: {
+      add: (name: string) => `${name} hozzáadása`,
+      moveUp: 'Elem mozgatása fel',
+      moveDown: 'Elem mozgatása le',
+      remove: 'Elem törlése',
     },
     directions: {
       top: 'Felső oldal',
@@ -49,6 +51,22 @@ export const HU = {
     panels: {
       leather: 'Bőr',
       stitching: 'Varrás',
+    },
+  },
+  projects: {
+    title: 'Projektek',
+    actions: {
+      create: 'Új projekt',
+    },
+    createDialog: {
+      title: 'Új projekt létrehozása',
+      actions: {
+        create: 'Létrehozás',
+      },
+    },
+    notFound: {
+      title: 'A projekt nem található',
+      description: 'A megnyitni kívánt projekt nem létezik.',
     },
   },
   component: {
@@ -99,14 +117,14 @@ export const HU = {
     },
   },
   stitchLine: {
+    types: {
+      componentBounds: 'Körvonal varrás',
+      pocketCluster: 'Zseb-alj varrás',
+    },
     add: {
       title: 'Varrás hozzáadása',
       type: 'Varrás típusa',
       typePlaceholder: 'Varrás típusának kiválasztása',
-      types: {
-        componentBounds: 'Komponens határvonala',
-        pocketCluster: 'T-zsebek aljának varrása',
-      },
     },
     tree: {
       empty: {
@@ -114,7 +132,7 @@ export const HU = {
         description: 'Adj hozzá egy varrást az általad kiválasztott komponenshez!',
       },
       accessibility: {
-        deleteNamed: '{name} törlése',
+        deleteNamed: (name: string) => `${name} törlése`,
       },
     },
     editor: {
@@ -165,11 +183,11 @@ export const HU = {
     number: {
       invalidFormat: 'Érvénytelen számformátum.',
       integerOnly: 'Csak egész érték adható meg.',
-      minimumExclusive: 'Az értéknek a minimum felett kell lennie ({value}).',
-      minimumInclusive: 'Minimum érték: {value}.',
-      maximumExclusive: 'Az értéknek a maximum alatt kell lennie ({value}).',
-      maximumInclusive: 'Maximum érték: {value}.',
-      step: 'Lépték: {value}.',
+      minimumExclusive: (value: string) => `Az értéknek a minimum felett kell lennie (${value}).`,
+      minimumInclusive: (value: string) => `Minimum érték: ${value}.`,
+      maximumExclusive: (value: string) => `Az értéknek a maximum alatt kell lennie (${value}).`,
+      maximumInclusive: (value: string) => `Maximum érték: ${value}.`,
+      step: (value: string) => `Lépték: ${value}.`,
     },
     primitive: {
       required: 'Kötelező érték.',
@@ -182,6 +200,6 @@ export const HU = {
   defaults: {
     projectName: 'Új projekt',
     rootComponentName: 'Alap',
-    stitchLineName: 'Varrás {number}',
+    stitchLineName: (number: number) => `Varrás ${number}`,
   },
 }

@@ -33,7 +33,7 @@ export const ColorInput: FC<ColorInputProps> = ({ issue, onChange, value }) => {
         <ColorPicker.Trigger asChild>
           <Button
             aria-invalid={isInvalid}
-            aria-label={t.common.accessibility.selectColor()}
+            aria-label={t.common.accessibility.selectColor}
             justifyContent="start"
             minWidth="0"
             size="xs"

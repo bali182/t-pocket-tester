@@ -48,36 +48,36 @@ export const PocketClusterStitchLineSettingsSection = ({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.stitchLine.editor.pocketStitch.title()}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader>{t.stitchLine.editor.pocketStitch.title}</SectionGroup.SectionHeader>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.enabled()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.enabled}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Switch.Root checked={editable.enabled} onCheckedChange={handleEnabledChange} size="sm">
-          <Switch.HiddenInput aria-label={t.stitchLine.editor.pocketStitch.enableAccessibility()} />
+          <Switch.HiddenInput aria-label={t.stitchLine.editor.pocketStitch.enableAccessibility} />
           <Switch.Control>
             <Switch.Thumb />
           </Switch.Control>
         </Switch.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.startOffset()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.startOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.startOffset} onChange={handleStartOffsetChange} step={1} unit="mm" value={editable.startOffset} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.endOffset()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.endOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput issue={issues.endOffset} onChange={handleEndOffsetChange} step={1} unit="mm" value={editable.endOffset} />
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.common.labels.direction()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.common.labels.direction}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Switch.Root
           checked={editable.stitchDirection === 'start-to-end'}
           onCheckedChange={handleStitchDirectionChange}
           size="sm"
         >
-          <Switch.HiddenInput aria-label={t.stitchLine.editor.pocketStitch.directionAccessibility()} />
+          <Switch.HiddenInput aria-label={t.stitchLine.editor.pocketStitch.directionAccessibility} />
           <Switch.Control bg="bg.emphasized" _checked={{ bg: 'bg.emphasized' }}>
             <Switch.Thumb bg="bg.panel" _checked={{ bg: 'bg.panel' }}>
               <Switch.ThumbIndicator fallback={<PiArrowLeft />}>

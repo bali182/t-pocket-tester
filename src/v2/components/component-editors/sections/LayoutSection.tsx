@@ -45,38 +45,38 @@ export function LayoutSection<T extends HasLayoutSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.component.editor.layout.title()}</SectionGroup.SectionHeader>
-      <SectionGroup.SectionRowTitle>{t.component.editor.layout.orientation()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionHeader>{t.component.editor.layout.title}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionRowTitle>{t.component.editor.layout.orientation}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.layoutOrientation}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label={t.component.editor.layout.horizontal()} value="horizontal">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.horizontal} value="horizontal">
             <SegmentGroup.ItemHiddenInput />
             <PiColumns />
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.component.editor.layout.vertical()} value="vertical">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.vertical} value="vertical">
             <SegmentGroup.ItemHiddenInput />
             <PiRows />
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.component.editor.layout.order()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.component.editor.layout.order}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layoutOrder}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label={t.component.editor.layout.defaultOrder()} value="default">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.defaultOrder} value="default">
             <SegmentGroup.ItemHiddenInput />
             {editable.layoutOrientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.component.editor.layout.reverseOrder()} value="reverse">
+          <SegmentGroup.Item aria-label={t.component.editor.layout.reverseOrder} value="reverse">
             <SegmentGroup.ItemHiddenInput />
             {editable.layoutOrientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
 
-      <SectionGroup.SectionRowTitle>{t.component.editor.layout.gap()}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowTitle>{t.component.editor.layout.gap}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <NumberInput
           issue={issues.layoutGap}

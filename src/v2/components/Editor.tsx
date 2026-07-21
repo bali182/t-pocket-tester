@@ -140,7 +140,7 @@ export const Editor: FC = () => {
           >
             <Splitter.Panel display="flex" flexDirection="column" id="component" minHeight="0">
               <Heading px="4" py="3" size="sm">
-                {t.editor.panels.leather()}
+                {t.editor.panels.leather}
               </Heading>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
                 <ComponentTree selectedComponentId={selectedComponentId} />
@@ -154,11 +154,11 @@ export const Editor: FC = () => {
 
             <Splitter.Panel display="flex" flexDirection="column" id="stitching" minHeight="0">
               <HStack justify="space-between" px="4" py="3">
-                <Heading size="sm">{t.editor.panels.stitching()}</Heading>
+                <Heading size="sm">{t.editor.panels.stitching}</Heading>
                 <AddStitchLinePopover
                   trigger={
                     <Button size="2xs" variant="subtle">
-                      {t.common.actions.addStitchLine()}
+                      {t.common.actions.addStitchLine}
                     </Button>
                   }
                 />

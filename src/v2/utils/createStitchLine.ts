@@ -1,7 +1,6 @@
 import { defaultStitchingSettings } from '../defaultStates'
-import { HasIdentitySchema } from '../schemas/components'
+import { ComponentSchema, HasIdentitySchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
-import type { TranslationSchema } from '../translations/translation'
 import type {
   ComponentBoundsStitchLineOwnSchema,
   ComponentBoundsStitchLineSchema,
@@ -9,6 +8,7 @@ import type {
   PocketClusterStitchLineSchema,
   StitchLineComponentReferencesSchema,
 } from '../schemas/stitching'
+import type { TranslationSchema } from '../translations/translationSchema'
 import { getUnusedStitchLineName } from './getUnusedStitchLineName'
 import { id } from './id'
 
@@ -20,7 +20,7 @@ type StitchLineByTypeName = {
 export const createStitchLine = <T extends keyof StitchLineByTypeName>(
   type: T,
   project: ProjectSchema,
-  componentId: string,
+  component: ComponentSchema,
   t: TranslationSchema,
 ): StitchLineByTypeName[T] => {
   const defaults = DEFAULT_STITCH_LINES[type]
@@ -29,8 +29,8 @@ export const createStitchLine = <T extends keyof StitchLineByTypeName>(
     ...project.stitchingSettings,
     id: id(),
     type,
-    componentId,
-    name: getUnusedStitchLineName(project, t),
+    componentId: component.id,
+    name: getUnusedStitchLineName(project, component, t),
   }
 }
 

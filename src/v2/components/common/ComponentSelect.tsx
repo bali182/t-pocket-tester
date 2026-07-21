@@ -8,11 +8,11 @@ import {
 } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC } from 'react'
 
-import { useComponentIcon } from '../../hooks/useComponentIcon'
 import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
-import { isDefined } from '../../utils/isDefined'
 import { useTranslation } from '../../translations/translation'
+import { getComponentIcon } from '../../utils/getComponentIcon'
+import { isDefined } from '../../utils/isDefined'
 
 type ComponentSelectProps = {
   componentId: string | undefined
@@ -24,7 +24,7 @@ export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, compone
   const t = useTranslation()
   const { project } = useProject()
   const component = isDefined(componentId) ? project.components[componentId] : undefined
-  const Icon = useComponentIcon(component?.type ?? 'panel')
+  const Icon = getComponentIcon(component?.type ?? 'panel')
   const collection = useMemo<ListCollection<ComponentSchema>>(
     () =>
       createListCollection<ComponentSchema>({
@@ -69,7 +69,7 @@ export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, compone
               </HStack>
             </Select.ValueText>
           ) : (
-            <Select.ValueText placeholder={t.common.placeholders.selectComponent()} />
+            <Select.ValueText placeholder={t.common.placeholders.selectComponent} />
           )}
         </Select.Trigger>
         <Select.IndicatorGroup>
@@ -92,7 +92,7 @@ type ComponentSelectItemProps = {
 }
 
 const ComponentSelectItem: FC<ComponentSelectItemProps> = ({ component }) => {
-  const Icon = useComponentIcon(component.type)
+  const Icon = getComponentIcon(component.type)
 
   return (
     <Select.Item item={component}>
