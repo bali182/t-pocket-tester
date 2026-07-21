@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedTPocketSchema } from '../../schemas/computed'
 import type { LineSchema, PathSchema } from '../../schemas/geometry'
-import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedPocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { clamp } from '../../utils/clamp'
 import { getTPocketTabDepth } from '../pocketUtils'
 
@@ -13,7 +13,7 @@ export type CalculatedTPocketStitchLine = {
 }
 
 export const calculateTPocketStitchLine = (
-  stitchLine: PocketClusterStitchLineSchema,
+  stitchLine: ResolvedPocketClusterStitchLineSchema,
   normalizedPocketCluster: PocketClusterSchema,
   tPocket: ComputedTPocketSchema,
 ): CalculatedTPocketStitchLine => {

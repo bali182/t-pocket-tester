@@ -31,7 +31,12 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
     height: new BigNumber(rootComponent.height),
   }
   const root = computeRootPanel(rootComponent, rootBoundingRect, project, computedComponents)
-  const stitchLines = calculateStitchLines(project.stitchLines, project.components, computedComponents)
+  const stitchLines = calculateStitchLines(
+    project.stitchLines,
+    project.stitchingSettings,
+    project.components,
+    computedComponents,
+  )
 
   return {
     id: project.id,

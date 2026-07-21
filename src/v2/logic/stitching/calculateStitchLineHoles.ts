@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 import { PointSchema } from '../../schemas/geometry'
-import type { ComponentBoundsStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
+import type { ResolvedComponentBoundsStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
 import { isDefined } from '../../utils/isDefined'
 import type { CalculatedStitchLinePath, StitchPathFragment, StitchSidePathFragment } from './calculateStitchLinePaths'
 import {
@@ -22,7 +22,7 @@ type StitchHoleTraversal = {
 }
 
 export const calculateStitchLineHoles = (
-  stitchLine: ComponentBoundsStitchLineSchema,
+  stitchLine: ResolvedComponentBoundsStitchLineSchema,
   calculatedPath: CalculatedStitchLinePath,
 ): StitchHoleSchema[] => {
   const stitchHoleDistance = new BigNumber(stitchLine.stitchHoleDistance)
@@ -46,7 +46,7 @@ export const calculateStitchLineHoles = (
 }
 
 const calculateStitchHoleTraversals = (
-  stitchLine: ComponentBoundsStitchLineSchema,
+  stitchLine: ResolvedComponentBoundsStitchLineSchema,
   fragments: StitchPathFragment[],
 ): StitchHoleTraversal[] => {
   const orientedFragments = orientFragments(stitchLine, fragments)
@@ -73,7 +73,7 @@ const calculateStitchHoleTraversals = (
 }
 
 const orientFragments = (
-  stitchLine: ComponentBoundsStitchLineSchema,
+  stitchLine: ResolvedComponentBoundsStitchLineSchema,
   fragments: StitchPathFragment[],
 ): StitchPathFragment[] => {
   if (fragments.some((fragment) => fragment.type === 'corner')) {
@@ -88,7 +88,7 @@ const orientFragments = (
   return [reverseSideFragment(side)]
 }
 
-const isCanonicalDirection = (stitchLine: ComponentBoundsStitchLineSchema, side: StitchSidePathFragment): boolean => {
+const isCanonicalDirection = (stitchLine: ResolvedComponentBoundsStitchLineSchema, side: StitchSidePathFragment): boolean => {
   switch (side.side) {
     case 'top':
       return stitchLine.topStitchDirection === 'left-to-right'

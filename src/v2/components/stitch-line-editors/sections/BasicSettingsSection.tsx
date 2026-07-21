@@ -3,7 +3,7 @@ import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 
 import type { ComponentSchema, HasIdentitySchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
-import type { StitchLineCommonConfigSchema, StitchLineComponentReferencesSchema } from '../../../schemas/stitching'
+import type { StitchLineComponentReferencesSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { isDefined } from '../../../utils/isDefined'
@@ -11,7 +11,6 @@ import { ComponentSelect } from '../../common/ComponentSelect'
 import { SectionGroup } from '../../common/SectionGroup'
 
 export type BaseStitchLineSchema = HasIdentitySchema &
-  StitchLineCommonConfigSchema &
   StitchLineComponentReferencesSchema
 
 type BasicSettingsSectionProps<T extends BaseStitchLineSchema> = {

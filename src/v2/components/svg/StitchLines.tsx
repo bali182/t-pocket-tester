@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { useProject } from '../../hooks/useProject'
+import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
 import { isDefined } from '../../utils/isDefined'
 import { StitchLine } from './StitchLine'
 
@@ -25,7 +26,9 @@ export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
           throw new Error(`Computed stitch line not found: ${stitchLine.id}`)
         }
 
-        return <StitchLine key={stitchLine.id} stitchLine={stitchLine} computedStitchLine={computedStitchLine} />
+        const resolvedStitchLine = getResolvedStitchLine(stitchLine, project.stitchingSettings)
+
+        return <StitchLine key={stitchLine.id} stitchLine={resolvedStitchLine} computedStitchLine={computedStitchLine} />
       })}
     </>
   )

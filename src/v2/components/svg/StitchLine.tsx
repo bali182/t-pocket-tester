@@ -1,11 +1,11 @@
 import type { FC } from 'react'
 
 import type { ComputedStitchLineSchema } from '../../schemas/computed'
-import type { StitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { StitchLineRoute } from './StitchLineRoute'
 
 type StitchLineProps = {
-  stitchLine: StitchLineSchema
+  stitchLine: ResolvedStitchLineSchema
   computedStitchLine: ComputedStitchLineSchema
 }
 

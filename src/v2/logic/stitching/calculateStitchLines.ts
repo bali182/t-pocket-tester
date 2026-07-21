@@ -1,11 +1,13 @@
 import type { ComponentSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../../schemas/computed'
-import type { StitchLineSchema } from '../../schemas/stitching'
+import type { StitchLineCommonConfigSchema, StitchLineSchema } from '../../schemas/stitching'
 import { isDefined } from '../../utils/isDefined'
+import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
 import { calculateStitchLine } from './calculateStitchLine'
 
 export const calculateStitchLines = (
   stitchLines: StitchLineSchema[],
+  stitchingSettings: StitchLineCommonConfigSchema,
   components: Record<string, ComponentSchema>,
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedStitchLineSchema[] => {
@@ -18,7 +20,8 @@ export const calculateStitchLines = (
     if (!isDefined(component) || !isDefined(computedComponent)) {
       continue
     }
-    computedStitchLines.push(calculateStitchLine(stitchLine, component, computedComponent))
+    const resolvedStitchLine = getResolvedStitchLine(stitchLine, stitchingSettings)
+    computedStitchLines.push(calculateStitchLine(resolvedStitchLine, component, computedComponent))
   }
 
   return computedStitchLines

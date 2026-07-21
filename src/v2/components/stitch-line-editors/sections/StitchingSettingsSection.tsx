@@ -4,64 +4,82 @@ import type { EditableSchema } from '../../../schemas/editable'
 import type { StitchLineCommonConfigSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
+import { isDefined } from '../../../utils/isDefined'
 import { ColorInput } from '../../common/ColorInput'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type StitchingSettingsSectionProps<T extends StitchLineCommonConfigSchema> = {
+type StitchingSettingsSectionProps<T extends Partial<StitchLineCommonConfigSchema>> = {
   editable: EditableSchema<T>
   issues: ValidationIssuesSchema<T>
   onChange: (updated: EditableSchema<T>) => void
+  resolvedEditable: EditableSchema<StitchLineCommonConfigSchema> & EditableSchema<T>
 }
 
-export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>({
+export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfigSchema>>({
   editable,
   issues,
   onChange,
+  resolvedEditable,
 }: StitchingSettingsSectionProps<T>): ReactNode => {
   const t = useTranslation()
   const handleStitchHoleColorChange = useCallback(
-    (stitchHoleColor: string): void => {
-      onChange({ ...editable, stitchHoleColor })
+    (nextStitchHoleColor: string): void => {
+      onChange({ ...editable, stitchHoleColor: nextStitchHoleColor })
     },
     [editable, onChange],
   )
   const handleStitchLineColorChange = useCallback(
-    (stitchLineColor: string): void => {
-      onChange({ ...editable, stitchLineColor })
+    (nextStitchLineColor: string): void => {
+      onChange({ ...editable, stitchLineColor: nextStitchLineColor })
     },
     [editable, onChange],
   )
   const handleStitchMarginChange = useCallback(
-    (stitchMargin: string): void => {
-      onChange({ ...editable, stitchMargin })
+    (nextStitchMargin: string): void => {
+      onChange({ ...editable, stitchMargin: nextStitchMargin })
     },
     [editable, onChange],
   )
   const handleStitchHoleLengthChange = useCallback(
-    (stitchHoleLength: string): void => {
-      onChange({ ...editable, stitchHoleLength })
+    (nextStitchHoleLength: string): void => {
+      onChange({ ...editable, stitchHoleLength: nextStitchHoleLength })
     },
     [editable, onChange],
   )
   const handleStitchHoleDistanceChange = useCallback(
-    (stitchHoleDistance: string): void => {
-      onChange({ ...editable, stitchHoleDistance })
+    (nextStitchHoleDistance: string): void => {
+      onChange({ ...editable, stitchHoleDistance: nextStitchHoleDistance })
     },
     [editable, onChange],
   )
   const handleStitchHoleThicknessChange = useCallback(
-    (stitchHoleThickness: string): void => {
-      onChange({ ...editable, stitchHoleThickness })
+    (nextStitchHoleThickness: string): void => {
+      onChange({ ...editable, stitchHoleThickness: nextStitchHoleThickness })
     },
     [editable, onChange],
   )
   const handleStitchLineThicknessChange = useCallback(
-    (stitchLineThickness: string): void => {
-      onChange({ ...editable, stitchLineThickness })
+    (nextStitchLineThickness: string): void => {
+      onChange({ ...editable, stitchLineThickness: nextStitchLineThickness })
     },
     [editable, onChange],
   )
+  const handleStitchMarginReset = useCallback((): void => {
+    onChange(removeStitchLineSetting(editable, 'stitchMargin'))
+  }, [editable, onChange])
+  const handleStitchHoleLengthReset = useCallback((): void => {
+    onChange(removeStitchLineSetting(editable, 'stitchHoleLength'))
+  }, [editable, onChange])
+  const handleStitchHoleDistanceReset = useCallback((): void => {
+    onChange(removeStitchLineSetting(editable, 'stitchHoleDistance'))
+  }, [editable, onChange])
+  const handleStitchHoleThicknessReset = useCallback((): void => {
+    onChange(removeStitchLineSetting(editable, 'stitchHoleThickness'))
+  }, [editable, onChange])
+  const handleStitchLineThicknessReset = useCallback((): void => {
+    onChange(removeStitchLineSetting(editable, 'stitchLineThickness'))
+  }, [editable, onChange])
 
   return (
     <SectionGroup.Section>
@@ -69,17 +87,33 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeColor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <ColorInput issue={issues.stitchHoleColor} onChange={handleStitchHoleColorChange} value={editable.stitchHoleColor} />
+        <ColorInput
+          issue={issues.stitchHoleColor}
+          onChange={handleStitchHoleColorChange}
+          value={resolvedEditable.stitchHoleColor}
+        />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineColor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <ColorInput issue={issues.stitchLineColor} onChange={handleStitchLineColorChange} value={editable.stitchLineColor} />
+        <ColorInput
+          issue={issues.stitchLineColor}
+          onChange={handleStitchLineColorChange}
+          value={resolvedEditable.stitchLineColor}
+        />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.margin}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <NumberInput issue={issues.stitchMargin} onChange={handleStitchMarginChange} step={1} unit="mm" value={editable.stitchMargin} />
+        <NumberInput
+          issue={issues.stitchMargin}
+          onChange={handleStitchMarginChange}
+          onReset={handleStitchMarginReset}
+          isResetEnabled={isDefined(editable.stitchMargin)}
+          step={1}
+          unit="mm"
+          value={resolvedEditable.stitchMargin}
+        />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeLength}</SectionGroup.SectionRowTitle>
@@ -87,9 +121,11 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         <NumberInput
           issue={issues.stitchHoleLength}
           onChange={handleStitchHoleLengthChange}
+          onReset={handleStitchHoleLengthReset}
+          isResetEnabled={isDefined(editable.stitchHoleLength)}
           step={1}
           unit="mm"
-          value={editable.stitchHoleLength}
+          value={resolvedEditable.stitchHoleLength}
         />
       </SectionGroup.SectionRowEditor>
 
@@ -98,9 +134,11 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         <NumberInput
           issue={issues.stitchHoleDistance}
           onChange={handleStitchHoleDistanceChange}
+          onReset={handleStitchHoleDistanceReset}
+          isResetEnabled={isDefined(editable.stitchHoleDistance)}
           step={1}
           unit="mm"
-          value={editable.stitchHoleDistance}
+          value={resolvedEditable.stitchHoleDistance}
         />
       </SectionGroup.SectionRowEditor>
 
@@ -109,9 +147,11 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         <NumberInput
           issue={issues.stitchHoleThickness}
           onChange={handleStitchHoleThicknessChange}
+          onReset={handleStitchHoleThicknessReset}
+          isResetEnabled={isDefined(editable.stitchHoleThickness)}
           step={1}
           unit="mm"
-          value={editable.stitchHoleThickness}
+          value={resolvedEditable.stitchHoleThickness}
         />
       </SectionGroup.SectionRowEditor>
 
@@ -120,11 +160,22 @@ export const StitchingSettingsSection = <T extends StitchLineCommonConfigSchema>
         <NumberInput
           issue={issues.stitchLineThickness}
           onChange={handleStitchLineThicknessChange}
+          onReset={handleStitchLineThicknessReset}
+          isResetEnabled={isDefined(editable.stitchLineThickness)}
           step={1}
           unit="mm"
-          value={editable.stitchLineThickness}
+          value={resolvedEditable.stitchLineThickness}
         />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )
+}
+
+const removeStitchLineSetting = <T extends Partial<StitchLineCommonConfigSchema>>(
+  editable: EditableSchema<T>,
+  key: keyof StitchLineCommonConfigSchema,
+): EditableSchema<T> => {
+  const updatedEditable = { ...editable }
+  delete updatedEditable[key]
+  return updatedEditable
 }

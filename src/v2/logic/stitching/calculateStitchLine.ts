@@ -1,11 +1,11 @@
 import type { ComponentSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../../schemas/computed'
-import type { StitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { calculateComponentBoundsStitchLine } from './calculateComponentBoundsStitchLine'
 import { calculatePocketClusterStitchLine } from './calculatePocketClusterStitchLine'
 
 export const calculateStitchLine = (
-  stitchLine: StitchLineSchema,
+  stitchLine: ResolvedStitchLineSchema,
   component: ComponentSchema,
   computedComponent: ComputedComponentSchema,
 ): ComputedStitchLineSchema => {
