@@ -174,6 +174,7 @@ export const EN: typeof HU = {
         holeDistance: 'Hole spacing',
         holeThickness: 'Hole thickness',
         lineThickness: 'Thread thickness',
+        reset: 'Use project value',
       },
     },
   },

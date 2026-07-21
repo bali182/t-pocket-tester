@@ -1,12 +1,12 @@
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedPocketClusterSchema, ComputedStitchLineSchema } from '../../schemas/computed'
-import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedPocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { normalizePocketCluster } from '../normalizePocketCluster'
 import { calculateTPocketStitchHoles } from './calculateTPocketStitchHoles'
 import { calculateTPocketStitchLine } from './calculateTPocketStitchLine'
 
 export const calculatePocketClusterStitchLine = (
-  stitchLine: PocketClusterStitchLineSchema,
+  stitchLine: ResolvedPocketClusterStitchLineSchema,
   pocketCluster: PocketClusterSchema,
   computedPocketCluster: ComputedPocketClusterSchema,
 ): ComputedStitchLineSchema => {

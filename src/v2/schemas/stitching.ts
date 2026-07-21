@@ -62,12 +62,15 @@ export type ComponentBoundsStitchLineOwnSchema = {
   leftEndOffset: number
 }
 
+type ComponentBoundsStitchLineDiscriminatorSchema = {
+  type: 'component-bounds-stitch-line'
+}
+
 export type ComponentBoundsStitchLineSchema = HasIdentitySchema &
-  StitchLineCommonConfigSchema &
+  Partial<StitchLineCommonConfigSchema> &
   StitchLineComponentReferencesSchema &
-  ComponentBoundsStitchLineOwnSchema & {
-    type: 'component-bounds-stitch-line'
-  }
+  ComponentBoundsStitchLineOwnSchema &
+  ComponentBoundsStitchLineDiscriminatorSchema
 
 export type PocketClusterStitchLineOwnSchema = {
   enabled: boolean
@@ -76,11 +79,28 @@ export type PocketClusterStitchLineOwnSchema = {
   stitchDirection: StitchDirectionSchema
 }
 
+type PocketClusterStitchLineDiscriminatorSchema = {
+  type: 'pocket-cluster-stitch-line'
+}
+
 export type PocketClusterStitchLineSchema = HasIdentitySchema &
-  StitchLineCommonConfigSchema &
+  Partial<StitchLineCommonConfigSchema> &
   StitchLineComponentReferencesSchema &
-  PocketClusterStitchLineOwnSchema & {
-    type: 'pocket-cluster-stitch-line'
-  }
+  PocketClusterStitchLineOwnSchema &
+  PocketClusterStitchLineDiscriminatorSchema
 
 export type StitchLineSchema = ComponentBoundsStitchLineSchema | PocketClusterStitchLineSchema
+
+export type ResolvedComponentBoundsStitchLineSchema = HasIdentitySchema &
+  StitchLineCommonConfigSchema &
+  StitchLineComponentReferencesSchema &
+  ComponentBoundsStitchLineOwnSchema &
+  ComponentBoundsStitchLineDiscriminatorSchema
+
+export type ResolvedPocketClusterStitchLineSchema = HasIdentitySchema &
+  StitchLineCommonConfigSchema &
+  StitchLineComponentReferencesSchema &
+  PocketClusterStitchLineOwnSchema &
+  PocketClusterStitchLineDiscriminatorSchema
+
+export type ResolvedStitchLineSchema = ResolvedComponentBoundsStitchLineSchema | ResolvedPocketClusterStitchLineSchema

@@ -6,10 +6,10 @@ import type {
 } from '../schemas/stitching'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
-import { validateHexColor } from './validateHexColor'
 import { validateName } from './validateName'
 import { validateNumber } from './validateNumber'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
+import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
 
 const horizontalStitchDirectionValues: Record<HorizontalStitchDirectionSchema, boolean> = {
   'left-to-right': true,
@@ -27,28 +27,7 @@ export const validateComponentBoundsStitchLineSchema = (
   context: ValidationContextSchema,
 ): ValidationResultSchema<ComponentBoundsStitchLineSchema> => {
   const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
-  const stitchMarginResult = validateNumber(input.stitchMargin, currentValue.stitchMargin, context, { min: 2 })
-  const stitchHoleLengthResult = validateNumber(input.stitchHoleLength, currentValue.stitchHoleLength, context, {
-    min: 0,
-    minInclusive: false,
-  })
-  const stitchHoleDistanceResult = validateNumber(input.stitchHoleDistance, currentValue.stitchHoleDistance, context, {
-    min: 1,
-  })
-  const stitchHoleThicknessResult = validateNumber(
-    input.stitchHoleThickness,
-    currentValue.stitchHoleThickness,
-    context,
-    { min: 0, minInclusive: false },
-  )
-  const stitchLineThicknessResult = validateNumber(
-    input.stitchLineThickness,
-    currentValue.stitchLineThickness,
-    context,
-    { min: 0, minInclusive: false },
-  )
-  const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor, context)
-  const stitchThreadColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor, context)
+  const commonConfigResult = validateStitchLineCommonConfigSchema(input, currentValue, context)
   const topStitchDirectionResult = validatePrimitiveUnion(
     input.topStitchDirection,
     currentValue.topStitchDirection,
@@ -100,13 +79,13 @@ export const validateComponentBoundsStitchLineSchema = (
     rightEndOffset: rightEndOffsetResult.issues,
     rightStartOffset: rightStartOffsetResult.issues,
     rightStitchDirection: rightStitchDirectionResult.issues,
-    stitchHoleColor: stitchHoleColorResult.issues,
-    stitchHoleDistance: stitchHoleDistanceResult.issues,
-    stitchHoleLength: stitchHoleLengthResult.issues,
-    stitchHoleThickness: stitchHoleThicknessResult.issues,
-    stitchLineThickness: stitchLineThicknessResult.issues,
-    stitchMargin: stitchMarginResult.issues,
-    stitchLineColor: stitchThreadColorResult.issues,
+    stitchHoleColor: commonConfigResult.issues.stitchHoleColor,
+    stitchHoleDistance: commonConfigResult.issues.stitchHoleDistance,
+    stitchHoleLength: commonConfigResult.issues.stitchHoleLength,
+    stitchHoleThickness: commonConfigResult.issues.stitchHoleThickness,
+    stitchLineThickness: commonConfigResult.issues.stitchLineThickness,
+    stitchMargin: commonConfigResult.issues.stitchMargin,
+    stitchLineColor: commonConfigResult.issues.stitchLineColor,
     type: undefined,
     top: undefined,
     topEndOffset: topEndOffsetResult.issues,
@@ -117,6 +96,7 @@ export const validateComponentBoundsStitchLineSchema = (
   }
 
   const committedValue: ComponentBoundsStitchLineSchema = {
+    ...commonConfigResult.committedValue,
     bottom: input.bottom,
     bottomEndOffset: bottomEndOffsetResult.committedValue,
     bottomLeftCorner: input.bottomLeftCorner,
@@ -134,13 +114,6 @@ export const validateComponentBoundsStitchLineSchema = (
     rightEndOffset: rightEndOffsetResult.committedValue,
     rightStartOffset: rightStartOffsetResult.committedValue,
     rightStitchDirection: rightStitchDirectionResult.committedValue,
-    stitchHoleColor: stitchHoleColorResult.committedValue,
-    stitchHoleDistance: stitchHoleDistanceResult.committedValue,
-    stitchHoleLength: stitchHoleLengthResult.committedValue,
-    stitchHoleThickness: stitchHoleThicknessResult.committedValue,
-    stitchLineThickness: stitchLineThicknessResult.committedValue,
-    stitchMargin: stitchMarginResult.committedValue,
-    stitchLineColor: stitchThreadColorResult.committedValue,
     top: input.top,
     topEndOffset: topEndOffsetResult.committedValue,
     topLeftCorner: input.topLeftCorner,
@@ -152,13 +125,7 @@ export const validateComponentBoundsStitchLineSchema = (
 
   if (
     !nameResult.isValid ||
-    !stitchMarginResult.isValid ||
-    !stitchHoleLengthResult.isValid ||
-    !stitchHoleDistanceResult.isValid ||
-    !stitchHoleThicknessResult.isValid ||
-    !stitchLineThicknessResult.isValid ||
-    !stitchHoleColorResult.isValid ||
-    !stitchThreadColorResult.isValid ||
+    !commonConfigResult.isValid ||
     !topStitchDirectionResult.isValid ||
     !rightStitchDirectionResult.isValid ||
     !bottomStitchDirectionResult.isValid ||

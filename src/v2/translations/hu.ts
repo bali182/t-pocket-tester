@@ -172,6 +172,7 @@ export const HU = {
         holeDistance: 'Lyuktávolság',
         holeThickness: 'Lyuk vastagsága',
         lineThickness: 'Vonal vastagsága',
+        reset: 'Projektérték használata',
       },
     },
   },

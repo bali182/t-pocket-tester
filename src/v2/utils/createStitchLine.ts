@@ -1,4 +1,3 @@
-import { defaultStitchingSettings } from '../defaultStates'
 import { ComponentSchema, HasIdentitySchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
 import type {
@@ -26,7 +25,6 @@ export const createStitchLine = <T extends keyof StitchLineByTypeName>(
   const defaults = DEFAULT_STITCH_LINES[type]
   return {
     ...defaults,
-    ...project.stitchingSettings,
     id: id(),
     type,
     componentId: component.id,
@@ -72,13 +70,11 @@ const junkIdentityProps: HasIdentitySchema & StitchLineComponentReferencesSchema
 
 const DEFAULT_STITCH_LINES: StitchLineByTypeName = {
   'component-bounds-stitch-line': {
-    ...defaultStitchingSettings,
     ...defaultStitchLine,
     ...junkIdentityProps,
     type: 'component-bounds-stitch-line',
   },
   'pocket-cluster-stitch-line': {
-    ...defaultStitchingSettings,
     ...defaultPocketClusterStitchLine,
     ...junkIdentityProps,
     type: 'pocket-cluster-stitch-line',

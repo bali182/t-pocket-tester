@@ -2,6 +2,7 @@ import type { FC } from 'react'
 
 import { useProject } from '../../hooks/useProject'
 import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
+import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
 import { isDefined } from '../../utils/isDefined'
 import { StitchLineRoute } from './StitchLineRoute'
 
@@ -34,7 +35,9 @@ export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ componentId, p
           return null
         }
 
-        return <StitchLineRoute key={stitchLine.id} route={route} settings={stitchLine} />
+        const resolvedStitchLine = getResolvedStitchLine(stitchLine, project.stitchingSettings)
+
+        return <StitchLineRoute key={stitchLine.id} route={route} settings={resolvedStitchLine} />
       })}
     </>
   )

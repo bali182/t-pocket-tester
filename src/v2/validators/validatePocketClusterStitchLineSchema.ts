@@ -2,10 +2,10 @@ import type { EditableSchema } from '../schemas/editable'
 import type { PocketClusterStitchLineSchema, StitchDirectionSchema } from '../schemas/stitching'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
-import { validateHexColor } from './validateHexColor'
 import { validateName } from './validateName'
 import { validateNumber } from './validateNumber'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
+import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
 
 const stitchDirectionValues: Record<StitchDirectionSchema, boolean> = {
   'end-to-start': true,
@@ -18,28 +18,7 @@ export const validatePocketClusterStitchLineSchema = (
   context: ValidationContextSchema,
 ): ValidationResultSchema<PocketClusterStitchLineSchema> => {
   const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
-  const stitchMarginResult = validateNumber(input.stitchMargin, currentValue.stitchMargin, context, { min: 2 })
-  const stitchHoleLengthResult = validateNumber(input.stitchHoleLength, currentValue.stitchHoleLength, context, {
-    min: 0,
-    minInclusive: false,
-  })
-  const stitchHoleDistanceResult = validateNumber(input.stitchHoleDistance, currentValue.stitchHoleDistance, context, {
-    min: 1,
-  })
-  const stitchHoleThicknessResult = validateNumber(
-    input.stitchHoleThickness,
-    currentValue.stitchHoleThickness,
-    context,
-    { min: 0, minInclusive: false },
-  )
-  const stitchLineThicknessResult = validateNumber(
-    input.stitchLineThickness,
-    currentValue.stitchLineThickness,
-    context,
-    { min: 0, minInclusive: false },
-  )
-  const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor, context)
-  const stitchLineColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor, context)
+  const commonConfigResult = validateStitchLineCommonConfigSchema(input, currentValue, context)
   const startOffsetResult = validateNumber(input.startOffset, currentValue.startOffset, context)
   const endOffsetResult = validateNumber(input.endOffset, currentValue.endOffset, context)
   const stitchDirectionResult = validatePrimitiveUnion(
@@ -57,17 +36,18 @@ export const validatePocketClusterStitchLineSchema = (
     name: nameResult.issues,
     startOffset: startOffsetResult.issues,
     stitchDirection: stitchDirectionResult.issues,
-    stitchHoleColor: stitchHoleColorResult.issues,
-    stitchHoleDistance: stitchHoleDistanceResult.issues,
-    stitchHoleLength: stitchHoleLengthResult.issues,
-    stitchHoleThickness: stitchHoleThicknessResult.issues,
-    stitchLineColor: stitchLineColorResult.issues,
-    stitchLineThickness: stitchLineThicknessResult.issues,
-    stitchMargin: stitchMarginResult.issues,
+    stitchHoleColor: commonConfigResult.issues.stitchHoleColor,
+    stitchHoleDistance: commonConfigResult.issues.stitchHoleDistance,
+    stitchHoleLength: commonConfigResult.issues.stitchHoleLength,
+    stitchHoleThickness: commonConfigResult.issues.stitchHoleThickness,
+    stitchLineColor: commonConfigResult.issues.stitchLineColor,
+    stitchLineThickness: commonConfigResult.issues.stitchLineThickness,
+    stitchMargin: commonConfigResult.issues.stitchMargin,
     type: undefined,
   }
 
   const committedValue: PocketClusterStitchLineSchema = {
+    ...commonConfigResult.committedValue,
     componentId: input.componentId,
     enabled: input.enabled,
     endOffset: endOffsetResult.committedValue,
@@ -75,25 +55,12 @@ export const validatePocketClusterStitchLineSchema = (
     name: nameResult.committedValue,
     startOffset: startOffsetResult.committedValue,
     stitchDirection: stitchDirectionResult.committedValue,
-    stitchHoleColor: stitchHoleColorResult.committedValue,
-    stitchHoleDistance: stitchHoleDistanceResult.committedValue,
-    stitchHoleLength: stitchHoleLengthResult.committedValue,
-    stitchHoleThickness: stitchHoleThicknessResult.committedValue,
-    stitchLineColor: stitchLineColorResult.committedValue,
-    stitchLineThickness: stitchLineThicknessResult.committedValue,
-    stitchMargin: stitchMarginResult.committedValue,
     type: currentValue.type,
   }
 
   if (
     !nameResult.isValid ||
-    !stitchMarginResult.isValid ||
-    !stitchHoleLengthResult.isValid ||
-    !stitchHoleDistanceResult.isValid ||
-    !stitchHoleThicknessResult.isValid ||
-    !stitchLineThicknessResult.isValid ||
-    !stitchHoleColorResult.isValid ||
-    !stitchLineColorResult.isValid ||
+    !commonConfigResult.isValid ||
     !startOffsetResult.isValid ||
     !endOffsetResult.isValid ||
     !stitchDirectionResult.isValid

@@ -15,9 +15,8 @@ type StitchLineFloatingEditorProps = {
 }
 
 export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ anchorElement, onClose, stitchLine }) => {
-  const { editableStitchLine, setStitchLine, stitchLine: editedStitchLine, validationIssues } = useEditableStitchLine(
-    stitchLine.id,
-  )
+  const { editableStitchLine, resolvedEditableStitchLine, setStitchLine, stitchLine: editedStitchLine, validationIssues } =
+    useEditableStitchLine(stitchLine.id)
 
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
@@ -30,6 +29,7 @@ export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ an
           editable={editableStitchLine}
           issues={validationIssues}
           onChange={setStitchLine}
+          resolvedEditable={resolvedEditableStitchLine}
           stitchLine={editedStitchLine}
         />
       </SectionGroup.Root>

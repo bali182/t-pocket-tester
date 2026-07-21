@@ -13,7 +13,7 @@ export type IssueSchema = {
 export type ValidationIssuesSchema<T> = T extends readonly unknown[]
   ? { [K in keyof T]: ValidationIssuesSchema<T[K]> }
   : T extends object
-    ? { [K in keyof T]-?: ValidationIssuesSchema<Exclude<T[K], undefined>> }
+    ? { [K in keyof T]: ValidationIssuesSchema<T[K]> }
     : IssueSchema | undefined
 
 export type ValidationResultValidSchema<T> = {
