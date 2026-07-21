@@ -5,8 +5,8 @@ import type { ComponentSchema } from '../../schemas/components'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
+import { ComponentActionsMenu } from '../ComponentActionsMenu'
 import { ComponentEditor } from './ComponentEditor'
-import { ComponentEditorHeaderMenu } from './ComponentEditorHeaderMenu'
 
 type ComponentFloatingEditorProps = {
   anchorElement: SVGGraphicsElement
@@ -25,7 +25,7 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
       <FloatingEditorHeader
-        menu={<ComponentEditorHeaderMenu component={editedComponent} onClose={onClose} />}
+        menu={<ComponentActionsMenu component={editedComponent} onDelete={onClose} size="xs" />}
         title={`#${editedComponent.id}`}
       />
       <SectionGroup.Root>

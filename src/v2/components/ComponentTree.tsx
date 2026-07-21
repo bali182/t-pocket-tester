@@ -10,13 +10,13 @@ import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
 import { PiCaretRight } from 'react-icons/pi'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useComponent } from '../hooks/useComponent'
-import { useComponentIcon } from '../hooks/useComponentIcon'
 import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import { getComponentAncestorIds } from '../utils/getComponentAncestorIds'
+import { getComponentIcon } from '../utils/getComponentIcon'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
-import { ComponentTreeItemActions } from './ComponentTreeItemActions'
+import { ComponentActionsMenu } from './ComponentActionsMenu'
 
 type ComponentTreeNode = {
   children?: ComponentTreeNode[]
@@ -27,16 +27,6 @@ type ComponentTreeNode = {
 
 type ComponentTreeProps = {
   selectedComponentId: string | undefined
-}
-
-type ComponentTreeNodeIconProps = {
-  type: ComponentSchema['type']
-}
-
-const ComponentTreeNodeIcon: FC<ComponentTreeNodeIconProps> = ({ type }) => {
-  const Icon = useComponentIcon(type)
-
-  return <Icon />
 }
 
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
@@ -137,13 +127,14 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
       selectionMode="single"
     >
       <TreeView.Tree>
-        <TreeView.Node
+        <TreeView.Node<ComponentTreeNode>
           indentGuide={<TreeView.BranchIndentGuide />}
           render={({ node, nodeState }) => {
-            if (!isDefined(node.component)) {
+            const { component } = node
+            if (!isDefined(component)) {
               return null
             }
-
+            const Icon = getComponentIcon(component.type)
             if (nodeState.isBranch) {
               return (
                 <TreeView.BranchControl>
@@ -152,18 +143,18 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
                       <PiCaretRight />
                     </TreeView.BranchIndicator>
                   </TreeView.BranchTrigger>
-                  <ComponentTreeNodeIcon type={node.component.type} />
+                  <Icon type={component.type} />
                   <TreeView.BranchText>{node.name}</TreeView.BranchText>
-                  <ComponentTreeItemActions component={node.component} onAddChild={handleAddChild} />
+                  <ComponentActionsMenu component={component} onAddChild={handleAddChild} size="2xs" />
                 </TreeView.BranchControl>
               )
             }
 
             return (
               <TreeView.Item>
-                <ComponentTreeNodeIcon type={node.component.type} />
+                <Icon type={component.type} />
                 <TreeView.ItemText>{node.name}</TreeView.ItemText>
-                <ComponentTreeItemActions component={node.component} onAddChild={handleAddChild} />
+                <ComponentActionsMenu component={component} onAddChild={handleAddChild} size="2xs" />
               </TreeView.Item>
             )
           }}

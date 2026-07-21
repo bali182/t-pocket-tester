@@ -29,12 +29,12 @@ export const HU = {
     },
     accessibility: {
       selectColor: 'Szín kiválasztása',
-      componentTree: {
-        moveUp: 'Elem mozgatása fel',
-        moveDown: 'Elem mozgatása le',
-        add: 'Gyerek hozzáadása',
-        remove: 'Elem törlése',
-      },
+    },
+    componentActions: {
+      add: (name: string) => `${name} hozzáadása`,
+      moveUp: 'Elem mozgatása fel',
+      moveDown: 'Elem mozgatása le',
+      remove: 'Elem törlése',
     },
     directions: {
       top: 'Felső oldal',
@@ -117,14 +117,14 @@ export const HU = {
     },
   },
   stitchLine: {
+    types: {
+      componentBounds: 'Körvonal varrás',
+      pocketCluster: 'Zseb-alj varrás',
+    },
     add: {
       title: 'Varrás hozzáadása',
       type: 'Varrás típusa',
       typePlaceholder: 'Varrás típusának kiválasztása',
-      types: {
-        componentBounds: 'Komponens határvonala',
-        pocketCluster: 'T-zsebek aljának varrása',
-      },
     },
     tree: {
       empty: {

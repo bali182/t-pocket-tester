@@ -31,12 +31,12 @@ export const EN: typeof HU = {
     },
     accessibility: {
       selectColor: 'Select color',
-      componentTree: {
-        moveUp: 'Move item up',
-        moveDown: 'Move item down',
-        add: 'Add child',
-        remove: 'Delete item',
-      },
+    },
+    componentActions: {
+      moveUp: 'Move item up',
+      moveDown: 'Move item down',
+      add: (name: string) => `Add ${name.toLowerCase()}`,
+      remove: 'Delete item',
     },
     directions: {
       top: 'Top edge',
@@ -119,14 +119,14 @@ export const EN: typeof HU = {
     },
   },
   stitchLine: {
+    types: {
+      componentBounds: 'Outline stitching',
+      pocketCluster: 'Pocket-bottom stitching',
+    },
     add: {
       title: 'Add stitch line',
       type: 'Stitch line type',
       typePlaceholder: 'Select a stitch line type',
-      types: {
-        componentBounds: 'Component outline',
-        pocketCluster: 'T-pocket bottom stitch',
-      },
     },
     tree: {
       empty: {

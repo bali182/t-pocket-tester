@@ -13,10 +13,11 @@ import { useCallback, useMemo, useState, type FC, type ReactElement } from 'reac
 import { PiPlus } from 'react-icons/pi'
 
 import { useProject } from '../hooks/useProject'
+import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
 import { useTranslation } from '../translations/translation'
-import { getStitchLineTypeOptions, type StitchLineTypeOption } from '../utils/getStitchLineTypeOptions'
+import type { TranslationSchema } from '../translations/translationSchema'
 import { isDefined } from '../utils/isDefined'
 import { ComponentSelect } from './common/ComponentSelect'
 
@@ -92,14 +93,14 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
   }, [])
 
   const handleAdd = useCallback((): void => {
-    if (!canAdd || !isDefined(componentId) || !isDefined(stitchLineType)) {
+    if (!canAdd || !isDefined(componentId) || !isDefined(component) || !isDefined(stitchLineType)) {
       return
     }
 
-    addStitchLine(componentId, stitchLineType)
+    addStitchLine(component, stitchLineType)
     reset()
     setIsOpen(false)
-  }, [addStitchLine, canAdd, componentId, reset, stitchLineType])
+  }, [addStitchLine, canAdd, component, componentId, reset, stitchLineType])
 
   return (
     <Popover.Root onOpenChange={handleOpenChange} open={isOpen}>
@@ -158,4 +159,27 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
       </Popover.Positioner>
     </Popover.Root>
   )
+}
+
+export type StitchLineTypeOption = {
+  label: string
+  value: StitchLineSchema['type']
+}
+
+export const getStitchLineTypeOptions = (
+  component: ComponentSchema | undefined,
+  t: TranslationSchema,
+): StitchLineTypeOption[] => {
+  if (!isDefined(component)) {
+    return []
+  }
+
+  if (component.type === 'pocket-cluster') {
+    return [
+      { label: t.stitchLine.types.componentBounds, value: 'component-bounds-stitch-line' },
+      { label: t.stitchLine.types.pocketCluster, value: 'pocket-cluster-stitch-line' },
+    ]
+  }
+
+  return [{ label: t.stitchLine.types.componentBounds, value: 'component-bounds-stitch-line' }]
 }

@@ -57,9 +57,9 @@ export const useProject = () => {
 
   const addStitchLine = useAtomCallback(
     useCallback(
-      (get, set, componentId: string, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
+      (get, set, component: ComponentSchema, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
         const project = getRequiredProject(get)
-        const stitchLine = createStitchLine(stitchLineType, project, componentId, t)
+        const stitchLine = createStitchLine(stitchLineType, project, component, t)
 
         set(projectAtom, {
           ...project,
