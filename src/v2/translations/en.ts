@@ -12,6 +12,7 @@ export const EN: typeof HU = {
       cancel: 'Cancel',
       remove: 'Delete',
       reorder: 'Reorder',
+      finishReorder: 'Finish reordering',
     },
     labels: {
       general: 'General',

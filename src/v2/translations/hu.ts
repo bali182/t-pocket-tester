@@ -10,6 +10,7 @@ export const HU = {
       cancel: 'Mégse',
       remove: 'Törlés',
       reorder: 'Átrendezés',
+      finishReorder: 'Átrendezés befejezése',
     },
     labels: {
       general: 'Általános',

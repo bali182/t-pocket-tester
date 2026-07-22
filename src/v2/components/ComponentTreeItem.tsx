@@ -146,7 +146,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ isInReorderMode,
 
   if (nodeState.isBranch) {
     return (
-      <TreeView.BranchControl py="0" ref={setNodeRef}>
+      <TreeView.BranchControl ref={setNodeRef} py="0" h="9">
         {dropAreas}
         {insideDropAreaFeedback}
         {insertionIndicators}
@@ -166,7 +166,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ isInReorderMode,
   }
 
   return (
-    <TreeView.Item py="0" ref={setNodeRef}>
+    <TreeView.Item ref={setNodeRef} py="0" h="9">
       {dropAreas}
       {insideDropAreaFeedback}
       {insertionIndicators}

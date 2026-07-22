@@ -1,6 +1,7 @@
 import { Box, Button, Heading, HStack, Splitter, SplitterPanelData, SplitterResizeDetails } from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
+import { PiArrowsDownUp, PiCheck } from 'react-icons/pi'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
@@ -150,8 +151,13 @@ export const Editor: FC = () => {
             <Splitter.Panel display="flex" flexDirection="column" id="component" minHeight="0">
               <HStack justify="space-between" px="4" py="3">
                 <Heading size="sm">{t.editor.panels.leather}</Heading>
-                <Button size="2xs" variant="subtle" onClick={handleToggleReorder}>
-                  {t.common.actions.reorder}
+                <Button
+                  size="2xs"
+                  variant={isComponentTreeInReorderMode ? 'solid' : 'subtle'}
+                  onClick={handleToggleReorder}
+                >
+                  {isComponentTreeInReorderMode ? <PiCheck /> : <PiArrowsDownUp />}
+                  {isComponentTreeInReorderMode ? t.common.actions.finishReorder : t.common.actions.reorder}
                 </Button>
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
