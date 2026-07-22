@@ -11,6 +11,8 @@ export const EN: typeof HU = {
       addStitchLine: 'Add stitch line',
       cancel: 'Cancel',
       remove: 'Delete',
+      reorder: 'Reorder',
+      finishReorder: 'Finish reordering',
     },
     labels: {
       general: 'General',

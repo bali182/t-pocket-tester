@@ -5,49 +5,46 @@ import {
   type TreeViewExpandedChangeDetails,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
+import { DndContext, PointerSensor, pointerWithin, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
 
-import { PiCaretRight } from 'react-icons/pi'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useComponent } from '../hooks/useComponent'
 import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import { getComponentAncestorIds } from '../utils/getComponentAncestorIds'
-import { getComponentIcon } from '../utils/getComponentIcon'
 import { hasChildren } from '../utils/hasChildren'
+import { isComponentTreeDropAreaSchema } from '../utils/isComponentTreeDropAreaSchema'
 import { isDefined } from '../utils/isDefined'
-import { ComponentActionsMenu } from './ComponentActionsMenu'
-
-type ComponentTreeNode = {
-  children?: ComponentTreeNode[]
-  component?: ComponentSchema
-  id: string
-  name: string
-}
+import { ComponentTreeItem, type ComponentTreeNode } from './ComponentTreeItem'
 
 type ComponentTreeProps = {
+  isInReorderMode: boolean
   selectedComponentId: string | undefined
 }
 
-export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) => {
-  const { project } = useProject()
+export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isInReorderMode = true }) => {
+  const { moveComponent, project } = useProject()
   const rootComponent = useComponent(project.root)
   const { selectComponent } = useDrawAreaContext()
   const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])
+  const sensors = useSensors(useSensor(PointerSensor))
 
   const collection = useMemo<TreeCollection<ComponentTreeNode>>(() => {
-    const createNode = (component: ComponentSchema): ComponentTreeNode => {
+    const createNode = (
+      component: ComponentSchema,
+      parentId: string | undefined,
+      nextSiblingId: string | undefined,
+    ): ComponentTreeNode => {
       const childNodes: ComponentTreeNode[] = []
 
       if (hasChildren(component)) {
-        component.children.forEach((childId) => {
-          const child = project.components[childId]
+        const childComponents = component.children
+          .map((childId) => project.components[childId])
+          .filter(isDefined)
 
-          if (!isDefined(child)) {
-            return
-          }
-
-          childNodes.push(createNode(child))
+        childComponents.forEach((child, index) => {
+          childNodes.push(createNode(child, component.id, childComponents[index + 1]?.id))
         })
       }
 
@@ -57,6 +54,8 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
           component,
           id: component.id,
           name: component.name,
+          nextSiblingId,
+          parentId,
         }
       }
 
@@ -64,6 +63,8 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
         component,
         id: component.id,
         name: component.name,
+        nextSiblingId,
+        parentId,
       }
     }
 
@@ -72,9 +73,11 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
       nodeToString: (node) => node.name,
       nodeToValue: (node) => node.id,
       rootNode: {
-        children: [createNode(rootComponent)],
+        children: [createNode(rootComponent, undefined, undefined)],
         id: 'component-tree-root',
         name: '',
+        nextSiblingId: undefined,
+        parentId: undefined,
       },
     })
   }, [project.components, rootComponent])
@@ -116,50 +119,48 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId }) =
     setExpandedComponentIds((expandedComponentIds) => Array.from(new Set([...expandedComponentIds, parentId])))
   }, [])
 
-  return (
-    <TreeView.Root
-      collection={collection}
-      expandedValue={expandedComponentIds}
-      expandOnClick={false}
-      onExpandedChange={handleExpandedChange}
-      onSelectionChange={handleSelectionChange}
-      selectedValue={selectedValue}
-      selectionMode="single"
-    >
-      <TreeView.Tree>
-        <TreeView.Node<ComponentTreeNode>
-          indentGuide={<TreeView.BranchIndentGuide />}
-          render={({ node, nodeState }) => {
-            const { component } = node
-            if (!isDefined(component)) {
-              return null
-            }
-            const Icon = getComponentIcon(component.type)
-            if (nodeState.isBranch) {
-              return (
-                <TreeView.BranchControl>
-                  <TreeView.BranchTrigger>
-                    <TreeView.BranchIndicator asChild>
-                      <PiCaretRight />
-                    </TreeView.BranchIndicator>
-                  </TreeView.BranchTrigger>
-                  <Icon type={component.type} />
-                  <TreeView.BranchText>{node.name}</TreeView.BranchText>
-                  <ComponentActionsMenu component={component} onAddChild={handleAddChild} size="2xs" />
-                </TreeView.BranchControl>
-              )
-            }
+  const handleDragEnd = useCallback(
+    ({ active, over }: DragEndEvent): void => {
+      if (!isDefined(over) || typeof active.id !== 'string') {
+        return
+      }
 
-            return (
-              <TreeView.Item>
-                <Icon type={component.type} />
-                <TreeView.ItemText>{node.name}</TreeView.ItemText>
-                <ComponentActionsMenu component={component} onAddChild={handleAddChild} size="2xs" />
-              </TreeView.Item>
-            )
-          }}
-        />
-      </TreeView.Tree>
-    </TreeView.Root>
+      const dropAreaData: unknown = over.data.current
+
+      if (!isComponentTreeDropAreaSchema(dropAreaData)) {
+        return
+      }
+
+      moveComponent(active.id, dropAreaData.targetParentId, dropAreaData.beforeComponentId)
+    },
+    [moveComponent],
+  )
+
+  return (
+    <DndContext collisionDetection={pointerWithin} onDragEnd={handleDragEnd} sensors={sensors}>
+      <TreeView.Root
+        collection={collection}
+        expandedValue={expandedComponentIds}
+        expandOnClick={false}
+        onExpandedChange={handleExpandedChange}
+        onSelectionChange={!isInReorderMode ? handleSelectionChange : undefined}
+        selectedValue={!isInReorderMode ? selectedValue : undefined}
+        selectionMode="single"
+      >
+        <TreeView.Tree>
+          <TreeView.Node<ComponentTreeNode>
+            indentGuide={<TreeView.BranchIndentGuide />}
+            render={({ node, nodeState }) => (
+              <ComponentTreeItem
+                isInReorderMode={isInReorderMode}
+                node={node}
+                nodeState={nodeState}
+                onAddChild={handleAddChild}
+              />
+            )}
+          />
+        </TreeView.Tree>
+      </TreeView.Root>
+    </DndContext>
   )
 }
