@@ -1,14 +1,12 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
-import { PiCaretDown, PiCaretUp, PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
+import { PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
 import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
 import { getComponentIcon } from '../utils/getComponentIcon'
-import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'
-import { isDefined } from '../utils/isDefined'
 import { noop } from '../utils/noop'
 
 type ComponentActionsProps = {
@@ -17,13 +15,6 @@ type ComponentActionsProps = {
   onAddChild?: (parentId: string, type: ComponentSchema['type']) => void
   onAddStitchLine?: (componentId: string, type: StitchLineSchema['type']) => void
   onDelete?: (componentId: string) => void
-  onMoveDown?: (componentId: string) => void
-  onMoveUp?: (componentId: string) => void
-}
-
-type SiblingMoveState = {
-  canMoveUp: boolean
-  canMoveDown: boolean
 }
 
 export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
@@ -32,32 +23,11 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   onAddChild = noop,
   onAddStitchLine = noop,
   onDelete = noop,
-  onMoveDown = noop,
-  onMoveUp = noop,
 }) => {
   const t = useTranslation()
-  const { project, addComponent, addStitchLine, deleteComponent, moveComponent } = useProject()
+  const { addComponent, addStitchLine, deleteComponent } = useProject()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasChildren(component), [component])
-
-  const siblingMoveState = useMemo<SiblingMoveState>(() => {
-    if (component.type === 'root-panel') {
-      return { canMoveUp: false, canMoveDown: false }
-    }
-
-    const parent = getParent(component.id, project)
-
-    if (!isDefined(parent)) {
-      return { canMoveUp: false, canMoveDown: false }
-    }
-
-    const index = parent.children.indexOf(component.id)
-
-    return {
-      canMoveUp: index > 0,
-      canMoveDown: index >= 0 && index < parent.children.length - 1,
-    }
-  }, [component.id, component.type, project])
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
@@ -90,22 +60,6 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
     [addStitchLine, component, onAddStitchLine],
   )
 
-  const handleMoveUp = useCallback((): void => {
-    if (!siblingMoveState.canMoveUp) {
-      return
-    }
-    moveComponent(component.id, 'up')
-    onMoveUp(component.id)
-  }, [component.id, moveComponent, onMoveUp, siblingMoveState.canMoveUp])
-
-  const handleMoveDown = useCallback((): void => {
-    if (!siblingMoveState.canMoveDown) {
-      return
-    }
-    moveComponent(component.id, 'down')
-    onMoveDown(component.id)
-  }, [component.id, moveComponent, onMoveDown, siblingMoveState.canMoveDown])
-
   return (
     <Box onClick={handleActionsClick}>
       <Menu.Root>
@@ -119,11 +73,6 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
             <Menu.Content>
               <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
-              <MoveComponentMenuSection
-                siblingMoveState={siblingMoveState}
-                onMoveDown={handleMoveDown}
-                onMoveUp={handleMoveUp}
-              />
               <Menu.Item
                 disabled={!canDelete}
                 onClick={handleDelete}
@@ -227,30 +176,6 @@ export const AddComponentStitchLineMenu: FC<AddComponentStitchLineMenuProps> = (
         )
       })}
       {possibleTypes.length > 0 ? <Menu.Separator /> : null}
-    </>
-  )
-}
-
-type MoveComponentMenuSectionProps = {
-  onMoveUp: () => void
-  onMoveDown: () => void
-  siblingMoveState: SiblingMoveState
-}
-
-const MoveComponentMenuSection: FC<MoveComponentMenuSectionProps> = ({ onMoveDown, onMoveUp, siblingMoveState }) => {
-  const t = useTranslation()
-
-  return (
-    <>
-      <Menu.Item disabled={!siblingMoveState.canMoveUp} onClick={onMoveUp} value="move-up">
-        <PiCaretUp />
-        <Menu.ItemText>{t.common.componentActions.moveUp}</Menu.ItemText>
-      </Menu.Item>
-      <Menu.Item disabled={!siblingMoveState.canMoveDown} onClick={onMoveDown} value="move-down">
-        <PiCaretDown />
-        <Menu.ItemText>{t.common.componentActions.moveDown}</Menu.ItemText>
-      </Menu.Item>
-      <Menu.Separator />
     </>
   )
 }

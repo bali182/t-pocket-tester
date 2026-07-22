@@ -1,7 +1,7 @@
 import { useAtomValue, type Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
-import { ComponentSchema } from '../schemas/components'
+import type { ComponentSchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
 import { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
@@ -11,9 +11,9 @@ import { createComponent } from '../utils/createComponent'
 import { createStitchLine } from '../utils/createStitchLine'
 import { getComponentNestingLevel } from '../utils/getComponentNestingLevel'
 import { getDescendants } from '../utils/getDescendants'
-import { getParent } from '../utils/getParent'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
+import { resolveComponentMove } from '../utils/resolveComponentMove'
 
 export const useProject = () => {
   const project = useAtomValue(projectAtom)
@@ -111,38 +111,44 @@ export const useProject = () => {
   )
 
   const moveComponent = useAtomCallback(
-    useCallback((get, set, componentId: string, direction: 'up' | 'down'): void => {
+    useCallback((get, set, componentId: string, targetParentId: string, beforeCompId: string | undefined): void => {
       const project = getRequiredProject(get)
-      const component = project.components[componentId]
+      const resolvedMove = resolveComponentMove(project, componentId, targetParentId, beforeCompId)
 
-      if (!isDefined(component)) {
+      if (!isDefined(resolvedMove)) {
         return
       }
 
-      const parent = getParent(componentId, project)
+      const { beforeComponentId, movedComponent, sourceParent, targetParent } = resolvedMove
 
-      if (!isDefined(parent)) {
+      const sourceChildren = sourceParent.children.filter((childId) => childId !== movedComponent.id)
+      const targetChildren = sourceParent.id === targetParent.id ? sourceChildren : targetParent.children
+
+      const targetIndex = isDefined(beforeComponentId)
+        ? targetChildren.indexOf(beforeComponentId)
+        : targetChildren.length
+
+      if (targetIndex < 0) {
         return
       }
 
-      const currentIndex = parent.children.indexOf(componentId)
-      const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
-
-      if (targetIndex < 0 || targetIndex >= parent.children.length) {
-        return
-      }
-
-      const children = parent.children.slice()
-      const [movedChildId] = children.splice(currentIndex, 1)
-      children.splice(targetIndex, 0, movedChildId)
+      const updatedTargetChildren = [
+        ...targetChildren.slice(0, targetIndex),
+        movedComponent.id,
+        ...targetChildren.slice(targetIndex),
+      ]
 
       set(projectAtom, {
         ...project,
         components: {
           ...project.components,
-          [parent.id]: {
-            ...parent,
-            children,
+          [sourceParent.id]: {
+            ...sourceParent,
+            children: sourceChildren,
+          },
+          [targetParent.id]: {
+            ...targetParent,
+            children: updatedTargetChildren,
           },
         },
       })

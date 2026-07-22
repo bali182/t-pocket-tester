@@ -5,7 +5,7 @@ import {
   type TreeViewExpandedChangeDetails,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
-import { DndContext, PointerSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, PointerSensor, pointerWithin, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
 
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
@@ -14,6 +14,7 @@ import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import { getComponentAncestorIds } from '../utils/getComponentAncestorIds'
 import { hasChildren } from '../utils/hasChildren'
+import { isComponentTreeDropAreaSchema } from '../utils/isComponentTreeDropAreaSchema'
 import { isDefined } from '../utils/isDefined'
 import { ComponentTreeItem, type ComponentTreeNode } from './ComponentTreeItem'
 
@@ -23,25 +24,27 @@ type ComponentTreeProps = {
 }
 
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isInReorderMode = true }) => {
-  const { project } = useProject()
+  const { moveComponent, project } = useProject()
   const rootComponent = useComponent(project.root)
   const { selectComponent } = useDrawAreaContext()
   const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])
   const sensors = useSensors(useSensor(PointerSensor))
 
   const collection = useMemo<TreeCollection<ComponentTreeNode>>(() => {
-    const createNode = (component: ComponentSchema): ComponentTreeNode => {
+    const createNode = (
+      component: ComponentSchema,
+      parentId: string | undefined,
+      nextSiblingId: string | undefined,
+    ): ComponentTreeNode => {
       const childNodes: ComponentTreeNode[] = []
 
       if (hasChildren(component)) {
-        component.children.forEach((childId) => {
-          const child = project.components[childId]
+        const childComponents = component.children
+          .map((childId) => project.components[childId])
+          .filter(isDefined)
 
-          if (!isDefined(child)) {
-            return
-          }
-
-          childNodes.push(createNode(child))
+        childComponents.forEach((child, index) => {
+          childNodes.push(createNode(child, component.id, childComponents[index + 1]?.id))
         })
       }
 
@@ -51,6 +54,8 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isI
           component,
           id: component.id,
           name: component.name,
+          nextSiblingId,
+          parentId,
         }
       }
 
@@ -58,6 +63,8 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isI
         component,
         id: component.id,
         name: component.name,
+        nextSiblingId,
+        parentId,
       }
     }
 
@@ -66,9 +73,11 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isI
       nodeToString: (node) => node.name,
       nodeToValue: (node) => node.id,
       rootNode: {
-        children: [createNode(rootComponent)],
+        children: [createNode(rootComponent, undefined, undefined)],
         id: 'component-tree-root',
         name: '',
+        nextSiblingId: undefined,
+        parentId: undefined,
       },
     })
   }, [project.components, rootComponent])
@@ -110,8 +119,25 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isI
     setExpandedComponentIds((expandedComponentIds) => Array.from(new Set([...expandedComponentIds, parentId])))
   }, [])
 
+  const handleDragEnd = useCallback(
+    ({ active, over }: DragEndEvent): void => {
+      if (!isDefined(over) || typeof active.id !== 'string') {
+        return
+      }
+
+      const dropAreaData: unknown = over.data.current
+
+      if (!isComponentTreeDropAreaSchema(dropAreaData)) {
+        return
+      }
+
+      moveComponent(active.id, dropAreaData.targetParentId, dropAreaData.beforeComponentId)
+    },
+    [moveComponent],
+  )
+
   return (
-    <DndContext collisionDetection={pointerWithin} sensors={sensors}>
+    <DndContext collisionDetection={pointerWithin} onDragEnd={handleDragEnd} sensors={sensors}>
       <TreeView.Root
         collection={collection}
         expandedValue={expandedComponentIds}

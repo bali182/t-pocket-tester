@@ -4,6 +4,7 @@ import { useMemo, type FC } from 'react'
 
 import { PiCaretRight, PiDotsSixVertical } from 'react-icons/pi'
 import type { ComponentSchema } from '../schemas/components'
+import type { ComponentMovePlacementSchema, ComponentTreeDropAreaSchema } from '../schemas/move'
 import { getComponentIcon } from '../utils/getComponentIcon'
 import { hasChildren } from '../utils/hasChildren'
 import { isDefined } from '../utils/isDefined'
@@ -14,13 +15,8 @@ export type ComponentTreeNode = {
   component?: ComponentSchema
   id: string
   name: string
-}
-
-type ComponentTreeDropPosition = 'after' | 'before' | 'inside'
-
-type ComponentTreeDropAreaData = {
-  componentId: string
-  position: ComponentTreeDropPosition
+  nextSiblingId: string | undefined
+  parentId: string | undefined
 }
 
 type ComponentTreeItemProps = {
@@ -34,7 +30,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ isInReorderMode,
   const { component } = node
   const isRootPanel = isDefined(component) && component.type === 'root-panel'
   const canAcceptChildren = isDefined(component) && hasChildren(component)
-  const dropPositions = useMemo<ComponentTreeDropPosition[]>(() => {
+  const dropPositions = useMemo<ComponentMovePlacementSchema[]>(() => {
     if (isRootPanel) {
       return ['inside']
     }
@@ -56,26 +52,26 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ isInReorderMode,
     disabled: !isDraggable,
   })
 
-  const beforeDropData = useMemo<ComponentTreeDropAreaData>(
+  const beforeDropData = useMemo<ComponentTreeDropAreaSchema>(
     () => ({
-      componentId: node.id,
-      position: 'before',
+      beforeComponentId: node.id,
+      targetParentId: node.parentId ?? node.id,
     }),
-    [node.id],
+    [node.id, node.parentId],
   )
 
-  const afterDropData = useMemo<ComponentTreeDropAreaData>(
+  const afterDropData = useMemo<ComponentTreeDropAreaSchema>(
     () => ({
-      componentId: node.id,
-      position: 'after',
+      beforeComponentId: node.nextSiblingId,
+      targetParentId: node.parentId ?? node.id,
     }),
-    [node.id],
+    [node.id, node.nextSiblingId, node.parentId],
   )
 
-  const insideDropData = useMemo<ComponentTreeDropAreaData>(
+  const insideDropData = useMemo<ComponentTreeDropAreaSchema>(
     () => ({
-      componentId: node.id,
-      position: 'inside',
+      beforeComponentId: undefined,
+      targetParentId: node.id,
     }),
     [node.id],
   )
