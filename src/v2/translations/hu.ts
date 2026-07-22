@@ -9,6 +9,7 @@ export const HU = {
       addStitchLine: 'Új varrás',
       cancel: 'Mégse',
       remove: 'Törlés',
+      reorder: 'Átrendezés',
     },
     labels: {
       general: 'Általános',

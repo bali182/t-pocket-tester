@@ -6,9 +6,9 @@ import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
 import { EditorSelectionSchema } from '../schemas/selection'
 import type { StitchLineSchema } from '../schemas/stitching'
+import { useTranslation } from '../translations/translation'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
-import { useTranslation } from '../translations/translation'
 import { AddStitchLinePopover } from './AddStitchLinePopover'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
@@ -22,11 +22,15 @@ export const Editor: FC = () => {
   const t = useTranslation()
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
+  const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const { project, touchComponent } = useProject()
-  const selectComponent = useCallback((componentId: string): void => {
-    touchComponent(componentId)
-    setSelection({ componentId, type: 'component' })
-  }, [touchComponent])
+  const selectComponent = useCallback(
+    (componentId: string): void => {
+      touchComponent(componentId)
+      setSelection({ componentId, type: 'component' })
+    },
+    [touchComponent],
+  )
 
   const selectStitchLine = useCallback((stitchLineId: string): void => {
     setSelection({ stitchLineId, type: 'stitch-line' })
@@ -38,6 +42,11 @@ export const Editor: FC = () => {
 
   const handlePanelResize = useCallback((details: SplitterResizeDetails) => {
     setSidebarPanelSizes(details.size)
+  }, [])
+
+  const handleToggleReorder = useCallback(() => {
+    setSelection(undefined)
+    setComponentTreeInReorderMode((isInReorderMode) => !isInReorderMode)
   }, [])
 
   const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
@@ -139,11 +148,17 @@ export const Editor: FC = () => {
             width="100%"
           >
             <Splitter.Panel display="flex" flexDirection="column" id="component" minHeight="0">
-              <Heading px="4" py="3" size="sm">
-                {t.editor.panels.leather}
-              </Heading>
+              <HStack justify="space-between" px="4" py="3">
+                <Heading size="sm">{t.editor.panels.leather}</Heading>
+                <Button size="2xs" variant="subtle" onClick={handleToggleReorder}>
+                  {t.common.actions.reorder}
+                </Button>
+              </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
-                <ComponentTree selectedComponentId={selectedComponentId} />
+                <ComponentTree
+                  selectedComponentId={selectedComponentId}
+                  isInReorderMode={isComponentTreeInReorderMode}
+                />
               </Box>
             </Splitter.Panel>
 
