@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { LEATHER_BASE_COLOR } from '../constants/drawing'
 import { addComponent as addComponentPure } from '../operations/project/addComponent'
 import { addStitchLine as addStitchLinePure } from '../operations/project/addStitchLine'
+import { cloneComponent as cloneComponentPure } from '../operations/project/cloneComponent'
 import { deleteComponent as deleteComponentPure } from '../operations/project/deleteComponent'
 import { deleteStitchLine as deleteStitchLinePure } from '../operations/project/deleteStitchLine'
 import { updateComponent as updateComponentPure } from '../operations/project/updateComponent'
@@ -11,8 +12,8 @@ import { updateStitchLine as updateStitchLinePure } from '../operations/project/
 import { createComponent } from '../operations/project/utils/createComponent'
 import { createStitchLine } from '../operations/project/utils/createStitchLine'
 import { getComponentNestingLevel } from '../operations/project/utils/getComponentNestingLevel'
+import { getNextUnusedClonedComponentName } from '../operations/project/utils/getNextUnusedClonedComponentName'
 import { getUnusedComponentName } from '../operations/project/utils/getUnusedComponentName'
-import { resolveComponentClone } from '../operations/project/utils/resolveComponentClone'
 import { resolveComponentMove } from '../operations/project/utils/resolveComponentMove'
 import type { ComponentSchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
@@ -74,34 +75,21 @@ export const useProject = () => {
   )
 
   const cloneComponent = useAtomCallback(
-    useCallback((get, set, componentId: string): void => {
+    useCallback((get, set, sourceComponentId: string): void => {
       const project = getRequiredProject(get)
-      const resolvedClone = resolveComponentClone(project, componentId)
+      const cloneResult = cloneComponentPure(project, {
+        componentId: sourceComponentId,
+        getUnusedId: componentId,
+        getUnusedName: getNextUnusedClonedComponentName,
+      })
 
-      if (!isDefined(resolvedClone)) {
+      if (!isDefined(cloneResult)) {
         return
       }
 
-      const { clonedComponents, clonedRootId, sourceIndex, sourceParent } = resolvedClone
-      const updatedSourceChildren = [
-        ...sourceParent.children.slice(0, sourceIndex + 1),
-        clonedRootId,
-        ...sourceParent.children.slice(sourceIndex + 1),
-      ]
-
-      set(projectAtom, {
-        ...project,
-        components: {
-          ...project.components,
-          ...clonedComponents,
-          [sourceParent.id]: {
-            ...sourceParent,
-            children: updatedSourceChildren,
-          },
-        },
-      })
-      set(lastTouchedComponentAtom, { projectId: project.id, componentId: clonedRootId })
-    }, []),
+      set(projectAtom, cloneResult.project)
+      set(lastTouchedComponentAtom, { projectId: project.id, componentId: cloneResult.clonedRootId })
+    }, [componentId]),
   )
 
   const deleteComponent = useAtomCallback(
