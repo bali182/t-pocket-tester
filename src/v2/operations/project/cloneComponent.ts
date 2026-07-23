@@ -51,24 +51,23 @@ export const cloneComponent = (
   )
   const clonedRootId = clonedComponentIdBySourceComponentId[componentId]
 
-  return {
-    clonedRootId,
-    project: {
-      ...project,
-      components: {
-        ...project.components,
-        ...componentClones,
-        [sourceParent.id]: {
-          ...sourceParent,
-          children: [
-            ...sourceParent.children.slice(0, sourceIndex + 1),
-            clonedRootId,
-            ...sourceParent.children.slice(sourceIndex + 1),
-          ],
-        },
+  const projectWithClone: ProjectSchema = {
+    ...project,
+    components: {
+      ...project.components,
+      ...componentClones,
+      [sourceParent.id]: {
+        ...sourceParent,
+        children: [
+          ...sourceParent.children.slice(0, sourceIndex + 1),
+          clonedRootId,
+          ...sourceParent.children.slice(sourceIndex + 1),
+        ],
       },
     },
   }
+
+  return { clonedRootId, project: projectWithClone }
 }
 
 const getClonedComponents = (project: ProjectSchema, componentId: string): ComponentSchema[] | undefined => {

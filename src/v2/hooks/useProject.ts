@@ -7,6 +7,7 @@ import { addStitchLine as addStitchLinePure } from '../operations/project/addSti
 import { cloneComponent as cloneComponentPure } from '../operations/project/cloneComponent'
 import { deleteComponent as deleteComponentPure } from '../operations/project/deleteComponent'
 import { deleteStitchLine as deleteStitchLinePure } from '../operations/project/deleteStitchLine'
+import { moveComponent as moveComponentPure } from '../operations/project/moveComponent'
 import { updateComponent as updateComponentPure } from '../operations/project/updateComponent'
 import { updateStitchLine as updateStitchLinePure } from '../operations/project/updateStitchLine'
 import { createComponent } from '../operations/project/utils/createComponent'
@@ -14,7 +15,6 @@ import { createStitchLine } from '../operations/project/utils/createStitchLine'
 import { getComponentNestingLevel } from '../operations/project/utils/getComponentNestingLevel'
 import { getNextUnusedClonedComponentName } from '../operations/project/utils/getNextUnusedClonedComponentName'
 import { getUnusedComponentName } from '../operations/project/utils/getUnusedComponentName'
-import { resolveComponentMove } from '../operations/project/utils/resolveComponentMove'
 import type { ComponentSchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
 import { StitchLineSchema } from '../schemas/stitching'
@@ -109,45 +109,7 @@ export const useProject = () => {
   const moveComponent = useAtomCallback(
     useCallback((get, set, componentId: string, targetParentId: string, beforeCompId: string | undefined): void => {
       const project = getRequiredProject(get)
-      const resolvedMove = resolveComponentMove(project, componentId, targetParentId, beforeCompId)
-
-      if (!isDefined(resolvedMove)) {
-        return
-      }
-
-      const { beforeComponentId, movedComponent, sourceParent, targetParent } = resolvedMove
-
-      const sourceChildren = sourceParent.children.filter((childId) => childId !== movedComponent.id)
-      const targetChildren = sourceParent.id === targetParent.id ? sourceChildren : targetParent.children
-
-      const targetIndex = isDefined(beforeComponentId)
-        ? targetChildren.indexOf(beforeComponentId)
-        : targetChildren.length
-
-      if (targetIndex < 0) {
-        return
-      }
-
-      const updatedTargetChildren = [
-        ...targetChildren.slice(0, targetIndex),
-        movedComponent.id,
-        ...targetChildren.slice(targetIndex),
-      ]
-
-      set(projectAtom, {
-        ...project,
-        components: {
-          ...project.components,
-          [sourceParent.id]: {
-            ...sourceParent,
-            children: sourceChildren,
-          },
-          [targetParent.id]: {
-            ...targetParent,
-            children: updatedTargetChildren,
-          },
-        },
-      })
+      set(projectAtom, moveComponentPure(project, { beforeComponentId: beforeCompId, componentId, targetParentId }))
     }, []),
   )
 
