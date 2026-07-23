@@ -22,7 +22,7 @@ import { computedProjectAtom, projectAtom } from '../state/projectAtom'
 import { useTranslation } from '../translations/translation'
 import { getComponentColor } from '../utils/getComponentColor'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
-import { id } from '../utils/id'
+import { id as idPure } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
 
 export const useProject = () => {
@@ -34,6 +34,10 @@ export const useProject = () => {
     throw new Error('useProject requires an opened project')
   }
 
+  // In the future if this becomes a problem, do a uniqueness-check before assigning an id.
+  const componentId = useCallback(() => idPure(), [])
+  const stitchLineId = useCallback(() => idPure(), [])
+
   const addComponent = useAtomCallback(
     useCallback(
       (get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {
@@ -41,14 +45,14 @@ export const useProject = () => {
         const component = createComponent({
           type,
           color: getComponentColor(LEATHER_BASE_COLOR, getComponentNestingLevel(parentId, project) + 1),
-          id: id(),
+          id: componentId(),
           name: getUnusedComponentName(type, project, t),
         })
         set(projectAtom, addComponentPure(project, { parentId, component }))
         set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
         return component
       },
-      [t],
+      [componentId, t],
     ),
   )
 
@@ -59,13 +63,13 @@ export const useProject = () => {
         const stitchLine = createStitchLine({
           componentId,
           type: stitchLineType,
-          id: id(),
+          id: stitchLineId(),
           name: getUnusedStitchLineName(project, project.components[componentId], t),
         })
         set(projectAtom, addStitchLinePure(project, { stitchLine }))
         return stitchLine
       },
-      [t],
+      [stitchLineId, t],
     ),
   )
 
