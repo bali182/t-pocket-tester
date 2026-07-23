@@ -1,7 +1,7 @@
-import type { ComponentSchema } from '../schemas/components'
-import type { ProjectSchema } from '../schemas/project'
-import type { TranslationSchema } from '../translations/translationSchema'
-import { getComponentNameByType } from './getComponentNameByType'
+import type { ComponentSchema } from '../../../schemas/components'
+import type { ProjectSchema } from '../../../schemas/project'
+import type { TranslationSchema } from '../../../translations/translationSchema'
+import { getComponentNameByType } from '../../../utils/getComponentNameByType'
 
 export const getUnusedComponentName = (type: ComponentSchema['type'], project: ProjectSchema, t: TranslationSchema): string => {
   const baseName = getComponentNameByType(type, t)

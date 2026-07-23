@@ -35,6 +35,7 @@ export const EN: typeof HU = {
       selectColor: 'Select color',
     },
     componentActions: {
+      clone: 'Clone item',
       moveUp: 'Move item up',
       moveDown: 'Move item down',
       add: (name: string) => `Add ${name.toLowerCase()}`,

@@ -6,7 +6,7 @@ import { PiCaretRight, PiDotsSixVertical } from 'react-icons/pi'
 import type { ComponentSchema } from '../schemas/components'
 import type { ComponentMovePlacementSchema, ComponentTreeDropAreaSchema } from '../schemas/move'
 import { getComponentIcon } from '../utils/getComponentIcon'
-import { hasChildren } from '../utils/hasChildren'
+import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import { isDefined } from '../utils/isDefined'
 import { ComponentActionsMenu } from './ComponentActionsMenu'
 
@@ -29,7 +29,7 @@ type ComponentTreeItemProps = {
 export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ isInReorderMode, node, nodeState, onAddChild }) => {
   const { component } = node
   const isRootPanel = isDefined(component) && component.type === 'root-panel'
-  const canAcceptChildren = isDefined(component) && hasChildren(component)
+  const canAcceptChildren = isDefined(component) && hasComponentChildren(component)
   const dropPositions = useMemo<ComponentMovePlacementSchema[]>(() => {
     if (isRootPanel) {
       return ['inside']

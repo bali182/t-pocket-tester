@@ -1,5 +1,5 @@
 import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
-import { updateProjectComponents } from '../utils/updateProjectComponents'
+import { updateProjectComponents } from '../operations/project/utils/updateProjectComponents'
 
 export const addComputedSizes = (project: ProjectSchema, computedProject: ComputedProjectSchema): ProjectSchema => {
   if (!project.editingSettings.addComputedSizesToAutoSized) {

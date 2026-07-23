@@ -1,10 +1,10 @@
-import { ComponentSchema } from '../schemas/components'
-import { ProjectSchema } from '../schemas/project'
-import { hasChildren } from './hasChildren'
-import { isDefined } from './isDefined'
+import { ComponentSchema } from '../../../schemas/components'
+import { ProjectSchema } from '../../../schemas/project'
+import { isDefined } from '../../../utils/isDefined'
+import { hasComponentChildren } from './hasComponentChildren'
 
 const collectDescendantIds = (component: ComponentSchema, project: ProjectSchema, ids: Set<string>): void => {
-  if (!hasChildren(component)) {
+  if (!hasComponentChildren(component)) {
     return
   }
 
@@ -17,7 +17,7 @@ const collectDescendantIds = (component: ComponentSchema, project: ProjectSchema
   })
 }
 
-export const getDescendants = (component: ComponentSchema, project: ProjectSchema): string[] => {
+export const getComponentDescendants = (component: ComponentSchema, project: ProjectSchema): string[] => {
   const ids = new Set<string>([component.id])
   collectDescendantIds(component, project, ids)
   return Array.from(ids)
