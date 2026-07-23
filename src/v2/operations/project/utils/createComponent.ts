@@ -1,4 +1,4 @@
-import { LEATHER_BASE_COLOR } from '../constants/drawing'
+import { LEATHER_BASE_COLOR } from '../../../constants/drawing'
 import {
   HasCornerRadiusSchema,
   HasFillableSizeSchema,
@@ -6,12 +6,7 @@ import {
   PanelSchema,
   PocketClusterSchema,
   RootPanelSchema,
-} from '../schemas/components'
-import type { ProjectSchema } from '../schemas/project'
-import type { TranslationSchema } from '../translations/translationSchema'
-import { getComponentColor } from './getComponentColor'
-import { getUnusedComponentName } from './getUnusedComponentName'
-import { id } from './id'
+} from '../../../schemas/components'
 
 type ComponentByType = {
   'root-panel': RootPanelSchema
@@ -19,16 +14,23 @@ type ComponentByType = {
   'pocket-cluster': PocketClusterSchema
 }
 
-export const createComponent = <T extends keyof ComponentByType>(
-  type: T,
-  project: ProjectSchema,
-  t: TranslationSchema,
-  nestingLevel = 0,
-): ComponentByType[T] => ({
+type CreateComponentParams<T> = {
+  type: T
+  id: string
+  color: string
+  name: string
+}
+
+export const createComponent = <T extends keyof ComponentByType>({
+  type,
+  color,
+  id,
+  name,
+}: CreateComponentParams<T>): ComponentByType[T] => ({
   ...DEFAULT_COMPONENT_BY_TYPE[type],
-  color: getComponentColor(LEATHER_BASE_COLOR, nestingLevel),
-  id: id(),
-  name: getUnusedComponentName(type, project, t),
+  color,
+  id,
+  name,
 })
 
 const defaultHasCornerRadius: HasCornerRadiusSchema = {

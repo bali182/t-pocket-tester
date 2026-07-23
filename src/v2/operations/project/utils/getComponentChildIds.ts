@@ -1,6 +1,6 @@
-import { ComponentSchema } from '../schemas/components'
+import { ComponentSchema } from '../../../schemas/components'
 
-export const getChildIds = (component: ComponentSchema): string[] => {
+export const getComponentChildIds = (component: ComponentSchema): string[] => {
   switch (component.type) {
     case 'root-panel':
     case 'panel':

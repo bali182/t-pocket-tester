@@ -4,7 +4,7 @@ import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema
 import type { RectSchema } from '../schemas/geometry'
 import type { ProjectSchema } from '../schemas/project'
 import { clamp } from '../utils/clamp'
-import { getChildren } from '../utils/getChildren'
+import { getComponentChildren } from '../operations/project/utils/getComponentChildren'
 
 type LayoutComponent = RootPanelSchema | PanelSchema
 type LayoutChildComponent = PanelSchema | PocketClusterSchema
@@ -16,7 +16,7 @@ export const calculateLayoutBoundingBoxes = (
   project: ProjectSchema,
   rect: RectSchema,
 ): [LayoutChildComponent, RectSchema][] => {
-  const children = getChildren(component, project)
+  const children = getComponentChildren(component, project)
   const layoutChildren = assertLayoutChildren(children)
 
   return calculateChildBoundingBoxes(layoutChildren, rect, component)

@@ -1,34 +1,34 @@
-import { ComponentSchema, HasIdentitySchema } from '../schemas/components'
-import type { ProjectSchema } from '../schemas/project'
+import { HasIdentitySchema } from '../../../schemas/components'
 import type {
   ComponentBoundsStitchLineOwnSchema,
   ComponentBoundsStitchLineSchema,
   PocketClusterStitchLineOwnSchema,
   PocketClusterStitchLineSchema,
   StitchLineComponentReferencesSchema,
-} from '../schemas/stitching'
-import type { TranslationSchema } from '../translations/translationSchema'
-import { getUnusedStitchLineName } from './getUnusedStitchLineName'
-import { id } from './id'
+} from '../../../schemas/stitching'
 
 type StitchLineByTypeName = {
   'component-bounds-stitch-line': ComponentBoundsStitchLineSchema
   'pocket-cluster-stitch-line': PocketClusterStitchLineSchema
 }
 
+type CreateStitchLineParams<T> = {
+  type: T
+  id: string
+  componentId: string
+  name: string
+}
+
 export const createStitchLine = <T extends keyof StitchLineByTypeName>(
-  type: T,
-  project: ProjectSchema,
-  component: ComponentSchema,
-  t: TranslationSchema,
+  params: CreateStitchLineParams<T>,
 ): StitchLineByTypeName[T] => {
-  const defaults = DEFAULT_STITCH_LINES[type]
+  const defaults = DEFAULT_STITCH_LINES[params.type]
   return {
     ...defaults,
-    id: id(),
-    type,
-    componentId: component.id,
-    name: getUnusedStitchLineName(project, component, t),
+    id: params.id,
+    type: params.type,
+    componentId: params.componentId,
+    name: params.name,
   }
 }
 

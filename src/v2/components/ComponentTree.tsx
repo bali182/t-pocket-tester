@@ -12,8 +12,8 @@ import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useComponent } from '../hooks/useComponent'
 import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
-import { getComponentAncestorIds } from '../utils/getComponentAncestorIds'
-import { hasChildren } from '../utils/hasChildren'
+import { getComponentAncestorIds } from '../operations/project/utils/getComponentAncestorIds'
+import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import { isComponentTreeDropAreaSchema } from '../utils/isComponentTreeDropAreaSchema'
 import { isDefined } from '../utils/isDefined'
 import { ComponentTreeItem, type ComponentTreeNode } from './ComponentTreeItem'
@@ -38,7 +38,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isI
     ): ComponentTreeNode => {
       const childNodes: ComponentTreeNode[] = []
 
-      if (hasChildren(component)) {
+      if (hasComponentChildren(component)) {
         const childComponents = component.children
           .map((childId) => project.components[childId])
           .filter(isDefined)

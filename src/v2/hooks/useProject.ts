@@ -1,19 +1,29 @@
 import { useAtomValue, type Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
+import { LEATHER_BASE_COLOR } from '../constants/drawing'
+import { addComponent as addComponentPure } from '../operations/project/addComponent'
+import { addStitchLine as addStitchLinePure } from '../operations/project/addStitchLine'
+import { deleteComponent as deleteComponentPure } from '../operations/project/deleteComponent'
+import { deleteStitchLine as deleteStitchLinePure } from '../operations/project/deleteStitchLine'
+import { updateComponent as updateComponentPure } from '../operations/project/updateComponent'
+import { updateStitchLine as updateStitchLinePure } from '../operations/project/updateStitchLine'
+import { createComponent } from '../operations/project/utils/createComponent'
+import { createStitchLine } from '../operations/project/utils/createStitchLine'
+import { getComponentNestingLevel } from '../operations/project/utils/getComponentNestingLevel'
+import { getUnusedComponentName } from '../operations/project/utils/getUnusedComponentName'
+import { resolveComponentClone } from '../operations/project/utils/resolveComponentClone'
+import { resolveComponentMove } from '../operations/project/utils/resolveComponentMove'
 import type { ComponentSchema } from '../schemas/components'
 import type { ProjectSchema } from '../schemas/project'
 import { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
 import { computedProjectAtom, projectAtom } from '../state/projectAtom'
 import { useTranslation } from '../translations/translation'
-import { createComponent } from '../utils/createComponent'
-import { createStitchLine } from '../utils/createStitchLine'
-import { getComponentNestingLevel } from '../utils/getComponentNestingLevel'
-import { getDescendants } from '../utils/getDescendants'
-import { hasChildren } from '../utils/hasChildren'
+import { getComponentColor } from '../utils/getComponentColor'
+import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
+import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
-import { resolveComponentMove } from '../utils/resolveComponentMove'
 
 export const useProject = () => {
   const project = useAtomValue(projectAtom)
@@ -28,27 +38,14 @@ export const useProject = () => {
     useCallback(
       (get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {
         const project = getRequiredProject(get)
-        const parent = project.components[parentId]
-
-        if (!isDefined(parent) || !hasChildren(parent)) {
-          throw new Error('Missing parent or cannot have child elements')
-        }
-
-        const component = createComponent(type, project, t, getComponentNestingLevel(parent.id, project) + 1)
-
-        set(projectAtom, {
-          ...project,
-          components: {
-            ...project.components,
-            [parent.id]: {
-              ...parent,
-              children: [...parent.children, component.id],
-            },
-            [component.id]: component,
-          },
+        const component = createComponent({
+          type,
+          color: getComponentColor(LEATHER_BASE_COLOR, getComponentNestingLevel(parentId, project) + 1),
+          id: id(),
+          name: getUnusedComponentName(type, project, t),
         })
+        set(projectAtom, addComponentPure(project, { parentId, component }))
         set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
-
         return component
       },
       [t],
@@ -57,56 +54,63 @@ export const useProject = () => {
 
   const addStitchLine = useAtomCallback(
     useCallback(
-      (get, set, component: ComponentSchema, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
+      (get, set, componentId: string, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
         const project = getRequiredProject(get)
-        const stitchLine = createStitchLine(stitchLineType, project, component, t)
-
-        set(projectAtom, {
-          ...project,
-          stitchLines: [...project.stitchLines, stitchLine],
+        const stitchLine = createStitchLine({
+          componentId,
+          type: stitchLineType,
+          id: id(),
+          name: getUnusedStitchLineName(project, project.components[componentId], t),
         })
+        set(projectAtom, addStitchLinePure(project, { stitchLine }))
         return stitchLine
       },
       [t],
     ),
   )
 
-  const deleteComponent = useAtomCallback(
+  const cloneComponent = useAtomCallback(
     useCallback((get, set, componentId: string): void => {
       const project = getRequiredProject(get)
-      const component = project.components[componentId]
+      const resolvedClone = resolveComponentClone(project, componentId)
 
-      if (!isDefined(component) || component.type === 'root-panel') {
+      if (!isDefined(resolvedClone)) {
         return
       }
 
-      const deletedIds = new Set([componentId, ...getDescendants(component, project)])
+      const { clonedComponents, clonedRootId, sourceIndex, sourceParent } = resolvedClone
+      const updatedSourceChildren = [
+        ...sourceParent.children.slice(0, sourceIndex + 1),
+        clonedRootId,
+        ...sourceParent.children.slice(sourceIndex + 1),
+      ]
 
       set(projectAtom, {
         ...project,
-        components: Object.fromEntries(
-          Object.entries(project.components)
-            .filter(([id]) => !deletedIds.has(id))
-            .map((tuple) => {
-              const [id, component] = tuple
-              if (!hasChildren(component) || !component.children.some((child) => deletedIds.has(child))) {
-                return tuple
-              }
-              return [id, { ...component, children: component.children.filter((child) => !deletedIds.has(child)) }]
-            }),
-        ),
+        components: {
+          ...project.components,
+          ...clonedComponents,
+          [sourceParent.id]: {
+            ...sourceParent,
+            children: updatedSourceChildren,
+          },
+        },
       })
+      set(lastTouchedComponentAtom, { projectId: project.id, componentId: clonedRootId })
+    }, []),
+  )
+
+  const deleteComponent = useAtomCallback(
+    useCallback((get, set, componentId: string): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, deleteComponentPure(project, { componentId }))
     }, []),
   )
 
   const deleteStitchLine = useAtomCallback(
     useCallback((get, set, stitchLineId: string): void => {
       const project = getRequiredProject(get)
-
-      set(projectAtom, {
-        ...project,
-        stitchLines: project.stitchLines.filter((stitchLine) => stitchLine.id !== stitchLineId),
-      })
+      set(projectAtom, deleteStitchLinePure(project, { stitchLineId }))
     }, []),
   )
 
@@ -158,15 +162,15 @@ export const useProject = () => {
   const updateComponent = useAtomCallback(
     useCallback((get, set, component: ComponentSchema): void => {
       const project = getRequiredProject(get)
-
-      set(projectAtom, {
-        ...project,
-        components: {
-          ...project.components,
-          [component.id]: component,
-        },
-      })
+      set(projectAtom, updateComponentPure(project, { component }))
       set(lastTouchedComponentAtom, { projectId: project.id, componentId: component.id })
+    }, []),
+  )
+
+  const updateStitchLine = useAtomCallback(
+    useCallback((get, set, stitchLine: StitchLineSchema): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, updateStitchLinePure(project, { stitchLine }))
     }, []),
   )
 
@@ -182,22 +186,12 @@ export const useProject = () => {
     }, []),
   )
 
-  const updateStitchLine = useAtomCallback(
-    useCallback((get, set, stitchLine: StitchLineSchema): void => {
-      const project = getRequiredProject(get)
-
-      set(projectAtom, {
-        ...project,
-        stitchLines: project.stitchLines.map((s) => (s.id === stitchLine.id ? stitchLine : s)),
-      })
-    }, []),
-  )
-
   return {
     project,
     computedProject,
     addComponent,
     addStitchLine,
+    cloneComponent,
     deleteComponent,
     deleteStitchLine,
     moveComponent,

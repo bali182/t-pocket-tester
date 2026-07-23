@@ -1,12 +1,12 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
-import { PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
+import { PiCopy, PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
 import { useProject } from '../hooks/useProject'
+import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
 import { getComponentIcon } from '../utils/getComponentIcon'
-import { hasChildren } from '../utils/hasChildren'
 import { noop } from '../utils/noop'
 
 type ComponentActionsProps = {
@@ -25,9 +25,10 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   onDelete = noop,
 }) => {
   const t = useTranslation()
-  const { addComponent, addStitchLine, deleteComponent } = useProject()
+  const { addComponent, addStitchLine, cloneComponent, deleteComponent } = useProject()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
-  const canAdd = useMemo((): boolean => hasChildren(component), [component])
+  const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
+  const canClone = useMemo((): boolean => component.type !== 'root-panel', [component.type])
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
@@ -52,9 +53,17 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
     onDelete(component.id)
   }, [canDelete, component.id, deleteComponent, onDelete])
 
+  const handleClone = useCallback((): void => {
+    if (!canClone) {
+      return
+    }
+
+    cloneComponent(component.id)
+  }, [canClone, cloneComponent, component.id])
+
   const handleAddStitchLine = useCallback(
     (type: StitchLineSchema['type']): void => {
-      addStitchLine(component, type)
+      addStitchLine(component.id, type)
       onAddStitchLine(component.id, type)
     },
     [addStitchLine, component, onAddStitchLine],
@@ -73,6 +82,10 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
             <Menu.Content>
               <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
+              <Menu.Item onClick={handleClone} value="clone" disabled={!canClone}>
+                <PiCopy />
+                <Menu.ItemText>{t.common.componentActions.clone}</Menu.ItemText>
+              </Menu.Item>
               <Menu.Item
                 disabled={!canDelete}
                 onClick={handleDelete}

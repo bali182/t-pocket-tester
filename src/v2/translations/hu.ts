@@ -34,6 +34,7 @@ export const HU = {
     },
     componentActions: {
       add: (name: string) => `${name} hozzáadása`,
+      clone: 'Elem klónozása',
       moveUp: 'Elem mozgatása fel',
       moveDown: 'Elem mozgatása le',
       remove: 'Elem törlése',

@@ -1,6 +1,6 @@
-import type { ComponentSchema } from '../schemas/components'
-import type { ComputedComponentSchema } from '../schemas/computed'
-import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
+import type { ComponentSchema } from '../../../schemas/components'
+import type { ComputedComponentSchema } from '../../../schemas/computed'
+import type { ComputedProjectSchema, ProjectSchema } from '../../../schemas/project'
 
 export const updateProjectComponents = (
   project: ProjectSchema,

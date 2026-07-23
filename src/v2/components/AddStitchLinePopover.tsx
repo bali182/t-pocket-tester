@@ -97,7 +97,7 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
       return
     }
 
-    addStitchLine(component, stitchLineType)
+    addStitchLine(component.id, stitchLineType)
     reset()
     setIsOpen(false)
   }, [addStitchLine, canAdd, component, componentId, reset, stitchLineType])
