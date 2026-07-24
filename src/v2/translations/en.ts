@@ -8,7 +8,6 @@ export const EN: typeof HU = {
   common: {
     actions: {
       add: 'Add',
-      addStitchLine: 'Add stitch line',
       cancel: 'Cancel',
       remove: 'Delete',
       reorder: 'Reorder',
@@ -134,7 +133,7 @@ export const EN: typeof HU = {
     tree: {
       empty: {
         title: 'No stitch lines yet',
-        description: 'Add a stitch line to the selected component.',
+        description: 'Add a stitch line from the tree or the editors!',
       },
       accessibility: {
         deleteNamed: (name: string) => `Delete ${name}`,

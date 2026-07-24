@@ -10,7 +10,6 @@ import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
-import { AddStitchLinePopover } from './AddStitchLinePopover'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
@@ -176,13 +175,6 @@ export const Editor: FC = () => {
             <Splitter.Panel display="flex" flexDirection="column" id="stitching" minHeight="0">
               <HStack justify="space-between" px="4" py="3">
                 <Heading size="sm">{t.editor.panels.stitching}</Heading>
-                <AddStitchLinePopover
-                  trigger={
-                    <Button size="2xs" variant="subtle">
-                      {t.common.actions.addStitchLine}
-                    </Button>
-                  }
-                />
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
                 <StitchLineTree selectedStitchLineId={selectedStitchLineId} />

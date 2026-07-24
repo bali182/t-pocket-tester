@@ -1,23 +1,20 @@
 import {
-  Box,
-  Button,
   EmptyState,
-  IconButton,
   TreeView,
   createTreeCollection,
   type TreeCollection,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
-import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
+import { useCallback, useMemo, type FC } from 'react'
 
-import { PiNeedle, PiPlus, PiTrash } from 'react-icons/pi'
+import { PiNeedle } from 'react-icons/pi'
 import { TbNeedleThread } from 'react-icons/tb'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
 import { useProject } from '../hooks/useProject'
 import type { StitchLineSchema } from '../schemas/stitching'
-import { isDefined } from '../utils/isDefined'
 import { useTranslation } from '../translations/translation'
-import { AddStitchLinePopover } from './AddStitchLinePopover'
+import { isDefined } from '../utils/isDefined'
+import { StitchLineActionsMenu } from './StitchLineActionsMenu'
 
 type StitchLineTreeNode = {
   children?: StitchLineTreeNode[]
@@ -32,19 +29,16 @@ type StitchLineTreeProps = {
 
 export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }) => {
   const t = useTranslation()
-  const { project, deleteStitchLine } = useProject()
+  const { project } = useProject()
   const { clearSelection, selectStitchLine } = useDrawAreaContext()
 
   const handleDelete = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, stitchLineId: string): void => {
-      event.stopPropagation()
-      deleteStitchLine(stitchLineId)
-
+    (stitchLineId: string): void => {
       if (selectedStitchLineId === stitchLineId) {
         clearSelection()
       }
     },
-    [clearSelection, deleteStitchLine, selectedStitchLineId],
+    [clearSelection, selectedStitchLineId],
   )
 
   const selectedValue = useMemo((): string[] => {
@@ -95,19 +89,7 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
             <TbNeedleThread />
           </EmptyState.Indicator>
           <EmptyState.Title>{t.stitchLine.tree.empty.title}</EmptyState.Title>
-          <EmptyState.Description textAlign="center">
-            {t.stitchLine.tree.empty.description}
-          </EmptyState.Description>
-          <Box textAlign="center">
-            <AddStitchLinePopover
-              trigger={
-                <Button variant="subtle">
-                  <PiPlus />
-                  {t.common.actions.addStitchLine}
-                </Button>
-              }
-            />
-          </Box>
+          <EmptyState.Description textAlign="center">{t.stitchLine.tree.empty.description}</EmptyState.Description>
         </EmptyState.Content>
       </EmptyState.Root>
     )
@@ -131,14 +113,7 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
               <TreeView.Item>
                 <PiNeedle />
                 <TreeView.ItemText>{node.name}</TreeView.ItemText>
-                <IconButton
-                  aria-label={t.stitchLine.tree.accessibility.deleteNamed(node.name)}
-                  onClick={(event) => handleDelete(event, node.stitchLine.id)}
-                  size="2xs"
-                  variant="ghost"
-                >
-                  <PiTrash />
-                </IconButton>
+                <StitchLineActionsMenu size="2xs" stitchLine={node.stitchLine} onDelete={handleDelete} />
               </TreeView.Item>
             )
           }}

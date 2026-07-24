@@ -6,7 +6,6 @@ export const HU = {
   common: {
     actions: {
       add: 'Hozzáadás',
-      addStitchLine: 'Új varrás',
       cancel: 'Mégse',
       remove: 'Törlés',
       reorder: 'Átrendezés',
@@ -132,7 +131,7 @@ export const HU = {
     tree: {
       empty: {
         title: 'Nincs még varrás',
-        description: 'Adj hozzá egy varrást az általad kiválasztott komponenshez!',
+        description: 'Adj hozzá varrást a fa menüjéből vagy a szerkesztőből!',
       },
       accessibility: {
         deleteNamed: (name: string) => `${name} törlése`,

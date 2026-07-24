@@ -5,6 +5,7 @@ import { LEATHER_BASE_COLOR } from '../constants/drawing'
 import { addComponent as addComponentPure } from '../operations/project/addComponent'
 import { addStitchLine as addStitchLinePure } from '../operations/project/addStitchLine'
 import { cloneComponent as cloneComponentPure } from '../operations/project/cloneComponent'
+import { cloneStitchLine as cloneStitchLinePure } from '../operations/project/cloneStitchLine'
 import { deleteComponent as deleteComponentPure } from '../operations/project/deleteComponent'
 import { deleteStitchLine as deleteStitchLinePure } from '../operations/project/deleteStitchLine'
 import { moveComponent as moveComponentPure } from '../operations/project/moveComponent'
@@ -13,10 +14,10 @@ import { updateStitchLine as updateStitchLinePure } from '../operations/project/
 import { createComponent } from '../operations/project/utils/createComponent'
 import { createStitchLine } from '../operations/project/utils/createStitchLine'
 import { getComponentNestingLevel } from '../operations/project/utils/getComponentNestingLevel'
-import { getNextUnusedClonedComponentName } from '../operations/project/utils/getNextUnusedClonedComponentName'
 import { getUnusedComponentName } from '../operations/project/utils/getUnusedComponentName'
-import type { ComponentSchema } from '../schemas/components'
-import type { ProjectSchema } from '../schemas/project'
+import { getUnusedName } from '../operations/project/utils/getUnusedName'
+import { ComponentSchema } from '../schemas/components'
+import { ProjectSchema } from '../schemas/project'
 import { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
 import { computedProjectAtom, projectAtom } from '../state/projectAtom'
@@ -75,21 +76,24 @@ export const useProject = () => {
   )
 
   const cloneComponent = useAtomCallback(
-    useCallback((get, set, sourceComponentId: string): void => {
-      const project = getRequiredProject(get)
-      const cloneResult = cloneComponentPure(project, {
-        componentId: sourceComponentId,
-        getUnusedId: componentId,
-        getUnusedName: getNextUnusedClonedComponentName,
-      })
+    useCallback(
+      (get, set, sourceComponentId: string): void => {
+        const project = getRequiredProject(get)
+        const cloneResult = cloneComponentPure(project, {
+          componentId: sourceComponentId,
+          getUnusedId: componentId,
+          getUnusedName: getUnusedName,
+        })
 
-      if (!isDefined(cloneResult)) {
-        return
-      }
+        if (!isDefined(cloneResult)) {
+          return
+        }
 
-      set(projectAtom, cloneResult.project)
-      set(lastTouchedComponentAtom, { projectId: project.id, componentId: cloneResult.clonedRootId })
-    }, [componentId]),
+        set(projectAtom, cloneResult.project)
+        set(lastTouchedComponentAtom, { projectId: project.id, componentId: cloneResult.clonedRootId })
+      },
+      [componentId],
+    ),
   )
 
   const deleteComponent = useAtomCallback(
@@ -97,6 +101,21 @@ export const useProject = () => {
       const project = getRequiredProject(get)
       set(projectAtom, deleteComponentPure(project, { componentId }))
     }, []),
+  )
+
+  const cloneStitchLine = useAtomCallback(
+    useCallback(
+      (get, set, sourceStitchLineId: string): void => {
+        const project = getRequiredProject(get)
+        const withClonedStitchLine = cloneStitchLinePure(project, {
+          stitchLineId: sourceStitchLineId,
+          getUnusedId: stitchLineId,
+          getUnusedName,
+        })
+        set(projectAtom, withClonedStitchLine)
+      },
+      [stitchLineId],
+    ),
   )
 
   const deleteStitchLine = useAtomCallback(
@@ -146,6 +165,7 @@ export const useProject = () => {
     addComponent,
     addStitchLine,
     cloneComponent,
+    cloneStitchLine,
     deleteComponent,
     deleteStitchLine,
     moveComponent,
