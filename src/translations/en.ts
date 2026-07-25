@@ -72,6 +72,10 @@ export const EN: typeof HU = {
     },
     settingsDialog: {
       title: 'Project settings',
+      components: {
+        title: 'Components',
+        baseColor: 'Base color',
+      },
       tabs: {
         basic: 'Basic settings',
         stitching: 'Stitching',

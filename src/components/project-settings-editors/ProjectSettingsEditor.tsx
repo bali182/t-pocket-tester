@@ -7,6 +7,7 @@ import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { SectionGroup } from '../common/SectionGroup'
 import { ProjectBasicSection } from './ProjectBasicSection'
+import { ProjectComponentSettingsSection } from './ProjectComponentSettingsSection'
 import { ProjectStitchingSection } from './ProjectStitchingSection'
 
 type ProjectSettingsEditorProps = {
@@ -30,6 +31,7 @@ export const ProjectSettingsEditor: FC<ProjectSettingsEditorProps> = ({ editable
       <Tabs.Content value="basic" pt={0}>
         <SectionGroup.Root>
           <ProjectBasicSection editable={editable} issues={issues} onChange={onChange} />
+          <ProjectComponentSettingsSection editable={editable} issues={issues} onChange={onChange} />
         </SectionGroup.Root>
       </Tabs.Content>
       <Tabs.Content value="stitching" pt={0}>

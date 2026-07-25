@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   parseColor,
+  Portal,
 } from '@chakra-ui/react'
 import { useCallback, useEffect, useMemo, useRef, useState, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
@@ -102,22 +103,24 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
           />
         </InputGroup>
       </ColorPicker.Control>
-      <ColorPicker.Positioner>
-        <ColorPicker.Content>
-          <ColorPicker.Area>
-            <ColorPicker.AreaBackground />
-            <ColorPicker.AreaThumb />
-          </ColorPicker.Area>
-          <ColorPicker.ChannelSlider channel="hue">
-            <ColorPicker.ChannelSliderTrack />
-            <ColorPicker.ChannelSliderThumb />
-          </ColorPicker.ChannelSlider>
-          <ColorPicker.ChannelSlider channel="alpha">
-            <ColorPicker.ChannelSliderTrack />
-            <ColorPicker.ChannelSliderThumb />
-          </ColorPicker.ChannelSlider>
-        </ColorPicker.Content>
-      </ColorPicker.Positioner>
+      <Portal>
+        <ColorPicker.Positioner>
+          <ColorPicker.Content>
+            <ColorPicker.Area>
+              <ColorPicker.AreaBackground />
+              <ColorPicker.AreaThumb />
+            </ColorPicker.Area>
+            <ColorPicker.ChannelSlider channel="hue">
+              <ColorPicker.ChannelSliderTrack />
+              <ColorPicker.ChannelSliderThumb />
+            </ColorPicker.ChannelSlider>
+            <ColorPicker.ChannelSlider channel="alpha">
+              <ColorPicker.ChannelSliderTrack />
+              <ColorPicker.ChannelSliderThumb />
+            </ColorPicker.ChannelSlider>
+          </ColorPicker.Content>
+        </ColorPicker.Positioner>
+      </Portal>
     </ColorPicker.Root>
   )
 }

@@ -6,6 +6,7 @@ import type {
   ValidationResultSchema,
 } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
+import { validateHexColor } from './validateHexColor'
 import { validateName } from './validateName'
 import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
 
@@ -20,6 +21,11 @@ export const validateProjectSchema = (
     currentValue.stitchingSettings,
     context,
   )
+  const componentSettingsResult = validateHexColor(
+    input.componentSettings.baseColor,
+    currentValue.componentSettings.baseColor,
+    context,
+  )
   const issues: ValidationIssuesSchema<ProjectSchema> = {
     components: {},
     editingSettings: {
@@ -31,9 +37,8 @@ export const validateProjectSchema = (
     name: nameResult.issues,
     root: undefined,
     stitchLines: [],
-    // TODO
     componentSettings: {
-      baseColor: undefined,
+      baseColor: componentSettingsResult.issues,
     },
     stitchingSettings: stitchingSettingsResult.issues,
   }
@@ -45,13 +50,19 @@ export const validateProjectSchema = (
     root: currentValue.root,
     stitchLines: currentValue.stitchLines,
     stitchingSettings: stitchingSettingsResult.committedValue,
-    // TODO
-    componentSettings: currentValue.componentSettings,
+    componentSettings: {
+      baseColor: componentSettingsResult.committedValue,
+    },
   }
 
-  if (!nameResult.isValid || !stitchingSettingsResult.isValid) {
+  if (!nameResult.isValid || !stitchingSettingsResult.isValid || !componentSettingsResult.isValid) {
     return createInvalidValidationResult(issues, committedValue)
   }
 
-  return createValidValidationResult(issues, committedValue)
+  return createValidValidationResult(issues, {
+    ...committedValue,
+    componentSettings: {
+      baseColor: componentSettingsResult.value,
+    },
+  })
 }

@@ -70,6 +70,10 @@ export const HU = {
     },
     settingsDialog: {
       title: 'Projekt beállításai',
+      components: {
+        title: 'Komponensek',
+        baseColor: 'Alapszín',
+      },
       tabs: {
         basic: 'Alapbeállítások',
         stitching: 'Varrás',

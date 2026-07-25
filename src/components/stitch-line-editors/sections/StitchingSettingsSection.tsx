@@ -67,6 +67,12 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
     },
     [editable, onChange],
   )
+  const handleStitchHoleColorReset = useCallback((): void => {
+    onReset?.('stitchHoleColor')
+  }, [onReset])
+  const handleStitchLineColorReset = useCallback((): void => {
+    onReset?.('stitchLineColor')
+  }, [onReset])
   const handleStitchMarginReset = useCallback((): void => {
     onReset?.('stitchMargin')
   }, [onReset])
@@ -90,8 +96,10 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeColor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ColorInput
+          isResetEnabled={isDefined(editable.stitchHoleColor)}
           issue={issues.stitchHoleColor}
           onChange={handleStitchHoleColorChange}
+          onReset={isDefined(onReset) ? handleStitchHoleColorReset : undefined}
           value={resolvedEditable.stitchHoleColor}
         />
       </SectionGroup.SectionRowEditor>
@@ -99,8 +107,10 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineColor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ColorInput
+          isResetEnabled={isDefined(editable.stitchLineColor)}
           issue={issues.stitchLineColor}
           onChange={handleStitchLineColorChange}
+          onReset={isDefined(onReset) ? handleStitchLineColorReset : undefined}
           value={resolvedEditable.stitchLineColor}
         />
       </SectionGroup.SectionRowEditor>
