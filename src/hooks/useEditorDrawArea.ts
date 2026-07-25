@@ -9,6 +9,7 @@ import {
 import { ComponentSchema } from '../schemas/components'
 import { EditorSelectionSchema } from '../schemas/selection'
 import { StitchLineSchema } from '../schemas/stitching'
+import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { useProject } from './useProject'
 
@@ -98,11 +99,12 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
 
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
-      getBackgroundColor: (component, isHovered) => {
+      getBackgroundColor: (component, nestingLevel, isHovered) => {
+        const color = component.color ?? getComponentColor(project.componentSettings.baseColor, nestingLevel)
         if (component.type === 'root-panel') {
-          return component.color
+          return color
         }
-        return isComponentSelected(component.id) || isHovered ? addAlpha(component.color) : component.color
+        return isComponentSelected(component.id) || isHovered ? addAlpha(color) : color
       },
       getBorderColor: (component, isHovered) => {
         return isComponentSelected(component.id) || isHovered ? SELECTED_STROKE_COLOR : STROKE_COLOR
@@ -116,7 +118,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
           : undefined
       },
     }),
-    [isComponentSelected],
+    [isComponentSelected, project.componentSettings.baseColor],
   )
 
   const stitchLineStyles = useMemo<DrawAreaStitchLineStyles>(

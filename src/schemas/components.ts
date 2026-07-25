@@ -4,7 +4,7 @@ export type HasIdentitySchema = {
 }
 
 export type HasColorSchema = {
-  color: string
+  color?: string
 }
 
 export type BaseComponentSchema = HasIdentitySchema & HasColorSchema

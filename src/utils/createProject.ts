@@ -19,7 +19,6 @@ export const createProject = (name: string, t: TranslationSchema): ProjectSchema
     type: 'root-panel',
     id: id(),
     name: t.defaults.rootComponentName,
-    color: LEATHER_BASE_COLOR,
     children: [],
     width: 170,
     height: 100,
@@ -39,6 +38,7 @@ export const createProject = (name: string, t: TranslationSchema): ProjectSchema
     editingSettings: {
       addComputedSizesToAutoSized: true,
       adjustCornerRadiiToParent: true,
+      addBaseColorByDefault: false,
     },
     stitchingSettings: { ...defaultStitchingSettings },
   }

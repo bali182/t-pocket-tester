@@ -118,7 +118,10 @@ export const validateStitchLineCommonConfigOverridesSchema = (
   return createValidValidationResult(issues, committedValue)
 }
 
-const getOverrideIssue = (editableValue: string | undefined, issue: IssueSchema | undefined): IssueSchema | undefined => {
+const getOverrideIssue = (
+  editableValue: string | undefined,
+  issue: IssueSchema | undefined,
+): IssueSchema | undefined => {
   if (!isDefined(editableValue)) {
     return undefined
   }

@@ -12,9 +12,10 @@ import { StitchLines } from './StitchLines'
 
 type RootPanelProps = {
   componentId: string
+  nestingLevel: number
 }
 
-export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
+export const RootPanel: FC<RootPanelProps> = ({ componentId, nestingLevel }) => {
   const { componentStyles, isInteractive, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const rootPanel = useComponent<RootPanelSchema>(componentId)
@@ -39,7 +40,7 @@ export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
     <>
       <path
         d={pathData}
-        fill={componentStyles.getBackgroundColor(rootPanel, isHovered)}
+        fill={componentStyles.getBackgroundColor(rootPanel, nestingLevel, isHovered)}
         filter={componentStyles.getFilter(rootPanel, isHovered)}
         stroke={componentStyles.getBorderColor(rootPanel, isHovered)}
         strokeWidth={componentStyles.getBorderThickness(rootPanel, isHovered)}
@@ -54,9 +55,17 @@ export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
       {computedRootPanel.children.map((component) => {
         switch (component.type) {
           case 'computed-panel':
-            return <Panel key={component.componentId} componentId={component.componentId} />
+            return (
+              <Panel componentId={component.componentId} key={component.componentId} nestingLevel={nestingLevel + 1} />
+            )
           case 'computed-pocket-cluster':
-            return <PocketCluster key={component.componentId} componentId={component.componentId} />
+            return (
+              <PocketCluster
+                componentId={component.componentId}
+                key={component.componentId}
+                nestingLevel={nestingLevel + 1}
+              />
+            )
           case 'computed-root-panel':
             throw new Error(`Root panel cannot be rendered as a child: ${component.componentId}`)
         }

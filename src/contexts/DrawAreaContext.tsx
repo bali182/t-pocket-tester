@@ -16,7 +16,7 @@ export type DrawAreaSelection = {
 }
 
 export type DrawAreaComponentStyles = {
-  getBackgroundColor: (component: ComponentSchema, isHovered: boolean) => string | undefined
+  getBackgroundColor: (component: ComponentSchema, nestingLevel: number, isHovered: boolean) => string | undefined
   getBorderColor: (component: ComponentSchema, isHovered: boolean) => string | undefined
   getBorderThickness: (component: ComponentSchema, isHovered: boolean) => number | undefined
   getFilter: (component: ComponentSchema, isHovered: boolean) => string | undefined

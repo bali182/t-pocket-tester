@@ -9,15 +9,19 @@ import { ColorInput } from '../../common/ColorInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
 type NameAndColorSectionProps<T> = {
+  baseColor: string
   editable: T
   issues: ValidationIssuesSchema<T>
   onChange: (updated: T) => void
+  onResetColor: () => void
 }
 
 export function NameAndColorSection<T extends BaseComponentSchema>({
+  baseColor,
   editable,
   issues,
   onChange,
+  onResetColor,
 }: NameAndColorSectionProps<T>): ReactNode {
   const t = useTranslation()
   const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
@@ -56,7 +60,13 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
       <SectionGroup.SectionRowTitle>{t.common.labels.color}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Field.Root invalid={isColorInvalid} alignItems="stretch">
-          <ColorInput issue={issues.color} onChange={handleColorChange} value={editable.color} />
+          <ColorInput
+            isResetEnabled={isDefined(editable.color)}
+            issue={issues.color}
+            onChange={handleColorChange}
+            onReset={onResetColor}
+            value={editable.color ?? baseColor}
+          />
         </Field.Root>
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>

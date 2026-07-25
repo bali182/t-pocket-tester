@@ -27,9 +27,7 @@ export const useEditableModel = <T, C extends EditableSchemaContextSchema>({
   const [isDirty, setIsDirty] = useState(false)
   const [locallyCommittedValue, setLocallyCommittedValue] = useState<T | undefined>(undefined)
   const [lastObservedValue, setLastObservedValue] = useState(value)
-  const [editableValue, setEditableValue] = useState<EditableSchema<T>>(() =>
-    getEditableSchema(value, context),
-  )
+  const [editableValue, setEditableValue] = useState<EditableSchema<T>>(() => getEditableSchema(value, context))
   const [processedEditableValue, setProcessedEditableValue] = useState<EditableSchema<T> | undefined>(undefined)
 
   const validationResult = validate(editableValue, value, context)

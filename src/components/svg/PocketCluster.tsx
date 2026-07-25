@@ -12,9 +12,10 @@ import { TPocketStitchLines } from './TPocketStitchLines'
 
 type PocketClusterProps = {
   componentId: string
+  nestingLevel: number
 }
 
-export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
+export const PocketCluster: FC<PocketClusterProps> = ({ componentId, nestingLevel }) => {
   const { componentStyles, isInteractive, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const pocketCluster = useComponent<PocketClusterSchema>(componentId)
@@ -47,7 +48,7 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
       {isSelected && (
         <path
           d={pathData}
-          fill={componentStyles.getBackgroundColor(pocketCluster, isHovered)}
+          fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}
           filter={componentStyles.getFilter(pocketCluster, isHovered)}
           stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
           strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
@@ -56,7 +57,7 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
       {computedPocketCluster.tPockets.map((pocket, pocketIndex) => (
         <Fragment key={pocket.id}>
           <TPocket
-            fill={componentStyles.getBackgroundColor(pocketCluster, isHovered)}
+            fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}
             path={pocket.path}
             stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
             strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
@@ -67,7 +68,7 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
 
       <path
         d={frontPocketPathData}
-        fill={componentStyles.getBackgroundColor(pocketCluster, isHovered)}
+        fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}
         stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
         strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
       />

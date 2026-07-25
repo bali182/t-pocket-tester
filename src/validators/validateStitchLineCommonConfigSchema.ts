@@ -18,14 +18,24 @@ export const validateStitchLineCommonConfigSchema = (
   const stitchHoleDistanceResult = validateNumber(input.stitchHoleDistance, currentValue.stitchHoleDistance, context, {
     min: 1,
   })
-  const stitchHoleThicknessResult = validateNumber(input.stitchHoleThickness, currentValue.stitchHoleThickness, context, {
-    min: 0,
-    minInclusive: false,
-  })
-  const stitchLineThicknessResult = validateNumber(input.stitchLineThickness, currentValue.stitchLineThickness, context, {
-    min: 0,
-    minInclusive: false,
-  })
+  const stitchHoleThicknessResult = validateNumber(
+    input.stitchHoleThickness,
+    currentValue.stitchHoleThickness,
+    context,
+    {
+      min: 0,
+      minInclusive: false,
+    },
+  )
+  const stitchLineThicknessResult = validateNumber(
+    input.stitchLineThickness,
+    currentValue.stitchLineThickness,
+    context,
+    {
+      min: 0,
+      minInclusive: false,
+    },
+  )
   const stitchHoleColorResult = validateHexColor(input.stitchHoleColor, currentValue.stitchHoleColor, context)
   const stitchLineColorResult = validateHexColor(input.stitchLineColor, currentValue.stitchLineColor, context)
 

@@ -1,7 +1,6 @@
 import { useAtomValue, type Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
-import { LEATHER_BASE_COLOR } from '../constants/drawing'
 import { addComponent as addComponentPure } from '../operations/project/addComponent'
 import { addStitchLine as addStitchLinePure } from '../operations/project/addStitchLine'
 import { cloneComponent as cloneComponentPure } from '../operations/project/cloneComponent'
@@ -13,7 +12,6 @@ import { updateComponent as updateComponentPure } from '../operations/project/up
 import { updateStitchLine as updateStitchLinePure } from '../operations/project/updateStitchLine'
 import { createComponent } from '../operations/project/utils/createComponent'
 import { createStitchLine } from '../operations/project/utils/createStitchLine'
-import { getComponentNestingLevel } from '../operations/project/utils/getComponentNestingLevel'
 import { getUnusedComponentName } from '../operations/project/utils/getUnusedComponentName'
 import { getUnusedName } from '../operations/project/utils/getUnusedName'
 import { ComponentSchema } from '../schemas/components'
@@ -22,7 +20,6 @@ import { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
 import { computedProjectAtom, projectAtom } from '../state/projectAtom'
 import { useTranslation } from '../translations/translation'
-import { getComponentColor } from '../utils/getComponentColor'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
 import { id as idPure } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
@@ -46,7 +43,7 @@ export const useProject = () => {
         const project = getRequiredProject(get)
         const component = createComponent({
           type,
-          color: getComponentColor(LEATHER_BASE_COLOR, getComponentNestingLevel(parentId, project) + 1),
+          color: project.editingSettings.addBaseColorByDefault ? project.componentSettings.baseColor : undefined,
           id: componentId(),
           name: getUnusedComponentName(type, project, t),
         })
