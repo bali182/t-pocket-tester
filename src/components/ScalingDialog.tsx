@@ -21,10 +21,7 @@ export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) 
 
   const handleOpenChange = useCallback(
     (details: Dialog.OpenChangeDetails): void => {
-      if (details.open) {
-        setDraftScaling(scaling)
-      }
-
+      setDraftScaling(scaling)
       onOpenChange(details.open)
     },
     [onOpenChange, scaling],
