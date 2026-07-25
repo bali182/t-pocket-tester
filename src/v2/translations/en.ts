@@ -12,6 +12,8 @@ export const EN: typeof HU = {
       remove: 'Delete',
       reorder: 'Reorder',
       finishReorder: 'Finish reordering',
+      scaling: 'Scaling',
+      apply: 'Apply',
     },
     labels: {
       general: 'General',
@@ -52,6 +54,11 @@ export const EN: typeof HU = {
     },
   },
   editor: {
+    scalingDialog: {
+      title: 'Scaling',
+      description:
+        'Hold a ruler up to your screen and use the slider to make the ruler shown on screen 10 cm long. This will make the graphics appear at the correct scale.',
+    },
     panels: {
       leather: 'Leather',
       stitching: 'Stitching',

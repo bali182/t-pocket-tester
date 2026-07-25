@@ -7,9 +7,11 @@ export const HU = {
     actions: {
       add: 'Hozzáadás',
       cancel: 'Mégse',
+      apply: 'Alkalmaz',
       remove: 'Törlés',
       reorder: 'Átrendezés',
       finishReorder: 'Átrendezés befejezése',
+      scaling: 'Skálázás',
     },
     labels: {
       general: 'Általános',
@@ -50,6 +52,11 @@ export const HU = {
     },
   },
   editor: {
+    scalingDialog: {
+      title: 'Skálázás',
+      description:
+        'Tegyél egy vonalzót a képernyőhöz, és a csúszkával állítsd be, hogy a képen látható vonalzó 10cm hosszúságú legyen. Így a grafikák méretarányosan fognak megjelenni.',
+    },
     panels: {
       leather: 'Bőr',
       stitching: 'Varrás',

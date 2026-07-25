@@ -1,7 +1,18 @@
-import { Box, Button, Heading, HStack, Splitter, SplitterPanelData, SplitterResizeDetails } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Card,
+  Heading,
+  HStack,
+  IconButton,
+  Splitter,
+  SplitterPanelData,
+  SplitterResizeDetails,
+} from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
-import { PiArrowsDownUp, PiCheck } from 'react-icons/pi'
+import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiDotsThreeVertical, PiRuler } from 'react-icons/pi'
+import { Link } from 'react-router-dom'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import { useProject } from '../hooks/useProject'
 import type { ComponentSchema } from '../schemas/components'
@@ -13,6 +24,7 @@ import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
+import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
 
@@ -23,6 +35,7 @@ export const Editor: FC = () => {
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
+  const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const { project, touchComponent } = useProject()
   const selectComponent = useCallback(
     (componentId: string): void => {
@@ -48,6 +61,8 @@ export const Editor: FC = () => {
     setSelection(undefined)
     setComponentTreeInReorderMode((isInReorderMode) => !isInReorderMode)
   }, [])
+
+  const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
 
   const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'component') {
@@ -121,8 +136,30 @@ export const Editor: FC = () => {
     <DrawAreaContext.Provider value={drawAreaContextValue}>
       <Box display="flex" height="100%" overflow="hidden">
         <Box flex="1" minHeight="0" minWidth="0" onClick={clearSelection} overflow="hidden" position="relative">
+          {/* Project menu (top left) */}
+          <Card.Root position="absolute" left="2" top="2">
+            <Card.Body padding="2" flexDirection="row" alignItems="center" gap="2">
+              <Link to={`/projects`}>
+                <IconButton size="sm" variant="ghost">
+                  <PiCaretLeft />
+                </IconButton>
+              </Link>
+              {project.name}
+              <IconButton size="sm" variant="ghost">
+                <PiDotsThreeVertical />
+              </IconButton>
+            </Card.Body>
+          </Card.Root>
           <DrawArea />
-
+          {/* Global menu (bottom left) */}
+          <Card.Root position="absolute" left="2" bottom="2">
+            <Card.Body padding="2" flexDirection="row" alignItems="center" gap="2">
+              <IconButton size="xs" variant="ghost" px="2" onClick={handleScalingButtonClick}>
+                <PiRuler />
+                {t.common.actions.scaling}
+              </IconButton>
+            </Card.Body>
+          </Card.Root>
           {isDefined(selectedComponent) && isDefined(anchorElement) && (
             <ComponentFloatingEditor
               component={selectedComponent}
@@ -137,6 +174,7 @@ export const Editor: FC = () => {
               onClose={clearSelection}
             />
           )}
+          <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
         </Box>
         <Box bg="bg.panel" flexShrink={0} height="100%" width="400px">
           <Splitter.Root
