@@ -10,10 +10,15 @@ export const EN: typeof HU = {
       add: 'Add',
       cancel: 'Cancel',
       remove: 'Delete',
-      reorder: 'Reorder',
-      finishReorder: 'Finish reordering',
       scaling: 'Scaling',
       apply: 'Apply',
+      clone: 'Clone',
+      settings: 'Settings',
+      addByName: (name: string) => `Add ${name.toLowerCase()}`,
+    },
+    reorder: {
+      reorder: 'Reorder',
+      finishReorder: 'Finish reordering',
     },
     labels: {
       general: 'General',
@@ -31,13 +36,6 @@ export const EN: typeof HU = {
     },
     placeholders: {
       selectComponent: 'Select a component',
-    },
-    componentActions: {
-      clone: 'Clone item',
-      moveUp: 'Move item up',
-      moveDown: 'Move item down',
-      add: (name: string) => `Add ${name.toLowerCase()}`,
-      remove: 'Delete item',
     },
     directions: {
       top: 'Top edge',

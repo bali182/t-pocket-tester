@@ -84,7 +84,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
               <Menu.Item onClick={handleClone} value="clone" disabled={!canClone}>
                 <PiCopy />
-                <Menu.ItemText>{t.common.componentActions.clone}</Menu.ItemText>
+                <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item
                 disabled={!canDelete}
@@ -94,7 +94,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
                 _hover={{ bg: 'bg.error', color: 'fg.error' }}
               >
                 <PiTrash />
-                <Menu.ItemText>{t.common.componentActions.remove}</Menu.ItemText>
+                <Menu.ItemText>{t.common.actions.remove}</Menu.ItemText>
               </Menu.Item>
             </Menu.Content>
           </Menu.Positioner>
@@ -126,9 +126,9 @@ const AddChildComponentMenuSection: FC<AddChildComponentMenuProps> = ({ onAddChi
 
   const labels = useMemo<Record<ComponentSchema['type'], string>>(
     () => ({
-      panel: t.common.componentActions.add(t.component.types.panel),
-      'root-panel': t.common.componentActions.add(t.component.types.rootPanel),
-      'pocket-cluster': t.common.componentActions.add(t.component.types.pocketCluster),
+      panel: t.common.actions.addByName(t.component.types.panel),
+      'root-panel': t.common.actions.addByName(t.component.types.rootPanel),
+      'pocket-cluster': t.common.actions.addByName(t.component.types.pocketCluster),
     }),
     [t],
   )
@@ -172,8 +172,8 @@ export const AddComponentStitchLineMenu: FC<AddComponentStitchLineMenuProps> = (
 
   const labels = useMemo<Record<StitchLineSchema['type'], string>>(
     () => ({
-      'component-bounds-stitch-line': t.common.componentActions.add(t.stitchLine.types.componentBounds),
-      'pocket-cluster-stitch-line': t.common.componentActions.add(t.stitchLine.types.pocketCluster),
+      'component-bounds-stitch-line': t.common.actions.addByName(t.stitchLine.types.componentBounds),
+      'pocket-cluster-stitch-line': t.common.actions.addByName(t.stitchLine.types.pocketCluster),
     }),
     [t],
   )

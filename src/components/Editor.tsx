@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
-import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiDotsThreeVertical, PiRuler } from 'react-icons/pi'
+import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import { useProject } from '../hooks/useProject'
@@ -24,6 +24,7 @@ import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
+import { ProjectActionsMenu } from './ProjectActionsMenu'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
@@ -145,9 +146,7 @@ export const Editor: FC = () => {
                 </IconButton>
               </Link>
               {project.name}
-              <IconButton size="sm" variant="ghost">
-                <PiDotsThreeVertical />
-              </IconButton>
+              <ProjectActionsMenu projectId={project.id} size="sm" />
             </Card.Body>
           </Card.Root>
           <DrawArea />
@@ -194,7 +193,7 @@ export const Editor: FC = () => {
                   onClick={handleToggleReorder}
                 >
                   {isComponentTreeInReorderMode ? <PiCheck /> : <PiArrowsDownUp />}
-                  {isComponentTreeInReorderMode ? t.common.actions.finishReorder : t.common.actions.reorder}
+                  {isComponentTreeInReorderMode ? t.common.reorder.finishReorder : t.common.reorder.reorder}
                 </Button>
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">

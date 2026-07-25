@@ -1,36 +1,30 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, type FC, type MouseEvent } from 'react'
-import { PiCopy, PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
-import { useProject } from '../hooks/useProject'
-import type { ComponentSchema } from '../schemas/components'
-import type { StitchLineSchema } from '../schemas/stitching'
+import { PiDotsThreeVertical, PiGear, PiTrash } from 'react-icons/pi'
+import { useProjects } from '../hooks/useProjects'
 import { useTranslation } from '../translations/translation'
-import { noop } from '../utils/noop'
 
-type StitchLineActionsMenuProps = {
-  stitchLine: StitchLineSchema
+type ProjectActionsMenuProps = {
+  projectId: string
   size: IconButtonProps['size']
-  onAddChild?: (parentId: string, type: ComponentSchema['type']) => void
-  onAddStitchLine?: (componentId: string, type: StitchLineSchema['type']) => void
-  onDelete?: (stitchLineId: string) => void
 }
 
-export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLine, size, onDelete = noop }) => {
+export const ProjectActionsMenu: FC<ProjectActionsMenuProps> = ({ size, projectId }) => {
   const t = useTranslation()
-  const { cloneStitchLine, deleteStitchLine } = useProject()
+  const { deleteProject } = useProjects()
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
   }, [])
 
-  const handleDelete = useCallback((): void => {
-    deleteStitchLine(stitchLine.id)
-    onDelete(stitchLine.id)
-  }, [deleteStitchLine, stitchLine.id, onDelete])
+  const handleSettings = useCallback(() => {
+    // TODO open dialog
+  }, [])
 
-  const handleClone = useCallback((): void => {
-    cloneStitchLine(stitchLine.id)
-  }, [cloneStitchLine, stitchLine.id])
+  const handleDelete = useCallback(() => {
+    deleteProject(projectId)
+    // Navigate back to /projects.
+  }, [deleteProject, projectId])
 
   return (
     <Box onClick={handleActionsClick}>
@@ -43,9 +37,9 @@ export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLi
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
-              <Menu.Item onClick={handleClone} value="clone">
-                <PiCopy />
-                <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
+              <Menu.Item onClick={handleSettings} value="settings">
+                <PiGear />
+                <Menu.ItemText>{t.common.actions.settings}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item
                 onClick={handleDelete}

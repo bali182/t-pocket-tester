@@ -9,9 +9,14 @@ export const HU = {
       cancel: 'Mégse',
       apply: 'Alkalmaz',
       remove: 'Törlés',
+      scaling: 'Skálázás',
+      clone: 'Duplikálás',
+      settings: 'Beállítások',
+      addByName: (name: string) => `${name} hozzáadása`,
+    },
+    reorder: {
       reorder: 'Átrendezés',
       finishReorder: 'Átrendezés befejezése',
-      scaling: 'Skálázás',
     },
     labels: {
       general: 'Általános',
@@ -29,13 +34,6 @@ export const HU = {
     },
     placeholders: {
       selectComponent: 'Komponens kiválasztása',
-    },
-    componentActions: {
-      add: (name: string) => `${name} hozzáadása`,
-      clone: 'Elem klónozása',
-      moveUp: 'Elem mozgatása fel',
-      moveDown: 'Elem mozgatása le',
-      remove: 'Elem törlése',
     },
     directions: {
       top: 'Felső oldal',
