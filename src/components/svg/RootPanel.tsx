@@ -1,6 +1,5 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
@@ -10,19 +9,17 @@ import type { ComputedRootPanelSchema } from '../../schemas/computed'
 import { Panel } from './Panel'
 import { PocketCluster } from './PocketCluster'
 import { StitchLines } from './StitchLines'
-import { useSvgElementStyle } from './useSvgElementStyle'
 
 type RootPanelProps = {
   componentId: string
 }
 
 export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
-  const { isInteractive, selection } = useDrawAreaContext()
+  const { componentStyles, isInteractive, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const rootPanel = useComponent<RootPanelSchema>(componentId)
   const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(componentId)
   const pathData = usePath(computedRootPanel.path)
-  const svgStyles = useSvgElementStyle(rootPanel, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGPathElement>>(() => {
     setIsHovered(true)
@@ -41,9 +38,11 @@ export const RootPanel: FC<RootPanelProps> = ({ componentId }) => {
   return (
     <>
       <path
-        {...svgStyles.element}
         d={pathData}
-        strokeWidth={STROKE_THICKNESS}
+        fill={componentStyles.getBackgroundColor(rootPanel, isHovered)}
+        filter={componentStyles.getFilter(rootPanel, isHovered)}
+        stroke={componentStyles.getBorderColor(rootPanel, isHovered)}
+        strokeWidth={componentStyles.getBorderThickness(rootPanel, isHovered)}
         data-component-id={rootPanel.id}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}

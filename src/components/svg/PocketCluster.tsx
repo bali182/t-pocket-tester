@@ -1,6 +1,5 @@
 import { Fragment, useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
@@ -10,20 +9,19 @@ import type { ComputedPocketClusterSchema } from '../../schemas/computed'
 import { StitchLines } from './StitchLines'
 import { TPocket } from './TPocket'
 import { TPocketStitchLines } from './TPocketStitchLines'
-import { useSvgElementStyle } from './useSvgElementStyle'
 
 type PocketClusterProps = {
   componentId: string
 }
 
 export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
-  const { isInteractive, selection } = useDrawAreaContext()
+  const { componentStyles, isInteractive, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const pocketCluster = useComponent<PocketClusterSchema>(componentId)
   const computedPocketCluster = useComputedComponent<ComputedPocketClusterSchema>(componentId)
   const pathData = usePath(computedPocketCluster.path)
   const frontPocketPathData = usePath(computedPocketCluster.frontPocket.path)
-  const svgStyles = useSvgElementStyle(pocketCluster, isHovered)
+  const isSelected = selection.isComponentSelected(pocketCluster.id) || isHovered
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
     setIsHovered(true)
@@ -46,15 +44,33 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId }) => {
       onPointerEnter={isInteractive ? handlePointerEnter : undefined}
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
-      {svgStyles.isSelected && <path {...svgStyles.element} d={pathData} strokeWidth={STROKE_THICKNESS} />}
+      {isSelected && (
+        <path
+          d={pathData}
+          fill={componentStyles.getBackgroundColor(pocketCluster, isHovered)}
+          filter={componentStyles.getFilter(pocketCluster, isHovered)}
+          stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
+          strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
+        />
+      )}
       {computedPocketCluster.tPockets.map((pocket, pocketIndex) => (
         <Fragment key={pocket.id}>
-          <TPocket {...svgStyles.child} path={pocket.path} strokeWidth={STROKE_THICKNESS} />
+          <TPocket
+            fill={componentStyles.getBackgroundColor(pocketCluster, isHovered)}
+            path={pocket.path}
+            stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
+            strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
+          />
           <TPocketStitchLines componentId={pocketCluster.id} pocketIndex={pocketIndex} />
         </Fragment>
       ))}
 
-      <path {...svgStyles.child} d={frontPocketPathData} strokeWidth={STROKE_THICKNESS} />
+      <path
+        d={frontPocketPathData}
+        fill={componentStyles.getBackgroundColor(pocketCluster, isHovered)}
+        stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
+        strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
+      />
 
       <StitchLines componentId={pocketCluster.id} />
     </g>

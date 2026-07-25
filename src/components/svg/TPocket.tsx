@@ -5,9 +5,9 @@ import type { PathSchema } from '../../schemas/geometry'
 
 type TPocketProps = {
   path: PathSchema
-  fill: string
-  stroke: string
-  strokeWidth: number
+  fill: string | undefined
+  stroke: string | undefined
+  strokeWidth: number | undefined
   filter?: string
 }
 

@@ -15,14 +15,14 @@ export type DrawAreaSelection = {
   selectStitchLine: (stitchLineId: string) => void
 }
 
-export type DrawAreaComponentStlyes = {
-  getBackgroundColor: (component: ComponentSchema) => string | undefined
-  getBorderColor: (component: ComponentSchema) => string | undefined
-  getBorderThickness: (component: ComponentSchema) => number | undefined
-  getFilter: (component: ComponentSchema) => string | undefined
+export type DrawAreaComponentStyles = {
+  getBackgroundColor: (component: ComponentSchema, isHovered: boolean) => string | undefined
+  getBorderColor: (component: ComponentSchema, isHovered: boolean) => string | undefined
+  getBorderThickness: (component: ComponentSchema, isHovered: boolean) => number | undefined
+  getFilter: (component: ComponentSchema, isHovered: boolean) => string | undefined
 }
 
-export type DrawAreaStitchLineStlyes = {
+export type DrawAreaStitchLineStyles = {
   getLineColor: (stitchLine: StitchLineSchema) => string | undefined
   getLineThickness: (stitchLine: StitchLineSchema) => number | undefined
   getStitchHoleColor: (stitchLine: StitchLineSchema) => string | undefined
@@ -32,8 +32,8 @@ export type DrawAreaStitchLineStlyes = {
 export type DrawAreaContextValue = {
   isInteractive: boolean
   selection: DrawAreaSelection
-  stitchLineStyles: DrawAreaStitchLineStlyes
-  componentStyles: DrawAreaComponentStlyes
+  stitchLineStyles: DrawAreaStitchLineStyles
+  componentStyles: DrawAreaComponentStyles
 }
 
 const drawAreaDefaultSelection: DrawAreaSelection = {
@@ -46,14 +46,14 @@ const drawAreaDefaultSelection: DrawAreaSelection = {
   selectStitchLine: noop,
 }
 
-const drawAreaDefaultStitchLineStlyes: DrawAreaStitchLineStlyes = {
+const drawAreaDefaultStitchLineStyles: DrawAreaStitchLineStyles = {
   getLineColor: produce(undefined),
   getLineThickness: produce(undefined),
   getStitchHoleColor: produce(undefined),
   getStitchHoleThickness: produce(undefined),
 }
 
-const drawAreaDefaultComponentStlyes: DrawAreaComponentStlyes = {
+const drawAreaDefaultComponentStyles: DrawAreaComponentStyles = {
   getBackgroundColor: produce(undefined),
   getBorderColor: produce(undefined),
   getBorderThickness: produce(undefined),
@@ -63,8 +63,8 @@ const drawAreaDefaultComponentStlyes: DrawAreaComponentStlyes = {
 const defaultDrawAreaContext: DrawAreaContextValue = {
   isInteractive: false,
   selection: drawAreaDefaultSelection,
-  stitchLineStyles: drawAreaDefaultStitchLineStlyes,
-  componentStyles: drawAreaDefaultComponentStlyes,
+  stitchLineStyles: drawAreaDefaultStitchLineStyles,
+  componentStyles: drawAreaDefaultComponentStyles,
 }
 
 export const DrawAreaContext = createContext<DrawAreaContextValue>(defaultDrawAreaContext)

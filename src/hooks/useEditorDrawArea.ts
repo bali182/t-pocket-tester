@@ -1,16 +1,26 @@
 import { useCallback, useMemo, useState } from 'react'
 import { SELECTED_STROKE_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
 import {
-  DrawAreaComponentStlyes,
+  DrawAreaComponentStyles,
   DrawAreaContextValue,
   DrawAreaSelection,
-  DrawAreaStitchLineStlyes,
+  DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
 import { ComponentSchema } from '../schemas/components'
 import { EditorSelectionSchema } from '../schemas/selection'
 import { StitchLineSchema } from '../schemas/stitching'
 import { isDefined } from '../utils/isDefined'
 import { useProject } from './useProject'
+
+import { formatHex8, parse } from 'culori'
+
+const addAlpha = (color: string): string => {
+  const parsed = parse(color)
+  if (!isDefined(parsed)) {
+    return color
+  }
+  return formatHex8({ ...parsed, alpha: 0.6 })
+}
 
 export const useEditorDrawArea = (): DrawAreaContextValue => {
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
@@ -86,24 +96,43 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     ],
   )
 
-  const componentStyles = useMemo<DrawAreaComponentStlyes>(
+  const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
-      getBackgroundColor: (component) => component.color,
-      getBorderColor: (_component) => STROKE_COLOR,
-      getBorderThickness: (_component) => STROKE_THICKNESS,
-      getFilter: (component) =>
-        isComponentSelected(component.id) ? `drop-shadow(0px 0px 2px ${SELECTED_STROKE_COLOR})` : undefined,
+      getBackgroundColor: (component, isHovered) => {
+        if (component.type === 'root-panel') {
+          return component.color
+        }
+        return isComponentSelected(component.id) || isHovered ? addAlpha(component.color) : component.color
+      },
+      getBorderColor: (component, isHovered) => {
+        return isComponentSelected(component.id) || isHovered ? SELECTED_STROKE_COLOR : STROKE_COLOR
+      },
+      getBorderThickness: (_component, _isHovered) => {
+        return STROKE_THICKNESS
+      },
+      getFilter: (component, isHovered) => {
+        return isComponentSelected(component.id) || isHovered
+          ? `drop-shadow(0px 0px 2px ${SELECTED_STROKE_COLOR})`
+          : undefined
+      },
     }),
     [isComponentSelected],
   )
 
-  const stitchLineStyles = useMemo<DrawAreaStitchLineStlyes>(
+  const stitchLineStyles = useMemo<DrawAreaStitchLineStyles>(
     () => ({
-      getLineColor: (stitchLine) => stitchLine.stitchLineColor ?? project.stitchingSettings.stitchLineColor,
-      getLineThickness: (stitchLine) => stitchLine.stitchLineThickness ?? project.stitchingSettings.stitchLineThickness,
-      getStitchHoleColor: (stitchLine) => stitchLine.stitchHoleColor ?? project.stitchingSettings.stitchHoleColor,
-      getStitchHoleThickness: (stitchLine) =>
-        stitchLine.stitchHoleThickness ?? project.stitchingSettings.stitchHoleThickness,
+      getLineColor: (stitchLine) => {
+        return stitchLine.stitchLineColor ?? project.stitchingSettings.stitchLineColor
+      },
+      getLineThickness: (stitchLine) => {
+        return stitchLine.stitchLineThickness ?? project.stitchingSettings.stitchLineThickness
+      },
+      getStitchHoleColor: (stitchLine) => {
+        return stitchLine.stitchHoleColor ?? project.stitchingSettings.stitchHoleColor
+      },
+      getStitchHoleThickness: (stitchLine) => {
+        return stitchLine.stitchHoleThickness ?? project.stitchingSettings.stitchHoleThickness
+      },
     }),
     [
       project.stitchingSettings.stitchHoleColor,
