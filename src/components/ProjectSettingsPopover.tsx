@@ -1,35 +1,40 @@
 import { Popover } from '@chakra-ui/react'
-import { useAtomValue, useSetAtom } from 'jotai'
-import { useMemo, type FC, type ReactElement } from 'react'
+import { useMemo, type FC, type ReactElement, type RefObject } from 'react'
 
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
+import { useProject } from '../hooks/useProject'
+import { useProjects } from '../hooks/useProjects'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
-import { projectAtom } from '../state/projectAtom'
-import { projectsAtom } from '../state/projectsAtom'
 import { useTranslation } from '../translations/translation'
-import { isDefined } from '../utils/isDefined'
 import { validateProjectSchema } from '../validators/validateProjectSchema'
 import { ProjectSettingsEditor } from './project-settings-editors/ProjectSettingsEditor'
 import { ProjectActionsMenu } from './ProjectActionsMenu'
 
 type ProjectSettingsPopoverProps = {
+  anchorRef: RefObject<HTMLElement | null>
   trigger: ReactElement
 }
 
-export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ trigger }) => {
-  const project = useAtomValue(projectAtom)
-  const projects = useAtomValue(projectsAtom)
-  const setProject = useSetAtom(projectAtom)
+export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchorRef, trigger }) => {
   const t = useTranslation()
+
+  const { project, setProject } = useProject()
+  const { projects } = useProjects()
+
   const context = useMemo<ProjectBasedValidationContextSchema>(
     () => ({ language: LANGUAGE, projects, t }),
     [projects, t],
   )
 
-  if (!isDefined(project)) {
-    throw new Error('ProjectSettingsPopover requires an opened project')
-  }
+  // Chakra not exporting the appropriate type. FFS.
+  const positioning = useMemo(
+    () => ({
+      getAnchorElement: () => anchorRef.current,
+      placement: 'bottom-start' as const,
+    }),
+    [anchorRef],
+  )
 
   const { editableValue, setValue, validationIssues } = useEditableModel({
     commit: setProject,
@@ -39,7 +44,7 @@ export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ trigge
   })
 
   return (
-    <Popover.Root positioning={{ placement: 'bottom-start' }}>
+    <Popover.Root positioning={positioning}>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Positioner>
         <Popover.Content width="450px">

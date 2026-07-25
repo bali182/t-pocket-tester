@@ -1,4 +1,4 @@
-import { useAtomValue, type Getter } from 'jotai'
+import { useAtom, useAtomValue, type Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
 import { addComponent as addComponentPure } from '../operations/project/addComponent'
@@ -25,7 +25,7 @@ import { id as idPure } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
 
 export const useProject = () => {
-  const project = useAtomValue(projectAtom)
+  const [project, setProject] = useAtom(projectAtom)
   const computedProject = useAtomValue(computedProjectAtom)
   const t = useTranslation()
 
@@ -168,6 +168,7 @@ export const useProject = () => {
     moveComponent,
     updateComponent,
     touchComponent,
+    setProject,
     updateStitchLine,
   }
 }

@@ -9,7 +9,7 @@ import {
   SplitterPanelData,
   SplitterResizeDetails,
 } from '@chakra-ui/react'
-import { useCallback, useMemo, useState, type FC } from 'react'
+import { useCallback, useMemo, useRef, useState, type FC } from 'react'
 
 import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiGear, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
@@ -34,6 +34,7 @@ export const Editor: FC = () => {
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
+  const projectMenuRef = useRef<HTMLDivElement>(null)
   const { project } = useProject()
   const drawAreaContextValue = useEditorDrawArea()
   const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
@@ -63,7 +64,7 @@ export const Editor: FC = () => {
       <Box display="flex" height="100%" overflow="hidden">
         <Box flex="1" minHeight="0" minWidth="0" onClick={clearSelection} overflow="hidden" position="relative">
           {/* Project menu (top left) */}
-          <Card.Root position="absolute" left="2" top="2">
+          <Card.Root ref={projectMenuRef} position="absolute" left="2" top="2">
             <Card.Body padding="2" flexDirection="row" alignItems="center" gap="3">
               <Link to={`/projects`}>
                 <IconButton size="sm" variant="ghost">
@@ -72,6 +73,7 @@ export const Editor: FC = () => {
               </Link>
               {project.name}
               <ProjectSettingsPopover
+                anchorRef={projectMenuRef}
                 trigger={
                   <IconButton size="sm" variant="ghost">
                     <PiGear />
