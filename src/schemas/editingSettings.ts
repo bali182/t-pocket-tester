@@ -4,3 +4,7 @@ export type ProjectEditingSettingSchema = {
   addComputedSizesToAutoSized: boolean
   adjustCornerRadiiToParent: boolean
 }
+
+export type ComponentBaseSettings = {
+  baseColor: string
+}

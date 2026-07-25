@@ -30,6 +30,10 @@ export const validateProjectSchema = (
     name: nameResult.issues,
     root: undefined,
     stitchLines: [],
+    // TODO
+    componentSettings: {
+      baseColor: undefined,
+    },
     stitchingSettings: stitchingSettingsResult.issues,
   }
   const committedValue: ProjectSchema = {
@@ -40,6 +44,8 @@ export const validateProjectSchema = (
     root: currentValue.root,
     stitchLines: currentValue.stitchLines,
     stitchingSettings: stitchingSettingsResult.committedValue,
+    // TODO
+    componentSettings: currentValue.componentSettings,
   }
 
   if (!nameResult.isValid || !stitchingSettingsResult.isValid) {

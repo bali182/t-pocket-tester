@@ -13,11 +13,9 @@ import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiGear, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
-import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
+import { DrawAreaContext } from '../contexts/DrawAreaContext'
+import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'
-import type { ComponentSchema } from '../schemas/components'
-import { EditorSelectionSchema } from '../schemas/selection'
-import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
@@ -34,64 +32,23 @@ const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 export const Editor: FC = () => {
   const t = useTranslation()
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
-  const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
-  const { project, touchComponent } = useProject()
-  const selectComponent = useCallback(
-    (componentId: string): void => {
-      touchComponent(componentId)
-      setSelection({ componentId, type: 'component' })
-    },
-    [touchComponent],
-  )
-
-  const selectStitchLine = useCallback((stitchLineId: string): void => {
-    setSelection({ stitchLineId, type: 'stitch-line' })
-  }, [])
-
-  const clearSelection = useCallback((): void => {
-    setSelection(undefined)
-  }, [])
+  const { project } = useProject()
+  const drawAreaContextValue = useEditorDrawArea()
+  const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
+    drawAreaContextValue.selection
 
   const handlePanelResize = useCallback((details: SplitterResizeDetails) => {
     setSidebarPanelSizes(details.size)
   }, [])
 
   const handleToggleReorder = useCallback(() => {
-    setSelection(undefined)
+    clearSelection()
     setComponentTreeInReorderMode((isInReorderMode) => !isInReorderMode)
-  }, [])
+  }, [clearSelection])
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
-
-  const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'component') {
-      return undefined
-    }
-
-    return project.components[selection.componentId]
-  }, [project.components, selection])
-
-  const selectedStitchLine = useMemo<StitchLineSchema | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'stitch-line') {
-      return undefined
-    }
-
-    return project.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
-  }, [project.stitchLines, selection])
-
-  const highlightedComponentId = useMemo<string | undefined>(() => {
-    if (isDefined(selectedComponent)) {
-      return selectedComponent.id
-    }
-
-    if (isDefined(selectedStitchLine)) {
-      return selectedStitchLine.componentId
-    }
-
-    return undefined
-  }, [selectedComponent, selectedStitchLine])
 
   const anchorElement = useMemo<SVGGraphicsElement | undefined>(() => {
     if (!isDefined(highlightedComponentId)) {
@@ -100,38 +57,6 @@ export const Editor: FC = () => {
 
     return getComponentSvgElement(highlightedComponentId)
   }, [highlightedComponentId])
-
-  const selectedComponentId = useMemo<string | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'component') {
-      return undefined
-    }
-
-    return selection.componentId
-  }, [selection])
-
-  const selectedStitchLineId = useMemo<string | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'stitch-line') {
-      return undefined
-    }
-
-    return selection.stitchLineId
-  }, [selection])
-
-  const isComponentSelected = useCallback(
-    (componentId: string): boolean => componentId === highlightedComponentId,
-    [highlightedComponentId],
-  )
-
-  const drawAreaContextValue = useMemo<DrawAreaContextValue>(
-    () => ({
-      clearSelection,
-      isComponentSelected,
-      isInteractive: true,
-      selectComponent,
-      selectStitchLine,
-    }),
-    [clearSelection, isComponentSelected, selectComponent, selectStitchLine],
-  )
 
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
@@ -204,7 +129,7 @@ export const Editor: FC = () => {
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
                 <ComponentTree
-                  selectedComponentId={selectedComponentId}
+                  selectedComponentId={selectedComponent?.id}
                   isInReorderMode={isComponentTreeInReorderMode}
                 />
               </Box>
@@ -220,7 +145,7 @@ export const Editor: FC = () => {
                 <Heading size="sm">{t.editor.panels.stitching}</Heading>
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
-                <StitchLineTree selectedStitchLineId={selectedStitchLineId} />
+                <StitchLineTree selectedStitchLineId={selectedStitchLine?.id} />
               </Box>
             </Splitter.Panel>
           </Splitter.Root>

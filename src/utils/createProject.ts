@@ -33,6 +33,9 @@ export const createProject = (name: string, t: TranslationSchema): ProjectSchema
       [root.id]: root,
     },
     stitchLines: [],
+    componentSettings: {
+      baseColor: LEATHER_BASE_COLOR,
+    },
     editingSettings: {
       addComputedSizesToAutoSized: true,
       adjustCornerRadiiToParent: true,

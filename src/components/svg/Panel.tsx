@@ -16,7 +16,7 @@ type PanelProps = {
 }
 
 export const Panel: FC<PanelProps> = ({ componentId }) => {
-  const { isInteractive, selectComponent } = useDrawAreaContext()
+  const { isInteractive, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const panel = useComponent<PanelSchema>(componentId)
   const computedPanel = useComputedComponent<ComputedPanelSchema>(componentId)
@@ -32,9 +32,9 @@ export const Panel: FC<PanelProps> = ({ componentId }) => {
   const handleClick = useCallback<MouseEventHandler<SVGPathElement>>(
     (event) => {
       event.stopPropagation()
-      selectComponent(panel.id)
+      selection.selectComponent(panel.id)
     },
-    [panel.id, selectComponent],
+    [panel.id, selection],
   )
 
   return (

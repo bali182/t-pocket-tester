@@ -26,7 +26,7 @@ type ComponentTreeProps = {
 export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isInReorderMode = true }) => {
   const { moveComponent, project } = useProject()
   const rootComponent = useComponent(project.root)
-  const { selectComponent } = useDrawAreaContext()
+  const { selection } = useDrawAreaContext()
   const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])
   const sensors = useSensors(useSensor(PointerSensor))
 
@@ -108,9 +108,9 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isI
         return
       }
 
-      selectComponent(selectedComponentId)
+      selection.selectComponent(selectedComponentId)
     },
-    [selectComponent],
+    [selection],
   )
 
   const handleAddChild = useCallback((parentId: string): void => {
