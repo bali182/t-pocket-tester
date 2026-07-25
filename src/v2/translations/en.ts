@@ -32,9 +32,6 @@ export const EN: typeof HU = {
     placeholders: {
       selectComponent: 'Select a component',
     },
-    accessibility: {
-      selectColor: 'Select color',
-    },
     componentActions: {
       clone: 'Clone item',
       moveUp: 'Move item up',
@@ -142,9 +139,6 @@ export const EN: typeof HU = {
         title: 'No stitch lines yet',
         description: 'Add a stitch line from the tree or the editors!',
       },
-      accessibility: {
-        deleteNamed: (name: string) => `Delete ${name}`,
-      },
     },
     editor: {
       seamLine: {
@@ -169,10 +163,8 @@ export const EN: typeof HU = {
       pocketStitch: {
         title: 'Pocket stitch',
         enabled: 'Enabled',
-        enableAccessibility: 'Enable pocket stitch',
         startOffset: 'Start offset',
         endOffset: 'End offset',
-        directionAccessibility: 'Pocket stitch direction',
       },
       stitching: {
         title: 'Stitching',

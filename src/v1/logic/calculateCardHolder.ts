@@ -1,5 +1,5 @@
-import type { CardHolderInputSchema } from '../schemas/CardHolderInputSchema'
 import type { CalculatedCardHolderSchema } from '../schemas/CalculatedCardHolderSchema'
+import type { CardHolderInputSchema } from '../schemas/CardHolderInputSchema'
 import { calculateBackPanel } from './calculateBackPanel'
 import { calculateCard } from './calculateCard'
 import { calculateTopPocket } from './calculateTopPocket'

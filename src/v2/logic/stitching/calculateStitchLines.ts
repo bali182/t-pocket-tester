@@ -1,8 +1,8 @@
 import type { ComponentSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../../schemas/computed'
 import type { StitchLineCommonConfigSchema, StitchLineSchema } from '../../schemas/stitching'
-import { isDefined } from '../../utils/isDefined'
 import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
+import { isDefined } from '../../utils/isDefined'
 import { calculateStitchLine } from './calculateStitchLine'
 
 export const calculateStitchLines = (

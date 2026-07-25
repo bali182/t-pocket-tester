@@ -3,8 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { LANGUAGE } from '../constants/language'
 import type { EditableSchema } from '../schemas/editable'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
-import { getEditableSchema } from '../utils/getEditableSchema'
 import { useTranslation } from '../translations/translation'
+import { getEditableSchema } from '../utils/getEditableSchema'
 import { useProject } from './useProject'
 
 export type EditableModelValidatorSchema<T> = (
@@ -26,13 +26,19 @@ type UseEditableModelOptions<T> = {
   value: T
 }
 
-export const useEditableModel = <T>({ commit, validate, value }: UseEditableModelOptions<T>): UseEditableModelResult<T> => {
+export const useEditableModel = <T>({
+  commit,
+  validate,
+  value,
+}: UseEditableModelOptions<T>): UseEditableModelResult<T> => {
   const { project, computedProject } = useProject()
   const t = useTranslation()
   const [isDirty, setIsDirty] = useState(false)
   const [locallyCommittedValue, setLocallyCommittedValue] = useState<T | undefined>(undefined)
   const [lastObservedValue, setLastObservedValue] = useState(value)
-  const [editableValue, setEditableValue] = useState<EditableSchema<T>>(() => getEditableSchema(value, { language: LANGUAGE }))
+  const [editableValue, setEditableValue] = useState<EditableSchema<T>>(() =>
+    getEditableSchema(value, { language: LANGUAGE }),
+  )
   const [processedEditableValue, setProcessedEditableValue] = useState<EditableSchema<T> | undefined>(undefined)
 
   const validationContext = useMemo<ValidationContextSchema>(

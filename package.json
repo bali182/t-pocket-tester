@@ -7,7 +7,8 @@
     "start": "vite",
     "build": "vite build",
     "lint": "eslint src",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "pretty": "npx prettier --write src"
   },
   "dependencies": {
     "@chakra-ui/react": "3.36.0",

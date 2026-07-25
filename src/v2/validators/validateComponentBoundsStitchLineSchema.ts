@@ -1,7 +1,7 @@
 import type { EditableSchema } from '../schemas/editable'
 import type {
-  HorizontalStitchDirectionSchema,
   ComponentBoundsStitchLineSchema,
+  HorizontalStitchDirectionSchema,
   VerticalStitchDirectionSchema,
 } from '../schemas/stitching'
 import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'

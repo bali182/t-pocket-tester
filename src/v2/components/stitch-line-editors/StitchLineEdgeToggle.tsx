@@ -16,12 +16,7 @@ type StitchLineEdgeToggleProps = {
   side: StitchSideSchema
 }
 
-export const StitchLineEdgeToggle: FC<StitchLineEdgeToggleProps> = ({
-  label,
-  onClick,
-  selected,
-  side,
-}) => {
+export const StitchLineEdgeToggle: FC<StitchLineEdgeToggleProps> = ({ label, onClick, selected, side }) => {
   const layout = useMemo<StitchLineSegmentLayout>(() => getSideLayout(side), [side])
 
   const borderColor = useMemo<CssProperties['borderColor']>(

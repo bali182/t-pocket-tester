@@ -3,10 +3,10 @@ import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { useMemo, type FC } from 'react'
 
 import { PiCaretRight, PiDotsSixVertical } from 'react-icons/pi'
+import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
 import type { ComponentMovePlacementSchema, ComponentTreeDropAreaSchema } from '../schemas/move'
 import { getComponentIcon } from '../utils/getComponentIcon'
-import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import { isDefined } from '../utils/isDefined'
 import { ComponentActionsMenu } from './ComponentActionsMenu'
 

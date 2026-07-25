@@ -1,7 +1,7 @@
 import type { ComponentSchema } from '../../../schemas/components'
 import type { ProjectSchema } from '../../../schemas/project'
-import { hasComponentChildren } from './hasComponentChildren'
 import { isDefined } from '../../../utils/isDefined'
+import { hasComponentChildren } from './hasComponentChildren'
 
 export const getComponentNestingLevel = (componentId: string, project: ProjectSchema): number => {
   const rootComponent = project.components[project.root]

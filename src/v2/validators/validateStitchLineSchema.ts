@@ -1,5 +1,9 @@
 import type { EditableSchema } from '../schemas/editable'
-import type { ComponentBoundsStitchLineSchema, PocketClusterStitchLineSchema, StitchLineSchema } from '../schemas/stitching'
+import type {
+  ComponentBoundsStitchLineSchema,
+  PocketClusterStitchLineSchema,
+  StitchLineSchema,
+} from '../schemas/stitching'
 import type { ValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
 import { validateComponentBoundsStitchLineSchema } from './validateComponentBoundsStitchLineSchema'
 import { validatePocketClusterStitchLineSchema } from './validatePocketClusterStitchLineSchema'

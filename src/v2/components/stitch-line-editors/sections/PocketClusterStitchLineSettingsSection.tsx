@@ -53,7 +53,7 @@ export const PocketClusterStitchLineSettingsSection = ({
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.enabled}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <Switch.Root checked={editable.enabled} onCheckedChange={handleEnabledChange} size="sm">
-          <Switch.HiddenInput aria-label={t.stitchLine.editor.pocketStitch.enableAccessibility} />
+          <Switch.HiddenInput />
           <Switch.Control>
             <Switch.Thumb />
           </Switch.Control>
@@ -62,12 +62,24 @@ export const PocketClusterStitchLineSettingsSection = ({
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.startOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <NumberInput issue={issues.startOffset} onChange={handleStartOffsetChange} step={1} unit="mm" value={editable.startOffset} />
+        <NumberInput
+          issue={issues.startOffset}
+          onChange={handleStartOffsetChange}
+          step={1}
+          unit="mm"
+          value={editable.startOffset}
+        />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.endOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <NumberInput issue={issues.endOffset} onChange={handleEndOffsetChange} step={1} unit="mm" value={editable.endOffset} />
+        <NumberInput
+          issue={issues.endOffset}
+          onChange={handleEndOffsetChange}
+          step={1}
+          unit="mm"
+          value={editable.endOffset}
+        />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.direction}</SectionGroup.SectionRowTitle>
@@ -77,7 +89,7 @@ export const PocketClusterStitchLineSettingsSection = ({
           onCheckedChange={handleStitchDirectionChange}
           size="sm"
         >
-          <Switch.HiddenInput aria-label={t.stitchLine.editor.pocketStitch.directionAccessibility} />
+          <Switch.HiddenInput />
           <Switch.Control bg="bg.emphasized" _checked={{ bg: 'bg.emphasized' }}>
             <Switch.Thumb bg="bg.panel" _checked={{ bg: 'bg.panel' }}>
               <Switch.ThumbIndicator fallback={<PiArrowLeft />}>

@@ -72,7 +72,13 @@ const CORNER_UNSELECTED_HOVER_BORDER_COLOR: CssProperties['borderColor'] = 'bord
 const getCornerLayout = (corner: StitchCornerSchema): StitchLineSegmentLayout => {
   const layouts: Record<StitchCornerSchema, StitchLineSegmentLayout> = {
     'bottom-left': {
-      button: { bottom: NEGATIVE_CORNER_HIT_SLOP, left: NEGATIVE_CORNER_HIT_SLOP, position: 'absolute', right: 0, top: 0 },
+      button: {
+        bottom: NEGATIVE_CORNER_HIT_SLOP,
+        left: NEGATIVE_CORNER_HIT_SLOP,
+        position: 'absolute',
+        right: 0,
+        top: 0,
+      },
       root: {
         alignSelf: 'end',
         gridArea: 'bottom-left',
@@ -97,7 +103,13 @@ const getCornerLayout = (corner: StitchCornerSchema): StitchLineSegmentLayout =>
       },
     },
     'bottom-right': {
-      button: { bottom: NEGATIVE_CORNER_HIT_SLOP, left: 0, position: 'absolute', right: NEGATIVE_CORNER_HIT_SLOP, top: 0 },
+      button: {
+        bottom: NEGATIVE_CORNER_HIT_SLOP,
+        left: 0,
+        position: 'absolute',
+        right: NEGATIVE_CORNER_HIT_SLOP,
+        top: 0,
+      },
       root: {
         alignSelf: 'end',
         gridArea: 'bottom-right',
@@ -122,7 +134,13 @@ const getCornerLayout = (corner: StitchCornerSchema): StitchLineSegmentLayout =>
       },
     },
     'top-left': {
-      button: { bottom: 0, left: NEGATIVE_CORNER_HIT_SLOP, position: 'absolute', right: 0, top: NEGATIVE_CORNER_HIT_SLOP },
+      button: {
+        bottom: 0,
+        left: NEGATIVE_CORNER_HIT_SLOP,
+        position: 'absolute',
+        right: 0,
+        top: NEGATIVE_CORNER_HIT_SLOP,
+      },
       root: {
         alignSelf: 'start',
         gridArea: 'top-left',
@@ -147,7 +165,13 @@ const getCornerLayout = (corner: StitchCornerSchema): StitchLineSegmentLayout =>
       },
     },
     'top-right': {
-      button: { bottom: 0, left: 0, position: 'absolute', right: NEGATIVE_CORNER_HIT_SLOP, top: NEGATIVE_CORNER_HIT_SLOP },
+      button: {
+        bottom: 0,
+        left: 0,
+        position: 'absolute',
+        right: NEGATIVE_CORNER_HIT_SLOP,
+        top: NEGATIVE_CORNER_HIT_SLOP,
+      },
       root: {
         alignSelf: 'start',
         gridArea: 'top-right',

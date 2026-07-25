@@ -89,7 +89,9 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
 
       {editable.individualRadii && (
         <>
-          <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.individualMeasure}</SectionGroup.SectionRowTitle>
+          <SectionGroup.SectionRowTitle>
+            {t.component.editor.cornerRadius.individualMeasure}
+          </SectionGroup.SectionRowTitle>
           <SectionGroup.SectionRowEditor>
             <Grid columnGap="1" gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" rowGap="1">
               <NumberInput

@@ -10,8 +10,7 @@ import { isDefined } from '../../../utils/isDefined'
 import { ComponentSelect } from '../../common/ComponentSelect'
 import { SectionGroup } from '../../common/SectionGroup'
 
-export type BaseStitchLineSchema = HasIdentitySchema &
-  StitchLineComponentReferencesSchema
+export type BaseStitchLineSchema = HasIdentitySchema & StitchLineComponentReferencesSchema
 
 type BasicSettingsSectionProps<T extends BaseStitchLineSchema> = {
   editable: EditableSchema<T>

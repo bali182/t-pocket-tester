@@ -3,7 +3,11 @@ import BigNumber from 'bignumber.js'
 import type { ComponentSchema } from '../../schemas/components'
 import type { ComputedComponentSchema } from '../../schemas/computed'
 import type { PathCommand, PathSchema, PointSchema } from '../../schemas/geometry'
-import type { ResolvedComponentBoundsStitchLineSchema, StitchCornerSchema, StitchSideSchema } from '../../schemas/stitching'
+import type {
+  ResolvedComponentBoundsStitchLineSchema,
+  StitchCornerSchema,
+  StitchSideSchema,
+} from '../../schemas/stitching'
 import { getNormalizedCornerRadius } from '../getNormalizedCornerRadius'
 
 const ZERO = new BigNumber(0)

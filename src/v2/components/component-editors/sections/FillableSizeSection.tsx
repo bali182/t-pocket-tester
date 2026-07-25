@@ -67,54 +67,54 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
       <SectionGroup.SectionHeader>{t.common.labels.size}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.common.labels.width}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-          <HStack gap="2">
-            <Switch.Root checked={!editable.autoWidth} onCheckedChange={handleAutoWidthChange} size="md">
-              <Switch.HiddenInput />
-              <Switch.Control>
-                <Switch.Thumb>
-                  <Switch.ThumbIndicator fallback={<PiArrowsHorizontal />}>
-                    <PiRuler />
-                  </Switch.ThumbIndicator>
-                </Switch.Thumb>
-              </Switch.Control>
-            </Switch.Root>
-            <Box flex="1" minWidth="0">
-              <NumberInput
-                disabled={editable.autoWidth}
-                issue={issues.width}
-                onChange={handleWidthChange}
-                step={1}
-                unit="mm"
-                value={editable.width}
-              />
-            </Box>
-          </HStack>
+        <HStack gap="2">
+          <Switch.Root checked={!editable.autoWidth} onCheckedChange={handleAutoWidthChange} size="md">
+            <Switch.HiddenInput />
+            <Switch.Control>
+              <Switch.Thumb>
+                <Switch.ThumbIndicator fallback={<PiArrowsHorizontal />}>
+                  <PiRuler />
+                </Switch.ThumbIndicator>
+              </Switch.Thumb>
+            </Switch.Control>
+          </Switch.Root>
+          <Box flex="1" minWidth="0">
+            <NumberInput
+              disabled={editable.autoWidth}
+              issue={issues.width}
+              onChange={handleWidthChange}
+              step={1}
+              unit="mm"
+              value={editable.width}
+            />
+          </Box>
+        </HStack>
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.height}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-          <HStack gap="2">
-            <Switch.Root checked={!editable.autoHeight} onCheckedChange={handleAutoHeightChange} size="md">
-              <Switch.HiddenInput />
-              <Switch.Control>
-                <Switch.Thumb>
-                  <Switch.ThumbIndicator fallback={<PiArrowsVertical />}>
-                    <PiRuler />
-                  </Switch.ThumbIndicator>
-                </Switch.Thumb>
-              </Switch.Control>
-            </Switch.Root>
-            <Box flex="1" minWidth="0">
-              <NumberInput
-                disabled={editable.autoHeight}
-                issue={issues.height}
-                onChange={handleHeightChange}
-                step={1}
-                unit="mm"
-                value={editable.height}
-              />
-            </Box>
-          </HStack>
+        <HStack gap="2">
+          <Switch.Root checked={!editable.autoHeight} onCheckedChange={handleAutoHeightChange} size="md">
+            <Switch.HiddenInput />
+            <Switch.Control>
+              <Switch.Thumb>
+                <Switch.ThumbIndicator fallback={<PiArrowsVertical />}>
+                  <PiRuler />
+                </Switch.ThumbIndicator>
+              </Switch.Thumb>
+            </Switch.Control>
+          </Switch.Root>
+          <Box flex="1" minWidth="0">
+            <NumberInput
+              disabled={editable.autoHeight}
+              issue={issues.height}
+              onChange={handleHeightChange}
+              step={1}
+              unit="mm"
+              value={editable.height}
+            />
+          </Box>
+        </HStack>
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

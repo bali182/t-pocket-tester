@@ -30,9 +30,6 @@ export const HU = {
     placeholders: {
       selectComponent: 'Komponens kiválasztása',
     },
-    accessibility: {
-      selectColor: 'Szín kiválasztása',
-    },
     componentActions: {
       add: (name: string) => `${name} hozzáadása`,
       clone: 'Elem klónozása',
@@ -140,9 +137,6 @@ export const HU = {
         title: 'Nincs még varrás',
         description: 'Adj hozzá varrást a fa menüjéből vagy a szerkesztőből!',
       },
-      accessibility: {
-        deleteNamed: (name: string) => `${name} törlése`,
-      },
     },
     editor: {
       seamLine: {
@@ -167,10 +161,8 @@ export const HU = {
       pocketStitch: {
         title: 'Zsebvarrás',
         enabled: 'Engedélyezve',
-        enableAccessibility: 'Zsebvarrás engedélyezése',
         startOffset: 'Kezdő eltolás',
         endOffset: 'Vég eltolás',
-        directionAccessibility: 'Zsebvarrás iránya',
       },
       stitching: {
         title: 'Varrás',

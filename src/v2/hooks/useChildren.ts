@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
-import type { ComponentSchema } from '../schemas/components'
 import { getComponentChildren } from '../operations/project/utils/getComponentChildren'
+import type { ComponentSchema } from '../schemas/components'
 import { useProject } from './useProject'
 
 export const useChildren = (component: ComponentSchema): ComponentSchema[] => {

@@ -16,12 +16,7 @@ type PocketClusterEditorProps = {
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
 }
 
-export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
-  component,
-  editable,
-  issues,
-  onChange,
-}) => {
+export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({ component, editable, issues, onChange }) => {
   return (
     <>
       <NameAndColorSection editable={editable} issues={issues} onChange={onChange} />

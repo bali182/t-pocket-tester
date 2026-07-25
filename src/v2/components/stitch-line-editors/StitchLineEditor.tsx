@@ -19,7 +19,13 @@ type StitchLineEditorProps = {
   stitchLine: StitchLineSchema
 }
 
-export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, onChange, resolvedEditable, stitchLine }) => {
+export const StitchLineEditor: FC<StitchLineEditorProps> = ({
+  editable,
+  issues,
+  onChange,
+  resolvedEditable,
+  stitchLine,
+}) => {
   switch (stitchLine.type) {
     case 'component-bounds-stitch-line':
       return (
@@ -27,7 +33,10 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, 
           editable={editable as EditableSchema<ComponentBoundsStitchLineSchema>}
           issues={issues as ValidationIssuesSchema<ComponentBoundsStitchLineSchema>}
           onChange={onChange}
-          resolvedEditable={resolvedEditable as EditableSchema<StitchLineCommonConfigSchema> & EditableSchema<ComponentBoundsStitchLineSchema>}
+          resolvedEditable={
+            resolvedEditable as EditableSchema<StitchLineCommonConfigSchema> &
+              EditableSchema<ComponentBoundsStitchLineSchema>
+          }
         />
       )
     case 'pocket-cluster-stitch-line':
@@ -36,7 +45,10 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({ editable, issues, 
           editable={editable as EditableSchema<PocketClusterStitchLineSchema>}
           issues={issues as ValidationIssuesSchema<PocketClusterStitchLineSchema>}
           onChange={onChange}
-          resolvedEditable={resolvedEditable as EditableSchema<StitchLineCommonConfigSchema> & EditableSchema<PocketClusterStitchLineSchema>}
+          resolvedEditable={
+            resolvedEditable as EditableSchema<StitchLineCommonConfigSchema> &
+              EditableSchema<PocketClusterStitchLineSchema>
+          }
         />
       )
   }

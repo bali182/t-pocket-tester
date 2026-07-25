@@ -135,7 +135,12 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
           selected={editable.topLeftCorner}
           onClick={() => toggle('topLeftCorner')}
         />
-        <StitchLineEdgeToggle label={t.common.directions.top} selected={editable.top} side="top" onClick={() => toggle('top')} />
+        <StitchLineEdgeToggle
+          label={t.common.directions.top}
+          selected={editable.top}
+          side="top"
+          onClick={() => toggle('top')}
+        />
         <StitchLineCornerToggle
           label={t.common.directions.topRight}
           corner="top-right"
@@ -143,7 +148,12 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
           selected={editable.topRightCorner}
           onClick={() => toggle('topRightCorner')}
         />
-        <StitchLineEdgeToggle label={t.common.directions.left} selected={editable.left} side="left" onClick={() => toggle('left')} />
+        <StitchLineEdgeToggle
+          label={t.common.directions.left}
+          selected={editable.left}
+          side="left"
+          onClick={() => toggle('left')}
+        />
         <Box gridArea="center" />
         <StitchLineEdgeToggle
           label={t.common.directions.right}

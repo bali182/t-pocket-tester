@@ -13,8 +13,8 @@ import { isDefined } from '../utils/isDefined'
 import { calculateLayoutBoundingBoxes } from './calculateLayoutBoundingBoxes'
 import { calculatePocketClusterGeometry } from './calculatePocketClusterGeometry'
 import { calculateRectPath } from './calculateRectPath'
-import { calculateStitchLines } from './stitching/calculateStitchLines'
 import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
+import { calculateStitchLines } from './stitching/calculateStitchLines'
 
 export const getComputedProject = (project: ProjectSchema): ComputedProjectSchema => {
   const rootComponent = project.components[project.root]

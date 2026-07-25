@@ -2,8 +2,8 @@ import { Field, NumberInput, Stack } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import type { FC } from 'react'
 import { useMemo } from 'react'
-import type { CardHolderInputSchema } from '../../schemas/CardHolderInputSchema'
 import type { CardHolderInputFieldSchema } from '../../schemas/CardHolderInputFieldSchema'
+import type { CardHolderInputSchema } from '../../schemas/CardHolderInputSchema'
 import { cardHolderInputAtom } from '../../state'
 
 export const StitchingInputSection: FC = () => {

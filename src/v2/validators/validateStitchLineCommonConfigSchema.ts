@@ -37,13 +37,19 @@ export const validateStitchLineCommonConfigSchema = (
     editableStitchLine.stitchHoleThickness,
     currentStitchLine.stitchHoleThickness,
     (editedValue) =>
-      validateNumber(editedValue, resolvedCurrentSettings.stitchHoleThickness, context, { min: 0, minInclusive: false }),
+      validateNumber(editedValue, resolvedCurrentSettings.stitchHoleThickness, context, {
+        min: 0,
+        minInclusive: false,
+      }),
   )
   const stitchLineThicknessResult = validateOptionalValue(
     editableStitchLine.stitchLineThickness,
     currentStitchLine.stitchLineThickness,
     (editedValue) =>
-      validateNumber(editedValue, resolvedCurrentSettings.stitchLineThickness, context, { min: 0, minInclusive: false }),
+      validateNumber(editedValue, resolvedCurrentSettings.stitchLineThickness, context, {
+        min: 0,
+        minInclusive: false,
+      }),
   )
   const stitchHoleColorResult = validateOptionalValue(
     editableStitchLine.stitchHoleColor,

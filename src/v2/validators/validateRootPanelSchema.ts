@@ -22,7 +22,13 @@ export const validateRootPanelSchema = (
   currentValue: RootPanelSchema,
   context: ValidationContextSchema,
 ): ValidationResultSchema<RootPanelSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, Object.values(context.project.components), context)
+  const nameResult = validateName(
+    input.name,
+    currentValue.name,
+    input.id,
+    Object.values(context.project.components),
+    context,
+  )
   const colorResult = validateHexColor(input.color, currentValue.color, context)
   const layoutOrientationResult = validatePrimitiveUnion(
     input.layoutOrientation,
@@ -30,7 +36,12 @@ export const validateRootPanelSchema = (
     layoutOrientationValues,
     context,
   )
-  const layoutOrderResult = validatePrimitiveUnion(input.layoutOrder, currentValue.layoutOrder, layoutOrderValues, context)
+  const layoutOrderResult = validatePrimitiveUnion(
+    input.layoutOrder,
+    currentValue.layoutOrder,
+    layoutOrderValues,
+    context,
+  )
   const layoutGapResult = validateNumber(input.layoutGap, currentValue.layoutGap, context, { min: 0 })
   const borderRadiusResult = validateNumber(input.borderRadius, currentValue.borderRadius, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })

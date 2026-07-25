@@ -1,8 +1,4 @@
-import type {
-  ResolvedStitchLineSchema,
-  StitchLineCommonConfigSchema,
-  StitchLineSchema,
-} from '../schemas/stitching'
+import type { ResolvedStitchLineSchema, StitchLineCommonConfigSchema, StitchLineSchema } from '../schemas/stitching'
 
 export const getResolvedStitchLine = (
   stitchLine: StitchLineSchema,

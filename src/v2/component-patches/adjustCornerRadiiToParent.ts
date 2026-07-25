@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js'
 
 import { getNormalizedCornerRadius } from '../logic/getNormalizedCornerRadius'
+import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import type { ComponentSchema, PanelSchema, RootPanelSchema } from '../schemas/components'
 import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
-import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import { isDefined } from '../utils/isDefined'
 
 export const adjustCornerRadiiToParent = (

@@ -3,7 +3,6 @@ import { FC, useCallback, useMemo } from 'react'
 
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
-import { useTranslation } from '../../translations/translation'
 
 type ColorInputProps = {
   issue: IssueSchema | undefined
@@ -12,7 +11,6 @@ type ColorInputProps = {
 }
 
 export const ColorInput: FC<ColorInputProps> = ({ issue, onChange, value }) => {
-  const t = useTranslation()
   const color = useMemo<Color>(() => parseColor(value), [value])
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
@@ -31,15 +29,7 @@ export const ColorInput: FC<ColorInputProps> = ({ issue, onChange, value }) => {
     <ColorPicker.Root onValueChange={handleValueChange} size="xs" value={color}>
       <ColorPicker.Control>
         <ColorPicker.Trigger asChild>
-          <Button
-            aria-invalid={isInvalid}
-            aria-label={t.common.accessibility.selectColor}
-            justifyContent="start"
-            minWidth="0"
-            size="xs"
-            variant="outline"
-            width="100%"
-          >
+          <Button aria-invalid={isInvalid} justifyContent="start" minWidth="0" size="xs" variant="outline" width="100%">
             <ColorPicker.ValueSwatch />
             <Text truncate>{value}</Text>
           </Button>

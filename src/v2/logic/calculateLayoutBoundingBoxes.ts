@@ -1,10 +1,10 @@
 import BigNumber from 'bignumber.js'
 
+import { getComponentChildren } from '../operations/project/utils/getComponentChildren'
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { RectSchema } from '../schemas/geometry'
 import type { ProjectSchema } from '../schemas/project'
 import { clamp } from '../utils/clamp'
-import { getComponentChildren } from '../operations/project/utils/getComponentChildren'
 
 type LayoutComponent = RootPanelSchema | PanelSchema
 type LayoutChildComponent = PanelSchema | PocketClusterSchema
@@ -171,10 +171,7 @@ const calculateMainAxisSizes = (
     sizesById[child.id] = clamp(getMainAxisSize(child, parent), ZERO, parentSpace)
   }
 
-  const fixedComponentSpace = Object.values(sizesById).reduce(
-    (sum, componentSize) => sum.plus(componentSize),
-    ZERO,
-  )
+  const fixedComponentSpace = Object.values(sizesById).reduce((sum, componentSize) => sum.plus(componentSize), ZERO)
   const autoComponentCount = new BigNumber(children.filter((child) => isMainAxisAuto(child, parent)).length)
   const autoComponentSize = autoComponentCount.isZero()
     ? ZERO

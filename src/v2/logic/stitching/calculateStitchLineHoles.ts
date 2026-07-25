@@ -88,7 +88,10 @@ const orientFragments = (
   return [reverseSideFragment(side)]
 }
 
-const isCanonicalDirection = (stitchLine: ResolvedComponentBoundsStitchLineSchema, side: StitchSidePathFragment): boolean => {
+const isCanonicalDirection = (
+  stitchLine: ResolvedComponentBoundsStitchLineSchema,
+  side: StitchSidePathFragment,
+): boolean => {
   switch (side.side) {
     case 'top':
       return stitchLine.topStitchDirection === 'left-to-right'
