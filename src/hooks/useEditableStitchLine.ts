@@ -3,7 +3,8 @@ import { useCallback, useMemo } from 'react'
 import { LANGUAGE } from '../constants/language'
 import type { EditableSchema } from '../schemas/editable'
 import type { StitchLineCommonConfigSchema, StitchLineSchema } from '../schemas/stitching'
-import type { ValidationIssuesSchema } from '../schemas/validation'
+import type { ComponentBasedValidationContextSchema, ValidationIssuesSchema } from '../schemas/validation'
+import { useTranslation } from '../translations/translation'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { validateStitchLineSchema } from '../validators/validateStitchLineSchema'
 import { useEditableModel } from './useEditableModel'
@@ -21,7 +22,12 @@ export type UseEditableStitchLineResult = {
 export const useEditableStitchLine = (stitchLineId: string): UseEditableStitchLineResult => {
   const stitchLine = useStitchLine(stitchLineId)
 
-  const { project, updateStitchLine } = useProject()
+  const { computedProject, project, updateStitchLine } = useProject()
+  const t = useTranslation()
+  const context = useMemo<ComponentBasedValidationContextSchema>(
+    () => ({ computedProject, language: LANGUAGE, project, t }),
+    [computedProject, project, t],
+  )
 
   const commit = useCallback(
     (updatedStitchLine: StitchLineSchema): void => {
@@ -32,6 +38,7 @@ export const useEditableStitchLine = (stitchLineId: string): UseEditableStitchLi
 
   const { editableValue, setValue, validationIssues } = useEditableModel({
     commit,
+    context,
     validate: validateStitchLineSchema,
     value: stitchLine,
   })

@@ -4,14 +4,14 @@ import type {
   PocketClusterStitchLineSchema,
   StitchLineSchema,
 } from '../schemas/stitching'
-import type { ValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
+import type { ComponentBasedValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
 import { validateComponentBoundsStitchLineSchema } from './validateComponentBoundsStitchLineSchema'
 import { validatePocketClusterStitchLineSchema } from './validatePocketClusterStitchLineSchema'
 
 export const validateStitchLineSchema = (
   input: EditableSchema<StitchLineSchema>,
   currentValue: StitchLineSchema,
-  context: ValidationContextSchema,
+  context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<StitchLineSchema> => {
   switch (currentValue.type) {
     case 'component-bounds-stitch-line':

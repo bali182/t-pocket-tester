@@ -1,11 +1,15 @@
 import type { EditableSchema } from '../schemas/editable'
 import type { PocketClusterStitchLineSchema, StitchDirectionSchema } from '../schemas/stitching'
-import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type {
+  ComponentBasedValidationContextSchema,
+  ValidationIssuesSchema,
+  ValidationResultSchema,
+} from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateName } from './validateName'
 import { validateNumber } from './validateNumber'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
-import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
+import { validateStitchLineCommonConfigOverridesSchema } from './validateStitchLineCommonConfigOverridesSchema'
 
 const stitchDirectionValues: Record<StitchDirectionSchema, boolean> = {
   'end-to-start': true,
@@ -15,10 +19,10 @@ const stitchDirectionValues: Record<StitchDirectionSchema, boolean> = {
 export const validatePocketClusterStitchLineSchema = (
   input: EditableSchema<PocketClusterStitchLineSchema>,
   currentValue: PocketClusterStitchLineSchema,
-  context: ValidationContextSchema,
+  context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<PocketClusterStitchLineSchema> => {
   const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
-  const commonConfigResult = validateStitchLineCommonConfigSchema(input, currentValue, context)
+  const commonConfigResult = validateStitchLineCommonConfigOverridesSchema(input, currentValue, context)
   const startOffsetResult = validateNumber(input.startOffset, currentValue.startOffset, context)
   const endOffsetResult = validateNumber(input.endOffset, currentValue.endOffset, context)
   const stitchDirectionResult = validatePrimitiveUnion(

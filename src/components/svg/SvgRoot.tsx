@@ -23,7 +23,7 @@ export const SvgRoot = () => {
       style={{ display: 'block' }}
       viewBox={viewBox}
     >
-      <RootPanel componentId={computedProject.root} />
+      <RootPanel componentId={computedProject.root} nestingLevel={0} />
     </svg>
   )
 }

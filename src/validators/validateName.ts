@@ -1,5 +1,5 @@
 import type { HasIdentitySchema } from '../schemas/components'
-import type { ValidationContextSchema } from '../schemas/validation'
+import type { BaseValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
 export const validateName = (
@@ -7,8 +7,8 @@ export const validateName = (
   currentValue: string,
   id: string,
   values: readonly HasIdentitySchema[],
-  context: ValidationContextSchema,
-) => {
+  context: BaseValidationContextSchema,
+): ValidationResultSchema<string> => {
   if (input === '') {
     return createInvalidValidationResult<string>(
       {

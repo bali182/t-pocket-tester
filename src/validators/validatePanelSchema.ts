@@ -1,10 +1,15 @@
 import type { LayoutOrderSchema, LayoutOrientationSchema, PanelSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
-import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type {
+  ComponentBasedValidationContextSchema,
+  ValidationIssuesSchema,
+  ValidationResultSchema,
+} from '../schemas/validation'
+import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
-import { validateHexColor } from './validateHexColor'
 import { validateName } from './validateName'
 import { validateNumber } from './validateNumber'
+import { validateOptionalHexColor } from './validateOptionalHexColor'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
 
 const layoutOrientationValues: Record<LayoutOrientationSchema, boolean> = {
@@ -20,7 +25,7 @@ const layoutOrderValues: Record<LayoutOrderSchema, boolean> = {
 export const validatePanelSchema = (
   input: EditableSchema<PanelSchema>,
   currentValue: PanelSchema,
-  context: ValidationContextSchema,
+  context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<PanelSchema> => {
   const nameResult = validateName(
     input.name,
@@ -29,7 +34,7 @@ export const validatePanelSchema = (
     Object.values(context.project.components),
     context,
   )
-  const colorResult = validateHexColor(input.color, currentValue.color, context)
+  const colorResult = validateOptionalHexColor(input.color, currentValue.color, context)
   const layoutOrientationResult = validatePrimitiveUnion(
     input.layoutOrientation,
     currentValue.layoutOrientation,
@@ -83,7 +88,6 @@ export const validatePanelSchema = (
     bottomLeftRadius: bottomLeftRadiusResult.committedValue,
     bottomRightRadius: bottomRightRadiusResult.committedValue,
     children: currentValue.children,
-    color: colorResult.committedValue,
     height: heightResult.committedValue,
     id: currentValue.id,
     individualRadii: input.individualRadii,
@@ -95,6 +99,10 @@ export const validatePanelSchema = (
     topRightRadius: topRightRadiusResult.committedValue,
     type: currentValue.type,
     width: widthResult.committedValue,
+  }
+
+  if (isDefined(colorResult.committedValue)) {
+    committedValue.color = colorResult.committedValue
   }
 
   if (
@@ -114,28 +122,29 @@ export const validatePanelSchema = (
     return createInvalidValidationResult(issues, committedValue)
   }
 
-  return createValidValidationResult(
-    issues,
-    {
-      autoHeight: input.autoHeight,
-      autoWidth: input.autoWidth,
-      borderRadius: borderRadiusResult.value,
-      bottomLeftRadius: bottomLeftRadiusResult.value,
-      bottomRightRadius: bottomRightRadiusResult.value,
-      children: currentValue.children,
-      color: colorResult.value,
-      height: heightResult.value,
-      id: currentValue.id,
-      individualRadii: input.individualRadii,
-      layoutGap: layoutGapResult.value,
-      layoutOrder: layoutOrderResult.value,
-      layoutOrientation: layoutOrientationResult.value,
-      name: nameResult.value,
-      topLeftRadius: topLeftRadiusResult.value,
-      topRightRadius: topRightRadiusResult.value,
-      type: currentValue.type,
-      width: widthResult.value,
-    },
-    committedValue,
-  )
+  const value: PanelSchema = {
+    autoHeight: input.autoHeight,
+    autoWidth: input.autoWidth,
+    borderRadius: borderRadiusResult.value,
+    bottomLeftRadius: bottomLeftRadiusResult.value,
+    bottomRightRadius: bottomRightRadiusResult.value,
+    children: currentValue.children,
+    height: heightResult.value,
+    id: currentValue.id,
+    individualRadii: input.individualRadii,
+    layoutGap: layoutGapResult.value,
+    layoutOrder: layoutOrderResult.value,
+    layoutOrientation: layoutOrientationResult.value,
+    name: nameResult.value,
+    topLeftRadius: topLeftRadiusResult.value,
+    topRightRadius: topRightRadiusResult.value,
+    type: currentValue.type,
+    width: widthResult.value,
+  }
+
+  if (isDefined(colorResult.value)) {
+    value.color = colorResult.value
+  }
+
+  return createValidValidationResult(issues, value, committedValue)
 }

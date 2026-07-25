@@ -1,6 +1,5 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { STROKE_THICKNESS } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
@@ -9,19 +8,18 @@ import type { PanelSchema } from '../../schemas/components'
 import type { ComputedPanelSchema } from '../../schemas/computed'
 import { PocketCluster } from './PocketCluster'
 import { StitchLines } from './StitchLines'
-import { useSvgElementStyle } from './useSvgElementStyle'
 
 type PanelProps = {
   componentId: string
+  nestingLevel: number
 }
 
-export const Panel: FC<PanelProps> = ({ componentId }) => {
-  const { isInteractive, selectComponent } = useDrawAreaContext()
+export const Panel: FC<PanelProps> = ({ componentId, nestingLevel }) => {
+  const { componentStyles, isInteractive, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const panel = useComponent<PanelSchema>(componentId)
   const computedPanel = useComputedComponent<ComputedPanelSchema>(componentId)
   const pathData = usePath(computedPanel.path)
-  const svgStyles = useSvgElementStyle(panel, isHovered)
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGPathElement>>(() => {
     setIsHovered(true)
@@ -32,17 +30,19 @@ export const Panel: FC<PanelProps> = ({ componentId }) => {
   const handleClick = useCallback<MouseEventHandler<SVGPathElement>>(
     (event) => {
       event.stopPropagation()
-      selectComponent(panel.id)
+      selection.selectComponent(panel.id)
     },
-    [panel.id, selectComponent],
+    [panel.id, selection],
   )
 
   return (
     <>
       <path
-        {...svgStyles.element}
         d={pathData}
-        strokeWidth={STROKE_THICKNESS}
+        fill={componentStyles.getBackgroundColor(panel, nestingLevel, isHovered)}
+        filter={componentStyles.getFilter(panel, isHovered)}
+        stroke={componentStyles.getBorderColor(panel, isHovered)}
+        strokeWidth={componentStyles.getBorderThickness(panel, isHovered)}
         data-component-id={panel.id}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}
@@ -54,9 +54,17 @@ export const Panel: FC<PanelProps> = ({ componentId }) => {
       {computedPanel.children.map((component) => {
         switch (component.type) {
           case 'computed-panel':
-            return <Panel key={component.componentId} componentId={component.componentId} />
+            return (
+              <Panel componentId={component.componentId} key={component.componentId} nestingLevel={nestingLevel + 1} />
+            )
           case 'computed-pocket-cluster':
-            return <PocketCluster key={component.componentId} componentId={component.componentId} />
+            return (
+              <PocketCluster
+                componentId={component.componentId}
+                key={component.componentId}
+                nestingLevel={nestingLevel + 1}
+              />
+            )
           case 'computed-root-panel':
             throw new Error(`Root panel cannot be rendered as a child: ${component.componentId}`)
         }

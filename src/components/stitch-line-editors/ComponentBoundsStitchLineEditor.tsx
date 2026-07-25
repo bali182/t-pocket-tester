@@ -11,6 +11,7 @@ type ComponentBoundsStitchLineEditorProps = {
   editable: EditableSchema<ComponentBoundsStitchLineSchema>
   issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
   onChange: (updated: EditableSchema<ComponentBoundsStitchLineSchema>) => void
+  onReset: (key: keyof StitchLineCommonConfigSchema) => void
   resolvedEditable: EditableSchema<StitchLineCommonConfigSchema> & EditableSchema<ComponentBoundsStitchLineSchema>
 }
 
@@ -18,6 +19,7 @@ export const ComponentBoundsStitchLineEditor: FC<ComponentBoundsStitchLineEditor
   editable,
   issues,
   onChange,
+  onReset,
   resolvedEditable,
 }) => {
   return (
@@ -28,6 +30,7 @@ export const ComponentBoundsStitchLineEditor: FC<ComponentBoundsStitchLineEditor
         editable={editable}
         issues={issues}
         onChange={onChange}
+        onReset={onReset}
         resolvedEditable={resolvedEditable}
       />
     </>

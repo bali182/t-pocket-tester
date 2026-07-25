@@ -1,6 +1,6 @@
 import { ComponentSchema } from './components'
 import { ComputedComponentSchema, ComputedStitchLineSchema } from './computed'
-import { ProjectEditingSettingSchema } from './editingSettings'
+import { ComponentBaseSettings, ProjectEditingSettingSchema } from './editingSettings'
 import { StitchLineCommonConfigSchema, StitchLineSchema } from './stitching'
 
 export type ProjectSchema = {
@@ -11,6 +11,7 @@ export type ProjectSchema = {
   stitchLines: StitchLineSchema[]
   editingSettings: ProjectEditingSettingSchema
   stitchingSettings: StitchLineCommonConfigSchema
+  componentSettings: ComponentBaseSettings
 }
 
 export type ComputedProjectSchema = {

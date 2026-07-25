@@ -1,18 +1,55 @@
-import { Button, Color, ColorPicker, ColorPickerValueChangeDetails, Text, parseColor } from '@chakra-ui/react'
-import { FC, useCallback, useMemo } from 'react'
+import {
+  Color,
+  ColorPicker,
+  ColorPickerValueChangeDetails,
+  IconButton,
+  Input,
+  InputGroup,
+  Portal,
+  parseColor,
+} from '@chakra-ui/react'
+import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
+import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
 
 type ColorInputProps = {
+  isResetEnabled?: boolean
   issue: IssueSchema | undefined
   onChange: (value: string) => void
+  onReset?: () => void
   value: string
 }
 
-export const ColorInput: FC<ColorInputProps> = ({ issue, onChange, value }) => {
-  const color = useMemo<Color>(() => parseColor(value), [value])
+type ColorPickerPositioning = {
+  placement: 'bottom-start'
+}
+
+const getColor = (value: string): Color | undefined => {
+  try {
+    return parseColor(value)
+  } catch {
+    return undefined
+  }
+}
+
+export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
+  const parsedColor = useMemo<Color | undefined>(() => getColor(value), [value])
+  const positioning = useMemo<ColorPickerPositioning>(
+    () => ({
+      placement: 'bottom-start',
+    }),
+    [],
+  )
+  const [pickerColor, setPickerColor] = useState<Color>(() => parsedColor ?? parseColor('#000000'))
   const isInvalid = isDefined(issue) && issue.severity === 'error'
+
+  useEffect(() => {
+    if (isDefined(parsedColor)) {
+      setPickerColor(parsedColor)
+    }
+  }, [parsedColor])
 
   const handleValueChange = useCallback(
     (details: ColorPickerValueChangeDetails) => {
@@ -26,31 +63,68 @@ export const ColorInput: FC<ColorInputProps> = ({ issue, onChange, value }) => {
   )
 
   return (
-    <ColorPicker.Root onValueChange={handleValueChange} size="xs" value={color}>
+    <ColorPicker.Root onValueChange={handleValueChange} positioning={positioning} size="xs" value={pickerColor}>
       <ColorPicker.Control>
-        <ColorPicker.Trigger asChild>
-          <Button aria-invalid={isInvalid} justifyContent="start" minWidth="0" size="xs" variant="outline" width="100%">
-            <ColorPicker.ValueSwatch />
-            <Text truncate>{value}</Text>
-          </Button>
-        </ColorPicker.Trigger>
+        <InputGroup
+          endAddon={
+            isDefined(onReset) ? (
+              <IconButton
+                alignSelf="stretch"
+                borderRadius="0"
+                disabled={!isResetEnabled}
+                height="auto"
+                onClick={onReset}
+                size="xs"
+                variant="plain"
+              >
+                <PiArrowCounterClockwise />
+              </IconButton>
+            ) : undefined
+          }
+          endAddonProps={{ px: 0, size: 'xs' }}
+          startAddon={
+            <ColorPicker.Trigger
+              alignItems="center"
+              alignSelf="stretch"
+              border="0"
+              borderRadius="0"
+              display="flex"
+              height="auto"
+              justifyContent="center"
+              p="0"
+              unstyled
+            >
+              <ColorPicker.ValueSwatch />
+            </ColorPicker.Trigger>
+          }
+          startAddonProps={{ px: '1.5', size: 'xs' }}
+        >
+          <Input
+            aria-invalid={isInvalid}
+            onChange={(event) => onChange(event.currentTarget.value)}
+            size="xs"
+            value={value}
+          />
+        </InputGroup>
       </ColorPicker.Control>
-      <ColorPicker.Positioner>
-        <ColorPicker.Content>
-          <ColorPicker.Area>
-            <ColorPicker.AreaBackground />
-            <ColorPicker.AreaThumb />
-          </ColorPicker.Area>
-          <ColorPicker.ChannelSlider channel="hue">
-            <ColorPicker.ChannelSliderTrack />
-            <ColorPicker.ChannelSliderThumb />
-          </ColorPicker.ChannelSlider>
-          <ColorPicker.ChannelSlider channel="alpha">
-            <ColorPicker.ChannelSliderTrack />
-            <ColorPicker.ChannelSliderThumb />
-          </ColorPicker.ChannelSlider>
-        </ColorPicker.Content>
-      </ColorPicker.Positioner>
+      <Portal>
+        <ColorPicker.Positioner>
+          <ColorPicker.Content>
+            <ColorPicker.Area>
+              <ColorPicker.AreaBackground />
+              <ColorPicker.AreaThumb />
+            </ColorPicker.Area>
+            <ColorPicker.ChannelSlider channel="hue">
+              <ColorPicker.ChannelSliderTrack />
+              <ColorPicker.ChannelSliderThumb />
+            </ColorPicker.ChannelSlider>
+            <ColorPicker.ChannelSlider channel="alpha">
+              <ColorPicker.ChannelSliderTrack />
+              <ColorPicker.ChannelSliderThumb />
+            </ColorPicker.ChannelSlider>
+          </ColorPicker.Content>
+        </ColorPicker.Positioner>
+      </Portal>
     </ColorPicker.Root>
   )
 }

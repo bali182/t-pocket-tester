@@ -70,6 +70,17 @@ export const EN: typeof HU = {
         create: 'Create',
       },
     },
+    settingsDialog: {
+      title: 'Project settings',
+      components: {
+        title: 'Components',
+        baseColor: 'Base color',
+      },
+      tabs: {
+        basic: 'Basic settings',
+        stitching: 'Stitching',
+      },
+    },
     notFound: {
       title: 'Project not found',
       description: 'The project you want to open does not exist.',
@@ -167,12 +178,12 @@ export const EN: typeof HU = {
       stitching: {
         title: 'Stitching',
         holeColor: 'Hole color',
-        lineColor: 'Thread color',
+        lineColor: 'Line color',
         margin: 'Margin',
         holeLength: 'Hole length',
         holeDistance: 'Hole spacing',
         holeThickness: 'Hole thickness',
-        lineThickness: 'Thread thickness',
+        lineThickness: 'Line thickness',
         reset: 'Use project value',
       },
     },

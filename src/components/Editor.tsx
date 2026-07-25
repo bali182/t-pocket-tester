@@ -9,22 +9,20 @@ import {
   SplitterPanelData,
   SplitterResizeDetails,
 } from '@chakra-ui/react'
-import { useCallback, useMemo, useState, type FC } from 'react'
+import { useCallback, useMemo, useRef, useState, type FC } from 'react'
 
-import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiRuler } from 'react-icons/pi'
+import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiGear, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
-import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
+import { DrawAreaContext } from '../contexts/DrawAreaContext'
+import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'
-import type { ComponentSchema } from '../schemas/components'
-import { EditorSelectionSchema } from '../schemas/selection'
-import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
-import { ProjectActionsMenu } from './ProjectActionsMenu'
+import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
@@ -34,64 +32,24 @@ const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 export const Editor: FC = () => {
   const t = useTranslation()
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
-  const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
-  const { project, touchComponent } = useProject()
-  const selectComponent = useCallback(
-    (componentId: string): void => {
-      touchComponent(componentId)
-      setSelection({ componentId, type: 'component' })
-    },
-    [touchComponent],
-  )
-
-  const selectStitchLine = useCallback((stitchLineId: string): void => {
-    setSelection({ stitchLineId, type: 'stitch-line' })
-  }, [])
-
-  const clearSelection = useCallback((): void => {
-    setSelection(undefined)
-  }, [])
+  const projectMenuRef = useRef<HTMLDivElement>(null)
+  const { project } = useProject()
+  const drawAreaContextValue = useEditorDrawArea()
+  const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
+    drawAreaContextValue.selection
 
   const handlePanelResize = useCallback((details: SplitterResizeDetails) => {
     setSidebarPanelSizes(details.size)
   }, [])
 
   const handleToggleReorder = useCallback(() => {
-    setSelection(undefined)
+    clearSelection()
     setComponentTreeInReorderMode((isInReorderMode) => !isInReorderMode)
-  }, [])
+  }, [clearSelection])
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
-
-  const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'component') {
-      return undefined
-    }
-
-    return project.components[selection.componentId]
-  }, [project.components, selection])
-
-  const selectedStitchLine = useMemo<StitchLineSchema | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'stitch-line') {
-      return undefined
-    }
-
-    return project.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
-  }, [project.stitchLines, selection])
-
-  const highlightedComponentId = useMemo<string | undefined>(() => {
-    if (isDefined(selectedComponent)) {
-      return selectedComponent.id
-    }
-
-    if (isDefined(selectedStitchLine)) {
-      return selectedStitchLine.componentId
-    }
-
-    return undefined
-  }, [selectedComponent, selectedStitchLine])
 
   const anchorElement = useMemo<SVGGraphicsElement | undefined>(() => {
     if (!isDefined(highlightedComponentId)) {
@@ -101,52 +59,27 @@ export const Editor: FC = () => {
     return getComponentSvgElement(highlightedComponentId)
   }, [highlightedComponentId])
 
-  const selectedComponentId = useMemo<string | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'component') {
-      return undefined
-    }
-
-    return selection.componentId
-  }, [selection])
-
-  const selectedStitchLineId = useMemo<string | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'stitch-line') {
-      return undefined
-    }
-
-    return selection.stitchLineId
-  }, [selection])
-
-  const isComponentSelected = useCallback(
-    (componentId: string): boolean => componentId === highlightedComponentId,
-    [highlightedComponentId],
-  )
-
-  const drawAreaContextValue = useMemo<DrawAreaContextValue>(
-    () => ({
-      clearSelection,
-      isComponentSelected,
-      isInteractive: true,
-      selectComponent,
-      selectStitchLine,
-    }),
-    [clearSelection, isComponentSelected, selectComponent, selectStitchLine],
-  )
-
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
       <Box display="flex" height="100%" overflow="hidden">
         <Box flex="1" minHeight="0" minWidth="0" onClick={clearSelection} overflow="hidden" position="relative">
           {/* Project menu (top left) */}
-          <Card.Root position="absolute" left="2" top="2">
-            <Card.Body padding="2" flexDirection="row" alignItems="center" gap="2">
+          <Card.Root ref={projectMenuRef} position="absolute" left="2" top="2">
+            <Card.Body padding="2" flexDirection="row" alignItems="center" gap="3">
               <Link to={`/projects`}>
                 <IconButton size="sm" variant="ghost">
                   <PiCaretLeft />
                 </IconButton>
               </Link>
               {project.name}
-              <ProjectActionsMenu projectId={project.id} size="sm" />
+              <ProjectSettingsPopover
+                anchorRef={projectMenuRef}
+                trigger={
+                  <IconButton size="sm" variant="ghost">
+                    <PiGear />
+                  </IconButton>
+                }
+              />
             </Card.Body>
           </Card.Root>
           <DrawArea />
@@ -198,7 +131,7 @@ export const Editor: FC = () => {
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
                 <ComponentTree
-                  selectedComponentId={selectedComponentId}
+                  selectedComponentId={selectedComponent?.id}
                   isInReorderMode={isComponentTreeInReorderMode}
                 />
               </Box>
@@ -214,7 +147,7 @@ export const Editor: FC = () => {
                 <Heading size="sm">{t.editor.panels.stitching}</Heading>
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
-                <StitchLineTree selectedStitchLineId={selectedStitchLineId} />
+                <StitchLineTree selectedStitchLineId={selectedStitchLine?.id} />
               </Box>
             </Splitter.Panel>
           </Splitter.Root>

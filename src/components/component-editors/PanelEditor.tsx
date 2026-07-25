@@ -8,16 +8,31 @@ import { LayoutSection } from './sections/LayoutSection'
 import { NameAndColorSection } from './sections/NameAndColorSection'
 
 type PanelEditorProps = {
+  baseColor: string
   component: PanelSchema
   editable: EditableSchema<PanelSchema>
   issues: ValidationIssuesSchema<PanelSchema>
   onChange: (updated: EditableSchema<PanelSchema>) => void
+  onResetColor: () => void
 }
 
-export const PanelEditor: FC<PanelEditorProps> = ({ component, editable, issues, onChange }) => {
+export const PanelEditor: FC<PanelEditorProps> = ({
+  baseColor,
+  component,
+  editable,
+  issues,
+  onChange,
+  onResetColor,
+}) => {
   return (
     <>
-      <NameAndColorSection editable={editable} issues={issues} onChange={onChange} />
+      <NameAndColorSection
+        baseColor={baseColor}
+        editable={editable}
+        issues={issues}
+        onChange={onChange}
+        onResetColor={onResetColor}
+      />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />

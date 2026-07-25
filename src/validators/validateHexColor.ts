@@ -1,4 +1,4 @@
-import type { ValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
+import type { BaseValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
 const hexColorPattern = /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/
@@ -6,7 +6,7 @@ const hexColorPattern = /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/
 export const validateHexColor = (
   input: string,
   currentValue: string,
-  context: ValidationContextSchema,
+  context: BaseValidationContextSchema,
 ): ValidationResultSchema<string> => {
   if (!hexColorPattern.test(input)) {
     return createInvalidValidationResult<string>(

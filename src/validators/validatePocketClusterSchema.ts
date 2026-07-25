@@ -1,10 +1,15 @@
 import type { PocketClusterSchema, PocketOrientationSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
-import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type {
+  ComponentBasedValidationContextSchema,
+  ValidationIssuesSchema,
+  ValidationResultSchema,
+} from '../schemas/validation'
+import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
-import { validateHexColor } from './validateHexColor'
 import { validateName } from './validateName'
 import { validateNumber } from './validateNumber'
+import { validateOptionalHexColor } from './validateOptionalHexColor'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
 
 const pocketOrientationValues: Record<PocketOrientationSchema, boolean> = {
@@ -17,7 +22,7 @@ const pocketOrientationValues: Record<PocketOrientationSchema, boolean> = {
 export const validatePocketClusterSchema = (
   input: EditableSchema<PocketClusterSchema>,
   currentValue: PocketClusterSchema,
-  context: ValidationContextSchema,
+  context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<PocketClusterSchema> => {
   const nameResult = validateName(
     input.name,
@@ -26,7 +31,7 @@ export const validatePocketClusterSchema = (
     Object.values(context.project.components),
     context,
   )
-  const colorResult = validateHexColor(input.color, currentValue.color, context)
+  const colorResult = validateOptionalHexColor(input.color, currentValue.color, context)
   const borderRadiusResult = validateNumber(input.borderRadius, currentValue.borderRadius, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
@@ -88,7 +93,6 @@ export const validatePocketClusterSchema = (
     borderRadius: borderRadiusResult.committedValue,
     bottomLeftRadius: bottomLeftRadiusResult.committedValue,
     bottomRightRadius: bottomRightRadiusResult.committedValue,
-    color: colorResult.committedValue,
     height: heightResult.committedValue,
     id: currentValue.id,
     individualRadii: input.individualRadii,
@@ -102,6 +106,10 @@ export const validatePocketClusterSchema = (
     topRightRadius: topRightRadiusResult.committedValue,
     type: currentValue.type,
     width: widthResult.committedValue,
+  }
+
+  if (isDefined(colorResult.committedValue)) {
+    committedValue.color = colorResult.committedValue
   }
 
   if (
@@ -123,29 +131,30 @@ export const validatePocketClusterSchema = (
     return createInvalidValidationResult(issues, committedValue)
   }
 
-  return createValidValidationResult(
-    issues,
-    {
-      autoHeight: input.autoHeight,
-      autoWidth: input.autoWidth,
-      borderRadius: borderRadiusResult.value,
-      bottomLeftRadius: bottomLeftRadiusResult.value,
-      bottomRightRadius: bottomRightRadiusResult.value,
-      color: colorResult.value,
-      height: heightResult.value,
-      id: currentValue.id,
-      individualRadii: input.individualRadii,
-      name: nameResult.value,
-      orientation: orientationResult.value,
-      pocketCount: pocketCountResult.value,
-      pocketStep: pocketStepResult.value,
-      tPocketTabWidth: tPocketTabWidthResult.value,
-      tPocketTaper: tPocketTaperResult.value,
-      topLeftRadius: topLeftRadiusResult.value,
-      topRightRadius: topRightRadiusResult.value,
-      type: currentValue.type,
-      width: widthResult.value,
-    },
-    committedValue,
-  )
+  const value: PocketClusterSchema = {
+    autoHeight: input.autoHeight,
+    autoWidth: input.autoWidth,
+    borderRadius: borderRadiusResult.value,
+    bottomLeftRadius: bottomLeftRadiusResult.value,
+    bottomRightRadius: bottomRightRadiusResult.value,
+    height: heightResult.value,
+    id: currentValue.id,
+    individualRadii: input.individualRadii,
+    name: nameResult.value,
+    orientation: orientationResult.value,
+    pocketCount: pocketCountResult.value,
+    pocketStep: pocketStepResult.value,
+    tPocketTabWidth: tPocketTabWidthResult.value,
+    tPocketTaper: tPocketTaperResult.value,
+    topLeftRadius: topLeftRadiusResult.value,
+    topRightRadius: topRightRadiusResult.value,
+    type: currentValue.type,
+    width: widthResult.value,
+  }
+
+  if (isDefined(colorResult.value)) {
+    value.color = colorResult.value
+  }
+
+  return createValidValidationResult(issues, value, committedValue)
 }

@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { useCallback, type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
 import type {
@@ -26,6 +26,15 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({
   resolvedEditable,
   stitchLine,
 }) => {
+  const handleReset = useCallback(
+    (key: keyof StitchLineCommonConfigSchema): void => {
+      const updatedEditable = { ...editable }
+      delete updatedEditable[key]
+      onChange(updatedEditable)
+    },
+    [editable, onChange],
+  )
+
   switch (stitchLine.type) {
     case 'component-bounds-stitch-line':
       return (
@@ -33,6 +42,7 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({
           editable={editable as EditableSchema<ComponentBoundsStitchLineSchema>}
           issues={issues as ValidationIssuesSchema<ComponentBoundsStitchLineSchema>}
           onChange={onChange}
+          onReset={handleReset}
           resolvedEditable={
             resolvedEditable as EditableSchema<StitchLineCommonConfigSchema> &
               EditableSchema<ComponentBoundsStitchLineSchema>
@@ -45,6 +55,7 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({
           editable={editable as EditableSchema<PocketClusterStitchLineSchema>}
           issues={issues as ValidationIssuesSchema<PocketClusterStitchLineSchema>}
           onChange={onChange}
+          onReset={handleReset}
           resolvedEditable={
             resolvedEditable as EditableSchema<StitchLineCommonConfigSchema> &
               EditableSchema<PocketClusterStitchLineSchema>

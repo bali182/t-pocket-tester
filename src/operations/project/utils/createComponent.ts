@@ -1,4 +1,3 @@
-import { LEATHER_BASE_COLOR } from '../../../constants/drawing'
 import {
   HasCornerRadiusSchema,
   HasFillableSizeSchema,
@@ -7,6 +6,7 @@ import {
   PocketClusterSchema,
   RootPanelSchema,
 } from '../../../schemas/components'
+import { isDefined } from '../../../utils/isDefined'
 
 type ComponentByType = {
   'root-panel': RootPanelSchema
@@ -14,10 +14,10 @@ type ComponentByType = {
   'pocket-cluster': PocketClusterSchema
 }
 
-type CreateComponentParams<T> = {
+type CreateComponentParams<T extends keyof ComponentByType> = {
   type: T
   id: string
-  color: string
+  color?: string
   name: string
 }
 
@@ -26,12 +26,19 @@ export const createComponent = <T extends keyof ComponentByType>({
   color,
   id,
   name,
-}: CreateComponentParams<T>): ComponentByType[T] => ({
-  ...DEFAULT_COMPONENT_BY_TYPE[type],
-  color,
-  id,
-  name,
-})
+}: CreateComponentParams<T>): ComponentByType[T] => {
+  const component: ComponentByType[T] = {
+    ...DEFAULT_COMPONENT_BY_TYPE[type],
+    id,
+    name,
+  }
+
+  if (isDefined(color)) {
+    component.color = color
+  }
+
+  return component
+}
 
 const defaultHasCornerRadius: HasCornerRadiusSchema = {
   borderRadius: 0,
@@ -61,7 +68,6 @@ const DEFAULT_ROOT_PANEL: RootPanelSchema = {
   type: 'root-panel',
   id: '',
   name: '',
-  color: LEATHER_BASE_COLOR,
   children: [],
   width: 170,
   height: 100,
@@ -74,7 +80,6 @@ const DEFAULT_PANEL: PanelSchema = {
   type: 'panel',
   id: '',
   name: '',
-  color: LEATHER_BASE_COLOR,
   children: [],
 }
 
@@ -85,7 +90,6 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   id: '',
   name: '',
   orientation: 'up',
-  color: LEATHER_BASE_COLOR,
   pocketCount: 3,
   pocketStep: 12,
   tPocketTabWidth: 8,

@@ -2,7 +2,7 @@ import { NumberFormatter, NumberParser } from '@internationalized/number'
 import BigNumber from 'bignumber.js'
 import isDecimal from 'validator/es/lib/isDecimal'
 
-import type { ValidationContextSchema } from '../schemas/validation'
+import type { BaseValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
 import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
@@ -18,9 +18,9 @@ export type NumberValidationConfigSchema = {
 export const validateNumber = (
   input: string,
   currentValue: number,
-  context: ValidationContextSchema,
+  context: BaseValidationContextSchema,
   config: NumberValidationConfigSchema = {},
-) => {
+): ValidationResultSchema<number> => {
   if (!isDecimal(input, { locale: context.language })) {
     return createInvalidValidationResult<number>(
       {

@@ -30,15 +30,15 @@ type StitchLineTreeProps = {
 export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }) => {
   const t = useTranslation()
   const { project } = useProject()
-  const { clearSelection, selectStitchLine } = useDrawAreaContext()
+  const { selection } = useDrawAreaContext()
 
   const handleDelete = useCallback(
     (stitchLineId: string): void => {
       if (selectedStitchLineId === stitchLineId) {
-        clearSelection()
+        selection.clearSelection()
       }
     },
-    [clearSelection, selectedStitchLineId],
+    [selectedStitchLineId, selection],
   )
 
   const selectedValue = useMemo((): string[] => {
@@ -76,9 +76,9 @@ export const StitchLineTree: FC<StitchLineTreeProps> = ({ selectedStitchLineId }
         return
       }
 
-      selectStitchLine(stitchLineId)
+      selection.selectStitchLine(stitchLineId)
     },
-    [selectStitchLine],
+    [selection],
   )
 
   if (project.stitchLines.length === 0) {
