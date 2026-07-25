@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
-import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiRuler } from 'react-icons/pi'
+import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiGear, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import { DrawAreaContext, type DrawAreaContextValue } from '../contexts/DrawAreaContext'
 import { useProject } from '../hooks/useProject'
@@ -24,7 +24,7 @@ import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { ComponentTree } from './ComponentTree'
 import { DrawArea } from './DrawArea'
-import { ProjectActionsMenu } from './ProjectActionsMenu'
+import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
@@ -139,14 +139,20 @@ export const Editor: FC = () => {
         <Box flex="1" minHeight="0" minWidth="0" onClick={clearSelection} overflow="hidden" position="relative">
           {/* Project menu (top left) */}
           <Card.Root position="absolute" left="2" top="2">
-            <Card.Body padding="2" flexDirection="row" alignItems="center" gap="2">
+            <Card.Body padding="2" flexDirection="row" alignItems="center" gap="3">
               <Link to={`/projects`}>
                 <IconButton size="sm" variant="ghost">
                   <PiCaretLeft />
                 </IconButton>
               </Link>
               {project.name}
-              <ProjectActionsMenu projectId={project.id} size="sm" />
+              <ProjectSettingsPopover
+                trigger={
+                  <IconButton size="sm" variant="ghost">
+                    <PiGear />
+                  </IconButton>
+                }
+              />
             </Card.Body>
           </Card.Root>
           <DrawArea />
