@@ -5,10 +5,10 @@ import {
   IconButton,
   Input,
   InputGroup,
-  parseColor,
   Portal,
+  parseColor,
 } from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useRef, useState, type FC } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
@@ -22,6 +22,10 @@ type ColorInputProps = {
   value: string
 }
 
+type ColorPickerPositioning = {
+  placement: 'bottom-start'
+}
+
 const getColor = (value: string): Color | undefined => {
   try {
     return parseColor(value)
@@ -31,10 +35,14 @@ const getColor = (value: string): Color | undefined => {
 }
 
 export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
-  const inputRef = useRef<HTMLInputElement>(null)
   const parsedColor = useMemo<Color | undefined>(() => getColor(value), [value])
+  const positioning = useMemo<ColorPickerPositioning>(
+    () => ({
+      placement: 'bottom-start',
+    }),
+    [],
+  )
   const [pickerColor, setPickerColor] = useState<Color>(() => parsedColor ?? parseColor('#000000'))
-  const [isOpen, setOpen] = useState(false)
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   useEffect(() => {
@@ -42,14 +50,6 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
       setPickerColor(parsedColor)
     }
   }, [parsedColor])
-
-  const handleOpenColorPicker = useCallback((): void => {
-    setOpen(true)
-  }, [])
-
-  const handleOpenChange = useCallback((details: { open: boolean }): void => {
-    setOpen(details.open)
-  }, [])
 
   const handleValueChange = useCallback(
     (details: ColorPickerValueChangeDetails) => {
@@ -63,15 +63,7 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
   )
 
   return (
-    <ColorPicker.Root
-      onOpenChange={handleOpenChange}
-      onValueChange={handleValueChange}
-      open={isOpen}
-      openAutoFocus={false}
-      positioning={{ getAnchorElement: () => inputRef.current }}
-      size="xs"
-      value={pickerColor}
-    >
+    <ColorPicker.Root onValueChange={handleValueChange} positioning={positioning} size="xs" value={pickerColor}>
       <ColorPicker.Control>
         <InputGroup
           endAddon={
@@ -90,14 +82,26 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
             ) : undefined
           }
           endAddonProps={{ px: 0, size: 'xs' }}
-          startAddon={<ColorPicker.ValueSwatch onClick={handleOpenColorPicker} />}
+          startAddon={
+            <ColorPicker.Trigger
+              alignItems="center"
+              alignSelf="stretch"
+              border="0"
+              borderRadius="0"
+              display="flex"
+              height="auto"
+              justifyContent="center"
+              p="0"
+              unstyled
+            >
+              <ColorPicker.ValueSwatch />
+            </ColorPicker.Trigger>
+          }
           startAddonProps={{ px: '1.5', size: 'xs' }}
         >
           <Input
             aria-invalid={isInvalid}
             onChange={(event) => onChange(event.currentTarget.value)}
-            onFocus={handleOpenColorPicker}
-            ref={inputRef}
             size="xs"
             value={value}
           />
