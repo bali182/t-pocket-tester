@@ -1,5 +1,4 @@
-import { STROKE_THICKNESS } from '../v1/constants'
-import { STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR } from './constants/drawing'
+import { STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR, STROKE_THICKNESS } from './constants/drawing'
 import { StitchLineCommonConfigSchema } from './schemas/stitching'
 
 export const defaultStitchingSettings: StitchLineCommonConfigSchema = {
