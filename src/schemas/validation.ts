@@ -32,9 +32,16 @@ export type ValidationResultInvalidSchema<T> = {
 
 export type ValidationResultSchema<T> = ValidationResultValidSchema<T> | ValidationResultInvalidSchema<T>
 
-export type ValidationContextSchema = {
-  project: ProjectSchema
-  computedProject: ComputedProjectSchema
+export type BaseValidationContextSchema = {
   language: DecimalLocale
   t: TranslationSchema
+}
+
+export type ComponentBasedValidationContextSchema = BaseValidationContextSchema & {
+  project: ProjectSchema
+  computedProject: ComputedProjectSchema
+}
+
+export type ProjectBasedValidationContextSchema = BaseValidationContextSchema & {
+  projects: readonly ProjectSchema[]
 }

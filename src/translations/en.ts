@@ -70,6 +70,13 @@ export const EN: typeof HU = {
         create: 'Create',
       },
     },
+    settingsDialog: {
+      title: 'Project settings',
+      tabs: {
+        basic: 'Basic settings',
+        stitching: 'Stitching',
+      },
+    },
     notFound: {
       title: 'Project not found',
       description: 'The project you want to open does not exist.',

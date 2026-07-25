@@ -1,6 +1,10 @@
 import type { PocketClusterSchema, PocketOrientationSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
-import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type {
+  ComponentBasedValidationContextSchema,
+  ValidationIssuesSchema,
+  ValidationResultSchema,
+} from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateHexColor } from './validateHexColor'
 import { validateName } from './validateName'
@@ -17,7 +21,7 @@ const pocketOrientationValues: Record<PocketOrientationSchema, boolean> = {
 export const validatePocketClusterSchema = (
   input: EditableSchema<PocketClusterSchema>,
   currentValue: PocketClusterSchema,
-  context: ValidationContextSchema,
+  context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<PocketClusterSchema> => {
   const nameResult = validateName(
     input.name,

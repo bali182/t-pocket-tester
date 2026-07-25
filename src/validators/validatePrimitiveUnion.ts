@@ -1,4 +1,4 @@
-import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type { BaseValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 
@@ -6,7 +6,7 @@ export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T,
   allowedValues: Record<T, boolean>,
-  context: ValidationContextSchema,
+  context: BaseValidationContextSchema,
   allowUndefined?: false,
 ): ValidationResultSchema<T>
 
@@ -14,7 +14,7 @@ export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T | undefined,
   allowedValues: Record<T, boolean>,
-  context: ValidationContextSchema,
+  context: BaseValidationContextSchema,
   allowUndefined: true,
 ): ValidationResultSchema<T | undefined>
 
@@ -22,7 +22,7 @@ export function validatePrimitiveUnion<T extends string>(
   value: string | undefined,
   currentValue: T | undefined,
   allowedValues: Record<T, boolean>,
-  context: ValidationContextSchema,
+  context: BaseValidationContextSchema,
   allowUndefined = false,
 ): ValidationResultSchema<T | undefined> {
   if (!isDefined(value)) {

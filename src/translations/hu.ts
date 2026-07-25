@@ -68,6 +68,13 @@ export const HU = {
         create: 'Létrehozás',
       },
     },
+    settingsDialog: {
+      title: 'Projekt beállításai',
+      tabs: {
+        basic: 'Alapbeállítások',
+        stitching: 'Varrás',
+      },
+    },
     notFound: {
       title: 'A projekt nem található',
       description: 'A megnyitni kívánt projekt nem létezik.',

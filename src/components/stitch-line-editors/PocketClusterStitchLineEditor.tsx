@@ -11,6 +11,7 @@ type PocketClusterStitchLineEditorProps = {
   editable: EditableSchema<PocketClusterStitchLineSchema>
   issues: ValidationIssuesSchema<PocketClusterStitchLineSchema>
   onChange: (updated: EditableSchema<PocketClusterStitchLineSchema>) => void
+  onReset: (key: keyof StitchLineCommonConfigSchema) => void
   resolvedEditable: EditableSchema<StitchLineCommonConfigSchema> & EditableSchema<PocketClusterStitchLineSchema>
 }
 
@@ -18,6 +19,7 @@ export const PocketClusterStitchLineEditor: FC<PocketClusterStitchLineEditorProp
   editable,
   issues,
   onChange,
+  onReset,
   resolvedEditable,
 }) => {
   return (
@@ -33,6 +35,7 @@ export const PocketClusterStitchLineEditor: FC<PocketClusterStitchLineEditorProp
         editable={editable}
         issues={issues}
         onChange={onChange}
+        onReset={onReset}
         resolvedEditable={resolvedEditable}
       />
     </>

@@ -4,12 +4,16 @@ import type {
   HorizontalStitchDirectionSchema,
   VerticalStitchDirectionSchema,
 } from '../schemas/stitching'
-import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type {
+  ComponentBasedValidationContextSchema,
+  ValidationIssuesSchema,
+  ValidationResultSchema,
+} from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateName } from './validateName'
 import { validateNumber } from './validateNumber'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
-import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
+import { validateStitchLineCommonConfigOverridesSchema } from './validateStitchLineCommonConfigOverridesSchema'
 
 const horizontalStitchDirectionValues: Record<HorizontalStitchDirectionSchema, boolean> = {
   'left-to-right': true,
@@ -24,10 +28,10 @@ const verticalStitchDirectionValues: Record<VerticalStitchDirectionSchema, boole
 export const validateComponentBoundsStitchLineSchema = (
   input: EditableSchema<ComponentBoundsStitchLineSchema>,
   currentValue: ComponentBoundsStitchLineSchema,
-  context: ValidationContextSchema,
+  context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<ComponentBoundsStitchLineSchema> => {
   const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
-  const commonConfigResult = validateStitchLineCommonConfigSchema(input, currentValue, context)
+  const commonConfigResult = validateStitchLineCommonConfigOverridesSchema(input, currentValue, context)
   const topStitchDirectionResult = validatePrimitiveUnion(
     input.topStitchDirection,
     currentValue.topStitchDirection,

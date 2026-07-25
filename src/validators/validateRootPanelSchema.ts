@@ -1,6 +1,10 @@
 import type { LayoutOrderSchema, LayoutOrientationSchema, RootPanelSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
-import type { ValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
+import type {
+  ComponentBasedValidationContextSchema,
+  ValidationIssuesSchema,
+  ValidationResultSchema,
+} from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateHexColor } from './validateHexColor'
 import { validateName } from './validateName'
@@ -20,7 +24,7 @@ const layoutOrderValues: Record<LayoutOrderSchema, boolean> = {
 export const validateRootPanelSchema = (
   input: EditableSchema<RootPanelSchema>,
   currentValue: RootPanelSchema,
-  context: ValidationContextSchema,
+  context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<RootPanelSchema> => {
   const nameResult = validateName(
     input.name,
