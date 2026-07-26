@@ -28,7 +28,7 @@ export const useSvgDrawArea = (): DrawAreaContextValue => {
 
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
-      getBackgroundColor: produce(undefined),
+      getBackgroundColor: produce('none'),
       getBorderColor: produce(STROKE_COLOR),
       getBorderThickness: produce(STROKE_THICKNESS),
       getFilter: produce(undefined),
