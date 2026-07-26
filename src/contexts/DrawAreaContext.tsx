@@ -42,12 +42,18 @@ export type DrawAreaExportTextStyles = {
   getNameDimensionsGap: (element: SvgExportElementSchema) => number | undefined
 }
 
+export type DrawAreaChildMarkerStyles = {
+  getColor: () => string | undefined
+  getThickness: () => number | undefined
+}
+
 export type DrawAreaContextValue = {
   isInteractive: boolean
   selection: DrawAreaSelection
   stitchLineStyles: DrawAreaStitchLineStyles
   componentStyles: DrawAreaComponentStyles
   exportTextStyles: DrawAreaExportTextStyles
+  childMarkerStyles: DrawAreaChildMarkerStyles
 }
 
 const drawAreaDefaultSelection: DrawAreaSelection = {
@@ -86,12 +92,18 @@ const drawAreaDefaultExportTextStyles: DrawAreaExportTextStyles = {
   getNameDimensionsGap: produce(undefined),
 }
 
+const drawAreaDefaultChildMarkerStyles: DrawAreaChildMarkerStyles = {
+  getColor: produce(undefined),
+  getThickness: produce(undefined),
+}
+
 const defaultDrawAreaContext: DrawAreaContextValue = {
   isInteractive: false,
   selection: drawAreaDefaultSelection,
   stitchLineStyles: drawAreaDefaultStitchLineStyles,
   componentStyles: drawAreaDefaultComponentStyles,
   exportTextStyles: drawAreaDefaultExportTextStyles,
+  childMarkerStyles: drawAreaDefaultChildMarkerStyles,
 }
 
 export const DrawAreaContext = createContext<DrawAreaContextValue>(defaultDrawAreaContext)

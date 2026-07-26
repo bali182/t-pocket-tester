@@ -71,6 +71,7 @@ const translateSvgExportPanel = (element: SvgExportPanelSchema, translation: Poi
     ...element,
     boundingRect: translateRect(element.boundingRect, translation),
     path: translatePath(element.path, translation),
+    childMarkerPaths: element.childMarkerPaths.map((path) => translatePath(path, translation)),
     stitchLines: element.stitchLines.map((stitchLine) => translateSvgExportStitchLine(stitchLine, translation)),
   }
 }

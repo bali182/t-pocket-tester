@@ -13,6 +13,7 @@ export type SvgExportParamsSchema = {
   stitchLineMode: SvgExportStitchLineModeSchema
   showNames: boolean
   showDimensions: boolean
+  childMarkers: boolean
 }
 
 export type SvgExportStitchLineSchema = {
@@ -26,6 +27,7 @@ export type SvgExportPanelSchema = {
   component: ComponentSchema
   boundingRect: RectSchema
   path: PathSchema
+  childMarkerPaths: PathSchema[]
   stitchLines: SvgExportStitchLineSchema[]
 }
 

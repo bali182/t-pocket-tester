@@ -5,6 +5,7 @@ import type { ComputedTPocketSchema } from '../../schemas/computed'
 import type { LineSchema, PathSchema } from '../../schemas/geometry'
 import type { ResolvedPocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { clamp } from '../../utils/clamp'
+import { createPathFromConnectedSegments } from '../pathSegments'
 import { getTPocketTabDepth } from '../pocketUtils'
 
 export type CalculatedTPocketStitchLine = {
@@ -65,14 +66,8 @@ export const calculateTPocketStitchLine = (
       break
   }
 
-  return { line, path: createPathFromLine(line) }
-}
-
-const createPathFromLine = (line: LineSchema): PathSchema => {
   return {
-    commands: [
-      { type: 'moveTo', point: line.start },
-      { type: 'lineTo', point: line.end },
-    ],
+    line,
+    path: createPathFromConnectedSegments([{ type: 'line', start: line.start, end: line.end }]),
   }
 }

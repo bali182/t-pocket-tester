@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 import type { PathArcToSchema, PointSchema } from '../schemas/geometry'
-import type { ArcPathSegment, PathSegment } from './pathSegmentTypes'
+import type { ArcPathSegment, LinePathSegment, PathSegment } from './pathSegmentTypes'
 
 const ZERO = new BigNumber(0)
 const TWO = new BigNumber(2)
@@ -53,6 +53,10 @@ export const createArcPathSegment = (start: PointSchema, command: PathArcToSchem
     startAngle,
     sweepAngle,
   }
+}
+
+export const isLinePathSegment = (segment: PathSegment): segment is LinePathSegment => {
+  return segment.type === 'line'
 }
 
 export const getPathSegmentMidpoint = (segment: PathSegment): PointSchema => {
@@ -140,6 +144,44 @@ export const isProgressInRange = (progress: BigNumber): boolean => {
   return progress.isGreaterThanOrEqualTo(ZERO) && progress.isLessThanOrEqualTo(1)
 }
 
+export const doLinePathSegmentsOverlap = (first: LinePathSegment, second: LinePathSegment): boolean => {
+  const firstDx = first.end.x.minus(first.start.x)
+  const firstDy = first.end.y.minus(first.start.y)
+  const secondDx = second.end.x.minus(second.start.x)
+  const secondDy = second.end.y.minus(second.start.y)
+
+  if (
+    (firstDx.isZero() && firstDy.isZero()) ||
+    (secondDx.isZero() && secondDy.isZero()) ||
+    !firstDx.times(secondDy).minus(firstDy.times(secondDx)).isZero()
+  ) {
+    return false
+  }
+
+  const startDx = second.start.x.minus(first.start.x)
+  const startDy = second.start.y.minus(first.start.y)
+
+  if (!firstDx.times(startDy).minus(firstDy.times(startDx)).isZero()) {
+    return false
+  }
+
+  if (!firstDx.isZero()) {
+    return doRangesOverlap(
+      first.start.x,
+      first.end.x,
+      second.start.x,
+      second.end.x,
+    )
+  }
+
+  return doRangesOverlap(
+    first.start.y,
+    first.end.y,
+    second.start.y,
+    second.end.y,
+  )
+}
+
 const getPathSegmentRange = (segment: PathSegment, startProgress: BigNumber, endProgress: BigNumber): PathSegment => {
   const start = getPointOnPathSegment(segment, startProgress)
   const end = getPointOnPathSegment(segment, endProgress)
@@ -155,6 +197,24 @@ const getPathSegmentRange = (segment: PathSegment, startProgress: BigNumber, end
     startAngle: segment.startAngle + segment.sweepAngle * startProgress.toNumber(),
     sweepAngle: segment.sweepAngle * endProgress.minus(startProgress).toNumber(),
   }
+}
+
+const doRangesOverlap = (
+  firstStart: BigNumber,
+  firstEnd: BigNumber,
+  secondStart: BigNumber,
+  secondEnd: BigNumber,
+): boolean => {
+  const overlapStart = BigNumber.maximum(
+    BigNumber.minimum(firstStart, firstEnd),
+    BigNumber.minimum(secondStart, secondEnd),
+  )
+  const overlapEnd = BigNumber.minimum(
+    BigNumber.maximum(firstStart, firstEnd),
+    BigNumber.maximum(secondStart, secondEnd),
+  )
+
+  return overlapStart.isLessThan(overlapEnd)
 }
 
 const getSweepOneCenter = (start: PointSchema, end: PointSchema, first: PointSchema, second: PointSchema): PointSchema => {

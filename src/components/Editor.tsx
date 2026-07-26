@@ -60,6 +60,7 @@ export const Editor: FC = () => {
       stitchLineMode: 'all-stitch-lines',
       showNames: true,
       showDimensions: true,
+      childMarkers: true,
     })
 
     downloadSvg(svg, `${project.name}.svg`)

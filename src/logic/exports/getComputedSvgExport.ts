@@ -10,6 +10,7 @@ import type {
   SvgExportTPocketSchema,
 } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
+import { getSvgExportChildMarkerPaths } from './getSvgExportChildMarkerPaths'
 import { getSvgExportStitchLines } from './getSvgExportStitchLines'
 import { layoutSvgExportElements } from './layoutSvgExportElements'
 
@@ -96,6 +97,9 @@ const getSvgExportPanel = (
     component,
     boundingRect: computedComponent.boundingRect,
     path: computedComponent.path,
+    childMarkerPaths: params.childMarkers
+      ? getSvgExportChildMarkerPaths(computedComponent.children, computedComponent.path)
+      : [],
     stitchLines: getSvgExportStitchLines(
       project,
       computedProject,

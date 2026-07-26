@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 import type { PointSchema } from '../../schemas/geometry'
+import { isDefined } from '../../utils/isDefined'
 import type { StitchCornerPathFragment, StitchPathFragment } from './calculateStitchLinePaths'
 
 const ZERO = new BigNumber(0)
@@ -247,8 +248,4 @@ const getRotationFromVector = (x: BigNumber, y: BigNumber): number => {
 
 const areNumberPointsEqual = (first: { x: number; y: number }, second: { x: number; y: number }): boolean => {
   return Math.abs(first.x - second.x) < ANGLE_EPSILON && Math.abs(first.y - second.y) < ANGLE_EPSILON
-}
-
-const isDefined = <T>(value: T | undefined): value is T => {
-  return value !== undefined
 }

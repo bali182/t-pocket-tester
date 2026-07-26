@@ -57,7 +57,7 @@ export const createPathsFromConnectedSegments = (segments: PathSegment[]): PathS
     const previousSegment = currentSegments[currentSegments.length - 1]
 
     if (isDefined(previousSegment) && !arePointsEqual(previousSegment.end, segment.start)) {
-      paths.push(createPathFromSegments(currentSegments))
+      paths.push(createPathFromConnectedSegments(currentSegments))
       currentSegments = []
     }
 
@@ -65,7 +65,7 @@ export const createPathsFromConnectedSegments = (segments: PathSegment[]): PathS
   }
 
   if (currentSegments.length > 0) {
-    paths.push(createPathFromSegments(currentSegments))
+    paths.push(createPathFromConnectedSegments(currentSegments))
   }
 
   return paths
@@ -77,7 +77,7 @@ const addLineSegment = (segments: PathSegment[], start: PointSchema, end: PointS
   }
 }
 
-const createPathFromSegments = (segments: PathSegment[]): PathSchema => {
+export const createPathFromConnectedSegments = (segments: PathSegment[]): PathSchema => {
   const commands: PathCommand[] = [{ type: 'moveTo', point: segments[0].start }]
 
   for (const segment of segments) {
