@@ -8,11 +8,9 @@ import {
 } from '../contexts/DrawAreaContext'
 import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
-import { useProject } from './useProject'
+import type { ProjectSchema } from '../schemas/project'
 
-export const useSvgDrawArea = (): DrawAreaContextValue => {
-  const { project } = useProject()
-
+export const useSvgDrawArea = (project: ProjectSchema): DrawAreaContextValue => {
   const drawAreaSelection = useMemo<DrawAreaSelection>(
     () => ({
       clearSelection: noop,

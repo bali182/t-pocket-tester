@@ -11,12 +11,13 @@ import {
 } from '@chakra-ui/react'
 import { useCallback, useMemo, useRef, useState, type FC } from 'react'
 
-import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiGear, PiRuler } from 'react-icons/pi'
+import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiExport, PiGear, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'
 import { useTranslation } from '../translations/translation'
+import { downloadSvg } from '../utils/downloadSvg'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
@@ -26,6 +27,7 @@ import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
+import { renderSvgToString } from '../logic/exports/renderSvgToString'
 
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 
@@ -35,7 +37,7 @@ export const Editor: FC = () => {
   const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const projectMenuRef = useRef<HTMLDivElement>(null)
-  const { project } = useProject()
+  const { computedProject, project } = useProject()
   const drawAreaContextValue = useEditorDrawArea()
   const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
     drawAreaContextValue.selection
@@ -50,6 +52,16 @@ export const Editor: FC = () => {
   }, [clearSelection])
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
+
+  const handleExportClick = useCallback(() => {
+    const svg = renderSvgToString(project, computedProject, {
+      gap: 10,
+      padding: 10,
+      stitchLineMode: 'all-stitch-lines',
+    })
+
+    downloadSvg(svg, `${project.name}.svg`)
+  }, [computedProject, project])
 
   const anchorElement = useMemo<SVGGraphicsElement | undefined>(() => {
     if (!isDefined(highlightedComponentId)) {
@@ -80,6 +92,9 @@ export const Editor: FC = () => {
                   </IconButton>
                 }
               />
+              <IconButton size="sm" variant="ghost" onClick={handleExportClick}>
+                <PiExport />
+              </IconButton>
             </Card.Body>
           </Card.Root>
           <DrawArea />

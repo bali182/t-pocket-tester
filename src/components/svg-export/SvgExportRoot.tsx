@@ -3,17 +3,19 @@ import type { FC } from 'react'
 
 import { DrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useSvgDrawArea } from '../../hooks/useSvgDrawArea'
+import type { ProjectSchema } from '../../schemas/project'
 import type { SvgExportSchema } from '../../schemas/svgExport'
 import { ExportFrontPocket } from './ExportFrontPocket'
 import { ExportPanel } from './ExportPanel'
 import { ExportTPocket } from './ExportTPocket'
 
 type SvgExportRootProps = {
+  project: ProjectSchema
   svgExport: SvgExportSchema
 }
 
-export const SvgExportRoot: FC<SvgExportRootProps> = ({ svgExport }) => {
-  const drawAreaContextValue = useSvgDrawArea()
+export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, svgExport }) => {
+  const drawAreaContextValue = useSvgDrawArea(project)
   const padding = new BigNumber(svgExport.params.padding)
   const width = svgExport.contentWidth.plus(padding.times(2))
   const height = svgExport.contentHeight.plus(padding.times(2))
