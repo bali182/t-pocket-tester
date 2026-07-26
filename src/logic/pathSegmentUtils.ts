@@ -1,0 +1,171 @@
+import BigNumber from 'bignumber.js'
+
+import type { PathArcToSchema, PointSchema } from '../schemas/geometry'
+import type { ArcPathSegment, PathSegment } from './pathSegmentTypes'
+
+const ZERO = new BigNumber(0)
+const TWO = new BigNumber(2)
+const TWO_PI = Math.PI * 2
+
+export const createArcPathSegment = (start: PointSchema, command: PathArcToSchema): ArcPathSegment => {
+  const chordDx = command.point.x.minus(start.x)
+  const chordDy = command.point.y.minus(start.y)
+  const chordLength = chordDx.pow(2).plus(chordDy.pow(2)).sqrt()
+
+  if (chordLength.isZero()) {
+    throw new Error('Arc start and end points must differ')
+  }
+
+  if (chordLength.isGreaterThan(command.radius.times(TWO))) {
+    throw new Error('Arc radius is too small for its endpoints')
+  }
+
+  const midpoint: PointSchema = {
+    x: start.x.plus(command.point.x).dividedBy(TWO),
+    y: start.y.plus(command.point.y).dividedBy(TWO),
+  }
+  const perpendicularLength = command.radius.pow(2).minus(chordLength.dividedBy(TWO).pow(2)).sqrt()
+  const perpendicularX = chordDy.negated().dividedBy(chordLength).times(perpendicularLength)
+  const perpendicularY = chordDx.dividedBy(chordLength).times(perpendicularLength)
+  const firstCenter: PointSchema = {
+    x: midpoint.x.plus(perpendicularX),
+    y: midpoint.y.plus(perpendicularY),
+  }
+  const secondCenter: PointSchema = {
+    x: midpoint.x.minus(perpendicularX),
+    y: midpoint.y.minus(perpendicularY),
+  }
+  const center = getSweepOneCenter(start, command.point, firstCenter, secondCenter)
+  const startAngle = getAngle(center, start)
+  const endAngle = getAngle(center, command.point)
+  const sweepAngle = getPositiveAngleDifference(startAngle, endAngle)
+
+  if (sweepAngle > Math.PI) {
+    throw new Error('Arc path commands must use the small sweep')
+  }
+
+  return {
+    type: 'arc',
+    start,
+    end: command.point,
+    radius: command.radius,
+    center,
+    startAngle,
+    sweepAngle,
+  }
+}
+
+export const getPathSegmentMidpoint = (segment: PathSegment): PointSchema => {
+  return getPointOnPathSegment(segment, new BigNumber(0.5))
+}
+
+export const getPointOnPathSegment = (segment: PathSegment, progress: BigNumber): PointSchema => {
+  if (segment.type === 'line') {
+    return {
+      x: segment.start.x.plus(segment.end.x.minus(segment.start.x).times(progress)),
+      y: segment.start.y.plus(segment.end.y.minus(segment.start.y).times(progress)),
+    }
+  }
+
+  const angle = segment.startAngle + segment.sweepAngle * progress.toNumber()
+
+  return {
+    x: segment.center.x.plus(new BigNumber(Math.cos(angle)).times(segment.radius)),
+    y: segment.center.y.plus(new BigNumber(Math.sin(angle)).times(segment.radius)),
+  }
+}
+
+export const splitPathSegment = (segment: PathSegment, progresses: BigNumber[]): PathSegment[] => {
+  const sortedProgresses = getSortedDistinctProgresses(progresses)
+  const boundaries = [ZERO, ...sortedProgresses, new BigNumber(1)]
+  const pieces: PathSegment[] = []
+
+  for (let index = 0; index < boundaries.length - 1; index += 1) {
+    const startProgress = boundaries[index]
+    const endProgress = boundaries[index + 1]
+
+    if (!startProgress.isEqualTo(endProgress)) {
+      pieces.push(getPathSegmentRange(segment, startProgress, endProgress))
+    }
+  }
+
+  return pieces
+}
+
+export const isPointOnPathSegment = (point: PointSchema, segment: PathSegment): boolean => {
+  if (segment.type === 'line') {
+    const dx = segment.end.x.minus(segment.start.x)
+    const dy = segment.end.y.minus(segment.start.y)
+    const pointDx = point.x.minus(segment.start.x)
+    const pointDy = point.y.minus(segment.start.y)
+
+    if (!dx.times(pointDy).minus(dy.times(pointDx)).isZero()) {
+      return false
+    }
+
+    return point.x.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.x, segment.end.x)) &&
+      point.x.isLessThanOrEqualTo(BigNumber.maximum(segment.start.x, segment.end.x)) &&
+      point.y.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.y, segment.end.y)) &&
+      point.y.isLessThanOrEqualTo(BigNumber.maximum(segment.start.y, segment.end.y))
+  }
+
+  const distanceSquared = point.x.minus(segment.center.x).pow(2).plus(point.y.minus(segment.center.y).pow(2))
+
+  return distanceSquared.isEqualTo(segment.radius.pow(2)) && isPointOnArc(point, segment)
+}
+
+export const isPointOnArc = (point: PointSchema, arc: ArcPathSegment): boolean => {
+  const progress = getArcProgress(arc, getAngle(arc.center, point))
+
+  return progress >= 0 && progress <= 1
+}
+
+export const getArcProgress = (arc: ArcPathSegment, angle: number): number => {
+  return getPositiveAngleDifference(arc.startAngle, angle) / arc.sweepAngle
+}
+
+export const getAngle = (center: PointSchema, point: PointSchema): number => {
+  return Math.atan2(point.y.minus(center.y).toNumber(), point.x.minus(center.x).toNumber())
+}
+
+export const getSortedDistinctProgresses = (progresses: BigNumber[]): BigNumber[] => {
+  const sortedProgresses = progresses
+    .filter((progress) => progress.isGreaterThan(ZERO) && progress.isLessThan(1))
+    .sort((first, second) => first.comparedTo(second) ?? 0)
+
+  return sortedProgresses.filter((progress, index) => index === 0 || !progress.isEqualTo(sortedProgresses[index - 1]))
+}
+
+export const isProgressInRange = (progress: BigNumber): boolean => {
+  return progress.isGreaterThanOrEqualTo(ZERO) && progress.isLessThanOrEqualTo(1)
+}
+
+const getPathSegmentRange = (segment: PathSegment, startProgress: BigNumber, endProgress: BigNumber): PathSegment => {
+  const start = getPointOnPathSegment(segment, startProgress)
+  const end = getPointOnPathSegment(segment, endProgress)
+
+  if (segment.type === 'line') {
+    return { type: 'line', start, end }
+  }
+
+  return {
+    ...segment,
+    start,
+    end,
+    startAngle: segment.startAngle + segment.sweepAngle * startProgress.toNumber(),
+    sweepAngle: segment.sweepAngle * endProgress.minus(startProgress).toNumber(),
+  }
+}
+
+const getSweepOneCenter = (start: PointSchema, end: PointSchema, first: PointSchema, second: PointSchema): PointSchema => {
+  const firstStartAngle = getAngle(first, start)
+  const firstEndAngle = getAngle(first, end)
+
+  return getPositiveAngleDifference(firstStartAngle, firstEndAngle) <= Math.PI ? first : second
+}
+
+const getPositiveAngleDifference = (start: number, end: number): number => {
+  const difference = (end - start) % TWO_PI
+
+  return difference < 0 ? difference + TWO_PI : difference
+}
