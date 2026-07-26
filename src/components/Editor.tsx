@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom'
 import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'
+import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import { useTranslation } from '../translations/translation'
 import { downloadSvg } from '../utils/downloadSvg'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
@@ -27,7 +28,6 @@ import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
-import { renderSvgToString } from '../logic/exports/renderSvgToString'
 
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 
@@ -58,6 +58,8 @@ export const Editor: FC = () => {
       gap: 10,
       padding: 10,
       stitchLineMode: 'all-stitch-lines',
+      showNames: true,
+      showDimensions: true,
     })
 
     downloadSvg(svg, `${project.name}.svg`)

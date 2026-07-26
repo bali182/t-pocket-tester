@@ -3,6 +3,7 @@ import { SELECTED_STROKE_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../consta
 import {
   DrawAreaComponentStyles,
   DrawAreaContextValue,
+  DrawAreaExportTextStyles,
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
@@ -11,6 +12,7 @@ import { EditorSelectionSchema } from '../schemas/selection'
 import { StitchLineSchema } from '../schemas/stitching'
 import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
+import { produce } from '../utils/produce'
 import { useProject } from './useProject'
 
 import { formatHex8, parse } from 'culori'
@@ -21,6 +23,18 @@ const addAlpha = (color: string): string => {
     return color
   }
   return formatHex8({ ...parsed, alpha: 0.6 })
+}
+
+const exportTextStyles: DrawAreaExportTextStyles = {
+  getNameText: produce(undefined),
+  getNameTextColor: produce(undefined),
+  getNameTextFontFamily: produce(undefined),
+  getNameTextFontSize: produce(undefined),
+  getDimensionsText: produce(undefined),
+  getDimensionsTextColor: produce(undefined),
+  getDimensionsTextFontFamily: produce(undefined),
+  getDimensionsTextFontSize: produce(undefined),
+  getNameDimensionsGap: produce(undefined),
 }
 
 export const useEditorDrawArea = (): DrawAreaContextValue => {
@@ -150,6 +164,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       selection: drawAreaSelection,
       componentStyles,
       stitchLineStyles,
+      exportTextStyles,
     }),
     [componentStyles, drawAreaSelection, stitchLineStyles],
   )

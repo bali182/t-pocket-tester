@@ -3,6 +3,7 @@ import type { FC } from 'react'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { SvgExportTPocketSchema } from '../../schemas/svgExport'
+import { ExportElementText } from './ExportElementText'
 import { ExportStitchLine } from './ExportStitchLine'
 
 type ExportTPocketProps = {
@@ -14,7 +15,7 @@ export const ExportTPocket: FC<ExportTPocketProps> = ({ element }) => {
   const pathData = usePath(element.pocket.path)
 
   return (
-    <>
+    <g>
       <path
         d={pathData}
         fill={componentStyles.getBackgroundColor(element.ownerComponent, 0, false)}
@@ -25,6 +26,8 @@ export const ExportTPocket: FC<ExportTPocketProps> = ({ element }) => {
       {element.stitchLines.map((stitchLine) => (
         <ExportStitchLine key={stitchLine.stitchLine.id} stitchLine={stitchLine} />
       ))}
-    </>
+
+      <ExportElementText element={element} />
+    </g>
   )
 }

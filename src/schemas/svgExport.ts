@@ -11,6 +11,8 @@ export type SvgExportParamsSchema = {
   gap: number
   padding: number
   stitchLineMode: SvgExportStitchLineModeSchema
+  showNames: boolean
+  showDimensions: boolean
 }
 
 export type SvgExportStitchLineSchema = {
@@ -42,10 +44,7 @@ export type SvgExportTPocketSchema = {
   stitchLines: SvgExportStitchLineSchema[]
 }
 
-export type SvgExportElementSchema =
-  | SvgExportPanelSchema
-  | SvgExportFrontPocketSchema
-  | SvgExportTPocketSchema
+export type SvgExportElementSchema = SvgExportPanelSchema | SvgExportFrontPocketSchema | SvgExportTPocketSchema
 
 export type SvgExportSchema = {
   params: SvgExportParamsSchema

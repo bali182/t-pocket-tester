@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import type { PointSchema, RectSchema } from '../../schemas/geometry'
+import type { PointSchema } from '../../schemas/geometry'
 import type {
   SvgExportElementSchema,
   SvgExportFrontPocketSchema,
@@ -10,6 +10,7 @@ import type {
 } from '../../schemas/svgExport'
 import { translatePath } from '../translatePath'
 import { translateRect } from '../translateRect'
+import { getSvgExportElementBoundingRect } from './getSvgExportElementBoundingRect'
 
 const ZERO = new BigNumber(0)
 
@@ -48,16 +49,6 @@ export const layoutSvgExportElements = (
     contentWidth,
     contentHeight: nextTop,
     elements: positionedElements,
-  }
-}
-
-const getSvgExportElementBoundingRect = (element: SvgExportElementSchema): RectSchema => {
-  switch (element.type) {
-    case 'svg-export-panel':
-      return element.boundingRect
-    case 'svg-export-front-pocket':
-    case 'svg-export-t-pocket':
-      return element.pocket.boundingRect
   }
 }
 

@@ -1,16 +1,21 @@
 import { useMemo } from 'react'
-import { STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
+import { COMPONENT_DIMENSIONS_COLOR, COMPONENT_NAME_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
 import {
   DrawAreaComponentStyles,
   DrawAreaContextValue,
+  DrawAreaExportTextStyles,
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
+import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
+import type { ProjectSchema } from '../schemas/project'
+import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import { useTranslation } from '../translations/translation'
 import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
-import type { ProjectSchema } from '../schemas/project'
 
-export const useSvgDrawArea = (project: ProjectSchema): DrawAreaContextValue => {
+export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSchema): DrawAreaContextValue => {
+  const t = useTranslation()
   const drawAreaSelection = useMemo<DrawAreaSelection>(
     () => ({
       clearSelection: noop,
@@ -48,14 +53,50 @@ export const useSvgDrawArea = (project: ProjectSchema): DrawAreaContextValue => 
     [project.stitchingSettings.stitchHoleThickness, project.stitchingSettings.stitchLineThickness],
   )
 
+  const exportTextStyles = useMemo<DrawAreaExportTextStyles>(
+    () => ({
+      getNameText: (element) => {
+        if (!params.showNames) {
+          return undefined
+        }
+
+        switch (element.type) {
+          case 'svg-export-panel':
+            return element.component.name
+          case 'svg-export-front-pocket':
+            return t.svgExport.frontPocketName(element.ownerComponent.name)
+          case 'svg-export-t-pocket':
+            return t.svgExport.tPocketName(element.ownerComponent.name, element.pocketIndex + 1)
+        }
+      },
+      getNameTextColor: produce(COMPONENT_NAME_COLOR),
+      getNameTextFontFamily: produce('sans-serif'),
+      getNameTextFontSize: produce(3),
+      getDimensionsText: (element) => {
+        if (!params.showDimensions) {
+          return undefined
+        }
+
+        const boundingRect = getSvgExportElementBoundingRect(element)
+        return t.svgExport.dimensions(boundingRect.width.toFixed(1), boundingRect.height.toFixed(1))
+      },
+      getDimensionsTextColor: produce(COMPONENT_DIMENSIONS_COLOR),
+      getDimensionsTextFontFamily: produce('sans-serif'),
+      getDimensionsTextFontSize: produce(2.5),
+      getNameDimensionsGap: produce(1),
+    }),
+    [params.showDimensions, params.showNames, t],
+  )
+
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
     () => ({
       isInteractive: false,
       selection: drawAreaSelection,
       componentStyles,
       stitchLineStyles,
+      exportTextStyles,
     }),
-    [componentStyles, drawAreaSelection, stitchLineStyles],
+    [componentStyles, drawAreaSelection, exportTextStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

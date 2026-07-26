@@ -15,7 +15,7 @@ type SvgExportRootProps = {
 }
 
 export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, svgExport }) => {
-  const drawAreaContextValue = useSvgDrawArea(project)
+  const drawAreaContextValue = useSvgDrawArea(project, svgExport.params)
   const padding = new BigNumber(svgExport.params.padding)
   const width = svgExport.contentWidth.plus(padding.times(2))
   const height = svgExport.contentHeight.plus(padding.times(2))

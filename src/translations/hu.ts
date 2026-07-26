@@ -57,6 +57,11 @@ export const HU = {
       stitching: 'Varrás',
     },
   },
+  svgExport: {
+    frontPocketName: (ownerName: string) => `${ownerName} - első zseb`,
+    tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. zseb`,
+    dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
+  },
   projects: {
     title: 'Projektek',
     actions: {

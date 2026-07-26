@@ -59,6 +59,11 @@ export const EN: typeof HU = {
       stitching: 'Stitching',
     },
   },
+  svgExport: {
+    frontPocketName: (ownerName: string) => `${ownerName} - front pocket`,
+    tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. pocket`,
+    dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
+  },
   projects: {
     title: 'Projects',
     actions: {

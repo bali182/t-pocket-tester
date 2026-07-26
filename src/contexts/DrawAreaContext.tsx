@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react'
 
 import { ComponentSchema } from '../schemas/components'
 import { StitchLineSchema } from '../schemas/stitching'
+import { SvgExportElementSchema } from '../schemas/svgExport'
 import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
 
@@ -29,11 +30,24 @@ export type DrawAreaStitchLineStyles = {
   getStitchHoleThickness: (stitchLine: StitchLineSchema) => number | undefined
 }
 
+export type DrawAreaExportTextStyles = {
+  getNameText: (element: SvgExportElementSchema) => string | undefined
+  getNameTextColor: (element: SvgExportElementSchema) => string | undefined
+  getNameTextFontFamily: (element: SvgExportElementSchema) => string | undefined
+  getNameTextFontSize: (element: SvgExportElementSchema) => number | undefined
+  getDimensionsText: (element: SvgExportElementSchema) => string | undefined
+  getDimensionsTextColor: (element: SvgExportElementSchema) => string | undefined
+  getDimensionsTextFontFamily: (element: SvgExportElementSchema) => string | undefined
+  getDimensionsTextFontSize: (element: SvgExportElementSchema) => number | undefined
+  getNameDimensionsGap: (element: SvgExportElementSchema) => number | undefined
+}
+
 export type DrawAreaContextValue = {
   isInteractive: boolean
   selection: DrawAreaSelection
   stitchLineStyles: DrawAreaStitchLineStyles
   componentStyles: DrawAreaComponentStyles
+  exportTextStyles: DrawAreaExportTextStyles
 }
 
 const drawAreaDefaultSelection: DrawAreaSelection = {
@@ -60,11 +74,24 @@ const drawAreaDefaultComponentStyles: DrawAreaComponentStyles = {
   getFilter: produce(undefined),
 }
 
+const drawAreaDefaultExportTextStyles: DrawAreaExportTextStyles = {
+  getNameText: produce(undefined),
+  getNameTextColor: produce(undefined),
+  getNameTextFontFamily: produce(undefined),
+  getNameTextFontSize: produce(undefined),
+  getDimensionsText: produce(undefined),
+  getDimensionsTextColor: produce(undefined),
+  getDimensionsTextFontFamily: produce(undefined),
+  getDimensionsTextFontSize: produce(undefined),
+  getNameDimensionsGap: produce(undefined),
+}
+
 const defaultDrawAreaContext: DrawAreaContextValue = {
   isInteractive: false,
   selection: drawAreaDefaultSelection,
   stitchLineStyles: drawAreaDefaultStitchLineStyles,
   componentStyles: drawAreaDefaultComponentStyles,
+  exportTextStyles: drawAreaDefaultExportTextStyles,
 }
 
 export const DrawAreaContext = createContext<DrawAreaContextValue>(defaultDrawAreaContext)
