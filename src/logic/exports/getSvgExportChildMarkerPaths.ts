@@ -15,18 +15,18 @@ export const getSvgExportChildMarkerPaths = (
       case 'computed-panel':
         return [child.boundingRect]
       case 'computed-pocket-cluster':
-        return [
-          child.frontPocket.boundingRect,
-          ...child.tPockets.map((pocket) => pocket.boundingRect),
-        ]
+        return [child.frontPocket.boundingRect, ...child.tPockets.map((pocket) => pocket.boundingRect)]
     }
   })
 
-  return boundingRects.flatMap((boundingRect) => {
+  const markerLines = boundingRects.flatMap((boundingRect) => {
     return getBoundingRectMarkerLines(boundingRect)
-      .filter((markerLine) => !parentLineSegments.some((parentLine) => doLinePathSegmentsOverlap(markerLine, parentLine)))
-      .map((markerLine) => createPathFromConnectedSegments([markerLine]))
+      .filter(
+        (markerLine) => !parentLineSegments.some((parentLine) => doLinePathSegmentsOverlap(markerLine, parentLine)),
+      )
   })
+
+  return removeDuplicates(markerLines).map((markerLine) => createPathFromConnectedSegments([markerLine]))
 }
 
 const getBoundingRectMarkerLines = (boundingRect: RectSchema): LinePathSegment[] => {
@@ -43,4 +43,20 @@ const getBoundingRectMarkerLines = (boundingRect: RectSchema): LinePathSegment[]
     { type: 'line', start: bottomRight, end: bottomLeft },
     { type: 'line', start: bottomLeft, end: topLeft },
   ]
+}
+
+const removeDuplicates = (lines: LinePathSegment[]): LinePathSegment[] => {
+  const uniqueLinesByKey = new Map<string, LinePathSegment>()
+
+  for (const line of lines) {
+    const start = `${line.start.x.toString()},${line.start.y.toString()}`
+    const end = `${line.end.x.toString()},${line.end.y.toString()}`
+    const key = [start, end].sort().join(':')
+
+    if (!uniqueLinesByKey.has(key)) {
+      uniqueLinesByKey.set(key, line)
+    }
+  }
+
+  return [...uniqueLinesByKey.values()]
 }
