@@ -5,15 +5,15 @@ import { PiWarningCircle } from 'react-icons/pi'
 import { useParams } from 'react-router-dom'
 
 import { projectAtom } from '../../state/projectAtom'
-import { projectsAtom } from '../../state/projectsAtom'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { Editor } from '../Editor'
+import { useProjects } from '../../hooks/useProjects'
 
 export const ProjectRoute: FC = () => {
   const { projectId } = useParams()
   const t = useTranslation()
-  const projects = useAtomValue(projectsAtom)
+  const { projects } = useProjects()
   const activeProject = useAtomValue(projectAtom)
   const setProject = useSetAtom(projectAtom)
   const project = projects.find((candidate) => candidate.id === projectId)

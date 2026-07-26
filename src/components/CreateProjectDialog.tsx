@@ -1,13 +1,12 @@
 import { Button, Dialog } from '@chakra-ui/react'
-import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
+import { useProjects } from '../hooks/useProjects'
 import type { ProjectSchema } from '../schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
-import { projectsAtom } from '../state/projectsAtom'
 import { useTranslation } from '../translations/translation'
 import { createProject } from '../utils/createProject'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
@@ -20,8 +19,7 @@ type CreateProjectDialogProps = {
 }
 
 export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOpenChange }) => {
-  const projects = useAtomValue(projectsAtom)
-  const setProjects = useSetAtom(projectsAtom)
+  const { addProject, projects } = useProjects()
   const navigate = useNavigate()
   const t = useTranslation()
   const [project, setProject] = useState<ProjectSchema>(() => createProject(t.defaults.projectName, t))
@@ -70,11 +68,11 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
       }
 
       const createdProject = validationResult.value
-      setProjects((currentProjects) => [...currentProjects, createdProject])
+      addProject(createdProject)
       onOpenChange(false)
       navigate(`/projects/${createdProject.id}`)
     },
-    [context, editableValue, navigate, onOpenChange, project, setProjects],
+    [addProject, context, editableValue, navigate, onOpenChange, project],
   )
 
   return (

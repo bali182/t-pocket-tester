@@ -1,16 +1,15 @@
 import { Box, Button, Card, Grid, Heading } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
 import { useCallback, useState, type FC } from 'react'
 import { PiPlus } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
-import { projectsAtom } from '../../state/projectsAtom'
 import { useTranslation } from '../../translations/translation'
+import { useProjects } from '../../hooks/useProjects'
 import { CreateProjectDialog } from '../CreateProjectDialog'
 
 export const ProjectsRoute: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const projects = useAtomValue(projectsAtom)
+  const { projects } = useProjects()
   const t = useTranslation()
 
   const openCreateDialog = useCallback((): void => {
