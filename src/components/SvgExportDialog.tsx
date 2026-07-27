@@ -1,6 +1,7 @@
-import { Button, Dialog } from '@chakra-ui/react'
+import { Button, Dialog, IconButton } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
+import { PiX } from 'react-icons/pi'
 
 import { LANGUAGE } from '../constants/language'
 import { useProject } from '../hooks/useProject'
@@ -99,6 +100,11 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
           <form onSubmit={handleSubmit}>
             <Dialog.Header>
               <Dialog.Title>{t.svgExport.dialog.title}</Dialog.Title>
+              <Dialog.CloseTrigger asChild>
+                <IconButton size="sm" variant="ghost">
+                  <PiX />
+                </IconButton>
+              </Dialog.CloseTrigger>
             </Dialog.Header>
             <Dialog.Body px="0">
               <SvgExportEditor
