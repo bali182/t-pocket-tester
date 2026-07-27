@@ -61,6 +61,28 @@ export const HU = {
     frontPocketName: (ownerName: string) => `${ownerName} - első zseb`,
     tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. zseb`,
     dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
+    dialog: {
+      title: 'SVG exportálása',
+      actions: {
+        export: 'Exportálás',
+      },
+      sections: {
+        layout: 'Elrendezés',
+        content: 'Tartalom',
+      },
+      labels: {
+        gap: 'Térköz',
+        padding: 'Belső margó',
+        stitchLineMode: 'Varróvonalak',
+        showNames: 'Nevek megjelenítése',
+        showDimensions: 'Méretek megjelenítése',
+        childMarkers: 'Gyermekjelölők megjelenítése',
+      },
+      stitchLineModes: {
+        ownStitchLines: 'Csak a saját varróvonalak',
+        allStitchLines: 'Összes varróvonal',
+      },
+    },
   },
   projects: {
     title: 'Projektek',

@@ -63,6 +63,28 @@ export const EN: typeof HU = {
     frontPocketName: (ownerName: string) => `${ownerName} - front pocket`,
     tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. pocket`,
     dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
+    dialog: {
+      title: 'Export SVG',
+      actions: {
+        export: 'Export',
+      },
+      sections: {
+        layout: 'Layout',
+        content: 'Content',
+      },
+      labels: {
+        gap: 'Gap',
+        padding: 'Padding',
+        stitchLineMode: 'Stitch lines',
+        showNames: 'Show names',
+        showDimensions: 'Show dimensions',
+        childMarkers: 'Show child markers',
+      },
+      stitchLineModes: {
+        ownStitchLines: 'Own stitch lines only',
+        allStitchLines: 'All stitch lines',
+      },
+    },
   },
   projects: {
     title: 'Projects',

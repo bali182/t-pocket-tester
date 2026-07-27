@@ -16,9 +16,7 @@ import { Link } from 'react-router-dom'
 import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'
-import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import { useTranslation } from '../translations/translation'
-import { downloadSvg } from '../utils/downloadSvg'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
@@ -28,6 +26,7 @@ import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
+import { SvgExportDialog } from './SvgExportDialog'
 
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 
@@ -36,8 +35,9 @@ export const Editor: FC = () => {
   const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
+  const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const projectMenuRef = useRef<HTMLDivElement>(null)
-  const { computedProject, project } = useProject()
+  const { project } = useProject()
   const drawAreaContextValue = useEditorDrawArea()
   const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
     drawAreaContextValue.selection
@@ -53,18 +53,7 @@ export const Editor: FC = () => {
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
 
-  const handleExportClick = useCallback(() => {
-    const svg = renderSvgToString(project, computedProject, {
-      gap: 10,
-      padding: 10,
-      stitchLineMode: 'all-stitch-lines',
-      showNames: true,
-      showDimensions: true,
-      childMarkers: true,
-    })
-
-    downloadSvg(svg, `${project.name}.svg`)
-  }, [computedProject, project])
+  const handleExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
 
   const anchorElement = useMemo<SVGGraphicsElement | undefined>(() => {
     if (!isDefined(highlightedComponentId)) {
@@ -125,6 +114,7 @@ export const Editor: FC = () => {
             />
           )}
           <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
+          <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />
         </Box>
         <Box bg="bg.panel" flexShrink={0} height="100%" width="400px">
           <Splitter.Root
