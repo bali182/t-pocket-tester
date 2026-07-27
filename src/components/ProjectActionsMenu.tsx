@@ -1,6 +1,8 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
+import { useNavigate } from 'react-router-dom'
+
 import { useProjects } from '../hooks/useProjects'
 import { useTranslation } from '../translations/translation'
 
@@ -12,6 +14,7 @@ type ProjectActionsMenuProps = {
 export const ProjectActionsMenu: FC<ProjectActionsMenuProps> = ({ size, projectId }) => {
   const t = useTranslation()
   const { deleteProject } = useProjects()
+  const navigate = useNavigate()
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
@@ -19,8 +22,8 @@ export const ProjectActionsMenu: FC<ProjectActionsMenuProps> = ({ size, projectI
 
   const handleDelete = useCallback(() => {
     deleteProject(projectId)
-    // Navigate back to /projects.
-  }, [deleteProject, projectId])
+    navigate('/projects')
+  }, [deleteProject, navigate, projectId])
 
   return (
     <>

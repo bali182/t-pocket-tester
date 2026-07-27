@@ -8,6 +8,7 @@ import { isDefined } from '../../../utils/isDefined'
 import { ColorInput } from '../../common/ColorInput'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
+import { StitchHoleDistanceEditor } from '../StitchHoleDistanceEditor'
 
 type StitchingSettingsSectionProps<T extends Partial<StitchLineCommonConfigSchema>> = {
   editable: EditableSchema<T>
@@ -143,13 +144,11 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeDistance}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <NumberInput
+        <StitchHoleDistanceEditor
           issue={issues.stitchHoleDistance}
           onChange={handleStitchHoleDistanceChange}
           onReset={isDefined(onReset) ? handleStitchHoleDistanceReset : undefined}
           isResetEnabled={isDefined(editable.stitchHoleDistance)}
-          step={1}
-          unit="mm"
           value={resolvedEditable.stitchHoleDistance}
         />
       </SectionGroup.SectionRowEditor>

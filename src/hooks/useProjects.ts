@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
-import { ProjectSchema } from '../schemas/project'
+import type { ProjectSchema } from '../schemas/project'
 import { projectsAtom } from '../state/projectsAtom'
 import { isDefined } from '../utils/isDefined'
 
@@ -10,20 +10,32 @@ export const useProjects = () => {
 
   const addProject = useAtomCallback(
     useCallback((get, set, project: ProjectSchema): ProjectSchema => {
-      // Implement me
+      set(projectsAtom, [...get(projectsAtom), project])
       return project
     }, []),
   )
 
   const updateProject = useAtomCallback(
     useCallback((get, set, project: ProjectSchema): void => {
-      // Implement me
+      const projects = get(projectsAtom)
+
+      if (!projects.some((candidate) => candidate.id === project.id)) {
+        throw new Error('Project not found!')
+      }
+
+      set(
+        projectsAtom,
+        projects.map((candidate) => (candidate.id === project.id ? project : candidate)),
+      )
     }, []),
   )
 
   const deleteProject = useAtomCallback(
     useCallback((get, set, projectId: string): void => {
-      // Implement me
+      set(
+        projectsAtom,
+        get(projectsAtom).filter((project) => project.id !== projectId),
+      )
     }, []),
   )
 

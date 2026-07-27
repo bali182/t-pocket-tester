@@ -7,3 +7,6 @@ export const CARD_COLOR = '#1CABFF'
 
 export const STROKE_THICKNESS = 0.3
 export const VIEWBOX_PADDING = 10
+
+export const COMPONENT_NAME_COLOR = '#000000'
+export const COMPONENT_DIMENSIONS_COLOR = '#666666'

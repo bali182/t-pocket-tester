@@ -9,6 +9,8 @@ import type {
   StitchSideSchema,
 } from '../../schemas/stitching'
 import { getNormalizedCornerRadius } from '../getNormalizedCornerRadius'
+import { arePointsEqual } from '../../utils/arePointsEqual'
+import { isDefined } from '../../utils/isDefined'
 
 const ZERO = new BigNumber(0)
 
@@ -233,12 +235,4 @@ const createPathFromFragments = (fragments: StitchPathFragment[]): PathSchema =>
   }
 
   return { commands }
-}
-
-const arePointsEqual = (first: PointSchema, second: PointSchema): boolean => {
-  return first.x.isEqualTo(second.x) && first.y.isEqualTo(second.y)
-}
-
-const isDefined = <T>(value: T | undefined): value is T => {
-  return value !== undefined
 }
