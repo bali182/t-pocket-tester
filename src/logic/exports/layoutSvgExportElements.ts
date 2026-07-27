@@ -8,9 +8,10 @@ import type {
   SvgExportStitchLineSchema,
   SvgExportTPocketSchema,
 } from '../../schemas/svgExport'
+import { isDefined } from '../../utils/isDefined'
 import { translatePath } from '../translatePath'
 import { translateRect } from '../translateRect'
-import { getSvgExportElementBoundingRect } from './getSvgExportElementBoundingRect'
+import { getSvgExportElementLayoutBoundingRect } from './getSvgExportElementLayoutBoundingRect'
 
 const ZERO = new BigNumber(0)
 
@@ -28,7 +29,7 @@ export const layoutSvgExportElements = (
   let nextTop = ZERO
 
   const positionedElements = elements.map((element, index) => {
-    const boundingRect = getSvgExportElementBoundingRect(element)
+    const boundingRect = getSvgExportElementLayoutBoundingRect(element)
     const translation: PointSchema = {
       x: boundingRect.x.negated(),
       y: nextTop.minus(boundingRect.y),
@@ -70,6 +71,12 @@ const translateSvgExportPanel = (element: SvgExportPanelSchema, translation: Poi
   return {
     ...element,
     boundingRect: translateRect(element.boundingRect, translation),
+    ...(isDefined(element.cutHelper)
+      ? { cutHelper: translatePath(element.cutHelper, translation) }
+      : {}),
+    ...(isDefined(element.cutHelperBoundingRect)
+      ? { cutHelperBoundingRect: translateRect(element.cutHelperBoundingRect, translation) }
+      : {}),
     path: translatePath(element.path, translation),
     childMarkerPaths: element.childMarkerPaths.map((path) => translatePath(path, translation)),
     stitchLines: element.stitchLines.map((stitchLine) => translateSvgExportStitchLine(stitchLine, translation)),
@@ -87,6 +94,12 @@ const translateSvgExportFrontPocket = (
       boundingRect: translateRect(element.pocket.boundingRect, translation),
       path: translatePath(element.pocket.path, translation),
     },
+    ...(isDefined(element.cutHelper)
+      ? { cutHelper: translatePath(element.cutHelper, translation) }
+      : {}),
+    ...(isDefined(element.cutHelperBoundingRect)
+      ? { cutHelperBoundingRect: translateRect(element.cutHelperBoundingRect, translation) }
+      : {}),
     stitchLines: element.stitchLines.map((stitchLine) => translateSvgExportStitchLine(stitchLine, translation)),
   }
 }
@@ -102,6 +115,12 @@ const translateSvgExportTPocket = (
       boundingRect: translateRect(element.pocket.boundingRect, translation),
       path: translatePath(element.pocket.path, translation),
     },
+    ...(isDefined(element.cutHelper)
+      ? { cutHelper: translatePath(element.cutHelper, translation) }
+      : {}),
+    ...(isDefined(element.cutHelperBoundingRect)
+      ? { cutHelperBoundingRect: translateRect(element.cutHelperBoundingRect, translation) }
+      : {}),
     stitchLines: element.stitchLines.map((stitchLine) => translateSvgExportStitchLine(stitchLine, translation)),
   }
 }

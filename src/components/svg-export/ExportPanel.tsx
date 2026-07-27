@@ -2,9 +2,10 @@ import type { FC } from 'react'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
-import { PathSchema } from '../../schemas/geometry'
 import type { SvgExportPanelSchema } from '../../schemas/svgExport'
+import { isDefined } from '../../utils/isDefined'
 import { ExportElementText } from './ExportElementText'
+import { ExportMarkerPath } from './ExportMarkerPath'
 import { ExportStitchLine } from './ExportStitchLine'
 
 type ExportPanelProps = {
@@ -17,6 +18,7 @@ export const ExportPanel: FC<ExportPanelProps> = ({ element }) => {
 
   return (
     <g>
+      {isDefined(element.cutHelper) && <ExportMarkerPath path={element.cutHelper} />}
       <path
         d={pathData}
         fill={componentStyles.getBackgroundColor(element.component, 0, false)}
@@ -25,7 +27,7 @@ export const ExportPanel: FC<ExportPanelProps> = ({ element }) => {
       />
 
       {element.childMarkerPaths.map((path, index) => (
-        <ExportChildMarkerPath key={index} path={path} />
+        <ExportMarkerPath key={index} path={path} />
       ))}
 
       {element.stitchLines.map((stitchLine) => (
@@ -34,23 +36,5 @@ export const ExportPanel: FC<ExportPanelProps> = ({ element }) => {
 
       <ExportElementText element={element} />
     </g>
-  )
-}
-
-type ExportChildMarkerPathProps = {
-  path: PathSchema
-}
-
-const ExportChildMarkerPath: FC<ExportChildMarkerPathProps> = ({ path }) => {
-  const { childMarkerStyles } = useDrawAreaContext()
-  const pathData = usePath(path)
-
-  return (
-    <path
-      d={pathData}
-      fill="none"
-      stroke={childMarkerStyles.getColor()}
-      strokeWidth={childMarkerStyles.getThickness()}
-    />
   )
 }

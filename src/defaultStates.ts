@@ -19,4 +19,5 @@ export const defaultSvgExportParams: SvgExportParamsSchema = {
   showNames: true,
   showDimensions: true,
   childMarkers: true,
+  cutHelperDistance: 0,
 }

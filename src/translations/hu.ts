@@ -77,6 +77,7 @@ export const HU = {
         showNames: 'Nevek megjelenítése',
         showDimensions: 'Méretek megjelenítése',
         childMarkers: 'Gyermekjelölők megjelenítése',
+        cutHelperDistance: 'Vágási segédtávolság',
       },
       stitchLineModes: {
         ownStitchLines: 'Csak a saját varróvonalak',

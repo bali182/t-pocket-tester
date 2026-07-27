@@ -14,6 +14,7 @@ export type SvgExportParamsSchema = {
   showNames: boolean
   showDimensions: boolean
   childMarkers: boolean
+  cutHelperDistance: number
 }
 
 export type SvgExportStitchLineSchema = {
@@ -26,6 +27,8 @@ export type SvgExportPanelSchema = {
   type: 'svg-export-panel'
   component: ComponentSchema
   boundingRect: RectSchema
+  cutHelper?: PathSchema
+  cutHelperBoundingRect?: RectSchema
   path: PathSchema
   childMarkerPaths: PathSchema[]
   stitchLines: SvgExportStitchLineSchema[]
@@ -35,6 +38,8 @@ export type SvgExportFrontPocketSchema = {
   type: 'svg-export-front-pocket'
   ownerComponent: PocketClusterSchema
   pocket: ComputedTopPocketSchema
+  cutHelper?: PathSchema
+  cutHelperBoundingRect?: RectSchema
   stitchLines: SvgExportStitchLineSchema[]
 }
 
@@ -43,6 +48,8 @@ export type SvgExportTPocketSchema = {
   ownerComponent: PocketClusterSchema
   pocketIndex: number
   pocket: ComputedTPocketSchema
+  cutHelper?: PathSchema
+  cutHelperBoundingRect?: RectSchema
   stitchLines: SvgExportStitchLineSchema[]
 }
 

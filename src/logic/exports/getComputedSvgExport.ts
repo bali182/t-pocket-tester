@@ -1,5 +1,6 @@
 import type { ComponentSchema, PocketClusterSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedPocketClusterSchema } from '../../schemas/computed'
+import type { CornerRadiusSchema } from '../../schemas/geometry'
 import type { ComputedProjectSchema, ProjectSchema } from '../../schemas/project'
 import type {
   SvgExportElementSchema,
@@ -10,9 +11,18 @@ import type {
   SvgExportTPocketSchema,
 } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
+import { calculateRectPath } from '../calculateRectPath'
 import { getSvgExportChildMarkerPaths } from './getSvgExportChildMarkerPaths'
+import { getSvgExportCutHelperBoundingRect } from './getSvgExportCutHelperBoundingRect'
 import { getSvgExportStitchLines } from './getSvgExportStitchLines'
 import { layoutSvgExportElements } from './layoutSvgExportElements'
+
+const zeroCornerRadius: CornerRadiusSchema = {
+  topLeft: 0,
+  topRight: 0,
+  bottomRight: 0,
+  bottomLeft: 0,
+}
 
 export const getComputedSvgExport = (
   project: ProjectSchema,
@@ -92,10 +102,21 @@ const getSvgExportPanel = (
     throw new Error(`Expected panel component: ${componentId}`)
   }
 
+  const cutHelperBoundingRect = getSvgExportCutHelperBoundingRect(
+    computedComponent.boundingRect,
+    params.cutHelperDistance,
+  )
+
   return {
     type: 'svg-export-panel',
     component,
     boundingRect: computedComponent.boundingRect,
+    ...(isDefined(cutHelperBoundingRect)
+      ? {
+          cutHelper: calculateRectPath(cutHelperBoundingRect, zeroCornerRadius),
+          cutHelperBoundingRect,
+        }
+      : {}),
     path: computedComponent.path,
     childMarkerPaths: params.childMarkers
       ? getSvgExportChildMarkerPaths(computedComponent.children, computedComponent.path)
@@ -136,10 +157,21 @@ const getSvgExportFrontPocket = (
   computedComponent: ComputedPocketClusterSchema,
   params: SvgExportParamsSchema,
 ): SvgExportFrontPocketSchema => {
+  const cutHelperBoundingRect = getSvgExportCutHelperBoundingRect(
+    computedComponent.frontPocket.boundingRect,
+    params.cutHelperDistance,
+  )
+
   return {
     type: 'svg-export-front-pocket',
     ownerComponent,
     pocket: computedComponent.frontPocket,
+    ...(isDefined(cutHelperBoundingRect)
+      ? {
+          cutHelper: calculateRectPath(cutHelperBoundingRect, zeroCornerRadius),
+          cutHelperBoundingRect,
+        }
+      : {}),
     stitchLines: getSvgExportStitchLines(
       project,
       computedProject,
@@ -158,11 +190,19 @@ const getSvgExportTPocket = (
   pocketIndex: number,
   params: SvgExportParamsSchema,
 ): SvgExportTPocketSchema => {
+  const cutHelperBoundingRect = getSvgExportCutHelperBoundingRect(pocket.boundingRect, params.cutHelperDistance)
+
   return {
     type: 'svg-export-t-pocket',
     ownerComponent,
     pocketIndex,
     pocket,
+    ...(isDefined(cutHelperBoundingRect)
+      ? {
+          cutHelper: calculateRectPath(cutHelperBoundingRect, zeroCornerRadius),
+          cutHelperBoundingRect,
+        }
+      : {}),
     stitchLines: getSvgExportStitchLines(
       project,
       computedProject,

@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 import { COMPONENT_DIMENSIONS_COLOR, COMPONENT_NAME_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
 import {
   DrawAreaComponentStyles,
-  DrawAreaChildMarkerStyles,
   DrawAreaContextValue,
   DrawAreaExportTextStyles,
+  DrawAreaMarkerStyles,
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
@@ -15,21 +15,18 @@ import { useTranslation } from '../translations/translation'
 import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
 
+const drawAreaSelection: DrawAreaSelection = {
+  clearSelection: noop,
+  isComponentSelected: produce(false),
+  selectComponent: noop,
+  selectStitchLine: noop,
+  selectedComponent: undefined,
+  selectedStitchLine: undefined,
+  highlightedComponentId: undefined,
+}
+
 export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSchema): DrawAreaContextValue => {
   const t = useTranslation()
-  const drawAreaSelection = useMemo<DrawAreaSelection>(
-    () => ({
-      clearSelection: noop,
-      isComponentSelected: produce(false),
-      selectComponent: noop,
-      selectStitchLine: noop,
-      selectedComponent: undefined,
-      selectedStitchLine: undefined,
-      highlightedComponentId: undefined,
-    }),
-    [],
-  )
-
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
       getBackgroundColor: produce('none'),
@@ -89,7 +86,7 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
     [params.showDimensions, params.showNames, t],
   )
 
-  const childMarkerStyles = useMemo<DrawAreaChildMarkerStyles>(
+  const markerStyles = useMemo<DrawAreaMarkerStyles>(
     () => ({
       getColor: produce('#666666'),
       getThickness: produce(0.3),
@@ -104,9 +101,9 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
       componentStyles,
       stitchLineStyles,
       exportTextStyles,
-      childMarkerStyles,
+      markerStyles,
     }),
-    [childMarkerStyles, componentStyles, drawAreaSelection, exportTextStyles, stitchLineStyles],
+    [componentStyles, exportTextStyles, markerStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

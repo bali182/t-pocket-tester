@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { SELECTED_STROKE_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
 import {
   DrawAreaComponentStyles,
-  DrawAreaChildMarkerStyles,
+  DrawAreaMarkerStyles,
   DrawAreaContextValue,
   DrawAreaExportTextStyles,
   DrawAreaSelection,
@@ -38,7 +38,7 @@ const exportTextStyles: DrawAreaExportTextStyles = {
   getNameDimensionsGap: produce(undefined),
 }
 
-const childMarkerStyles: DrawAreaChildMarkerStyles = {
+const markerStyles: DrawAreaMarkerStyles = {
   getColor: produce(undefined),
   getThickness: produce(undefined),
 }
@@ -171,7 +171,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       componentStyles,
       stitchLineStyles,
       exportTextStyles,
-      childMarkerStyles,
+      markerStyles,
     }),
     [componentStyles, drawAreaSelection, stitchLineStyles],
   )

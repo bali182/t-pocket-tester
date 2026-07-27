@@ -3,7 +3,9 @@ import type { FC } from 'react'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { SvgExportFrontPocketSchema } from '../../schemas/svgExport'
+import { isDefined } from '../../utils/isDefined'
 import { ExportElementText } from './ExportElementText'
+import { ExportMarkerPath } from './ExportMarkerPath'
 import { ExportStitchLine } from './ExportStitchLine'
 
 type ExportFrontPocketProps = {
@@ -16,6 +18,7 @@ export const ExportFrontPocket: FC<ExportFrontPocketProps> = ({ element }) => {
 
   return (
     <g>
+      {isDefined(element.cutHelper) && <ExportMarkerPath path={element.cutHelper} />}
       <path
         d={pathData}
         fill={componentStyles.getBackgroundColor(element.ownerComponent, 0, false)}

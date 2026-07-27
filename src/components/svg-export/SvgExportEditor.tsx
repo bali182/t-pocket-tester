@@ -59,6 +59,13 @@ export const SvgExportEditor: FC<SvgExportEditorProps> = ({ editable, issues, on
     [editable, onChange],
   )
 
+  const handleCutHelperDistanceChange = useCallback(
+    (cutHelperDistance: string): void => {
+      onChange({ ...editable, cutHelperDistance })
+    },
+    [editable, onChange],
+  )
+
   const handleStitchLineModeChange = useCallback(
     (details: SelectValueChangeDetails<SvgExportStitchLineModeOption>): void => {
       const stitchLineMode = details.value[0]
@@ -167,6 +174,16 @@ export const SvgExportEditor: FC<SvgExportEditorProps> = ({ editable, issues, on
               <Switch.Thumb />
             </Switch.Control>
           </Switch.Root>
+        </SectionGroup.SectionRowEditor>
+        <SectionGroup.SectionRowTitle>{t.svgExport.dialog.labels.cutHelperDistance}</SectionGroup.SectionRowTitle>
+        <SectionGroup.SectionRowEditor>
+          <NumberInput
+            issue={issues.cutHelperDistance}
+            onChange={handleCutHelperDistanceChange}
+            step={1}
+            unit="mm"
+            value={editable.cutHelperDistance}
+          />
         </SectionGroup.SectionRowEditor>
       </SectionGroup.Section>
     </SectionGroup.Root>

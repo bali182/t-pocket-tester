@@ -79,6 +79,7 @@ export const EN: typeof HU = {
         showNames: 'Show names',
         showDimensions: 'Show dimensions',
         childMarkers: 'Show child markers',
+        cutHelperDistance: 'Cut helper distance',
       },
       stitchLineModes: {
         ownStitchLines: 'Own stitch lines only',
