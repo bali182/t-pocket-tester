@@ -11,6 +11,8 @@ export const HU = {
       remove: 'Törlés',
       scaling: 'Skálázás',
       clone: 'Duplikálás',
+      flipHorizontal: 'Vízszintes tükrözés',
+      flipVertical: 'Függőleges tükrözés',
       settings: 'Beállítások',
       addByName: (name: string) => `${name} hozzáadása`,
     },

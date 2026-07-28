@@ -13,6 +13,8 @@ export const EN: typeof HU = {
       scaling: 'Scaling',
       apply: 'Apply',
       clone: 'Clone',
+      flipHorizontal: 'Flip horizontal',
+      flipVertical: 'Flip vertical',
       settings: 'Settings',
       addByName: (name: string) => `Add ${name.toLowerCase()}`,
     },

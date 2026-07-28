@@ -1,7 +1,8 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, type FC, type MouseEvent } from 'react'
-import { PiCopy, PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
+import { PiCopy, PiDotsThreeVertical, PiSquareSplitHorizontal, PiSquareSplitVertical, PiTrash } from 'react-icons/pi'
 import { useProject } from '../hooks/useProject'
+import { flipComponentBoundsStitchLine } from '../logic/flipComponentBoundsStitchLine'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
@@ -17,7 +18,7 @@ type StitchLineActionsMenuProps = {
 
 export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLine, size, onDelete = noop }) => {
   const t = useTranslation()
-  const { cloneStitchLine, deleteStitchLine } = useProject()
+  const { cloneStitchLine, deleteStitchLine, updateStitchLine } = useProject()
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
@@ -32,6 +33,22 @@ export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLi
     cloneStitchLine(stitchLine.id)
   }, [cloneStitchLine, stitchLine.id])
 
+  const handleFlipHorizontal = useCallback((): void => {
+    if (stitchLine.type !== 'component-bounds-stitch-line') {
+      return
+    }
+
+    updateStitchLine(flipComponentBoundsStitchLine(stitchLine, 'horizontal'))
+  }, [stitchLine, updateStitchLine])
+
+  const handleFlipVertical = useCallback((): void => {
+    if (stitchLine.type !== 'component-bounds-stitch-line') {
+      return
+    }
+
+    updateStitchLine(flipComponentBoundsStitchLine(stitchLine, 'vertical'))
+  }, [stitchLine, updateStitchLine])
+
   return (
     <Box onClick={handleActionsClick}>
       <Menu.Root>
@@ -43,6 +60,18 @@ export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLi
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
+              {stitchLine.type === 'component-bounds-stitch-line' && (
+                <>
+                  <Menu.Item onClick={handleFlipHorizontal} value="flip-horizontal">
+                    <PiSquareSplitHorizontal />
+                    <Menu.ItemText>{t.common.actions.flipHorizontal}</Menu.ItemText>
+                  </Menu.Item>
+                  <Menu.Item onClick={handleFlipVertical} value="flip-vertical">
+                    <PiSquareSplitVertical />
+                    <Menu.ItemText>{t.common.actions.flipVertical}</Menu.ItemText>
+                  </Menu.Item>
+                </>
+              )}
               <Menu.Item onClick={handleClone} value="clone">
                 <PiCopy />
                 <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
