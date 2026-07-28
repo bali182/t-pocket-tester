@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
-import { SELECTED_STROKE_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
+import { CARD_COLOR, SELECTED_STROKE_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
 import {
+  DrawAreaCardStyles,
   DrawAreaComponentStyles,
   DrawAreaMarkerStyles,
   DrawAreaContextValue,
@@ -23,7 +24,7 @@ const addAlpha = (color: string): string => {
   if (!isDefined(parsed)) {
     return color
   }
-  return formatHex8({ ...parsed, alpha: 0.6 })
+  return formatHex8({ ...parsed, alpha: 0.5 })
 }
 
 const exportTextStyles: DrawAreaExportTextStyles = {
@@ -141,6 +142,21 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     [isComponentSelected, project.componentSettings.baseColor],
   )
 
+  const cardStyles = useMemo<DrawAreaCardStyles>(
+    () => ({
+      getBackgroundColor: (owner, isParentHovered) => {
+        return isComponentSelected(owner.id) || isParentHovered ? addAlpha(CARD_COLOR) : CARD_COLOR
+      },
+      getStrokeColor: (owner, isParentHovered) => {
+        return isComponentSelected(owner.id) || isParentHovered ? SELECTED_STROKE_COLOR : STROKE_COLOR
+      },
+      getStrokeThickness: (_owner, _isParentHovered) => {
+        return STROKE_THICKNESS
+      },
+    }),
+    [isComponentSelected],
+  )
+
   const stitchLineStyles = useMemo<DrawAreaStitchLineStyles>(
     () => ({
       getLineColor: (stitchLine) => {
@@ -167,13 +183,15 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
     () => ({
       isInteractive: true,
+      isShowingCards: true,
       selection: drawAreaSelection,
       componentStyles,
+      cardStyles,
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
     }),
-    [componentStyles, drawAreaSelection, stitchLineStyles],
+    [cardStyles, componentStyles, drawAreaSelection, stitchLineStyles],
   )
 
   return drawAreaContextValue

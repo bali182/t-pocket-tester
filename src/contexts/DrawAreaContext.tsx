@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { ComponentSchema } from '../schemas/components'
+import { ComponentSchema, PocketClusterSchema } from '../schemas/components'
 import { StitchLineSchema } from '../schemas/stitching'
 import { SvgExportElementSchema } from '../schemas/svgExport'
 import { noop } from '../utils/noop'
@@ -21,6 +21,12 @@ export type DrawAreaComponentStyles = {
   getBorderColor: (component: ComponentSchema, isHovered: boolean) => string | undefined
   getBorderThickness: (component: ComponentSchema, isHovered: boolean) => number | undefined
   getFilter: (component: ComponentSchema, isHovered: boolean) => string | undefined
+}
+
+export type DrawAreaCardStyles = {
+  getBackgroundColor: (owner: PocketClusterSchema, isParentHovered: boolean) => string | undefined
+  getStrokeColor: (owner: PocketClusterSchema, isParentHovered: boolean) => string | undefined
+  getStrokeThickness: (owner: PocketClusterSchema, isParentHovered: boolean) => number | undefined
 }
 
 export type DrawAreaStitchLineStyles = {
@@ -49,9 +55,11 @@ export type DrawAreaMarkerStyles = {
 
 export type DrawAreaContextValue = {
   isInteractive: boolean
+  isShowingCards: boolean
   selection: DrawAreaSelection
   stitchLineStyles: DrawAreaStitchLineStyles
   componentStyles: DrawAreaComponentStyles
+  cardStyles: DrawAreaCardStyles
   exportTextStyles: DrawAreaExportTextStyles
   markerStyles: DrawAreaMarkerStyles
 }
@@ -80,6 +88,12 @@ const drawAreaDefaultComponentStyles: DrawAreaComponentStyles = {
   getFilter: produce(undefined),
 }
 
+const drawAreaDefaultCardStyles: DrawAreaCardStyles = {
+  getBackgroundColor: produce(undefined),
+  getStrokeColor: produce(undefined),
+  getStrokeThickness: produce(undefined),
+}
+
 const drawAreaDefaultExportTextStyles: DrawAreaExportTextStyles = {
   getNameText: produce(undefined),
   getNameTextColor: produce(undefined),
@@ -99,9 +113,11 @@ const drawAreaDefaultMarkerStyles: DrawAreaMarkerStyles = {
 
 const defaultDrawAreaContext: DrawAreaContextValue = {
   isInteractive: false,
+  isShowingCards: false,
   selection: drawAreaDefaultSelection,
   stitchLineStyles: drawAreaDefaultStitchLineStyles,
   componentStyles: drawAreaDefaultComponentStyles,
+  cardStyles: drawAreaDefaultCardStyles,
   exportTextStyles: drawAreaDefaultExportTextStyles,
   markerStyles: drawAreaDefaultMarkerStyles,
 }

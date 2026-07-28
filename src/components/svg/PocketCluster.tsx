@@ -6,6 +6,8 @@ import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedPocketClusterSchema } from '../../schemas/computed'
+import { isDefined } from '../../utils/isDefined'
+import { Card } from './Card'
 import { StitchLines } from './StitchLines'
 import { TPocket } from './TPocket'
 import { TPocketStitchLines } from './TPocketStitchLines'
@@ -16,7 +18,7 @@ type PocketClusterProps = {
 }
 
 export const PocketCluster: FC<PocketClusterProps> = ({ componentId, nestingLevel }) => {
-  const { componentStyles, isInteractive, selection } = useDrawAreaContext()
+  const { componentStyles, isInteractive, isShowingCards, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const pocketCluster = useComponent<PocketClusterSchema>(componentId)
   const computedPocketCluster = useComputedComponent<ComputedPocketClusterSchema>(componentId)
@@ -56,6 +58,9 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId, nestingLeve
       )}
       {computedPocketCluster.tPockets.map((pocket, pocketIndex) => (
         <Fragment key={pocket.id}>
+          {isShowingCards && isDefined(pocket.card) && (
+            <Card isParentHovered={isHovered} owner={pocketCluster} path={pocket.card.path} />
+          )}
           <TPocket
             fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}
             path={pocket.path}
@@ -66,6 +71,9 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId, nestingLeve
         </Fragment>
       ))}
 
+      {isShowingCards && isDefined(computedPocketCluster.frontPocket.card) && (
+        <Card isParentHovered={isHovered} owner={pocketCluster} path={computedPocketCluster.frontPocket.card.path} />
+      )}
       <path
         d={frontPocketPathData}
         fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}

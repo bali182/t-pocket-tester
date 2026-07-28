@@ -146,6 +146,8 @@ export const HU = {
       },
       pocketCluster: {
         title: 'Zsebek',
+        card: 'Kártya',
+        noCard: 'Nincs',
         opening: 'Nyílás',
         fromTop: 'Felülről',
         fromBottom: 'Alulról',

@@ -5,7 +5,10 @@ import { PiCaretDown, PiCaretLeft, PiCaretRight, PiCaretUp } from 'react-icons/p
 import type { PocketClusterSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
+import type { CardSchemaId } from '../../../schemas/valuables'
 import { useTranslation } from '../../../translations/translation'
+import { isDefined } from '../../../utils/isDefined'
+import { CardPicker } from '../../common/CardPicker'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
@@ -51,6 +54,21 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
     },
     [editable, onChange],
   )
+  const handleCardIdChange = useCallback(
+    (cardId: CardSchemaId): void => {
+      onChange({
+        ...editable,
+        cardId,
+      })
+    },
+    [editable, onChange],
+  )
+  const handleCardIdReset = useCallback((): void => {
+    onChange({
+      ...editable,
+      cardId: undefined,
+    })
+  }, [editable, onChange])
 
   return (
     <SectionGroup.Section>
@@ -97,6 +115,17 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
           step={1}
           unit="mm"
           value={editable.pocketStep}
+        />
+      </SectionGroup.SectionRowEditor>
+
+      <SectionGroup.SectionRowTitle>{t.component.editor.pocketCluster.card}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <CardPicker
+          isResetEnabled={isDefined(editable.cardId)}
+          issue={issues.cardId}
+          onChange={handleCardIdChange}
+          onReset={handleCardIdReset}
+          value={editable.cardId}
         />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>

@@ -1,5 +1,6 @@
 import { PathSchema, RectSchema } from './geometry'
 import { StitchHoleSchema } from './stitching'
+import { CardSchema } from './valuables'
 
 type BaseComputedSchema = {
   componentId: string
@@ -22,11 +23,20 @@ export type ComputedTopPocketSchema = {
   id: string
   boundingRect: RectSchema
   path: PathSchema
+  card?: ComputedCardSchema
 }
 
 export type ComputedTPocketSchema = {
   type: 'computed-t-pocket'
   id: string
+  boundingRect: RectSchema
+  path: PathSchema
+  card?: ComputedCardSchema
+}
+
+export type ComputedCardSchema = {
+  type: 'computed-card'
+  card: CardSchema
   boundingRect: RectSchema
   path: PathSchema
 }

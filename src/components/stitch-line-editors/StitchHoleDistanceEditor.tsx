@@ -103,7 +103,7 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
         width="full"
       >
         <Combobox.Control width="full">
-          <Combobox.Input aria-invalid={isInvalid} />
+          <Combobox.Input aria-invalid={isInvalid} borderRightRadius="0" />
           <Combobox.IndicatorGroup>
             <Combobox.Trigger />
           </Combobox.IndicatorGroup>

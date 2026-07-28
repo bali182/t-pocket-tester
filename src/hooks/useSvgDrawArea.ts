@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { COMPONENT_DIMENSIONS_COLOR, COMPONENT_NAME_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
 import {
+  DrawAreaCardStyles,
   DrawAreaComponentStyles,
   DrawAreaContextValue,
   DrawAreaExportTextStyles,
@@ -33,6 +34,15 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
       getBorderColor: produce(STROKE_COLOR),
       getBorderThickness: produce(STROKE_THICKNESS),
       getFilter: produce(undefined),
+    }),
+    [],
+  )
+
+  const cardStyles = useMemo<DrawAreaCardStyles>(
+    () => ({
+      getBackgroundColor: produce(undefined),
+      getStrokeColor: produce(undefined),
+      getStrokeThickness: produce(undefined),
     }),
     [],
   )
@@ -97,13 +107,15 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
     () => ({
       isInteractive: false,
+      isShowingCards: false,
       selection: drawAreaSelection,
       componentStyles,
+      cardStyles,
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
     }),
-    [componentStyles, exportTextStyles, markerStyles, stitchLineStyles],
+    [cardStyles, componentStyles, exportTextStyles, markerStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

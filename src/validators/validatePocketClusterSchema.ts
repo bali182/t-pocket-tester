@@ -5,6 +5,7 @@ import type {
   ValidationIssuesSchema,
   ValidationResultSchema,
 } from '../schemas/validation'
+import type { CardSchemaId } from '../schemas/valuables'
 import { isDefined } from '../utils/isDefined'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateName } from './validateName'
@@ -17,6 +18,12 @@ const pocketOrientationValues: Record<PocketOrientationSchema, boolean> = {
   left: true,
   right: true,
   up: true,
+}
+
+const cardIdValues: Record<CardSchemaId, boolean> = {
+  'ID-1': true,
+  'ID-2': true,
+  'ID-3': true,
 }
 
 export const validatePocketClusterSchema = (
@@ -49,6 +56,7 @@ export const validatePocketClusterSchema = (
     pocketOrientationValues,
     context,
   )
+  const cardIdResult = validatePrimitiveUnion(input.cardId, currentValue.cardId, cardIdValues, context, true)
   const pocketCountResult = validateNumber(input.pocketCount, currentValue.pocketCount, context, {
     allowFraction: false,
     min: 1,
@@ -71,6 +79,7 @@ export const validatePocketClusterSchema = (
     borderRadius: borderRadiusResult.issues,
     bottomLeftRadius: bottomLeftRadiusResult.issues,
     bottomRightRadius: bottomRightRadiusResult.issues,
+    cardId: cardIdResult.issues,
     color: colorResult.issues,
     height: heightResult.issues,
     id: undefined,
@@ -93,6 +102,7 @@ export const validatePocketClusterSchema = (
     borderRadius: borderRadiusResult.committedValue,
     bottomLeftRadius: bottomLeftRadiusResult.committedValue,
     bottomRightRadius: bottomRightRadiusResult.committedValue,
+    cardId: cardIdResult.committedValue,
     height: heightResult.committedValue,
     id: currentValue.id,
     individualRadii: input.individualRadii,
@@ -120,6 +130,7 @@ export const validatePocketClusterSchema = (
     !topRightRadiusResult.isValid ||
     !bottomLeftRadiusResult.isValid ||
     !bottomRightRadiusResult.isValid ||
+    !cardIdResult.isValid ||
     !widthResult.isValid ||
     !heightResult.isValid ||
     !orientationResult.isValid ||
@@ -137,6 +148,7 @@ export const validatePocketClusterSchema = (
     borderRadius: borderRadiusResult.value,
     bottomLeftRadius: bottomLeftRadiusResult.value,
     bottomRightRadius: bottomRightRadiusResult.value,
+    cardId: cardIdResult.value,
     height: heightResult.value,
     id: currentValue.id,
     individualRadii: input.individualRadii,

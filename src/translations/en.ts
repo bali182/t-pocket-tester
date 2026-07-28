@@ -148,6 +148,8 @@ export const EN: typeof HU = {
       },
       pocketCluster: {
         title: 'Pockets',
+        card: 'Card',
+        noCard: 'None',
         opening: 'Opening',
         fromTop: 'From the top',
         fromBottom: 'From the bottom',

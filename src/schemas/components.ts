@@ -1,3 +1,5 @@
+import { CardSchemaId } from './valuables'
+
 export type HasIdentitySchema = {
   id: string
   name: string
@@ -79,6 +81,8 @@ export type PocketClusterSchema = BaseComponentSchema &
     tPocketTabWidth: number
     /** How much the t pockets taper from the 2 * tPocketTabWidth reduced width to the bottom of the pocket */
     tPocketTaper: number
+    /** Id of the card shown in every pocket */
+    cardId?: CardSchemaId
   }
 
 export type ComponentSchema = RootPanelSchema | PanelSchema | PocketClusterSchema
