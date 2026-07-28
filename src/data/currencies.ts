@@ -1,4 +1,6 @@
-export const europeCurrencies = [
+import { BankNoteSchema } from '../schemas/valuables'
+
+export const europeCurrencies: BankNoteSchema[] = [
   { id: 'ALL', width: 160, height: 72 },
   { id: 'AMD', width: 160, height: 79 },
   { id: 'AZN', width: 160, height: 70 },
@@ -25,7 +27,7 @@ export const europeCurrencies = [
   { id: 'UAH', width: 160, height: 75 },
 ]
 
-export const asianCurrencies = [
+export const asianCurrencies: BankNoteSchema[] = [
   { id: 'AFN', width: 156, height: 66 },
   { id: 'BDT', width: 160, height: 72 },
   { id: 'BHD', width: 154, height: 74 },
@@ -135,7 +137,7 @@ export const southAndCentralAmericanCurrencies = [
 
 export const northAmericanCurrencies = [
   { id: 'BBD', width: null, height: null },
-  { id: 'BSD', width: null, height: null },
+  { id: 'BSD', width: 156, height: 67 },
   { id: 'CAD', width: 152.4, height: 69.85 },
   { id: 'CUP', width: null, height: null },
   { id: 'DOP', width: 158, height: 67 },
