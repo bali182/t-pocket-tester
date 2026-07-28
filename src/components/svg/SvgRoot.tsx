@@ -1,25 +1,25 @@
 import { STROKE_THICKNESS, VIEWBOX_PADDING } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { useProject } from '../../hooks/useProject'
-import type { RootPanelSchema } from '../../schemas/components'
 import type { ComputedRootPanelSchema } from '../../schemas/computed'
 import { getViewBox } from '../../utils/getViewBox'
 import { RootPanel } from './RootPanel'
 
 export const SvgRoot = () => {
   const { computedProject } = useProject()
-  const rootComponent = useComponent<RootPanelSchema>(computedProject.root)
   const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(computedProject.root)
   const { isInteractive } = useDrawAreaContext()
 
-  const viewBox = getViewBox(computedRootPanel.boundingRect, isInteractive ? VIEWBOX_PADDING : STROKE_THICKNESS / 2)
+  const padding = isInteractive ? VIEWBOX_PADDING : STROKE_THICKNESS / 2
+  const viewBox = getViewBox(computedRootPanel.boundingRect, padding)
+  const svgWidth = computedRootPanel.boundingRect.width.plus(padding * 2)
+  const svgHeight = computedRootPanel.boundingRect.height.plus(padding * 2)
 
   return (
     <svg
-      width={`${rootComponent.width}mm`}
-      height={`${rootComponent.height}mm`}
+      width={`${svgWidth.toString()}mm`}
+      height={`${svgHeight.toString()}mm`}
       style={{ display: 'block' }}
       viewBox={viewBox}
     >
