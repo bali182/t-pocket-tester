@@ -8,15 +8,16 @@ import {
 import { DndContext, PointerSensor, pointerWithin, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
 
-import { useDrawAreaContext } from '../contexts/DrawAreaContext'
-import { useComponent } from '../hooks/useComponent'
-import { useProject } from '../hooks/useProject'
-import { getComponentAncestorIds } from '../operations/project/utils/getComponentAncestorIds'
-import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
-import type { ComponentSchema } from '../schemas/components'
-import { isComponentTreeDropAreaSchema } from '../utils/isComponentTreeDropAreaSchema'
-import { isDefined } from '../utils/isDefined'
-import { ComponentTreeItem, type ComponentTreeNode } from './ComponentTreeItem'
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useComponent } from '../../hooks/useComponent'
+import { useProject } from '../../hooks/useProject'
+import { getComponentAncestorIds } from '../../operations/project/utils/getComponentAncestorIds'
+import { hasComponentChildren } from '../../operations/project/utils/hasComponentChildren'
+import type { ComponentSchema } from '../../schemas/components'
+import { isComponentTreeDropAreaSchema } from '../../utils/isComponentTreeDropAreaSchema'
+import { isDefined } from '../../utils/isDefined'
+import { ComponentTreeItem } from './ComponentTreeItem'
+import { ComponentTreeNode } from './treeTypes'
 
 type ComponentTreeProps = {
   isInReorderMode: boolean
