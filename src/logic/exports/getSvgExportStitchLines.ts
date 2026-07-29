@@ -42,9 +42,15 @@ const getCandidateStitchLines = (
   ownComponentId: string,
   stitchLineMode: SvgExportStitchLineModeSchema,
 ): StitchLineSchema[] => {
+  stitchLines.forEach((stitchLine) => {
+    if (stitchLine.targetType === 'hole') {
+      throw new Error('Hole stitch line targets are not supported yet')
+    }
+  })
+
   switch (stitchLineMode) {
     case 'own-stitch-lines':
-      return stitchLines.filter((stitchLine) => stitchLine.componentId === ownComponentId)
+      return stitchLines.filter((stitchLine) => stitchLine.targetId === ownComponentId)
     case 'all-stitch-lines':
       return stitchLines
   }

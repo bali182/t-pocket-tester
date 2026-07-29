@@ -33,7 +33,8 @@ export const validatePocketClusterStitchLineSchema = (
   )
 
   const issues: ValidationIssuesSchema<PocketClusterStitchLineSchema> = {
-    componentId: undefined,
+    targetId: undefined,
+    targetType: undefined,
     enabled: undefined,
     endOffset: endOffsetResult.issues,
     id: undefined,
@@ -51,8 +52,10 @@ export const validatePocketClusterStitchLineSchema = (
   }
 
   const committedValue: PocketClusterStitchLineSchema = {
+    ...currentValue,
     ...commonConfigResult.committedValue,
-    componentId: input.componentId,
+    targetType: currentValue.targetType,
+    targetId: input.targetId,
     enabled: input.enabled,
     endOffset: endOffsetResult.committedValue,
     id: currentValue.id,

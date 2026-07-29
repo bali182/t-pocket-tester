@@ -1,5 +1,5 @@
+import { HasCornerRadiusSchema } from '../../../schemas/common'
 import {
-  HasCornerRadiusSchema,
   HasFillableSizeSchema,
   HasLayoutSchema,
   PanelSchema,

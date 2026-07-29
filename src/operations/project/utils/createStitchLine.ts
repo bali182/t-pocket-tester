@@ -1,10 +1,10 @@
-import { HasIdentitySchema } from '../../../schemas/components'
+import { HasIdentitySchema } from '../../../schemas/common'
 import type {
   ComponentBoundsStitchLineOwnSchema,
   ComponentBoundsStitchLineSchema,
+  HasComponentTargetSchema,
   PocketClusterStitchLineOwnSchema,
   PocketClusterStitchLineSchema,
-  StitchLineComponentReferencesSchema,
 } from '../../../schemas/stitching'
 
 type StitchLineByTypeName = {
@@ -27,7 +27,8 @@ export const createStitchLine = <T extends keyof StitchLineByTypeName>(
     ...defaults,
     id: params.id,
     type: params.type,
-    componentId: params.componentId,
+    targetId: params.componentId,
+    targetType: 'component',
     name: params.name,
   }
 }
@@ -62,10 +63,11 @@ const defaultPocketClusterStitchLine: PocketClusterStitchLineOwnSchema = {
   stitchDirection: 'start-to-end',
 }
 
-const junkIdentityProps: HasIdentitySchema & StitchLineComponentReferencesSchema = {
-  componentId: '',
+const junkIdentityProps: HasIdentitySchema & HasComponentTargetSchema = {
   id: '',
   name: '',
+  targetId: '',
+  targetType: 'component',
 }
 
 const DEFAULT_STITCH_LINES: StitchLineByTypeName = {

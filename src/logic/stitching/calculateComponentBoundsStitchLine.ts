@@ -9,11 +9,15 @@ export const calculateComponentBoundsStitchLine = (
   component: ComponentSchema,
   computedComponent: ComputedComponentSchema,
 ): ComputedStitchLineSchema => {
+  if (stitchLine.targetType === 'hole') {
+    throw new Error('Hole stitch line targets are not supported yet')
+  }
+
   const calculatedPaths = calculateStitchLinePaths(stitchLine, component, computedComponent)
 
   return {
     stitchLineId: stitchLine.id,
-    componentId: stitchLine.componentId,
+    componentId: stitchLine.targetId,
     routes: calculatedPaths.map((calculatedPath) => ({
       path: calculatedPath.path,
       holes: calculateStitchLineHoles(stitchLine, calculatedPath),

@@ -1,9 +1,5 @@
+import { HasCornerRadiusSchema, HasIdentitySchema, HasSizeSchema } from './common'
 import { CardSchemaId } from './valuables'
-
-export type HasIdentitySchema = {
-  id: string
-  name: string
-}
 
 export type HasColorSchema = {
   color?: string
@@ -19,20 +15,6 @@ export type HasLayoutSchema = {
   layoutOrientation: LayoutOrientationSchema
   layoutOrder: LayoutOrderSchema
   layoutGap: number
-}
-
-export type HasCornerRadiusSchema = {
-  individualRadii: boolean
-  borderRadius: number
-  topLeftRadius: number
-  topRightRadius: number
-  bottomLeftRadius: number
-  bottomRightRadius: number
-}
-
-export type HasSizeSchema = {
-  width: number
-  height: number
 }
 
 export type HasFillableSizeSchema = HasSizeSchema & {

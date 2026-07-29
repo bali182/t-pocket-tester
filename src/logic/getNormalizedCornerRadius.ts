@@ -1,4 +1,4 @@
-import { HasCornerRadiusSchema } from '../schemas/components'
+import { HasCornerRadiusSchema } from '../schemas/common'
 import { CornerRadiusSchema } from '../schemas/geometry'
 
 export const getNormalizedCornerRadius = (component: HasCornerRadiusSchema): CornerRadiusSchema => {

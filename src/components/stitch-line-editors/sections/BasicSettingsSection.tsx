@@ -1,16 +1,17 @@
 import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 
-import type { ComponentSchema, HasIdentitySchema } from '../../../schemas/components'
+import { HasIdentitySchema } from '../../../schemas/common'
+import type { ComponentSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
-import type { StitchLineComponentReferencesSchema } from '../../../schemas/stitching'
+import type { HasTargetSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { isDefined } from '../../../utils/isDefined'
 import { ComponentSelect } from '../../common/ComponentSelect'
 import { SectionGroup } from '../../common/SectionGroup'
 
-export type BaseStitchLineSchema = HasIdentitySchema & StitchLineComponentReferencesSchema
+export type BaseStitchLineSchema = HasIdentitySchema & HasTargetSchema
 
 type BasicSettingsSectionProps<T extends BaseStitchLineSchema> = {
   editable: EditableSchema<T>
@@ -36,7 +37,7 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
   )
   const handleComponentChange = useCallback(
     (componentId: string): void => {
-      onChange({ ...editable, componentId })
+      onChange({ ...editable, targetId: componentId })
     },
     [editable, onChange],
   )
@@ -53,7 +54,7 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
       <SectionGroup.SectionRowTitle>{t.common.labels.component}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
         <ComponentSelect
-          componentId={editable.componentId}
+          componentId={editable.targetId}
           componentTypes={componentTypes}
           onChange={handleComponentChange}
         />

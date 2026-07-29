@@ -11,9 +11,16 @@ type StitchLinesProps = {
 
 export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
   const { project, computedProject } = useProject()
-  const stitchLines = project.stitchLines.filter(
-    (stitchLine) => stitchLine.componentId === componentId && stitchLine.type === 'component-bounds-stitch-line',
-  )
+  const stitchLines = project.stitchLines.filter((stitchLine) => {
+    if (stitchLine.type !== 'component-bounds-stitch-line') {
+      return false
+    }
+    if (stitchLine.targetType === 'hole') {
+      throw new Error('Hole stitch line targets are not supported yet')
+    }
+
+    return stitchLine.targetId === componentId
+  })
 
   return (
     <>

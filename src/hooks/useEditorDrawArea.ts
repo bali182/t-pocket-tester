@@ -70,7 +70,11 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     }
 
     if (isDefined(selectedStitchLine)) {
-      return selectedStitchLine.componentId
+      if (selectedStitchLine.targetType === 'hole') {
+        throw new Error('Hole stitch line targets are not supported yet')
+      }
+
+      return selectedStitchLine.targetId
     }
 
     return undefined

@@ -12,8 +12,12 @@ export const calculateStitchLines = (
   const computedStitchLines: ComputedStitchLineSchema[] = []
 
   for (const stitchLine of stitchLines) {
-    const component = components[stitchLine.componentId]
-    const computedComponent = computedComponents[stitchLine.componentId]
+    if (stitchLine.targetType === 'hole') {
+      throw new Error('Hole stitch line targets are not supported yet')
+    }
+
+    const component = components[stitchLine.targetId]
+    const computedComponent = computedComponents[stitchLine.targetId]
 
     if (!isDefined(component) || !isDefined(computedComponent)) {
       continue

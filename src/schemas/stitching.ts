@@ -1,4 +1,4 @@
-import { HasIdentitySchema } from './components'
+import { HasIdentitySchema } from './common'
 import { PointSchema } from './geometry'
 
 export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
@@ -6,6 +6,18 @@ export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
 export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
 export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
 export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
+
+export type HasComponentTargetSchema = {
+  targetType: 'component'
+  targetId: string
+}
+
+export type HasHoleTargetSchema = {
+  targetType: 'hole'
+  targetId: string
+}
+
+export type HasTargetSchema = HasComponentTargetSchema | HasHoleTargetSchema
 
 export type StitchHoleSchema = {
   center: PointSchema
@@ -20,11 +32,6 @@ export type StitchLineCommonConfigSchema = {
   stitchLineThickness: number
   stitchHoleColor: string
   stitchLineColor: string
-}
-
-export type StitchLineComponentReferencesSchema = {
-  /** Which component's bounding box are we stitching? */
-  componentId: string
 }
 
 export type ComponentBoundsStitchLineOwnSchema = {
@@ -67,8 +74,8 @@ type ComponentBoundsStitchLineDiscriminatorSchema = {
 }
 
 export type ComponentBoundsStitchLineSchema = HasIdentitySchema &
+  HasTargetSchema &
   Partial<StitchLineCommonConfigSchema> &
-  StitchLineComponentReferencesSchema &
   ComponentBoundsStitchLineOwnSchema &
   ComponentBoundsStitchLineDiscriminatorSchema
 
@@ -84,22 +91,22 @@ type PocketClusterStitchLineDiscriminatorSchema = {
 }
 
 export type PocketClusterStitchLineSchema = HasIdentitySchema &
+  HasComponentTargetSchema &
   Partial<StitchLineCommonConfigSchema> &
-  StitchLineComponentReferencesSchema &
   PocketClusterStitchLineOwnSchema &
   PocketClusterStitchLineDiscriminatorSchema
 
 export type StitchLineSchema = ComponentBoundsStitchLineSchema | PocketClusterStitchLineSchema
 
 export type ResolvedComponentBoundsStitchLineSchema = HasIdentitySchema &
+  HasTargetSchema &
   StitchLineCommonConfigSchema &
-  StitchLineComponentReferencesSchema &
   ComponentBoundsStitchLineOwnSchema &
   ComponentBoundsStitchLineDiscriminatorSchema
 
 export type ResolvedPocketClusterStitchLineSchema = HasIdentitySchema &
+  HasComponentTargetSchema &
   StitchLineCommonConfigSchema &
-  StitchLineComponentReferencesSchema &
   PocketClusterStitchLineOwnSchema &
   PocketClusterStitchLineDiscriminatorSchema
 
