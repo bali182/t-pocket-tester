@@ -49,6 +49,13 @@ export type ComputedPocketClusterSchema = BaseComputedSchema & {
 
 export type ComputedComponentSchema = ComputedRootPanelSchema | ComputedPanelSchema | ComputedPocketClusterSchema
 
+export type ComputedHoleSchema = {
+  holeId: string
+  componentId: string
+  boundingRect: RectSchema
+  path: PathSchema
+}
+
 export type ComputedStitchRouteSchema = {
   path: PathSchema
   holes: StitchHoleSchema[]
