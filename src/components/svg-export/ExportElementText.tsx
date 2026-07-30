@@ -33,12 +33,18 @@ export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
   const centerX = boundingRect.x.plus(boundingRect.width.dividedBy(2))
   const centerY = boundingRect.y.plus(boundingRect.height.dividedBy(2))
   const gap = isDefined(nameDimensionsGap) ? new BigNumber(nameDimensionsGap) : new BigNumber(0)
-  const nameY = hasName && hasDimensions
-    ? centerY.minus(new BigNumber(nameTextFontSize).plus(gap).plus(dimensionsTextFontSize).dividedBy(2)).plus(new BigNumber(nameTextFontSize).dividedBy(2))
-    : centerY
-  const dimensionsY = hasName && hasDimensions
-    ? centerY.plus(new BigNumber(nameTextFontSize).plus(gap).plus(dimensionsTextFontSize).dividedBy(2)).minus(new BigNumber(dimensionsTextFontSize).dividedBy(2))
-    : centerY
+  const nameY =
+    hasName && hasDimensions
+      ? centerY
+          .minus(new BigNumber(nameTextFontSize).plus(gap).plus(dimensionsTextFontSize).dividedBy(2))
+          .plus(new BigNumber(nameTextFontSize).dividedBy(2))
+      : centerY
+  const dimensionsY =
+    hasName && hasDimensions
+      ? centerY
+          .plus(new BigNumber(nameTextFontSize).plus(gap).plus(dimensionsTextFontSize).dividedBy(2))
+          .minus(new BigNumber(dimensionsTextFontSize).dividedBy(2))
+      : centerY
 
   return (
     <text textAnchor="middle">

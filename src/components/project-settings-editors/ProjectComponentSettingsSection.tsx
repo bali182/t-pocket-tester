@@ -21,7 +21,8 @@ export const ProjectComponentSettingsSection: FC<ProjectComponentSettingsSection
   onChange,
 }) => {
   const t = useTranslation()
-  const isBaseColorInvalid = isDefined(issues.componentSettings.baseColor) && issues.componentSettings.baseColor.severity === 'error'
+  const isBaseColorInvalid =
+    isDefined(issues.componentSettings.baseColor) && issues.componentSettings.baseColor.severity === 'error'
   const handleBaseColorChange = useCallback(
     (baseColor: string): void => {
       onChange({

@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js'
 
 import type { ComputedComponentSchema, ComputedHoleSchema } from '../schemas/computed'
-import type { HoleAnchorSchema, HoleSchema } from '../schemas/hole'
 import type { RectSchema } from '../schemas/geometry'
+import type { HoleAnchorSchema, HoleSchema } from '../schemas/hole'
 import { isDefined } from '../utils/isDefined'
 import { calculateCirclePath } from './calculateCirclePath'
 import { calculateRectPath } from './calculateRectPath'
@@ -71,20 +71,8 @@ const calculateHoleBoundingRect = (
   hole: HoleSchema,
 ): RectSchema => {
   return {
-    x: calculateAnchoredAxisStart(
-      ownerBoundingRect.x,
-      ownerBoundingRect.width,
-      width,
-      hole.xAnchor,
-      hole.xOffset,
-    ),
-    y: calculateAnchoredAxisStart(
-      ownerBoundingRect.y,
-      ownerBoundingRect.height,
-      height,
-      hole.yAnchor,
-      hole.yOffset,
-    ),
+    x: calculateAnchoredAxisStart(ownerBoundingRect.x, ownerBoundingRect.width, width, hole.xAnchor, hole.xOffset),
+    y: calculateAnchoredAxisStart(ownerBoundingRect.y, ownerBoundingRect.height, height, hole.yAnchor, hole.yOffset),
     width,
     height,
   }

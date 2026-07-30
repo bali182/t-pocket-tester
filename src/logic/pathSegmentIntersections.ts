@@ -2,14 +2,17 @@ import BigNumber from 'bignumber.js'
 
 import type { PointSchema } from '../schemas/geometry'
 import type { ArcPathSegment, LinePathSegment, PathSegment, PathSegmentIntersection } from './pathSegmentTypes'
-import { getAngle, getArcProgress, getPointOnPathSegment, getSortedDistinctProgresses, isProgressInRange } from './pathSegmentUtils'
+import {
+  getAngle,
+  getArcProgress,
+  getPointOnPathSegment,
+  getSortedDistinctProgresses,
+  isProgressInRange,
+} from './pathSegmentUtils'
 
 const TWO = new BigNumber(2)
 
-export const getPathSegmentIntersections = (
-  first: PathSegment,
-  second: PathSegment,
-): PathSegmentIntersection[] => {
+export const getPathSegmentIntersections = (first: PathSegment, second: PathSegment): PathSegmentIntersection[] => {
   if (first.type === 'line' && second.type === 'line') {
     return getLineLineIntersections(first, second)
   }
@@ -103,7 +106,11 @@ const getArcArcIntersections = (first: ArcPathSegment, second: ArcPathSegment): 
     return []
   }
 
-  const firstDistance = first.radius.pow(2).minus(second.radius.pow(2)).plus(centerDistance.pow(2)).dividedBy(TWO.times(centerDistance))
+  const firstDistance = first.radius
+    .pow(2)
+    .minus(second.radius.pow(2))
+    .plus(centerDistance.pow(2))
+    .dividedBy(TWO.times(centerDistance))
   const heightSquared = first.radius.pow(2).minus(firstDistance.pow(2))
 
   if (heightSquared.isNegative()) {

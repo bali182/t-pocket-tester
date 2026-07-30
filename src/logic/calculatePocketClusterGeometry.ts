@@ -63,12 +63,7 @@ export const calculatePocketClusterGeometry = (
       card: calculatePocketCard(normalizedPocketCluster, topPocketCardBoundingRect),
     },
     tPockets: initial(pocketRects).map((pocketRect, index) => {
-      const cardBoundingRect = getPocketCardBoundingRect(
-        normalizedPocketCluster,
-        pocketRect,
-        resolvedStitchLines,
-        true,
-      )
+      const cardBoundingRect = getPocketCardBoundingRect(normalizedPocketCluster, pocketRect, resolvedStitchLines, true)
 
       return {
         type: 'computed-t-pocket',
@@ -101,15 +96,15 @@ const getPocketCardBoundingRect = (
   )
   const pocketClusterStitchLines = resolvedStitchLines.filter(
     (stitchLine): stitchLine is ResolvedPocketClusterStitchLineSchema =>
-      stitchLine.type === 'pocket-cluster-stitch-line' && stitchLine.targetId === pocketCluster.id && stitchLine.enabled,
+      stitchLine.type === 'pocket-cluster-stitch-line' &&
+      stitchLine.targetId === pocketCluster.id &&
+      stitchLine.enabled,
   )
   const leftInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.left))
   const rightInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.right))
   const topInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.top))
   const bottomInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.bottom))
-  const pocketClusterStitchInset = isTPocket
-    ? getMaximumStitchClearance(pocketClusterStitchLines)
-    : ZERO
+  const pocketClusterStitchInset = isTPocket ? getMaximumStitchClearance(pocketClusterStitchLines) : ZERO
 
   let left = pocketBoundingRect.x
   let top = pocketBoundingRect.y
@@ -155,7 +150,9 @@ const getMaximumStitchClearance = (stitchLines: StitchLineCommonConfigSchema[]):
 }
 
 const getStitchClearance = (stitchLine: StitchLineCommonConfigSchema): BigNumber => {
-  return new BigNumber(stitchLine.stitchMargin).plus(new BigNumber(stitchLine.stitchHoleLength).dividedBy(2 * Math.sqrt(2)))
+  return new BigNumber(stitchLine.stitchMargin).plus(
+    new BigNumber(stitchLine.stitchHoleLength).dividedBy(2 * Math.sqrt(2)),
+  )
 }
 
 const calculatePocketBoundingBoxes = (pocketCluster: PocketClusterSchema, rect: RectSchema): RectSchema[] => {

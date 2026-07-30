@@ -3,8 +3,8 @@ import { useCallback, useState, type FC } from 'react'
 import { PiPlus } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
-import { useTranslation } from '../../translations/translation'
 import { useProjects } from '../../hooks/useProjects'
+import { useTranslation } from '../../translations/translation'
 import { CreateProjectDialog } from '../CreateProjectDialog'
 
 export const ProjectsRoute: FC = () => {

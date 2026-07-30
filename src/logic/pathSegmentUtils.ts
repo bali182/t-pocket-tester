@@ -107,10 +107,12 @@ export const isPointOnPathSegment = (point: PointSchema, segment: PathSegment): 
       return false
     }
 
-    return point.x.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.x, segment.end.x)) &&
+    return (
+      point.x.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.x, segment.end.x)) &&
       point.x.isLessThanOrEqualTo(BigNumber.maximum(segment.start.x, segment.end.x)) &&
       point.y.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.y, segment.end.y)) &&
       point.y.isLessThanOrEqualTo(BigNumber.maximum(segment.start.y, segment.end.y))
+    )
   }
 
   const distanceSquared = point.x.minus(segment.center.x).pow(2).plus(point.y.minus(segment.center.y).pow(2))
@@ -166,20 +168,10 @@ export const doLinePathSegmentsOverlap = (first: LinePathSegment, second: LinePa
   }
 
   if (!firstDx.isZero()) {
-    return doRangesOverlap(
-      first.start.x,
-      first.end.x,
-      second.start.x,
-      second.end.x,
-    )
+    return doRangesOverlap(first.start.x, first.end.x, second.start.x, second.end.x)
   }
 
-  return doRangesOverlap(
-    first.start.y,
-    first.end.y,
-    second.start.y,
-    second.end.y,
-  )
+  return doRangesOverlap(first.start.y, first.end.y, second.start.y, second.end.y)
 }
 
 const getPathSegmentRange = (segment: PathSegment, startProgress: BigNumber, endProgress: BigNumber): PathSegment => {
@@ -217,7 +209,12 @@ const doRangesOverlap = (
   return overlapStart.isLessThan(overlapEnd)
 }
 
-const getSweepOneCenter = (start: PointSchema, end: PointSchema, first: PointSchema, second: PointSchema): PointSchema => {
+const getSweepOneCenter = (
+  start: PointSchema,
+  end: PointSchema,
+  first: PointSchema,
+  second: PointSchema,
+): PointSchema => {
   const firstStartAngle = getAngle(first, start)
   const firstEndAngle = getAngle(first, end)
 

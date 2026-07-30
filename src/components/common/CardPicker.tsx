@@ -66,11 +66,7 @@ export const CardPicker: FC<CardPickerProps> = ({ isResetEnabled, issue, onChang
       value={isDefined(value) ? [value] : []}
       width="full"
     >
-      <InputGroup
-        endAddon={resetButtonEl}
-        endAddonProps={{ px: 0, size: 'xs' }}
-        width="full"
-      >
+      <InputGroup endAddon={resetButtonEl} endAddonProps={{ px: 0, size: 'xs' }} width="full">
         <Select.Control width="full">
           <Select.HiddenSelect />
           <Select.Trigger borderRightRadius="0">

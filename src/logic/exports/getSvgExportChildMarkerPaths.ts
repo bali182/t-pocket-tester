@@ -20,10 +20,9 @@ export const getSvgExportChildMarkerPaths = (
   })
 
   const markerLines = boundingRects.flatMap((boundingRect) => {
-    return getBoundingRectMarkerLines(boundingRect)
-      .filter(
-        (markerLine) => !parentLineSegments.some((parentLine) => doLinePathSegmentsOverlap(markerLine, parentLine)),
-      )
+    return getBoundingRectMarkerLines(boundingRect).filter(
+      (markerLine) => !parentLineSegments.some((parentLine) => doLinePathSegmentsOverlap(markerLine, parentLine)),
+    )
   })
 
   return removeDuplicates(markerLines).map((markerLine) => createPathFromConnectedSegments([markerLine]))

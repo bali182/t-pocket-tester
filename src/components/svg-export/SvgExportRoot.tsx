@@ -23,7 +23,12 @@ export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, svgExport }) =>
 
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
-      <svg width={`${width.toString()}mm`} height={`${height.toString()}mm`} style={{ display: 'block' }} viewBox={viewBox}>
+      <svg
+        width={`${width.toString()}mm`}
+        height={`${height.toString()}mm`}
+        style={{ display: 'block' }}
+        viewBox={viewBox}
+      >
         {svgExport.elements.map((element) => {
           switch (element.type) {
             case 'svg-export-panel':

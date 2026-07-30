@@ -1,6 +1,6 @@
 import { Box, TreeView } from '@chakra-ui/react'
+import type { FC, ReactNode } from 'react'
 import type { IconType } from 'react-icons'
-import type { ReactNode, FC } from 'react'
 
 import { PiCaretRight } from 'react-icons/pi'
 
@@ -28,7 +28,11 @@ export const TreeItemVisual: FC<TreeItemVisualProps> = ({
       </TreeView.BranchIndicator>
     </TreeView.BranchTrigger>
   ) : null
-  const text = isBranch ? <TreeView.BranchText>{label}</TreeView.BranchText> : <TreeView.ItemText>{label}</TreeView.ItemText>
+  const text = isBranch ? (
+    <TreeView.BranchText>{label}</TreeView.BranchText>
+  ) : (
+    <TreeView.ItemText>{label}</TreeView.ItemText>
+  )
 
   return (
     <Box

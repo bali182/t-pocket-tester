@@ -21,10 +21,7 @@ export type SvgExportElementsLayout = {
   elements: SvgExportElementSchema[]
 }
 
-export const layoutSvgExportElements = (
-  elements: SvgExportElementSchema[],
-  gap: number,
-): SvgExportElementsLayout => {
+export const layoutSvgExportElements = (elements: SvgExportElementSchema[], gap: number): SvgExportElementsLayout => {
   let contentWidth = ZERO
   let nextTop = ZERO
 
@@ -71,9 +68,7 @@ const translateSvgExportPanel = (element: SvgExportPanelSchema, translation: Poi
   return {
     ...element,
     boundingRect: translateRect(element.boundingRect, translation),
-    ...(isDefined(element.cutHelper)
-      ? { cutHelper: translatePath(element.cutHelper, translation) }
-      : {}),
+    ...(isDefined(element.cutHelper) ? { cutHelper: translatePath(element.cutHelper, translation) } : {}),
     ...(isDefined(element.cutHelperBoundingRect)
       ? { cutHelperBoundingRect: translateRect(element.cutHelperBoundingRect, translation) }
       : {}),
@@ -94,9 +89,7 @@ const translateSvgExportFrontPocket = (
       boundingRect: translateRect(element.pocket.boundingRect, translation),
       path: translatePath(element.pocket.path, translation),
     },
-    ...(isDefined(element.cutHelper)
-      ? { cutHelper: translatePath(element.cutHelper, translation) }
-      : {}),
+    ...(isDefined(element.cutHelper) ? { cutHelper: translatePath(element.cutHelper, translation) } : {}),
     ...(isDefined(element.cutHelperBoundingRect)
       ? { cutHelperBoundingRect: translateRect(element.cutHelperBoundingRect, translation) }
       : {}),
@@ -115,9 +108,7 @@ const translateSvgExportTPocket = (
       boundingRect: translateRect(element.pocket.boundingRect, translation),
       path: translatePath(element.pocket.path, translation),
     },
-    ...(isDefined(element.cutHelper)
-      ? { cutHelper: translatePath(element.cutHelper, translation) }
-      : {}),
+    ...(isDefined(element.cutHelper) ? { cutHelper: translatePath(element.cutHelper, translation) } : {}),
     ...(isDefined(element.cutHelperBoundingRect)
       ? { cutHelperBoundingRect: translateRect(element.cutHelperBoundingRect, translation) }
       : {}),

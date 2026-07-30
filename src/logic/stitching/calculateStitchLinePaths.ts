@@ -8,9 +8,9 @@ import type {
   StitchCornerSchema,
   StitchSideSchema,
 } from '../../schemas/stitching'
-import { getNormalizedCornerRadius } from '../getNormalizedCornerRadius'
 import { arePointsEqual } from '../../utils/arePointsEqual'
 import { isDefined } from '../../utils/isDefined'
+import { getNormalizedCornerRadius } from '../getNormalizedCornerRadius'
 
 const ZERO = new BigNumber(0)
 
