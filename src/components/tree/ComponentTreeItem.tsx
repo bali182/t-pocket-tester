@@ -4,7 +4,6 @@ import { useCallback, useMemo, type FC } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
 import { hasComponentChildren } from '../../operations/project/utils/hasComponentChildren'
-import { getComponentIcon } from '../../utils/getComponentIcon'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentActionsMenu } from '../ComponentActionsMenu'
 import { DropInsideIndicator, ReorderDropIndicator } from './ComponentTreeDropIndicators'
@@ -16,6 +15,8 @@ import type {
   ComponentTreeDropPosition,
 } from './types/dropDataTypes'
 import { ComponentTreeNode } from './types/nodeTypes'
+import { getProjectTreeNodeIcon } from './utils/getProjectTreeNodeIcon'
+import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 
 type ComponentTreeItemProps = {
   activeDragData: TreeDragData | undefined
@@ -155,7 +156,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
     [setAttachmentDropNodeRef, setNodeRef],
   )
 
-  const Icon = getComponentIcon(component.type)
+  const Icon = getProjectTreeNodeIcon(node)
   const dragHandle = isDraggable ? (
     <IconButton
       {...attributes}
@@ -207,7 +208,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
           icon={Icon}
           isBranch={true}
           isPositioned={true}
-          label={component.name}
+          label={getProjectTreeNodeLabel(node)}
           leading={dragHandle}
           trailing={
             !isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />

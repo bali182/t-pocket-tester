@@ -1,9 +1,8 @@
 import { IconButton, TreeView, type TreeViewNodeState } from '@chakra-ui/react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { useCallback, useMemo, type FC } from 'react'
-import { PiCircleDashed, PiDotsSixVertical, PiRectangleDashed } from 'react-icons/pi'
+import { PiDotsSixVertical } from 'react-icons/pi'
 
-import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { DropInsideIndicator } from './ComponentTreeDropIndicators'
 import { HoleActionsMenu } from './HoleActionsMenu'
@@ -11,6 +10,8 @@ import { TreeItemVisual } from './TreeItemVisual'
 import type { TreeDragData } from './types/dragDataTypes'
 import type { HoleStitchLineDropData } from './types/dropDataTypes'
 import type { HoleTreeNode } from './types/nodeTypes'
+import { getProjectTreeNodeIcon } from './utils/getProjectTreeNodeIcon'
+import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 
 type HoleTreeItemProps = {
   activeDragData: TreeDragData | undefined
@@ -27,7 +28,6 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   node,
   nodeState,
 }) => {
-  const t = useTranslation()
   const { hole } = node
   const isActiveHole = activeDragData?.kind === 'hole' && activeDragData.holeId === hole.id
   const canAcceptStitchLine =
@@ -67,8 +67,8 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
     [setDropNodeRef, setNodeRef],
   )
 
-  const Icon = hole.type === 'circle-hole' ? PiCircleDashed : PiRectangleDashed
-  const label = hole.type === 'circle-hole' ? t.hole.types.circle : t.hole.types.rectangle
+  const Icon = getProjectTreeNodeIcon(node)
+  const label = getProjectTreeNodeLabel(node)
   const dragHandle = isInReorderMode ? (
     <IconButton
       {...attributes}

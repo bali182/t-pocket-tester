@@ -1,12 +1,14 @@
 import { IconButton, TreeView, type TreeViewNodeState } from '@chakra-ui/react'
 import { useDraggable } from '@dnd-kit/core'
 import type { FC } from 'react'
-import { PiDotsSixVertical, PiNeedle } from 'react-icons/pi'
+import { PiDotsSixVertical } from 'react-icons/pi'
 
 import { StitchLineActionsMenu } from '../StitchLineActionsMenu'
 import { TreeItemVisual } from './TreeItemVisual'
 import type { TreeDragData } from './types/dragDataTypes'
 import type { StitchLineTreeNode } from './types/nodeTypes'
+import { getProjectTreeNodeIcon } from './utils/getProjectTreeNodeIcon'
+import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 
 type StitchLineTreeItemProps = {
   activeDragData: TreeDragData | undefined
@@ -39,20 +41,6 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
     id: node.id,
   })
 
-  const dragHandle = isInReorderMode ? (
-    <IconButton
-      {...attributes}
-      {...listeners}
-      cursor={isDragging ? 'grabbing' : 'grab'}
-      ref={setActivatorNodeRef}
-      size="2xs"
-      variant="ghost"
-      _hover={{ bg: 'transparent' }}
-    >
-      <PiDotsSixVertical />
-    </IconButton>
-  ) : null
-
   return (
     <TreeView.Item
       cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
@@ -62,11 +50,25 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
       h="9"
     >
       <TreeItemVisual
-        icon={PiNeedle}
+        icon={getProjectTreeNodeIcon(node)}
         isBranch={false}
         isPositioned={false}
-        label={stitchLine.name}
-        leading={dragHandle}
+        label={getProjectTreeNodeLabel(node)}
+        leading={
+          isInReorderMode ? (
+            <IconButton
+              {...attributes}
+              {...listeners}
+              cursor={isDragging ? 'grabbing' : 'grab'}
+              ref={setActivatorNodeRef}
+              size="2xs"
+              variant="ghost"
+              _hover={{ bg: 'transparent' }}
+            >
+              <PiDotsSixVertical />
+            </IconButton>
+          ) : null
+        }
         trailing={!isInReorderMode && <StitchLineActionsMenu size="2xs" stitchLine={stitchLine} onDelete={onDelete} />}
       />
     </TreeView.Item>

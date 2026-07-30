@@ -19,13 +19,11 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
-import { PiCircleDashed, PiDotsSixVertical, PiNeedle, PiRectangleDashed } from 'react-icons/pi'
+import { PiDotsSixVertical } from 'react-icons/pi'
 
 import typia from 'typia'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useProject } from '../../hooks/useProject'
-import { useTranslation } from '../../translations/translation'
-import { getComponentIcon } from '../../utils/getComponentIcon'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentTreeItem } from './ComponentTreeItem'
 import { HoleTreeItem } from './HoleTreeItem'
@@ -35,6 +33,8 @@ import { TreeDragData } from './types/dragDataTypes'
 import { TreeDropData } from './types/dropDataTypes'
 import { ProjectTreeNode } from './types/nodeTypes'
 import { getNextExpandedNodeIds } from './utils/getNextExpandedNodeIds'
+import { getProjectTreeNodeIcon } from './utils/getProjectTreeNodeIcon'
+import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 import { createTreeRootNode } from './utils/treeNodeFactories'
 import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './utils/treeNodeIds'
 
@@ -52,7 +52,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
   const collection = useMemo<TreeCollection<ProjectTreeNode>>(() => {
     return createTreeCollection<ProjectTreeNode>({
       nodeToChildren: (node) => node.children,
-      nodeToString: getTreeNodeLabel,
+      nodeToString: getProjectTreeNodeLabel,
       nodeToValue: (node) => node.id,
       rootNode: createTreeRootNode(project),
     })
@@ -241,23 +241,11 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
   )
 }
 
-const getTreeNodeLabel = (node: ProjectTreeNode): string => {
-  switch (node.kind) {
-    case 'component':
-      return node.component.name
-    case 'hole':
-      return node.hole.name
-    case 'stitch-line':
-      return node.stitchLine.name
-  }
-}
-
 type TreeDragPreviewProps = {
   dragData: TreeDragData
 }
 
 const TreeDragPreview: FC<TreeDragPreviewProps> = ({ dragData }) => {
-  const t = useTranslation()
   const { node } = dragData
   const isBranch = node.children.length > 0
   const dragHandle = (
@@ -266,31 +254,13 @@ const TreeDragPreview: FC<TreeDragPreviewProps> = ({ dragData }) => {
     </IconButton>
   )
   const isPositioned = node.kind !== 'stitch-line'
-  let icon
-  let label: string
-
-  switch (node.kind) {
-    case 'component':
-      icon = getComponentIcon(node.component.type)
-      label = node.component.name
-      break
-    case 'hole': {
-      icon = node.hole.type === 'circle-hole' ? PiCircleDashed : PiRectangleDashed
-      label = node.hole.type === 'circle-hole' ? t.hole.types.circle : t.hole.types.rectangle
-      break
-    }
-    case 'stitch-line':
-      icon = PiNeedle
-      label = node.stitchLine.name
-      break
-  }
 
   const visual = (
     <TreeItemVisual
-      icon={icon}
+      icon={getProjectTreeNodeIcon(node)}
       isBranch={isBranch}
       isPositioned={isPositioned}
-      label={label}
+      label={getProjectTreeNodeLabel(node)}
       leading={dragHandle}
       trailing={null}
     />
