@@ -70,6 +70,7 @@ export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLi
                     <PiSquareSplitVertical />
                     <Menu.ItemText>{t.common.actions.flipVertical}</Menu.ItemText>
                   </Menu.Item>
+                  <Menu.Separator />
                 </>
               )}
               <Menu.Item onClick={handleClone} value="clone">

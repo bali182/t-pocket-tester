@@ -1,6 +1,8 @@
 import { createContext, useContext } from 'react'
 
 import { ComponentSchema, PocketClusterSchema } from '../schemas/components'
+import { HoleSchema } from '../schemas/hole'
+import { EditorSelectionSchema } from '../schemas/selection'
 import { StitchLineSchema } from '../schemas/stitching'
 import { SvgExportElementSchema } from '../schemas/svgExport'
 import { noop } from '../utils/noop'
@@ -10,10 +12,13 @@ export type DrawAreaSelection = {
   highlightedComponentId: string | undefined
   selectedComponent: ComponentSchema | undefined
   selectedStitchLine: StitchLineSchema | undefined
+  selectedHole: HoleSchema | undefined
+  editorSelection: EditorSelectionSchema | undefined
   clearSelection: () => void
   isComponentSelected: (componentId: string) => boolean
   selectComponent: (componentId: string) => void
   selectStitchLine: (stitchLineId: string) => void
+  selectHole: (holeId: string) => void
 }
 
 export type DrawAreaComponentStyles = {
@@ -68,10 +73,13 @@ const drawAreaDefaultSelection: DrawAreaSelection = {
   highlightedComponentId: undefined,
   selectedComponent: undefined,
   selectedStitchLine: undefined,
+  selectedHole: undefined,
+  editorSelection: undefined,
   clearSelection: noop,
   isComponentSelected: () => false,
   selectComponent: noop,
   selectStitchLine: noop,
+  selectHole: noop,
 }
 
 const drawAreaDefaultStitchLineStyles: DrawAreaStitchLineStyles = {

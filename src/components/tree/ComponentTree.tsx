@@ -1,145 +1,191 @@
+import { TreeView as ArkTreeView } from '@ark-ui/react'
 import {
+  IconButton,
   TreeView,
   createTreeCollection,
   type TreeCollection,
   type TreeViewExpandedChangeDetails,
   type TreeViewSelectionChangeDetails,
 } from '@chakra-ui/react'
-import { DndContext, PointerSensor, pointerWithin, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  pointerWithin,
+  useSensor,
+  useSensors,
+  type DragCancelEvent,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core'
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
+import { PiCircleDashed, PiDotsSixVertical, PiNeedle, PiRectangleDashed } from 'react-icons/pi'
 
+import typia from 'typia'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { useComponent } from '../../hooks/useComponent'
 import { useProject } from '../../hooks/useProject'
-import { getComponentAncestorIds } from '../../operations/project/utils/getComponentAncestorIds'
-import { hasComponentChildren } from '../../operations/project/utils/hasComponentChildren'
-import type { ComponentSchema } from '../../schemas/components'
-import { isComponentTreeDropAreaSchema } from '../../utils/isComponentTreeDropAreaSchema'
+import { useTranslation } from '../../translations/translation'
+import { getComponentIcon } from '../../utils/getComponentIcon'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentTreeItem } from './ComponentTreeItem'
-import { ComponentTreeNode } from './treeTypes'
+import { HoleTreeItem } from './HoleTreeItem'
+import { StitchLineTreeItem } from './StitchLineTreeItem'
+import { TreeItemVisual } from './TreeItemVisual'
+import { TreeDragData } from './types/dragDataTypes'
+import { TreeDropData } from './types/dropDataTypes'
+import { ProjectTreeNode } from './types/nodeTypes'
+import { getNextExpandedNodeIds } from './utils/getNextExpandedNodeIds'
+import { createTreeRootNode } from './utils/treeNodeFactories'
+import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './utils/treeNodeIds'
 
 type ComponentTreeProps = {
   isInReorderMode: boolean
-  selectedComponentId: string | undefined
 }
 
-export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isInReorderMode = true }) => {
-  const { moveComponent, project } = useProject()
-  const rootComponent = useComponent(project.root)
+export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }) => {
+  const { project, moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole } = useProject()
   const { selection } = useDrawAreaContext()
-  const [expandedComponentIds, setExpandedComponentIds] = useState<string[]>(() => [project.root])
+  const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>(() => [getComponentNodeId(project.root)])
+  const [activeDragData, setActiveDragData] = useState<TreeDragData | undefined>()
   const sensors = useSensors(useSensor(PointerSensor))
 
-  const collection = useMemo<TreeCollection<ComponentTreeNode>>(() => {
-    const createNode = (
-      component: ComponentSchema,
-      parentId: string | undefined,
-      nextSiblingId: string | undefined,
-    ): ComponentTreeNode => {
-      const childNodes: ComponentTreeNode[] = []
-
-      if (hasComponentChildren(component)) {
-        const childComponents = component.children.map((childId) => project.components[childId]).filter(isDefined)
-
-        childComponents.forEach((child, index) => {
-          childNodes.push(createNode(child, component.id, childComponents[index + 1]?.id))
-        })
-      }
-
-      if (childNodes.length > 0) {
-        return {
-          children: childNodes,
-          component,
-          id: component.id,
-          name: component.name,
-          nextSiblingId,
-          parentId,
-        }
-      }
-
-      return {
-        component,
-        id: component.id,
-        name: component.name,
-        nextSiblingId,
-        parentId,
-      }
-    }
-
-    return createTreeCollection<ComponentTreeNode>({
-      nodeToChildren: (node) => node.children ?? [],
-      nodeToString: (node) => node.name,
+  const collection = useMemo<TreeCollection<ProjectTreeNode>>(() => {
+    return createTreeCollection<ProjectTreeNode>({
+      nodeToChildren: (node) => node.children,
+      nodeToString: getTreeNodeLabel,
       nodeToValue: (node) => node.id,
-      rootNode: {
-        children: [createNode(rootComponent, undefined, undefined)],
-        id: 'component-tree-root',
-        name: '',
-        nextSiblingId: undefined,
-        parentId: undefined,
-      },
+      rootNode: createTreeRootNode(project),
     })
-  }, [project.components, rootComponent])
+  }, [project])
 
   const selectedValue = useMemo((): string[] => {
-    if (!isDefined(selectedComponentId)) {
+    const { editorSelection } = selection
+    if (!isDefined(editorSelection)) {
       return []
     }
-
-    return [selectedComponentId]
-  }, [selectedComponentId])
+    switch (editorSelection.type) {
+      case 'component':
+        return [getComponentNodeId(editorSelection.componentId)]
+      case 'stitch-line':
+        return [getStitchLineNodeId(editorSelection.stitchLineId)]
+      case 'hole':
+        return [getHoleNodeId(editorSelection.holeId)]
+    }
+  }, [selection])
 
   useEffect(() => {
-    if (!isDefined(selectedComponentId)) {
-      return
+    const { editorSelection } = selection
+    if (isDefined(editorSelection)) {
+      setExpandedNodeIds((expandedIds) => getNextExpandedNodeIds(editorSelection, project, expandedIds))
     }
-    const ancestorIds = getComponentAncestorIds(selectedComponentId, project)
-    setExpandedComponentIds((expandedComponentIds) => Array.from(new Set([...expandedComponentIds, ...ancestorIds])))
-  }, [project, selectedComponentId])
+  }, [project, selection])
 
-  const handleExpandedChange = useCallback((details: TreeViewExpandedChangeDetails<ComponentTreeNode>): void => {
-    setExpandedComponentIds(details.expandedValue)
+  const handleExpandedChange = useCallback((details: TreeViewExpandedChangeDetails<ProjectTreeNode>): void => {
+    setExpandedNodeIds(details.expandedValue)
   }, [])
 
   const handleSelectionChange = useCallback(
-    (details: TreeViewSelectionChangeDetails<ComponentTreeNode>): void => {
-      const selectedComponentId = details.selectedValue[0]
-
-      if (!isDefined(selectedComponentId)) {
+    (details: TreeViewSelectionChangeDetails<ProjectTreeNode>): void => {
+      const selectedNode = details.selectedNodes[0]
+      if (!isDefined(selectedNode)) {
         return
       }
-
-      selection.selectComponent(selectedComponentId)
+      switch (selectedNode.kind) {
+        case 'component':
+          return selection.selectComponent(selectedNode.component.id)
+        case 'stitch-line':
+          return selection.selectStitchLine(selectedNode.stitchLine.id)
+        case 'hole':
+          return selection.selectHole(selectedNode.hole.id)
+      }
     },
     [selection],
   )
 
   const handleAddChild = useCallback((parentId: string): void => {
-    setExpandedComponentIds((expandedComponentIds) => Array.from(new Set([...expandedComponentIds, parentId])))
+    setExpandedNodeIds((currentExpandedNodeIds) =>
+      Array.from(new Set([...currentExpandedNodeIds, getComponentNodeId(parentId)])),
+    )
+  }, [])
+
+  const handleStitchLineDelete = useCallback(
+    (stitchLineId: string): void => {
+      if (selection.selectedStitchLine?.id === stitchLineId) {
+        selection.clearSelection()
+      }
+    },
+    [selection],
+  )
+
+  const handleDragStart = useCallback(({ active }: DragStartEvent): void => {
+    const dragData: unknown = active.data.current
+
+    if (typia.is<TreeDragData>(dragData)) {
+      setActiveDragData(dragData)
+    }
+  }, [])
+
+  const handleDragCancel = useCallback((_event: DragCancelEvent): void => {
+    setActiveDragData(undefined)
   }, [])
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent): void => {
-      if (!isDefined(over) || typeof active.id !== 'string') {
+      setActiveDragData(undefined)
+
+      if (!isDefined(over)) {
         return
       }
 
-      const dropAreaData: unknown = over.data.current
+      const dragData = active.data.current
+      const dropData = over.data.current
 
-      if (!isComponentTreeDropAreaSchema(dropAreaData)) {
+      if (!typia.is<TreeDragData>(dragData) || !typia.is<TreeDropData>(dropData)) {
         return
       }
 
-      moveComponent(active.id, dropAreaData.targetParentId, dropAreaData.beforeComponentId)
+      switch (dropData.kind) {
+        case 'component-reorder': {
+          if (dragData.kind === 'component') {
+            moveComponent(dragData.componentId, dropData.targetParentId, dropData.beforeComponentId)
+          }
+          break
+        }
+        case 'component-attachment': {
+          switch (dragData.kind) {
+            case 'hole': {
+              moveHole(dragData.holeId, dropData.componentId)
+              break
+            }
+            case 'stitch-line': {
+              moveStitchLineToComponent(dragData.stitchLineId, dropData.componentId)
+              break
+            }
+          }
+          break
+        }
+        case 'hole-stitch-line': {
+          if (dragData.kind === 'stitch-line' && dragData.stitchLineType === 'component-bounds-stitch-line') {
+            moveStitchLineToHole(dragData.stitchLineId, dropData.holeId)
+          }
+          break
+        }
+      }
     },
-    [moveComponent],
+    [moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole],
   )
 
   return (
-    <DndContext collisionDetection={pointerWithin} onDragEnd={handleDragEnd} sensors={sensors}>
+    <DndContext
+      collisionDetection={pointerWithin}
+      onDragCancel={handleDragCancel}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      sensors={sensors}
+    >
       <TreeView.Root
         collection={collection}
-        expandedValue={expandedComponentIds}
+        expandedValue={expandedNodeIds}
         expandOnClick={false}
         onExpandedChange={handleExpandedChange}
         onSelectionChange={!isInReorderMode ? handleSelectionChange : undefined}
@@ -147,19 +193,124 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ selectedComponentId, isI
         selectionMode="single"
       >
         <TreeView.Tree>
-          <TreeView.Node<ComponentTreeNode>
+          <TreeView.Node<ProjectTreeNode>
             indentGuide={<TreeView.BranchIndentGuide />}
-            render={({ node, nodeState }) => (
-              <ComponentTreeItem
-                isInReorderMode={isInReorderMode}
-                node={node}
-                nodeState={nodeState}
-                onAddChild={handleAddChild}
-              />
-            )}
+            render={({ indexPath, node, nodeState }) => {
+              switch (node.kind) {
+                case 'component':
+                  return (
+                    <ComponentTreeItem
+                      activeDragData={activeDragData}
+                      indexPath={indexPath}
+                      isInReorderMode={isInReorderMode}
+                      node={node}
+                      nodeState={nodeState}
+                      onAddChild={handleAddChild}
+                    />
+                  )
+                case 'hole':
+                  return (
+                    <HoleTreeItem
+                      activeDragData={activeDragData}
+                      indexPath={indexPath}
+                      isInReorderMode={isInReorderMode}
+                      node={node}
+                      nodeState={nodeState}
+                    />
+                  )
+                case 'stitch-line':
+                  return (
+                    <StitchLineTreeItem
+                      activeDragData={activeDragData}
+                      indexPath={indexPath}
+                      isInReorderMode={isInReorderMode}
+                      node={node}
+                      nodeState={nodeState}
+                      onDelete={handleStitchLineDelete}
+                    />
+                  )
+              }
+            }}
           />
         </TreeView.Tree>
+        <DragOverlay dropAnimation={null}>
+          {isDefined(activeDragData) && <TreeDragPreview dragData={activeDragData} />}
+        </DragOverlay>
       </TreeView.Root>
     </DndContext>
+  )
+}
+
+const getTreeNodeLabel = (node: ProjectTreeNode): string => {
+  switch (node.kind) {
+    case 'component':
+      return node.component.name
+    case 'hole':
+      return node.hole.name
+    case 'stitch-line':
+      return node.stitchLine.name
+  }
+}
+
+type TreeDragPreviewProps = {
+  dragData: TreeDragData
+}
+
+const TreeDragPreview: FC<TreeDragPreviewProps> = ({ dragData }) => {
+  const t = useTranslation()
+  const { node } = dragData
+  const isBranch = node.children.length > 0
+  const dragHandle = (
+    <IconButton pointerEvents="none" size="2xs" variant="ghost" _hover={{ bg: 'transparent' }}>
+      <PiDotsSixVertical />
+    </IconButton>
+  )
+  const isPositioned = node.kind !== 'stitch-line'
+  let icon
+  let label: string
+
+  switch (node.kind) {
+    case 'component':
+      icon = getComponentIcon(node.component.type)
+      label = node.component.name
+      break
+    case 'hole': {
+      icon = node.hole.type === 'circle-hole' ? PiCircleDashed : PiRectangleDashed
+      label = node.hole.type === 'circle-hole' ? t.hole.types.circle : t.hole.types.rectangle
+      break
+    }
+    case 'stitch-line':
+      icon = PiNeedle
+      label = node.stitchLine.name
+      break
+  }
+
+  const visual = (
+    <TreeItemVisual
+      icon={icon}
+      isBranch={isBranch}
+      isPositioned={isPositioned}
+      label={label}
+      leading={dragHandle}
+      trailing={null}
+    />
+  )
+
+  return (
+    <TreeView.Tree aria-hidden="true" height="100%" pointerEvents="none" width="100%">
+      <ArkTreeView.NodeProvider indexPath={dragData.indexPath} node={node}>
+        {isBranch ? (
+          <TreeView.Branch>
+            <TreeView.BranchControl bg="bg.muted" h="9" py="0">
+              {visual}
+            </TreeView.BranchControl>
+          </TreeView.Branch>
+        ) : (
+          <TreeView.Item bg="bg.muted" h="9" py="0">
+            {visual}
+          </TreeView.Item>
+        )}
+      </ArkTreeView.NodeProvider>
+    </TreeView.Tree>
   )
 }

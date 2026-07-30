@@ -1,96 +1,161 @@
 import { Box, IconButton, TreeView, type TreeViewNodeState } from '@chakra-ui/react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
-import { useMemo, type FC } from 'react'
+import { useCallback, useMemo, type FC } from 'react'
+import { PiDotsSixVertical } from 'react-icons/pi'
 
-import { PiCaretRight, PiDotsSixVertical } from 'react-icons/pi'
 import { hasComponentChildren } from '../../operations/project/utils/hasComponentChildren'
-import type { ComponentMovePlacementSchema, ComponentTreeDropAreaSchema } from '../../schemas/move'
 import { getComponentIcon } from '../../utils/getComponentIcon'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentActionsMenu } from '../ComponentActionsMenu'
-import { ComponentTreeNode } from './treeTypes'
+import { DropInsideIndicator, ReorderDropIndicator } from './ComponentTreeDropIndicators'
+import { TreeItemVisual } from './TreeItemVisual'
+import { TreeDragData } from './types/dragDataTypes'
+import type {
+  ComponentAttachmentDropData,
+  ComponentReorderDropData,
+  ComponentTreeDropPosition,
+} from './types/dropDataTypes'
+import { ComponentTreeNode } from './types/nodeTypes'
 
 type ComponentTreeItemProps = {
+  activeDragData: TreeDragData | undefined
+  indexPath: number[]
   isInReorderMode: boolean
   node: ComponentTreeNode
   nodeState: TreeViewNodeState
   onAddChild: (parentId: string) => void
 }
 
-export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ isInReorderMode, node, nodeState, onAddChild }) => {
+export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
+  activeDragData,
+  indexPath,
+  isInReorderMode,
+  node,
+  nodeState,
+  onAddChild,
+}) => {
   const { component } = node
-  const isRootPanel = isDefined(component) && component.type === 'root-panel'
-  const canAcceptChildren = isDefined(component) && hasComponentChildren(component)
-  const dropPositions = useMemo<ComponentMovePlacementSchema[]>(() => {
-    if (isRootPanel) {
+  const isActiveComponent = activeDragData?.kind === 'component' && activeDragData.componentId === component.id
+  const isDraggable = isInReorderMode && component.type !== 'root-panel'
+  const canReorder = !isDefined(activeDragData) || activeDragData.kind === 'component'
+
+  const canAcceptAttachment = useMemo<boolean>(() => {
+    if (!isDefined(activeDragData)) {
+      return false
+    }
+    switch (activeDragData.kind) {
+      case 'component':
+        return false
+      case 'hole':
+        return true
+      case 'stitch-line':
+        return activeDragData.stitchLineType === 'component-bounds-stitch-line' || component.type === 'pocket-cluster'
+    }
+  }, [activeDragData, component.type])
+
+  const isDisabledForActiveDrag = useMemo<boolean>(() => {
+    if (!isDefined(activeDragData) || isActiveComponent) {
+      return false
+    }
+    switch (activeDragData.kind) {
+      case 'component':
+        return false
+      case 'hole':
+        return false
+      case 'stitch-line':
+        return activeDragData.stitchLineType === 'pocket-cluster-stitch-line' && component.type !== 'pocket-cluster'
+    }
+  }, [activeDragData, component.type, isActiveComponent])
+
+  const dropPositions = useMemo<ComponentTreeDropPosition[]>(() => {
+    if (component.type === 'root-panel') {
       return ['inside']
     }
-
-    if (canAcceptChildren) {
-      if (nodeState.expanded) {
-        return ['before', 'inside']
-      }
-
-      return ['before', 'inside', 'after']
+    if (hasComponentChildren(component)) {
+      return nodeState.expanded ? ['before', 'inside'] : ['before', 'inside', 'after']
     }
-
     return ['before', 'after']
-  }, [canAcceptChildren, isRootPanel, nodeState.expanded])
-  const isDraggable = isInReorderMode && !isRootPanel
+  }, [component, nodeState.expanded])
 
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
-    id: node.id,
+    data: {
+      componentId: component.id,
+      indexPath,
+      kind: 'component',
+      node,
+    },
     disabled: !isDraggable,
+    id: node.id,
   })
 
-  const beforeDropData = useMemo<ComponentTreeDropAreaSchema>(
+  const attachmentDropData = useMemo<ComponentAttachmentDropData>(
     () => ({
-      beforeComponentId: node.id,
-      targetParentId: node.parentId ?? node.id,
+      componentId: component.id,
+      kind: 'component-attachment',
     }),
-    [node.id, node.parentId],
+    [component.id],
   )
 
-  const afterDropData = useMemo<ComponentTreeDropAreaSchema>(
+  const beforeDropData = useMemo<ComponentReorderDropData>(
+    () => ({
+      beforeComponentId: component.id,
+      kind: 'component-reorder',
+      targetParentId: node.parentId ?? component.id,
+    }),
+    [component.id, node.parentId],
+  )
+
+  const afterDropData = useMemo<ComponentReorderDropData>(
     () => ({
       beforeComponentId: node.nextSiblingId,
-      targetParentId: node.parentId ?? node.id,
+      kind: 'component-reorder',
+      targetParentId: node.parentId ?? component.id,
     }),
-    [node.id, node.nextSiblingId, node.parentId],
+    [component.id, node.nextSiblingId, node.parentId],
   )
 
-  const insideDropData = useMemo<ComponentTreeDropAreaSchema>(
+  const insideDropData = useMemo<ComponentReorderDropData>(
     () => ({
       beforeComponentId: undefined,
-      targetParentId: node.id,
+      kind: 'component-reorder',
+      targetParentId: component.id,
     }),
-    [node.id],
+    [component.id],
   )
+
+  const { isOver: isAttachmentDropOver, setNodeRef: setAttachmentDropNodeRef } = useDroppable({
+    data: attachmentDropData,
+    disabled: !isInReorderMode || !canAcceptAttachment,
+    id: `${node.id}:attachment`,
+  })
 
   const { isOver: isBeforeDropAreaOver, setNodeRef: setBeforeDropAreaNodeRef } = useDroppable({
     data: beforeDropData,
-    disabled: !isInReorderMode || !dropPositions.includes('before'),
+    disabled: !isInReorderMode || !canReorder || !dropPositions.includes('before'),
     id: `${node.id}:before`,
   })
 
   const { isOver: isAfterDropAreaOver, setNodeRef: setAfterDropAreaNodeRef } = useDroppable({
     data: afterDropData,
-    disabled: !isInReorderMode || !dropPositions.includes('after'),
+    disabled: !isInReorderMode || !canReorder || !dropPositions.includes('after'),
     id: `${node.id}:after`,
   })
 
   const { isOver: isInsideDropAreaOver, setNodeRef: setInsideDropAreaNodeRef } = useDroppable({
     data: insideDropData,
-    disabled: !isInReorderMode || !dropPositions.includes('inside'),
+    disabled: !isInReorderMode || !canReorder || !dropPositions.includes('inside'),
     id: `${node.id}:inside`,
   })
 
-  if (!isDefined(component)) {
-    return null
-  }
+  const setTreeNodeRef = useCallback(
+    (element: HTMLElement | null): void => {
+      setNodeRef(element)
+      setAttachmentDropNodeRef(element)
+    },
+    [setAttachmentDropNodeRef, setNodeRef],
+  )
 
   const Icon = getComponentIcon(component.type)
-
   const dragHandle = isDraggable ? (
     <IconButton
       {...attributes}
@@ -104,103 +169,72 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({ isInReorderMode,
       <PiDotsSixVertical />
     </IconButton>
   ) : null
-
   const dropAreaRefs = {
     after: setAfterDropAreaNodeRef,
     before: setBeforeDropAreaNodeRef,
     inside: setInsideDropAreaNodeRef,
   }
   const dropAreas = isInReorderMode ? (
-    <Box display="flex" flexDirection="column" inset="0" pointerEvents="none" position="absolute">
-      {dropPositions.map((position) => (
-        <ComponentTreeDropArea key={position} setNodeRef={dropAreaRefs[position]} />
-      ))}
+    <Box display="flex" flexDirection="column" inset="0" pointerEvents="none" position="absolute" ref={setTreeNodeRef}>
+      {canReorder &&
+        dropPositions.map((position) => (
+          <Box key={position} flex="1" pointerEvents="none" ref={dropAreaRefs[position]} />
+        ))}
     </Box>
   ) : null
-  const insideDropAreaFeedback = isInsideDropAreaOver ? (
-    <Box
-      bg="border.info/80"
-      border="2px solid"
-      borderColor="border.info"
-      inset="0"
-      pointerEvents="none"
-      position="absolute"
-      rounded="l2"
-    />
-  ) : null
+
+  const insideDropAreaFeedback = isInsideDropAreaOver || isAttachmentDropOver ? <DropInsideIndicator /> : null
+
   const insertionIndicators = (
     <>
-      <ComponentTreeInsertionIndicator isOver={isBeforeDropAreaOver} position="before" />
-      <ComponentTreeInsertionIndicator isOver={isAfterDropAreaOver} position="after" />
+      {isBeforeDropAreaOver && <ReorderDropIndicator position="before" />}
+      {isAfterDropAreaOver && <ReorderDropIndicator position="after" />}
     </>
   )
 
   if (nodeState.isBranch) {
     return (
-      <TreeView.BranchControl ref={setNodeRef} py="0" h="9">
+      <TreeView.BranchControl
+        cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
+        opacity={isDisabledForActiveDrag ? 0.4 : undefined}
+        py="0"
+        h="9"
+      >
         {dropAreas}
         {insideDropAreaFeedback}
         {insertionIndicators}
-        <Box alignItems="center" display="flex" flex="1" gap="2" minW="0" position="relative" py="1.5" zIndex="1">
-          <TreeView.BranchTrigger>
-            <TreeView.BranchIndicator asChild>
-              <PiCaretRight />
-            </TreeView.BranchIndicator>
-          </TreeView.BranchTrigger>
-          {dragHandle}
-          <Icon type={component.type} />
-          <TreeView.BranchText>{node.name}</TreeView.BranchText>
-          {!isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />}
-        </Box>
+        <TreeItemVisual
+          icon={Icon}
+          isBranch={true}
+          isPositioned={true}
+          label={component.name}
+          leading={dragHandle}
+          trailing={
+            !isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />
+          }
+        />
       </TreeView.BranchControl>
     )
   }
 
   return (
-    <TreeView.Item ref={setNodeRef} py="0" h="9">
+    <TreeView.Item
+      cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
+      opacity={isDisabledForActiveDrag ? 0.4 : undefined}
+      py="0"
+      h="9"
+    >
       {dropAreas}
       {insideDropAreaFeedback}
       {insertionIndicators}
-      <Box alignItems="center" display="flex" flex="1" gap="2" minW="0" position="relative" py="1.5" zIndex="1">
-        {dragHandle}
-        <Icon type={component.type} />
-        <TreeView.ItemText>{node.name}</TreeView.ItemText>
-        {!isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />}
-      </Box>
+      <TreeItemVisual
+        icon={Icon}
+        isBranch={false}
+        isPositioned={true}
+        label={component.name}
+        leading={dragHandle}
+        trailing={!isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />}
+      />
     </TreeView.Item>
-  )
-}
-
-type ComponentTreeDropAreaProps = {
-  setNodeRef: (element: HTMLElement | null) => void
-}
-
-const ComponentTreeDropArea: FC<ComponentTreeDropAreaProps> = ({ setNodeRef }) => {
-  return <Box flex="1" pointerEvents="none" ref={setNodeRef} />
-}
-
-type ComponentTreeInsertionIndicatorProps = {
-  isOver: boolean
-  position: 'after' | 'before'
-}
-
-const ComponentTreeInsertionIndicator: FC<ComponentTreeInsertionIndicatorProps> = ({ isOver, position }) => {
-  if (!isOver) {
-    return null
-  }
-
-  const isBefore = position === 'before'
-
-  return (
-    <Box
-      bg="border.info"
-      bottom={isBefore ? undefined : '-1px'}
-      height="2px"
-      insetInline="0"
-      pointerEvents="none"
-      position="absolute"
-      top={isBefore ? '-1px' : undefined}
-      zIndex="2"
-    />
   )
 }

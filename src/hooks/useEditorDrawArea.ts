@@ -3,9 +3,9 @@ import { CARD_COLOR, SELECTED_STROKE_COLOR, STROKE_COLOR, STROKE_THICKNESS } fro
 import {
   DrawAreaCardStyles,
   DrawAreaComponentStyles,
-  DrawAreaMarkerStyles,
   DrawAreaContextValue,
   DrawAreaExportTextStyles,
+  DrawAreaMarkerStyles,
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
@@ -18,6 +18,7 @@ import { produce } from '../utils/produce'
 import { useProject } from './useProject'
 
 import { formatHex8, parse } from 'culori'
+import { HoleSchema } from '../schemas/hole'
 
 const addAlpha = (color: string): string => {
   const parsed = parse(color)
@@ -56,6 +57,14 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     return project.components[selection.componentId]
   }, [project.components, selection])
 
+  const selectedHole = useMemo<HoleSchema | undefined>(() => {
+    if (!isDefined(selection) || selection.type !== 'hole') {
+      return undefined
+    }
+
+    return project.holes.find((hole) => hole.id === selection.holeId)
+  }, [project.holes, selection])
+
   const selectedStitchLine = useMemo<StitchLineSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'stitch-line') {
       return undefined
@@ -92,6 +101,10 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     setSelection({ stitchLineId, type: 'stitch-line' })
   }, [])
 
+  const selectHole = useCallback((holeId: string): void => {
+    setSelection({ holeId, type: 'hole' })
+  }, [])
+
   const clearSelection = useCallback((): void => {
     setSelection(undefined)
   }, [])
@@ -107,18 +120,24 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       isComponentSelected,
       selectComponent,
       selectStitchLine,
+      selectHole,
+      selectedHole,
       selectedComponent,
       selectedStitchLine,
       highlightedComponentId,
+      editorSelection: selection,
     }),
     [
       clearSelection,
       isComponentSelected,
       selectComponent,
       selectStitchLine,
+      selectHole,
+      selectedHole,
       selectedComponent,
       selectedStitchLine,
       highlightedComponentId,
+      selection,
     ],
   )
 

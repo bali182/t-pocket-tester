@@ -163,6 +163,12 @@ export const HU = {
       },
     },
   },
+  hole: {
+    types: {
+      circle: 'Kerek lyuk',
+      rectangle: 'Téglalap alakú lyuk',
+    },
+  },
   stitchLine: {
     types: {
       componentBounds: 'Körvonal varrás',

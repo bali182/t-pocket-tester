@@ -8,4 +8,9 @@ export type StitchLineSelectionSchema = {
   type: 'stitch-line'
 }
 
-export type EditorSelectionSchema = ComponentSelectionSchema | StitchLineSelectionSchema
+export type HoleSelectionSchema = {
+  holeId: string
+  type: 'hole'
+}
+
+export type EditorSelectionSchema = ComponentSelectionSchema | StitchLineSelectionSchema | HoleSelectionSchema

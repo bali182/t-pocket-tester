@@ -165,6 +165,12 @@ export const EN: typeof HU = {
       },
     },
   },
+  hole: {
+    types: {
+      circle: 'Circle hole',
+      rectangle: 'Rectangle hole',
+    },
+  },
   stitchLine: {
     types: {
       componentBounds: 'Outline stitching',

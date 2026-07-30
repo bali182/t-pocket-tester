@@ -8,6 +8,8 @@ import { cloneStitchLine as cloneStitchLinePure } from '../operations/project/cl
 import { deleteComponent as deleteComponentPure } from '../operations/project/deleteComponent'
 import { deleteStitchLine as deleteStitchLinePure } from '../operations/project/deleteStitchLine'
 import { moveComponent as moveComponentPure } from '../operations/project/moveComponent'
+import { moveHole as moveHolePure } from '../operations/project/moveHole'
+import { moveStitchLine as moveStitchLinePure } from '../operations/project/moveStitchLine'
 import { updateComponent as updateComponentPure } from '../operations/project/updateComponent'
 import { updateStitchLine as updateStitchLinePure } from '../operations/project/updateStitchLine'
 import { createComponent } from '../operations/project/utils/createComponent'
@@ -129,6 +131,27 @@ export const useProject = () => {
     }, []),
   )
 
+  const moveHole = useAtomCallback(
+    useCallback((get, set, holeId: string, targetComponentId: string): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, moveHolePure(project, { holeId, targetComponentId }))
+    }, []),
+  )
+
+  const moveStitchLineToComponent = useAtomCallback(
+    useCallback((get, set, stitchLineId: string, componentId: string): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, moveStitchLinePure(project, { stitchLineId, targetId: componentId, targetType: 'component' }))
+    }, []),
+  )
+
+  const moveStitchLineToHole = useAtomCallback(
+    useCallback((get, set, stitchLineId: string, holeId: string): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, moveStitchLinePure(project, { stitchLineId, targetId: holeId, targetType: 'hole' }))
+    }, []),
+  )
+
   const updateComponent = useAtomCallback(
     useCallback((get, set, component: ComponentSchema): void => {
       const project = getRequiredProject(get)
@@ -166,6 +189,9 @@ export const useProject = () => {
     deleteComponent,
     deleteStitchLine,
     moveComponent,
+    moveHole,
+    moveStitchLineToComponent,
+    moveStitchLineToHole,
     updateComponent,
     touchComponent,
     setProject,

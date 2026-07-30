@@ -21,9 +21,12 @@ const drawAreaSelection: DrawAreaSelection = {
   isComponentSelected: produce(false),
   selectComponent: noop,
   selectStitchLine: noop,
+  selectHole: noop,
   selectedComponent: undefined,
   selectedStitchLine: undefined,
   highlightedComponentId: undefined,
+  selectedHole: undefined,
+  editorSelection: undefined,
 }
 
 export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSchema): DrawAreaContextValue => {

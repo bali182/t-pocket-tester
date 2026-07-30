@@ -20,13 +20,13 @@ import { useTranslation } from '../translations/translation'
 import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
-import { ComponentTree } from './tree/ComponentTree'
 import { DrawArea } from './DrawArea'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 import { StitchLineTree } from './StitchLineTree'
 import { SvgExportDialog } from './SvgExportDialog'
+import { ComponentTree } from './tree/ComponentTree'
 
 const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
 
@@ -138,10 +138,7 @@ export const Editor: FC = () => {
                 </Button>
               </HStack>
               <Box flex="1" minHeight="0" overflow="auto" padding="4">
-                <ComponentTree
-                  selectedComponentId={selectedComponent?.id}
-                  isInReorderMode={isComponentTreeInReorderMode}
-                />
+                <ComponentTree isInReorderMode={isComponentTreeInReorderMode} />
               </Box>
             </Splitter.Panel>
 
