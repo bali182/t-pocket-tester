@@ -37,6 +37,7 @@ import { getProjectTreeNodeIcon } from './utils/getProjectTreeNodeIcon'
 import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 import { createTreeRootNode } from './utils/treeNodeFactories'
 import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './utils/treeNodeIds'
+import { useTreeDropAnimation } from './utils/useTreeDropAnimation'
 
 type ComponentTreeProps = {
   isInReorderMode: boolean
@@ -47,6 +48,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
   const { selection } = useDrawAreaContext()
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>(() => [getComponentNodeId(project.root)])
   const [activeDragData, setActiveDragData] = useState<TreeDragData | undefined>()
+  const { dropTargetRectRef, handleDropAnimation } = useTreeDropAnimation()
   const sensors = useSensors(useSensor(PointerSensor))
 
   const collection = useMemo<TreeCollection<ProjectTreeNode>>(() => {
@@ -118,17 +120,26 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
     [selection],
   )
 
-  const handleDragStart = useCallback(({ active }: DragStartEvent): void => {
-    const dragData: unknown = active.data.current
+  const handleDragStart = useCallback(
+    ({ active }: DragStartEvent): void => {
+      dropTargetRectRef.current = undefined
 
-    if (typia.is<TreeDragData>(dragData)) {
-      setActiveDragData(dragData)
-    }
-  }, [])
+      const dragData: unknown = active.data.current
 
-  const handleDragCancel = useCallback((_event: DragCancelEvent): void => {
-    setActiveDragData(undefined)
-  }, [])
+      if (typia.is<TreeDragData>(dragData)) {
+        setActiveDragData(dragData)
+      }
+    },
+    [dropTargetRectRef],
+  )
+
+  const handleDragCancel = useCallback(
+    (_event: DragCancelEvent): void => {
+      dropTargetRectRef.current = undefined
+      setActiveDragData(undefined)
+    },
+    [dropTargetRectRef],
+  )
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent): void => {
@@ -144,6 +155,8 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
       if (!typia.is<TreeDragData>(dragData) || !typia.is<TreeDropData>(dropData)) {
         return
       }
+
+      dropTargetRectRef.current = { ...over.rect }
 
       switch (dropData.kind) {
         case 'component-reorder': {
@@ -173,7 +186,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
         }
       }
     },
-    [moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole],
+    [dropTargetRectRef, moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole],
   )
 
   return (
@@ -232,7 +245,9 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
             }}
           />
         </TreeView.Tree>
-        <DragOverlay>{isDefined(activeDragData) && <TreeDragPreview dragData={activeDragData} />}</DragOverlay>
+        <DragOverlay dropAnimation={handleDropAnimation}>
+          {isDefined(activeDragData) && <TreeDragPreview dragData={activeDragData} />}
+        </DragOverlay>
       </TreeView.Root>
     </DndContext>
   )
