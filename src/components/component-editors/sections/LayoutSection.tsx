@@ -52,11 +52,11 @@ export function LayoutSection<T extends HasLayoutSchema>({
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.component.editor.layout.horizontal} value="horizontal">
             <SegmentGroup.ItemHiddenInput />
-            <PiColumns />
+            <PiColumns /> {t.component.editor.layout.horizontal}
           </SegmentGroup.Item>
           <SegmentGroup.Item aria-label={t.component.editor.layout.vertical} value="vertical">
             <SegmentGroup.ItemHiddenInput />
-            <PiRows />
+            <PiRows /> {t.component.editor.layout.vertical}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
@@ -68,10 +68,12 @@ export function LayoutSection<T extends HasLayoutSchema>({
           <SegmentGroup.Item aria-label={t.component.editor.layout.defaultOrder} value="default">
             <SegmentGroup.ItemHiddenInput />
             {editable.layoutOrientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
+            {t.component.editor.layout.defaultOrder}
           </SegmentGroup.Item>
           <SegmentGroup.Item aria-label={t.component.editor.layout.reverseOrder} value="reverse">
             <SegmentGroup.ItemHiddenInput />
             {editable.layoutOrientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
+            {t.component.editor.layout.reverseOrder}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>

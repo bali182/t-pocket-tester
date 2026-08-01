@@ -20,8 +20,6 @@ import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
 import { calculateStitchLines } from './stitching/calculateStitchLines'
 
 export const getComputedProject = (project: ProjectSchema): ComputedProjectSchema => {
-  console.log(project)
-
   const rootComponent = project.components[project.root]
 
   if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {

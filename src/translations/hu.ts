@@ -35,6 +35,7 @@ export const HU = {
       measure: 'Mérték',
     },
     placeholders: {
+      fill: 'Kitöltés',
       selectComponent: 'Komponens kiválasztása',
     },
     directions: {
@@ -141,8 +142,8 @@ export const HU = {
       cornerRadius: {
         title: 'Lekerekítés',
         type: 'Típus',
-        individual: 'Egyedi lekerekítések',
-        uniform: 'Egységes lekerekítés',
+        individual: 'Egyedi',
+        uniform: 'Egységes',
         individualMeasure: 'Mérték',
         uniformMeasure: 'Mérték',
       },

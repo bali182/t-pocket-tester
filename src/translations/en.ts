@@ -37,6 +37,7 @@ export const EN: typeof HU = {
       measure: 'Measurement',
     },
     placeholders: {
+      fill: 'Fill',
       selectComponent: 'Select a component',
     },
     directions: {
@@ -143,8 +144,8 @@ export const EN: typeof HU = {
       cornerRadius: {
         title: 'Corner radius',
         type: 'Type',
-        individual: 'Individual corner radii',
-        uniform: 'Uniform corner radius',
+        individual: 'Individual',
+        uniform: 'Uniform',
         individualMeasure: 'Measurement',
         uniformMeasure: 'Measurement',
       },
@@ -153,10 +154,10 @@ export const EN: typeof HU = {
         card: 'Card',
         noCard: 'None',
         opening: 'Opening',
-        fromTop: 'From the top',
-        fromBottom: 'From the bottom',
-        fromLeft: 'From the left',
-        fromRight: 'From the right',
+        fromTop: 'Top',
+        fromBottom: 'Bottom',
+        fromLeft: 'Left',
+        fromRight: 'Right',
       },
       tPocket: {
         title: 'T-pockets',
