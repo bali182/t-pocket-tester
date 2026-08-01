@@ -61,13 +61,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
     })
   }, [project])
 
-  useEffect(() => {
-    setExpandedNodeIds((currentExpandedNodeIds) => {
-      const nextExpanded = currentExpandedNodeIds.filter((id) => collection.findNode(id)?.children?.length ?? 0 > 0)
-      return nextExpanded.length === currentExpandedNodeIds.length ? currentExpandedNodeIds : nextExpanded
-    })
-  }, [collection])
-
   const selectedValue = useMemo((): string[] => {
     const { editorSelection } = selection
     if (!isDefined(editorSelection)) {
@@ -82,6 +75,13 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
         return [getHoleNodeId(editorSelection.holeId)]
     }
   }, [selection])
+
+  useEffect(() => {
+    setExpandedNodeIds((currentExpandedNodeIds) => {
+      const nextExpanded = currentExpandedNodeIds.filter((id) => collection.findNode(id)?.children?.length ?? 0 > 0)
+      return nextExpanded.length === currentExpandedNodeIds.length ? currentExpandedNodeIds : nextExpanded
+    })
+  }, [collection])
 
   useEffect(() => {
     const { editorSelection } = selection
