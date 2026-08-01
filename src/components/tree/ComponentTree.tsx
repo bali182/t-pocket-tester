@@ -61,6 +61,13 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
     })
   }, [project])
 
+  useEffect(() => {
+    setExpandedNodeIds((currentExpandedNodeIds) => {
+      const nextExpanded = currentExpandedNodeIds.filter((id) => collection.findNode(id)?.children?.length ?? 0 > 0)
+      return nextExpanded.length === currentExpandedNodeIds.length ? currentExpandedNodeIds : nextExpanded
+    })
+  }, [collection])
+
   const selectedValue = useMemo((): string[] => {
     const { editorSelection } = selection
     if (!isDefined(editorSelection)) {
