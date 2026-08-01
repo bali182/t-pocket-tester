@@ -1,8 +1,7 @@
-import { HasIdentitySchema } from '../../../schemas/common'
+import { HasComponentTargetSchema, HasIdentitySchema } from '../../../schemas/common'
 import type {
   ComponentBoundsStitchLineOwnSchema,
   ComponentBoundsStitchLineSchema,
-  HasComponentTargetSchema,
   PocketClusterStitchLineOwnSchema,
   PocketClusterStitchLineSchema,
 } from '../../../schemas/stitching'

@@ -17,7 +17,7 @@ import { applyHolePathsToComputedComponents } from './applyHolePathsToComputedCo
 import { calculateLayoutBoundingBoxes } from './calculateLayoutBoundingBoxes'
 import { calculatePocketClusterGeometry } from './calculatePocketClusterGeometry'
 import { calculateRectPath } from './calculateRectPath'
-import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
+import { getNormalizedCornerRadius } from './cornerRadiusUtils'
 import { calculateStitchLines } from './stitching/calculateStitchLines'
 
 export const getComputedProject = (project: ProjectSchema): ComputedProjectSchema => {
@@ -39,7 +39,7 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
   }
   const root = computeRootPanel(rootComponent, rootBoundingRect, project, resolvedStitchLines, computedComponents)
   const holes = calculateHoles(project.holes, computedComponents)
-  const stitchLines = calculateStitchLines(resolvedStitchLines, project.components, computedComponents)
+  const stitchLines = calculateStitchLines(resolvedStitchLines, project.components, computedComponents, project.holes, holes)
   applyHolePathsToComputedComponents(computedComponents, holes)
 
   return {

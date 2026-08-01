@@ -7,7 +7,7 @@ export const deleteOrphanedStitchLines = (
 ): ProjectSchema => {
   const stitchLines = project.stitchLines.filter((stitchLine) => {
     if (stitchLine.targetType === 'hole') {
-      throw new Error('Hole stitch line targets are not supported yet')
+      return project.holes.some((hole) => hole.id === stitchLine.targetId)
     }
 
     return isDefined(project.components[stitchLine.targetId])

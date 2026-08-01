@@ -1,3 +1,4 @@
+import { HasTargetSchema } from './common'
 import { PathSchema, RectSchema } from './geometry'
 import { StitchHoleSchema } from './stitching'
 import { CardSchema } from './valuables'
@@ -61,7 +62,7 @@ export type ComputedStitchRouteSchema = {
   holes: StitchHoleSchema[]
 }
 
-export type ComputedStitchLineSchema = {
+export type ComputedStitchLineSchema = HasTargetSchema & {
   stitchLineId: string
   componentId: string
   routes: ComputedStitchRouteSchema[]

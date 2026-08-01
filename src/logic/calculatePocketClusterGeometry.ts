@@ -15,7 +15,7 @@ import { calculatePocketBoundingBox } from './calculatePocketBoundingBox'
 import { calculatePocketCard } from './calculatePocketCard'
 import { calculateRectPath } from './calculateRectPath'
 import { calculateTPocketPath } from './calculateTPocketPath'
-import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
+import { getNormalizedCornerRadius } from './cornerRadiusUtils'
 import { normalizePocketCluster } from './normalizePocketCluster'
 
 export type PocketClusterGeometry = {

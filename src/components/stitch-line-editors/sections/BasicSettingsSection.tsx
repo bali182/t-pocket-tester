@@ -1,10 +1,9 @@
 import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 
-import { HasIdentitySchema } from '../../../schemas/common'
+import { HasIdentitySchema, HasTargetSchema } from '../../../schemas/common'
 import type { ComponentSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
-import type { HasTargetSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { isDefined } from '../../../utils/isDefined'

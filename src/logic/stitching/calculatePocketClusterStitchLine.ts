@@ -13,6 +13,8 @@ export const calculatePocketClusterStitchLine = (
   if (!stitchLine.enabled) {
     return {
       stitchLineId: stitchLine.id,
+      targetType: stitchLine.targetType,
+      targetId: stitchLine.targetId,
       componentId: stitchLine.targetId,
       routes: [],
     }
@@ -22,6 +24,8 @@ export const calculatePocketClusterStitchLine = (
 
   return {
     stitchLineId: stitchLine.id,
+    targetType: stitchLine.targetType,
+    targetId: stitchLine.targetId,
     componentId: stitchLine.targetId,
     routes: computedPocketCluster.tPockets.map((tPocket) => {
       const calculatedStitchLine = calculateTPocketStitchLine(stitchLine, normalizedPocketCluster, tPocket)

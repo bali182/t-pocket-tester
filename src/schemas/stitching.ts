@@ -1,4 +1,4 @@
-import { HasIdentitySchema } from './common'
+import { HasComponentTargetSchema, HasIdentitySchema, HasTargetSchema } from './common'
 import { PointSchema } from './geometry'
 
 export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
@@ -6,18 +6,6 @@ export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
 export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
 export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
 export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
-
-export type HasComponentTargetSchema = {
-  targetType: 'component'
-  targetId: string
-}
-
-export type HasHoleTargetSchema = {
-  targetType: 'hole'
-  targetId: string
-}
-
-export type HasTargetSchema = HasComponentTargetSchema | HasHoleTargetSchema
 
 export type StitchHoleSchema = {
   center: PointSchema

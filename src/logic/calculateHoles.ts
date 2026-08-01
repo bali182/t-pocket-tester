@@ -5,7 +5,7 @@ import type { RectSchema } from '../schemas/geometry'
 import type { HoleAnchorSchema, HoleSchema } from '../schemas/hole'
 import { isDefined } from '../utils/isDefined'
 import { calculateRectPath } from './calculateRectPath'
-import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
+import { getNormalizedCornerRadius } from './cornerRadiusUtils'
 
 export const calculateHoles = (
   holes: HoleSchema[],

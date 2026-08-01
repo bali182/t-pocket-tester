@@ -1,5 +1,6 @@
+import type { HasComponentTargetSchema, HasHoleTargetSchema } from '../../schemas/common'
 import type { ProjectSchema } from '../../schemas/project'
-import type { HasComponentTargetSchema, HasHoleTargetSchema, StitchLineSchema } from '../../schemas/stitching'
+import type { StitchLineSchema } from '../../schemas/stitching'
 import { isDefined } from '../../utils/isDefined'
 
 export type MoveStitchLineToComponentParams = HasComponentTargetSchema & {

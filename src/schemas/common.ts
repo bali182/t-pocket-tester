@@ -20,3 +20,15 @@ export type HasSizeSchema = {
 export type HasComponentReferenceSchema = {
   componentId: string
 }
+
+export type HasComponentTargetSchema = {
+  targetType: 'component'
+  targetId: string
+}
+
+export type HasHoleTargetSchema = {
+  targetType: 'hole'
+  targetId: string
+}
+
+export type HasTargetSchema = HasComponentTargetSchema | HasHoleTargetSchema
