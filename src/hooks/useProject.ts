@@ -80,13 +80,12 @@ export const useProject = () => {
   )
 
   const addHole = useAtomCallback(
-    (get, set, componentId: string, holeType: HoleSchema['type']): HoleSchema => {
+    (get, set, componentId: string): HoleSchema => {
       const project = getRequiredProject(get)
       const hole = createHole({
         componentId,
         id: idPure(),
-        name: getUnusedHoleName(holeType, project, t),
-        type: holeType,
+        name: getUnusedHoleName(project, t),
       })
       set(projectAtom, addHolePure(project, { hole }))
       return hole

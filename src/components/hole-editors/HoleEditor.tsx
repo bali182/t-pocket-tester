@@ -1,10 +1,12 @@
 import { type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { CircleHoleSchema, HoleSchema, RectHoleSchema } from '../../schemas/hole'
+import type { HoleSchema } from '../../schemas/hole'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { CircleHoleEditor } from './CircleHoleEditor'
-import { RectHoleEditor } from './RectHoleEditor'
+import { CornerRadiusSection } from '../component-editors/sections/CornerRadiusSection'
+import { WidthAndHeightSizeSection } from '../component-editors/sections/WidthAndHeightSizeSection'
+import { HoleBasicSettingsSection } from './sections/HoleBasicSettingsSection'
+import { HolePositionSection } from './sections/HolePositionSection'
 
 type HoleEditorProps = {
   editable: EditableSchema<HoleSchema>
@@ -13,23 +15,13 @@ type HoleEditorProps = {
   onChange: (updated: EditableSchema<HoleSchema>) => void
 }
 
-export const HoleEditor: FC<HoleEditorProps> = ({ editable, hole, issues, onChange }) => {
-  switch (hole.type) {
-    case 'rect-hole':
-      return (
-        <RectHoleEditor
-          editable={editable as EditableSchema<RectHoleSchema>}
-          issues={issues as ValidationIssuesSchema<RectHoleSchema>}
-          onChange={onChange}
-        />
-      )
-    case 'circle-hole':
-      return (
-        <CircleHoleEditor
-          editable={editable as EditableSchema<CircleHoleSchema>}
-          issues={issues as ValidationIssuesSchema<CircleHoleSchema>}
-          onChange={onChange}
-        />
-      )
-  }
+export const HoleEditor: FC<HoleEditorProps> = ({ editable, issues, onChange }) => {
+  return (
+    <>
+      <HoleBasicSettingsSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
+      <HolePositionSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
+      <WidthAndHeightSizeSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
+      <CornerRadiusSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
+    </>
+  )
 }

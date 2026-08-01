@@ -9,19 +9,8 @@ export type HolePositionSchema = {
   yOffset: number
 }
 
-export type RectHoleSchema = HasIdentitySchema &
+export type HoleSchema = HasIdentitySchema &
   HasComponentReferenceSchema &
   HolePositionSchema &
   HasSizeSchema &
-  HasCornerRadiusSchema & {
-    type: 'rect-hole'
-  }
-
-export type CircleHoleSchema = HasIdentitySchema &
-  HasComponentReferenceSchema &
-  HolePositionSchema & {
-    type: 'circle-hole'
-    radius: number
-  }
-
-export type HoleSchema = RectHoleSchema | CircleHoleSchema
+  HasCornerRadiusSchema

@@ -163,10 +163,7 @@ export const EN: typeof HU = {
     },
   },
   hole: {
-    types: {
-      circle: 'Circle hole',
-      rectangle: 'Rectangle hole',
-    },
+    title: 'Hole',
     editor: {
       position: {
         title: 'Position',

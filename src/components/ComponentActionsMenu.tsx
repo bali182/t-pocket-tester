@@ -1,6 +1,6 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
-import { PiCircleDashed, PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
+import { PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
 import { useProject } from '../hooks/useProject'
 import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
@@ -69,12 +69,8 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
     [addStitchLine, component, onAddStitchLine],
   )
 
-  const handleAddRectHole = useCallback((): void => {
-    addHole(component.id, 'rect-hole')
-  }, [addHole, component.id])
-
-  const handleAddCircleHole = useCallback((): void => {
-    addHole(component.id, 'circle-hole')
+  const handleAddHole = useCallback((): void => {
+    addHole(component.id)
   }, [addHole, component.id])
 
   return (
@@ -89,13 +85,9 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
           <Menu.Positioner>
             <Menu.Content>
               <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
-              <Menu.Item value="rect-hole" onClick={handleAddRectHole}>
+              <Menu.Item value="hole" onClick={handleAddHole}>
                 <PiRectangleDashed />
-                <Menu.ItemText>{t.common.actions.addByName(t.hole.types.rectangle)}</Menu.ItemText>
-              </Menu.Item>
-              <Menu.Item value="circle-hole" onClick={handleAddCircleHole}>
-                <PiCircleDashed />
-                <Menu.ItemText>{t.common.actions.addByName(t.hole.types.circle)}</Menu.ItemText>
+                <Menu.ItemText>{t.common.actions.addByName(t.hole.title)}</Menu.ItemText>
               </Menu.Item>
               <Menu.Separator />
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />

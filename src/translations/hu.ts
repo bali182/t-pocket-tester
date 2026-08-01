@@ -161,10 +161,7 @@ export const HU = {
     },
   },
   hole: {
-    types: {
-      circle: 'Kerek lyuk',
-      rectangle: 'Téglalap alakú lyuk',
-    },
+    title: 'Lyuk',
     editor: {
       position: {
         title: 'Pozíció',

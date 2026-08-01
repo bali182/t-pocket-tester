@@ -4,7 +4,6 @@ import type { ComputedComponentSchema, ComputedHoleSchema } from '../schemas/com
 import type { RectSchema } from '../schemas/geometry'
 import type { HoleAnchorSchema, HoleSchema } from '../schemas/hole'
 import { isDefined } from '../utils/isDefined'
-import { calculateCirclePath } from './calculateCirclePath'
 import { calculateRectPath } from './calculateRectPath'
 import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
 
@@ -33,37 +32,18 @@ const calculateHoleGeometry = (
   hole: HoleSchema,
   ownerBoundingRect: RectSchema,
 ): Pick<ComputedHoleSchema, 'boundingRect' | 'path'> => {
-  switch (hole.type) {
-    case 'rect-hole': {
-      const boundingRect = calculateHoleBoundingRect(
-        ownerBoundingRect,
-        new BigNumber(hole.width),
-        new BigNumber(hole.height),
-        hole,
-      )
+  const boundingRect = calculateHoleBoundingRect(
+    ownerBoundingRect,
+    new BigNumber(hole.width),
+    new BigNumber(hole.height),
+    hole,
+  )
 
-      return {
-        boundingRect,
-        path: calculateRectPath(boundingRect, getNormalizedCornerRadius(hole)),
-      }
-    }
-    case 'circle-hole': {
-      const radius = new BigNumber(hole.radius)
-      const diameter = radius.times(2)
-      const boundingRect = calculateHoleBoundingRect(ownerBoundingRect, diameter, diameter, hole)
-      const center = {
-        x: boundingRect.x.plus(radius),
-        y: boundingRect.y.plus(radius),
-      }
-
-      return {
-        boundingRect,
-        path: calculateCirclePath(center, radius),
-      }
-    }
+  return {
+    boundingRect,
+    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(hole)),
   }
 }
-
 const calculateHoleBoundingRect = (
   ownerBoundingRect: RectSchema,
   width: BigNumber,
