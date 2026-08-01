@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  Heading,
-  HStack,
-  IconButton,
-  Splitter,
-  SplitterPanelData,
-  SplitterResizeDetails,
-} from '@chakra-ui/react'
+import { Box, Button, Card, Heading, HStack, IconButton } from '@chakra-ui/react'
 import { useCallback, useMemo, useRef, useState, type FC } from 'react'
 
 import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiExport, PiGear, PiRuler } from 'react-icons/pi'
@@ -24,15 +14,11 @@ import { DrawArea } from './DrawArea'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
-import { StitchLineTree } from './StitchLineTree'
 import { SvgExportDialog } from './SvgExportDialog'
 import { ComponentTree } from './tree/ComponentTree'
 
-const panels: SplitterPanelData[] = [{ id: 'component' }, { id: 'stitching' }]
-
 export const Editor: FC = () => {
   const t = useTranslation()
-  const [sidebarPanelSizes, setSidebarPanelSizes] = useState([50, 50])
   const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
@@ -41,10 +27,6 @@ export const Editor: FC = () => {
   const drawAreaContextValue = useEditorDrawArea()
   const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
     drawAreaContextValue.selection
-
-  const handlePanelResize = useCallback((details: SplitterResizeDetails) => {
-    setSidebarPanelSizes(details.size)
-  }, [])
 
   const handleToggleReorder = useCallback(() => {
     clearSelection()
@@ -117,45 +99,20 @@ export const Editor: FC = () => {
           <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />
         </Box>
         <Box bg="bg.panel" flexShrink={0} height="100%" width="400px">
-          <Splitter.Root
-            height="100%"
-            onResize={handlePanelResize}
-            orientation="vertical"
-            panels={panels}
-            size={sidebarPanelSizes}
-            width="100%"
-          >
-            <Splitter.Panel display="flex" flexDirection="column" id="component" minHeight="0">
-              <HStack justify="space-between" px="4" py="3">
-                <Heading size="sm">{t.editor.panels.leather}</Heading>
-                <Button
-                  size="2xs"
-                  variant={isComponentTreeInReorderMode ? 'solid' : 'subtle'}
-                  onClick={handleToggleReorder}
-                >
-                  {isComponentTreeInReorderMode ? <PiCheck /> : <PiArrowsDownUp />}
-                  {isComponentTreeInReorderMode ? t.common.reorder.finishReorder : t.common.reorder.reorder}
-                </Button>
-              </HStack>
-              <Box flex="1" minHeight="0" overflow="auto" padding="4">
-                <ComponentTree isInReorderMode={isComponentTreeInReorderMode} />
-              </Box>
-            </Splitter.Panel>
-
-            <Splitter.ResizeTrigger id="component:stitching">
-              <Splitter.ResizeTriggerSeparator />
-              <Splitter.ResizeTriggerIndicator />
-            </Splitter.ResizeTrigger>
-
-            <Splitter.Panel display="flex" flexDirection="column" id="stitching" minHeight="0">
-              <HStack justify="space-between" px="4" py="3">
-                <Heading size="sm">{t.editor.panels.stitching}</Heading>
-              </HStack>
-              <Box flex="1" minHeight="0" overflow="auto" padding="4">
-                <StitchLineTree selectedStitchLineId={selectedStitchLine?.id} />
-              </Box>
-            </Splitter.Panel>
-          </Splitter.Root>
+          <HStack justify="space-between" px="4" py="3">
+            <Heading size="sm">{t.editor.panels.leather}</Heading>
+            <Button
+              size="2xs"
+              variant={isComponentTreeInReorderMode ? 'solid' : 'subtle'}
+              onClick={handleToggleReorder}
+            >
+              {isComponentTreeInReorderMode ? <PiCheck /> : <PiArrowsDownUp />}
+              {isComponentTreeInReorderMode ? t.common.reorder.finishReorder : t.common.reorder.reorder}
+            </Button>
+          </HStack>
+          <Box flex="1" minHeight="0" overflow="auto" padding="4">
+            <ComponentTree isInReorderMode={isComponentTreeInReorderMode} />
+          </Box>
         </Box>
       </Box>
     </DrawAreaContext.Provider>
