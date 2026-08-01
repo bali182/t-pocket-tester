@@ -2,6 +2,7 @@ import { useAtom, useAtomValue, type Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
 import { addComponent as addComponentPure } from '../operations/project/addComponent'
+import { addHole as addHolePure } from '../operations/project/addHole'
 import { addStitchLine as addStitchLinePure } from '../operations/project/addStitchLine'
 import { cloneComponent as cloneComponentPure } from '../operations/project/cloneComponent'
 import { cloneStitchLine as cloneStitchLinePure } from '../operations/project/cloneStitchLine'
@@ -14,8 +15,10 @@ import { updateComponent as updateComponentPure } from '../operations/project/up
 import { updateHole as updateHolePure } from '../operations/project/updateHole'
 import { updateStitchLine as updateStitchLinePure } from '../operations/project/updateStitchLine'
 import { createComponent } from '../operations/project/utils/createComponent'
+import { createHole } from '../operations/project/utils/createHole'
 import { createStitchLine } from '../operations/project/utils/createStitchLine'
 import { getUnusedComponentName } from '../operations/project/utils/getUnusedComponentName'
+import { getUnusedHoleName } from '../operations/project/utils/getUnusedHoleName'
 import { getUnusedName } from '../operations/project/utils/getUnusedName'
 import { ComponentSchema } from '../schemas/components'
 import { HoleSchema } from '../schemas/hole'
@@ -74,6 +77,20 @@ export const useProject = () => {
       },
       [stitchLineId, t],
     ),
+  )
+
+  const addHole = useAtomCallback(
+    (get, set, componentId: string, holeType: HoleSchema['type']): HoleSchema => {
+      const project = getRequiredProject(get)
+      const hole = createHole({
+        componentId,
+        id: idPure(),
+        name: getUnusedHoleName(holeType, project, t),
+        type: holeType,
+      })
+      set(projectAtom, addHolePure(project, { hole }))
+      return hole
+    },
   )
 
   const cloneComponent = useAtomCallback(
@@ -192,6 +209,7 @@ export const useProject = () => {
     project,
     computedProject,
     addComponent,
+    addHole,
     addStitchLine,
     cloneComponent,
     cloneStitchLine,

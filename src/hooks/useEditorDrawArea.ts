@@ -78,6 +78,10 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       return selectedComponent.id
     }
 
+    if (isDefined(selectedHole)) {
+      return selectedHole.componentId
+    }
+
     if (isDefined(selectedStitchLine)) {
       if (selectedStitchLine.targetType === 'hole') {
         throw new Error('Hole stitch line targets are not supported yet')
@@ -87,7 +91,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     }
 
     return undefined
-  }, [selectedComponent, selectedStitchLine])
+  }, [selectedComponent, selectedHole, selectedStitchLine])
 
   const selectComponent = useCallback(
     (componentId: string): void => {

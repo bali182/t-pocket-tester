@@ -11,6 +11,7 @@ import { getComponentSvgElement } from '../utils/getComponentSvgElement'
 import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { DrawArea } from './DrawArea'
+import { HoleFloatingEditor } from './hole-editors/HoleFloatingEditor'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
@@ -27,7 +28,7 @@ export const Editor: FC = () => {
   const projectMenuRef = useRef<HTMLDivElement>(null)
   const { project } = useProject()
   const drawAreaContextValue = useEditorDrawArea()
-  const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
+  const { highlightedComponentId, clearSelection, selectedComponent, selectedHole, selectedStitchLine } =
     drawAreaContextValue.selection
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
@@ -92,6 +93,9 @@ export const Editor: FC = () => {
                 anchorElement={anchorElement}
                 onClose={clearSelection}
               />
+            )}
+            {isDefined(selectedHole) && isDefined(anchorElement) && (
+              <HoleFloatingEditor hole={selectedHole} anchorElement={anchorElement} onClose={clearSelection} />
             )}
             <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
             <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />
