@@ -15,7 +15,12 @@ export const getSvgExportStitchLines = (
   ownComponentId: string,
   stitchLineMode: SvgExportStitchLineModeSchema,
 ): SvgExportStitchLineSchema[] => {
-  const candidateStitchLines = getCandidateStitchLines(project.stitchLines, ownComponentId, stitchLineMode)
+  const candidateStitchLines = getCandidateStitchLines(
+    project.stitchLines,
+    computedProject.stitchLines,
+    ownComponentId,
+    stitchLineMode,
+  )
 
   return candidateStitchLines.flatMap((stitchLine) => {
     const computedStitchLine = computedProject.stitchLines.find(
@@ -39,18 +44,18 @@ export const getSvgExportStitchLines = (
 
 const getCandidateStitchLines = (
   stitchLines: StitchLineSchema[],
+  computedStitchLines: ComputedStitchLineSchema[],
   ownComponentId: string,
   stitchLineMode: SvgExportStitchLineModeSchema,
 ): StitchLineSchema[] => {
-  stitchLines.forEach((stitchLine) => {
-    if (stitchLine.targetType === 'hole') {
-      throw new Error('Hole stitch line targets are not supported yet')
-    }
-  })
-
   switch (stitchLineMode) {
     case 'own-stitch-lines':
-      return stitchLines.filter((stitchLine) => stitchLine.targetId === ownComponentId)
+      return stitchLines.filter((stitchLine) => {
+        const computedStitchLine = computedStitchLines.find(
+          (candidateComputedStitchLine) => candidateComputedStitchLine.stitchLineId === stitchLine.id,
+        )
+        return isDefined(computedStitchLine) && computedStitchLine.componentId === ownComponentId
+      })
     case 'all-stitch-lines':
       return stitchLines
   }

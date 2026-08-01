@@ -83,15 +83,17 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     }
 
     if (isDefined(selectedStitchLine)) {
-      if (selectedStitchLine.targetType === 'hole') {
-        throw new Error('Hole stitch line targets are not supported yet')
+      if (selectedStitchLine.targetType === 'component') {
+        return selectedStitchLine.targetId
       }
 
-      return selectedStitchLine.targetId
+      const targetHole = project.holes.find((hole) => hole.id === selectedStitchLine.targetId)
+
+      return isDefined(targetHole) ? targetHole.componentId : undefined
     }
 
     return undefined
-  }, [selectedComponent, selectedHole, selectedStitchLine])
+  }, [project.holes, selectedComponent, selectedHole, selectedStitchLine])
 
   const selectComponent = useCallback(
     (componentId: string): void => {

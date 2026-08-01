@@ -87,11 +87,7 @@ const getPocketCardBoundingRect = (
       if (stitchLine.type !== 'component-bounds-stitch-line') {
         return false
       }
-      if (stitchLine.targetType === 'hole') {
-        throw new Error('Hole stitch line targets are not supported yet')
-      }
-
-      return stitchLine.targetId === pocketCluster.id
+      return stitchLine.targetType === 'component' && stitchLine.targetId === pocketCluster.id
     },
   )
   const pocketClusterStitchLines = resolvedStitchLines.filter(

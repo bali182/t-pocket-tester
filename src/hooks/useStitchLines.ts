@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import type { StitchLineSchema } from '../schemas/stitching'
+import { isDefined } from '../utils/isDefined'
 import { useProject } from './useProject'
 
 export const useStitchLines = (componentId: string): StitchLineSchema[] => {
@@ -9,12 +10,14 @@ export const useStitchLines = (componentId: string): StitchLineSchema[] => {
   return useMemo(
     () =>
       project.stitchLines.filter((stitchLine) => {
-        if (stitchLine.targetType === 'hole') {
-          throw new Error('Hole stitch line targets are not supported yet')
+        if (stitchLine.targetType === 'component') {
+          return stitchLine.targetId === componentId
         }
 
-        return stitchLine.targetId === componentId
+        const targetHole = project.holes.find((hole) => hole.id === stitchLine.targetId)
+
+        return isDefined(targetHole) && targetHole.componentId === componentId
       }),
-    [componentId, project.stitchLines],
+    [componentId, project.holes, project.stitchLines],
   )
 }
