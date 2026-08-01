@@ -5,6 +5,7 @@ import type { HoleSchema } from '../../schemas/hole'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
+import { HoleActionsMenu } from '../tree/HoleActionsMenu'
 import { HoleEditor } from './HoleEditor'
 
 type HoleFloatingEditorProps = {
@@ -18,7 +19,7 @@ export const HoleFloatingEditor: FC<HoleFloatingEditorProps> = ({ anchorElement,
 
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
-      <FloatingEditorHeader title={`#${editedHole.id}`} />
+      <FloatingEditorHeader menu={<HoleActionsMenu hole={editedHole} size="xs" />} title={`#${editedHole.id}`} />
       <SectionGroup.Root>
         <HoleEditor
           editable={editableHole}
