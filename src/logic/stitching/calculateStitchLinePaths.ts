@@ -230,7 +230,7 @@ const createPathFromFragments = (fragments: StitchPathFragment[]): PathSchema =>
     }
 
     if (fragment.radius.isGreaterThan(ZERO)) {
-      commands.push({ type: 'arcTo', radius: fragment.radius, point: fragment.end })
+      commands.push({ type: 'arcTo', radius: fragment.radius, point: fragment.end, reversed: false })
     }
   }
 

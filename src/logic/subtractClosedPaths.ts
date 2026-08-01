@@ -1,0 +1,87 @@
+import BigNumber from 'bignumber.js'
+import Flatten from '@flatten-js/core'
+
+import type { PathCommand, PathSchema, PointSchema } from '../schemas/geometry'
+import { getClosedPathLoops } from './pathSegments'
+import type { PathSegment } from './pathSegmentTypes'
+
+export const subtractClosedPaths = (subject: PathSchema, holes: readonly PathSchema[]): PathSchema => {
+  const polygon = holes.reduce<Flatten.Polygon>(
+    (result, hole) => Flatten.BooleanOperations.subtract(result, toFlattenPolygon(hole)),
+    toFlattenPolygon(subject),
+  )
+
+  return fromFlattenPolygon(polygon)
+}
+
+const toFlattenPolygon = (path: PathSchema): Flatten.Polygon => {
+  const polygon = new Flatten.Polygon()
+
+  getClosedPathLoops(path).forEach((loop) => {
+    polygon.addFace(loop.map(toFlattenShape))
+  })
+
+  return polygon
+}
+
+const toFlattenShape = (segment: PathSegment): Flatten.Segment | Flatten.Arc => {
+  if (segment.type === 'line') {
+    return new Flatten.Segment(toFlattenPoint(segment.start), toFlattenPoint(segment.end))
+  }
+
+  return new Flatten.Arc(
+    toFlattenPoint(segment.center),
+    segment.radius.toNumber(),
+    segment.startAngle,
+    segment.startAngle + segment.sweepAngle,
+    !segment.reversed,
+  )
+}
+
+const fromFlattenPolygon = (polygon: Flatten.Polygon): PathSchema => {
+  return {
+    commands: [...polygon.faces].flatMap((face) => getPathCommandsFromFace(face)),
+  }
+}
+
+const getPathCommandsFromFace = (face: Flatten.Face): PathCommand[] => {
+  const firstShape = face.shapes[0]
+
+  if (firstShape === undefined) {
+    return []
+  }
+
+  return [
+    { type: 'moveTo', point: fromFlattenPoint(firstShape.start) },
+    ...face.shapes.flatMap(getPathCommandsFromShape),
+    { type: 'close' },
+  ]
+}
+
+const getPathCommandsFromShape = (shape: Flatten.Segment | Flatten.Arc): PathCommand[] => {
+  if (shape instanceof Flatten.Segment) {
+    return [{ type: 'lineTo', point: fromFlattenPoint(shape.end) }]
+  }
+
+  return shape.breakToFunctional().map((arc) => getPathCommandFromArc(arc))
+}
+
+const getPathCommandFromArc = (arc: Flatten.Arc): PathCommand => {
+  return {
+    type: 'arcTo',
+    radius: new BigNumber(arc.r),
+    point: fromFlattenPoint(arc.end),
+    reversed: !arc.counterClockwise,
+  }
+}
+
+const toFlattenPoint = (point: PointSchema): Flatten.Point => {
+  return new Flatten.Point(point.x.toNumber(), point.y.toNumber())
+}
+
+const fromFlattenPoint = (point: Flatten.Point): PointSchema => {
+  return {
+    x: new BigNumber(point.x),
+    y: new BigNumber(point.y),
+  }
+}

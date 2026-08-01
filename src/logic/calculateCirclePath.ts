@@ -23,10 +23,10 @@ export const calculateCirclePath = (center: PointSchema, radius: BigNumber): Pat
   return {
     commands: [
       { type: 'moveTo', point: top },
-      { type: 'arcTo', radius, point: right },
-      { type: 'arcTo', radius, point: bottom },
-      { type: 'arcTo', radius, point: left },
-      { type: 'arcTo', radius, point: top },
+      { type: 'arcTo', radius, point: right, reversed: false },
+      { type: 'arcTo', radius, point: bottom, reversed: false },
+      { type: 'arcTo', radius, point: left, reversed: false },
+      { type: 'arcTo', radius, point: top, reversed: false },
       { type: 'close' },
     ],
   }

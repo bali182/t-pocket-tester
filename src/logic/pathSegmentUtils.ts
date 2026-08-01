@@ -35,12 +35,16 @@ export const createArcPathSegment = (start: PointSchema, command: PathArcToSchem
     x: midpoint.x.minus(perpendicularX),
     y: midpoint.y.minus(perpendicularY),
   }
-  const center = getSweepOneCenter(start, command.point, firstCenter, secondCenter)
+  const center = command.reversed
+    ? getSweepZeroCenter(start, command.point, firstCenter, secondCenter)
+    : getSweepOneCenter(start, command.point, firstCenter, secondCenter)
   const startAngle = getAngle(center, start)
   const endAngle = getAngle(center, command.point)
-  const sweepAngle = getPositiveAngleDifference(startAngle, endAngle)
+  const sweepAngle = command.reversed
+    ? -getPositiveAngleDifference(endAngle, startAngle)
+    : getPositiveAngleDifference(startAngle, endAngle)
 
-  if (sweepAngle > Math.PI) {
+  if (Math.abs(sweepAngle) > Math.PI) {
     throw new Error('Arc path commands must use the small sweep')
   }
 
@@ -49,6 +53,7 @@ export const createArcPathSegment = (start: PointSchema, command: PathArcToSchem
     start,
     end: command.point,
     radius: command.radius,
+    reversed: command.reversed,
     center,
     startAngle,
     sweepAngle,
@@ -127,7 +132,11 @@ export const isPointOnArc = (point: PointSchema, arc: ArcPathSegment): boolean =
 }
 
 export const getArcProgress = (arc: ArcPathSegment, angle: number): number => {
-  return getPositiveAngleDifference(arc.startAngle, angle) / arc.sweepAngle
+  if (arc.sweepAngle >= 0) {
+    return getPositiveAngleDifference(arc.startAngle, angle) / arc.sweepAngle
+  }
+
+  return getPositiveAngleDifference(angle, arc.startAngle) / -arc.sweepAngle
 }
 
 export const getAngle = (center: PointSchema, point: PointSchema): number => {
@@ -186,6 +195,7 @@ const getPathSegmentRange = (segment: PathSegment, startProgress: BigNumber, end
     ...segment,
     start,
     end,
+    reversed: segment.reversed,
     startAngle: segment.startAngle + segment.sweepAngle * startProgress.toNumber(),
     sweepAngle: segment.sweepAngle * endProgress.minus(startProgress).toNumber(),
   }
@@ -219,6 +229,18 @@ const getSweepOneCenter = (
   const firstEndAngle = getAngle(first, end)
 
   return getPositiveAngleDifference(firstStartAngle, firstEndAngle) <= Math.PI ? first : second
+}
+
+const getSweepZeroCenter = (
+  start: PointSchema,
+  end: PointSchema,
+  first: PointSchema,
+  second: PointSchema,
+): PointSchema => {
+  const firstStartAngle = getAngle(first, start)
+  const firstEndAngle = getAngle(first, end)
+
+  return getPositiveAngleDifference(firstEndAngle, firstStartAngle) <= Math.PI ? first : second
 }
 
 const getPositiveAngleDifference = (start: number, end: number): number => {

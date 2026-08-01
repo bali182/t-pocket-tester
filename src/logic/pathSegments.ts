@@ -49,6 +49,57 @@ export const getPathSegments = (path: PathSchema, requireClosed = false): PathSe
   return segments
 }
 
+export const getClosedPathLoops = (path: PathSchema): PathSegment[][] => {
+  const loops: PathSegment[][] = []
+  let currentPoint: PointSchema | undefined
+  let subpathStart: PointSchema | undefined
+  let segments: PathSegment[] = []
+
+  for (const command of path.commands) {
+    if (command.type === 'moveTo') {
+      if (isDefined(currentPoint)) {
+        throw new Error('Closed path contains an unclosed contour')
+      }
+
+      currentPoint = command.point
+      subpathStart = command.point
+      segments = []
+      continue
+    }
+
+    if (!isDefined(currentPoint)) {
+      throw new Error(`Path ${command.type} command has no start point`)
+    }
+
+    if (command.type === 'close') {
+      if (!isDefined(subpathStart)) {
+        throw new Error('Path close command has no subpath start')
+      }
+
+      addLineSegment(segments, currentPoint, subpathStart)
+      loops.push(segments)
+      currentPoint = undefined
+      subpathStart = undefined
+      continue
+    }
+
+    if (command.type === 'lineTo') {
+      addLineSegment(segments, currentPoint, command.point)
+      currentPoint = command.point
+      continue
+    }
+
+    segments.push(createArcPathSegment(currentPoint, command))
+    currentPoint = command.point
+  }
+
+  if (isDefined(currentPoint)) {
+    throw new Error('Closed path contains an unclosed contour')
+  }
+
+  return loops
+}
+
 export const createPathsFromConnectedSegments = (segments: PathSegment[]): PathSchema[] => {
   const paths: PathSchema[] = []
   let currentSegments: PathSegment[] = []
@@ -86,7 +137,7 @@ export const createPathFromConnectedSegments = (segments: PathSegment[]): PathSc
       continue
     }
 
-    commands.push({ type: 'arcTo', radius: segment.radius, point: segment.end })
+    commands.push({ type: 'arcTo', radius: segment.radius, point: segment.end, reversed: segment.reversed })
   }
 
   return { commands }

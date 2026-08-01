@@ -44,7 +44,7 @@ const calculateUpTPocketPath = (
   ]
 
   if (topRightRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: topRightRadius, point: { x: right, y: top.plus(topRightRadius) } })
+    commands.push({ type: 'arcTo', radius: topRightRadius, point: { x: right, y: top.plus(topRightRadius) }, reversed: false })
   }
 
   commands.push(
@@ -58,7 +58,7 @@ const calculateUpTPocketPath = (
   )
 
   if (topLeftRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: topLeftRadius, point: { x: left.plus(topLeftRadius), y: top } })
+    commands.push({ type: 'arcTo', radius: topLeftRadius, point: { x: left.plus(topLeftRadius), y: top }, reversed: false })
   }
 
   commands.push({ type: 'close' })
@@ -93,13 +93,13 @@ const calculateDownTPocketPath = (
   ]
 
   if (bottomRightRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: bottomRightRadius, point: { x: right.minus(bottomRightRadius), y: bottom } })
+    commands.push({ type: 'arcTo', radius: bottomRightRadius, point: { x: right.minus(bottomRightRadius), y: bottom }, reversed: false })
   }
 
   commands.push({ type: 'lineTo', point: { x: left.plus(bottomLeftRadius), y: bottom } })
 
   if (bottomLeftRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: bottomLeftRadius, point: { x: left, y: bottom.minus(bottomLeftRadius) } })
+    commands.push({ type: 'arcTo', radius: bottomLeftRadius, point: { x: left, y: bottom.minus(bottomLeftRadius) }, reversed: false })
   }
 
   commands.push({ type: 'close' })
@@ -134,13 +134,13 @@ const calculateLeftTPocketPath = (
   ]
 
   if (bottomLeftRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: bottomLeftRadius, point: { x: left, y: bottom.minus(bottomLeftRadius) } })
+    commands.push({ type: 'arcTo', radius: bottomLeftRadius, point: { x: left, y: bottom.minus(bottomLeftRadius) }, reversed: false })
   }
 
   commands.push({ type: 'lineTo', point: { x: left, y: top.plus(topLeftRadius) } })
 
   if (topLeftRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: topLeftRadius, point: { x: left.plus(topLeftRadius), y: top } })
+    commands.push({ type: 'arcTo', radius: topLeftRadius, point: { x: left.plus(topLeftRadius), y: top }, reversed: false })
   }
 
   commands.push({ type: 'close' })
@@ -169,7 +169,7 @@ const calculateRightTPocketPath = (
   ]
 
   if (bottomRightRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: bottomRightRadius, point: { x: right.minus(bottomRightRadius), y: bottom } })
+    commands.push({ type: 'arcTo', radius: bottomRightRadius, point: { x: right.minus(bottomRightRadius), y: bottom }, reversed: false })
   }
 
   commands.push(
@@ -183,7 +183,7 @@ const calculateRightTPocketPath = (
   )
 
   if (topRightRadius.isGreaterThan(ZERO)) {
-    commands.push({ type: 'arcTo', radius: topRightRadius, point: { x: right, y: top.plus(topRightRadius) } })
+    commands.push({ type: 'arcTo', radius: topRightRadius, point: { x: right, y: top.plus(topRightRadius) }, reversed: false })
   }
 
   commands.push({ type: 'close' })

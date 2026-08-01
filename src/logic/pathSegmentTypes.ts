@@ -13,6 +13,7 @@ export type ArcPathSegment = {
   start: PointSchema
   end: PointSchema
   radius: BigNumber
+  reversed: boolean
   center: PointSchema
   startAngle: number
   sweepAngle: number
