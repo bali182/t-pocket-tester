@@ -123,6 +123,15 @@ export const ComponentTree: FC = () => {
     [selection],
   )
 
+  const handleHoleDelete = useCallback(
+    (holeId: string): void => {
+      if (selection.selectedHole?.id === holeId) {
+        selection.clearSelection()
+      }
+    },
+    [selection],
+  )
+
   const handleDragStart = useCallback(
     ({ active }: DragStartEvent): void => {
       dropTargetRectRef.current = undefined
@@ -230,6 +239,7 @@ export const ComponentTree: FC = () => {
                       activeDragData={activeDragData}
                       indexPath={indexPath}
                       node={node}
+                      onDelete={handleHoleDelete}
                     />
                   )
                 case 'stitch-line':

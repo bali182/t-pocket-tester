@@ -17,12 +17,14 @@ type HoleTreeItemProps = {
   activeDragData: TreeDragData | undefined
   indexPath: number[]
   node: HoleTreeNode
+  onDelete: (holeId: string) => void
 }
 
 export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   activeDragData,
   indexPath,
   node,
+  onDelete,
 }) => {
   const { hole } = node
   const isActiveHole = activeDragData?.kind === 'hole' && activeDragData.holeId === hole.id
@@ -106,7 +108,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
         isPositioned={true}
         label={label}
         leading={dragHandle}
-        trailing={<HoleActionsMenu size="2xs" />}
+        trailing={<HoleActionsMenu hole={hole} size="2xs" onDelete={onDelete} />}
       />
     </TreeView.BranchControl>
   )

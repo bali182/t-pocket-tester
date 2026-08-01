@@ -27,7 +27,7 @@ type AddStitchLinePopoverProps = {
 
 export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger }) => {
   const t = useTranslation()
-  const { project, addStitchLine } = useProject()
+  const { project, addStitchLineToComponent } = useProject()
   const lastTouchedComponent = useAtomValue(lastTouchedComponentAtom)
   const defaultComponentId = useMemo((): string => {
     if (
@@ -97,10 +97,10 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
       return
     }
 
-    addStitchLine(component.id, stitchLineType)
+    addStitchLineToComponent(component.id, stitchLineType)
     reset()
     setIsOpen(false)
-  }, [addStitchLine, canAdd, component, componentId, reset, stitchLineType])
+  }, [addStitchLineToComponent, canAdd, component, componentId, reset, stitchLineType])
 
   return (
     <Popover.Root onOpenChange={handleOpenChange} open={isOpen}>

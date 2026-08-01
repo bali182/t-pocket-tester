@@ -5,8 +5,10 @@ import { addComponent as addComponentPure } from '../operations/project/addCompo
 import { addHole as addHolePure } from '../operations/project/addHole'
 import { addStitchLine as addStitchLinePure } from '../operations/project/addStitchLine'
 import { cloneComponent as cloneComponentPure } from '../operations/project/cloneComponent'
+import { cloneHole as cloneHolePure } from '../operations/project/cloneHole'
 import { cloneStitchLine as cloneStitchLinePure } from '../operations/project/cloneStitchLine'
 import { deleteComponent as deleteComponentPure } from '../operations/project/deleteComponent'
+import { deleteHole as deleteHolePure } from '../operations/project/deleteHole'
 import { deleteStitchLine as deleteStitchLinePure } from '../operations/project/deleteStitchLine'
 import { moveComponent as moveComponentPure } from '../operations/project/moveComponent'
 import { moveHole as moveHolePure } from '../operations/project/moveHole'
@@ -62,16 +64,34 @@ export const useProject = () => {
     ),
   )
 
-  const addStitchLine = useAtomCallback(
+  const addStitchLineToComponent = useAtomCallback(
     useCallback(
       (get, set, componentId: string, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
         const project = getRequiredProject(get)
-        const stitchLine = createStitchLine({
-          componentId,
-          type: stitchLineType,
-          id: stitchLineId(),
-          name: getUnusedStitchLineName(project, project.components[componentId], t),
-        })
+        const stitchLine = createStitchLine(
+          stitchLineType,
+          { targetId: componentId, targetType: 'component' },
+          stitchLineId(),
+          getUnusedStitchLineName(project, t),
+        )
+        set(projectAtom, addStitchLinePure(project, { stitchLine }))
+        return stitchLine
+      },
+      [stitchLineId, t],
+    ),
+  )
+
+  const addStitchLineToHole = useAtomCallback(
+    useCallback(
+      (get, set, holeId: string): StitchLineSchema => {
+        const project = getRequiredProject(get)
+        const stitchLine = createStitchLine(
+          'component-bounds-stitch-line',
+          { targetId: holeId, targetType: 'hole' },
+          stitchLineId(),
+          getUnusedStitchLineName(project, t),
+        )
+
         set(projectAtom, addStitchLinePure(project, { stitchLine }))
         return stitchLine
       },
@@ -117,6 +137,20 @@ export const useProject = () => {
     useCallback((get, set, componentId: string): void => {
       const project = getRequiredProject(get)
       set(projectAtom, deleteComponentPure(project, { componentId }))
+    }, []),
+  )
+
+  const cloneHole = useAtomCallback(
+    useCallback((get, set, holeId: string): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, cloneHolePure(project, { holeId, getUnusedId: idPure, getUnusedName }))
+    }, []),
+  )
+
+  const deleteHole = useAtomCallback(
+    useCallback((get, set, holeId: string): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, deleteHolePure(project, { holeId }))
     }, []),
   )
 
@@ -209,10 +243,13 @@ export const useProject = () => {
     computedProject,
     addComponent,
     addHole,
-    addStitchLine,
+    addStitchLineToComponent,
+    addStitchLineToHole,
     cloneComponent,
+    cloneHole,
     cloneStitchLine,
     deleteComponent,
+    deleteHole,
     deleteStitchLine,
     moveComponent,
     moveHole,
