@@ -1,7 +1,7 @@
-import { Box, Button, Card, Heading, HStack, IconButton } from '@chakra-ui/react'
+import { Box, Card, Heading, HStack, IconButton } from '@chakra-ui/react'
 import { useCallback, useMemo, useRef, useState, type FC } from 'react'
 
-import { PiArrowsDownUp, PiCaretLeft, PiCheck, PiExport, PiGear, PiRuler } from 'react-icons/pi'
+import { PiCaretLeft, PiExport, PiGear, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
@@ -19,7 +19,6 @@ import { ComponentTree } from './tree/ComponentTree'
 
 export const Editor: FC = () => {
   const t = useTranslation()
-  const [isComponentTreeInReorderMode, setComponentTreeInReorderMode] = useState<boolean>(false)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const projectMenuRef = useRef<HTMLDivElement>(null)
@@ -27,11 +26,6 @@ export const Editor: FC = () => {
   const drawAreaContextValue = useEditorDrawArea()
   const { highlightedComponentId, clearSelection, selectedComponent, selectedStitchLine } =
     drawAreaContextValue.selection
-
-  const handleToggleReorder = useCallback(() => {
-    clearSelection()
-    setComponentTreeInReorderMode((isInReorderMode) => !isInReorderMode)
-  }, [clearSelection])
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
 
@@ -101,17 +95,9 @@ export const Editor: FC = () => {
         <Box bg="bg.panel" flexShrink={0} height="100%" width="400px">
           <HStack justify="space-between" px="4" py="3">
             <Heading size="sm">{t.editor.panels.leather}</Heading>
-            <Button
-              size="2xs"
-              variant={isComponentTreeInReorderMode ? 'solid' : 'subtle'}
-              onClick={handleToggleReorder}
-            >
-              {isComponentTreeInReorderMode ? <PiCheck /> : <PiArrowsDownUp />}
-              {isComponentTreeInReorderMode ? t.common.reorder.finishReorder : t.common.reorder.reorder}
-            </Button>
           </HStack>
           <Box flex="1" minHeight="0" overflow="auto" padding="4">
-            <ComponentTree isInReorderMode={isComponentTreeInReorderMode} />
+            <ComponentTree />
           </Box>
         </Box>
       </Box>

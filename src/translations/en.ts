@@ -18,10 +18,6 @@ export const EN: typeof HU = {
       settings: 'Settings',
       addByName: (name: string) => `Add ${name.toLowerCase()}`,
     },
-    reorder: {
-      reorder: 'Reorder',
-      finishReorder: 'Finish reordering',
-    },
     labels: {
       general: 'General',
       name: 'Name',

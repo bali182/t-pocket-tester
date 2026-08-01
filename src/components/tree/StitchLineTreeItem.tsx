@@ -1,6 +1,6 @@
 import { IconButton, TreeView } from '@chakra-ui/react'
 import { useDraggable } from '@dnd-kit/core'
-import type { FC } from 'react'
+import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
 import { StitchLineActionsMenu } from '../StitchLineActionsMenu'
@@ -13,7 +13,6 @@ import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 type StitchLineTreeItemProps = {
   activeDragData: TreeDragData | undefined
   indexPath: number[]
-  isInReorderMode: boolean
   node: StitchLineTreeNode
   onDelete: (stitchLineId: string) => void
 }
@@ -21,13 +20,15 @@ type StitchLineTreeItemProps = {
 export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
   activeDragData,
   indexPath,
-  isInReorderMode,
   node,
   onDelete,
 }) => {
   const { stitchLine } = node
   const isActiveStitchLine = activeDragData?.kind === 'stitch-line' && activeDragData.stitchLineId === stitchLine.id
   const isDisabledForActiveDrag = activeDragData !== undefined && !isActiveStitchLine
+  const handleDragHandleClick = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation()
+  }, [])
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     data: {
       indexPath,
@@ -36,7 +37,6 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
       stitchLineId: stitchLine.id,
       stitchLineType: stitchLine.type,
     },
-    disabled: !isInReorderMode,
     id: node.id,
   })
 
@@ -55,21 +55,20 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
         isPositioned={false}
         label={getProjectTreeNodeLabel(node)}
         leading={
-          isInReorderMode ? (
-            <IconButton
-              {...attributes}
-              {...listeners}
-              cursor={isDragging ? 'grabbing' : 'grab'}
-              ref={setActivatorNodeRef}
-              size="2xs"
-              variant="ghost"
-              _hover={{ bg: 'transparent' }}
-            >
-              <PiDotsSixVertical />
-            </IconButton>
-          ) : null
+          <IconButton
+            {...attributes}
+            {...listeners}
+            cursor={isDragging ? 'grabbing' : 'grab'}
+            onClick={handleDragHandleClick}
+            ref={setActivatorNodeRef}
+            size="2xs"
+            variant="ghost"
+            _hover={{ bg: 'transparent' }}
+          >
+            <PiDotsSixVertical />
+          </IconButton>
         }
-        trailing={!isInReorderMode && <StitchLineActionsMenu size="2xs" stitchLine={stitchLine} onDelete={onDelete} />}
+        trailing={<StitchLineActionsMenu size="2xs" stitchLine={stitchLine} onDelete={onDelete} />}
       />
     </TreeView.Item>
   )

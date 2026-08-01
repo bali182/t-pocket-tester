@@ -1,6 +1,6 @@
 import { Box, IconButton, TreeView, type TreeViewNodeState } from '@chakra-ui/react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
-import { useCallback, useMemo, type FC } from 'react'
+import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
 import { hasComponentChildren } from '../../operations/project/utils/hasComponentChildren'
@@ -21,7 +21,6 @@ import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 type ComponentTreeItemProps = {
   activeDragData: TreeDragData | undefined
   indexPath: number[]
-  isInReorderMode: boolean
   node: ComponentTreeNode
   nodeState: TreeViewNodeState
   onAddChild: (parentId: string) => void
@@ -30,16 +29,19 @@ type ComponentTreeItemProps = {
 export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   activeDragData,
   indexPath,
-  isInReorderMode,
   node,
   nodeState,
   onAddChild,
 }) => {
   const { component } = node
   const isActiveComponent = activeDragData?.kind === 'component' && activeDragData.componentId === component.id
-  const isDraggable = isInReorderMode && component.type !== 'root-panel'
+  const isDraggable = component.type !== 'root-panel'
   const canReorder = !isDefined(activeDragData) || activeDragData.kind === 'component'
   const isExpandable = node.children.length > 0
+
+  const handleDragHandleClick = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation()
+  }, [])
 
   const canAcceptAttachment = useMemo<boolean>(() => {
     if (!isDefined(activeDragData)) {
@@ -127,25 +129,25 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
 
   const { isOver: isAttachmentDropOver, setNodeRef: setAttachmentDropNodeRef } = useDroppable({
     data: attachmentDropData,
-    disabled: !isInReorderMode || !canAcceptAttachment,
+    disabled: !canAcceptAttachment,
     id: `${node.id}:attachment`,
   })
 
   const { isOver: isBeforeDropAreaOver, setNodeRef: setBeforeDropAreaNodeRef } = useDroppable({
     data: beforeDropData,
-    disabled: !isInReorderMode || !canReorder || !dropPositions.includes('before'),
+    disabled: !canReorder || !dropPositions.includes('before'),
     id: `${node.id}:before`,
   })
 
   const { isOver: isAfterDropAreaOver, setNodeRef: setAfterDropAreaNodeRef } = useDroppable({
     data: afterDropData,
-    disabled: !isInReorderMode || !canReorder || !dropPositions.includes('after'),
+    disabled: !canReorder || !dropPositions.includes('after'),
     id: `${node.id}:after`,
   })
 
   const { isOver: isInsideDropAreaOver, setNodeRef: setInsideDropAreaNodeRef } = useDroppable({
     data: insideDropData,
-    disabled: !isInReorderMode || !canReorder || !dropPositions.includes('inside'),
+    disabled: !canReorder || !dropPositions.includes('inside'),
     id: `${node.id}:inside`,
   })
 
@@ -158,11 +160,13 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   )
 
   const Icon = getProjectTreeNodeIcon(node)
-  const dragHandle = isDraggable ? (
+  const dragHandle = (
     <IconButton
       {...attributes}
       {...listeners}
       cursor={isDragging ? 'grabbing' : 'grab'}
+      disabled={!isDraggable}
+      onClick={handleDragHandleClick}
       ref={setActivatorNodeRef}
       size="2xs"
       variant="ghost"
@@ -170,20 +174,20 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
     >
       <PiDotsSixVertical />
     </IconButton>
-  ) : null
+  )
   const dropAreaRefs = {
     after: setAfterDropAreaNodeRef,
     before: setBeforeDropAreaNodeRef,
     inside: setInsideDropAreaNodeRef,
   }
-  const dropAreas = isInReorderMode ? (
+  const dropAreas = (
     <Box display="flex" flexDirection="column" inset="0" pointerEvents="none" position="absolute" ref={setTreeNodeRef}>
       {canReorder &&
         dropPositions.map((position) => (
           <Box key={position} flex="1" pointerEvents="none" ref={dropAreaRefs[position]} />
         ))}
     </Box>
-  ) : null
+  )
 
   const insideDropAreaFeedback = isInsideDropAreaOver || isAttachmentDropOver ? <DropInsideIndicator /> : null
 
@@ -216,7 +220,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
         isPositioned={true}
         label={getProjectTreeNodeLabel(node)}
         leading={dragHandle}
-        trailing={!isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />}
+        trailing={<ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />}
       />
     </TreeView.BranchControl>
   )

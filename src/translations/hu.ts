@@ -16,10 +16,6 @@ export const HU = {
       settings: 'Beállítások',
       addByName: (name: string) => `${name} hozzáadása`,
     },
-    reorder: {
-      reorder: 'Átrendezés',
-      finishReorder: 'Átrendezés befejezése',
-    },
     labels: {
       general: 'Általános',
       name: 'Név',

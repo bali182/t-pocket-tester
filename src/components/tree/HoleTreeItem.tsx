@@ -1,6 +1,6 @@
 import { IconButton, TreeView } from '@chakra-ui/react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
-import { useCallback, useMemo, type FC } from 'react'
+import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
 import { isDefined } from '../../utils/isDefined'
@@ -16,14 +16,12 @@ import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 type HoleTreeItemProps = {
   activeDragData: TreeDragData | undefined
   indexPath: number[]
-  isInReorderMode: boolean
   node: HoleTreeNode
 }
 
 export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   activeDragData,
   indexPath,
-  isInReorderMode,
   node,
 }) => {
   const { hole } = node
@@ -33,6 +31,10 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   const isDisabledForActiveDrag = isDefined(activeDragData) && !isActiveHole && !canAcceptStitchLine
   const isExpandable = node.children.length > 0
 
+  const handleDragHandleClick = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation()
+  }, [])
+
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     data: {
       holeId: hole.id,
@@ -40,7 +42,6 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
       kind: 'hole',
       node,
     },
-    disabled: !isInReorderMode,
     id: node.id,
   })
 
@@ -54,7 +55,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
 
   const { isOver, setNodeRef: setDropNodeRef } = useDroppable({
     data: dropData,
-    disabled: !isInReorderMode || !canAcceptStitchLine,
+    disabled: !canAcceptStitchLine,
     id: `${node.id}:stitch-line`,
   })
 
@@ -68,11 +69,12 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
 
   const Icon = getProjectTreeNodeIcon(node)
   const label = getProjectTreeNodeLabel(node)
-  const dragHandle = isInReorderMode ? (
+  const dragHandle = (
     <IconButton
       {...attributes}
       {...listeners}
       cursor={isDragging ? 'grabbing' : 'grab'}
+      onClick={handleDragHandleClick}
       ref={setActivatorNodeRef}
       size="2xs"
       variant="ghost"
@@ -80,7 +82,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
     >
       <PiDotsSixVertical />
     </IconButton>
-  ) : null
+  )
   const dropFeedback = isOver ? <DropInsideIndicator /> : null
 
   return (
@@ -104,7 +106,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
         isPositioned={true}
         label={label}
         leading={dragHandle}
-        trailing={!isInReorderMode && <HoleActionsMenu size="2xs" />}
+        trailing={<HoleActionsMenu size="2xs" />}
       />
     </TreeView.BranchControl>
   )

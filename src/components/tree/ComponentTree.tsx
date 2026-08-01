@@ -39,11 +39,7 @@ import { createTreeRootNode } from './utils/treeNodeFactories'
 import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './utils/treeNodeIds'
 import { useTreeDropAnimation } from './utils/useTreeDropAnimation'
 
-type ComponentTreeProps = {
-  isInReorderMode: boolean
-}
-
-export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }) => {
+export const ComponentTree: FC = () => {
   const { project, moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole } = useProject()
   const { selection } = useDrawAreaContext()
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>(() => [getComponentNodeId(project.root)])
@@ -209,8 +205,8 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
         expandedValue={expandedNodeIds}
         expandOnClick={false}
         onExpandedChange={handleExpandedChange}
-        onSelectionChange={!isInReorderMode ? handleSelectionChange : undefined}
-        selectedValue={!isInReorderMode ? selectedValue : undefined}
+        onSelectionChange={handleSelectionChange}
+        selectedValue={selectedValue}
         selectionMode="single"
       >
         <TreeView.Tree>
@@ -223,7 +219,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
                     <ComponentTreeItem
                       activeDragData={activeDragData}
                       indexPath={indexPath}
-                      isInReorderMode={isInReorderMode}
                       node={node}
                       nodeState={nodeState}
                       onAddChild={handleAddChild}
@@ -234,7 +229,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
                     <HoleTreeItem
                       activeDragData={activeDragData}
                       indexPath={indexPath}
-                      isInReorderMode={isInReorderMode}
                       node={node}
                     />
                   )
@@ -243,7 +237,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
                     <StitchLineTreeItem
                       activeDragData={activeDragData}
                       indexPath={indexPath}
-                      isInReorderMode={isInReorderMode}
                       node={node}
                       onDelete={handleStitchLineDelete}
                     />
