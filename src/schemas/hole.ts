@@ -2,7 +2,7 @@ import { HasComponentReferenceSchema, HasCornerRadiusSchema, HasIdentitySchema, 
 
 export type HoleAnchorSchema = 'start' | 'middle' | 'end'
 
-type HolePositionSchema = {
+export type HolePositionSchema = {
   xAnchor: HoleAnchorSchema
   xOffset: number
   yAnchor: HoleAnchorSchema

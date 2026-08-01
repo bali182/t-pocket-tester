@@ -169,6 +169,23 @@ export const HU = {
       circle: 'Kerek lyuk',
       rectangle: 'Téglalap alakú lyuk',
     },
+    editor: {
+      position: {
+        title: 'Pozíció',
+        xAnchor: 'Vízszintes igazítás',
+        yAnchor: 'Függőleges igazítás',
+        xOffset: 'X eltolás',
+        yOffset: 'Y eltolás',
+        left: 'Bal',
+        center: 'Közép',
+        right: 'Jobb',
+        top: 'Fent',
+        bottom: 'Lent',
+      },
+      size: {
+        radius: 'Sugár',
+      },
+    },
   },
   stitchLine: {
     types: {

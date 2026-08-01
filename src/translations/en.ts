@@ -171,6 +171,23 @@ export const EN: typeof HU = {
       circle: 'Circle hole',
       rectangle: 'Rectangle hole',
     },
+    editor: {
+      position: {
+        title: 'Position',
+        xAnchor: 'Horizontal alignment',
+        yAnchor: 'Vertical alignment',
+        xOffset: 'X offset',
+        yOffset: 'Y offset',
+        left: 'Left',
+        center: 'Center',
+        right: 'Right',
+        top: 'Top',
+        bottom: 'Bottom',
+      },
+      size: {
+        radius: 'Radius',
+      },
+    },
   },
   stitchLine: {
     types: {

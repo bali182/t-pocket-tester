@@ -16,7 +16,6 @@ import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
 type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
-  component: T
   editable: EditableSchema<T>
   issues: ValidationIssuesSchema<HasCornerRadiusSchema>
   onChange: (updated: EditableSchema<T>) => void

@@ -11,12 +11,14 @@ import { moveComponent as moveComponentPure } from '../operations/project/moveCo
 import { moveHole as moveHolePure } from '../operations/project/moveHole'
 import { moveStitchLine as moveStitchLinePure } from '../operations/project/moveStitchLine'
 import { updateComponent as updateComponentPure } from '../operations/project/updateComponent'
+import { updateHole as updateHolePure } from '../operations/project/updateHole'
 import { updateStitchLine as updateStitchLinePure } from '../operations/project/updateStitchLine'
 import { createComponent } from '../operations/project/utils/createComponent'
 import { createStitchLine } from '../operations/project/utils/createStitchLine'
 import { getUnusedComponentName } from '../operations/project/utils/getUnusedComponentName'
 import { getUnusedName } from '../operations/project/utils/getUnusedName'
 import { ComponentSchema } from '../schemas/components'
+import { HoleSchema } from '../schemas/hole'
 import { ProjectSchema } from '../schemas/project'
 import { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
@@ -160,6 +162,13 @@ export const useProject = () => {
     }, []),
   )
 
+  const updateHole = useAtomCallback(
+    useCallback((get, set, hole: HoleSchema): void => {
+      const project = getRequiredProject(get)
+      set(projectAtom, updateHolePure(project, { hole }))
+    }, []),
+  )
+
   const updateStitchLine = useAtomCallback(
     useCallback((get, set, stitchLine: StitchLineSchema): void => {
       const project = getRequiredProject(get)
@@ -193,6 +202,7 @@ export const useProject = () => {
     moveStitchLineToComponent,
     moveStitchLineToHole,
     updateComponent,
+    updateHole,
     touchComponent,
     setProject,
     updateStitchLine,
