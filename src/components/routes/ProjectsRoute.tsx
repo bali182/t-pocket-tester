@@ -1,7 +1,7 @@
 import { Box, Button, Card, Grid, Heading } from '@chakra-ui/react'
 import { useCallback, useState, type FC } from 'react'
 import { PiPlus } from 'react-icons/pi'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 import { useProjects } from '../../hooks/useProjects'
 import { useTranslation } from '../../translations/translation'

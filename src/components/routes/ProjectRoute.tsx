@@ -2,7 +2,7 @@ import { EmptyState } from '@chakra-ui/react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useLayoutEffect, type FC } from 'react'
 import { PiWarningCircle } from 'react-icons/pi'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import { useProjects } from '../../hooks/useProjects'
 import { projectAtom } from '../../state/projectAtom'

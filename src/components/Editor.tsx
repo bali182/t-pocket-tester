@@ -2,7 +2,7 @@ import { Box, Card, Heading, HStack, IconButton, Splitter, SplitterPanelData } f
 import { useCallback, useMemo, useRef, useState, type FC } from 'react'
 
 import { PiCaretLeft, PiExport, PiGear, PiRuler } from 'react-icons/pi'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'

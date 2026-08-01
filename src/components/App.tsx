@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import type { FC } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router'
 import { useRoutes } from '../useRoutes'
 
 export const App: FC = () => {

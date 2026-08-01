@@ -1,6 +1,6 @@
 import { Button, Dialog } from '@chakra-ui/react'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
