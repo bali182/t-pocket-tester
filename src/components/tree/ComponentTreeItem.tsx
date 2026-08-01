@@ -39,6 +39,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   const isActiveComponent = activeDragData?.kind === 'component' && activeDragData.componentId === component.id
   const isDraggable = isInReorderMode && component.type !== 'root-panel'
   const canReorder = !isDefined(activeDragData) || activeDragData.kind === 'component'
+  const isExpandable = node.children.length > 0
 
   const canAcceptAttachment = useMemo<boolean>(() => {
     if (!isDefined(activeDragData)) {
@@ -193,35 +194,15 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
     </>
   )
 
-  if (nodeState.isBranch) {
-    return (
-      <TreeView.BranchControl
-        cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
-        opacity={isDisabledForActiveDrag ? 0.4 : undefined}
-        py="0"
-        h="9"
-      >
-        {dropAreas}
-        {insideDropAreaFeedback}
-        {insertionIndicators}
-        <TreeItemVisual
-          icon={Icon}
-          isBranch={true}
-          isPositioned={true}
-          label={getProjectTreeNodeLabel(node)}
-          leading={dragHandle}
-          trailing={
-            !isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />
-          }
-        />
-      </TreeView.BranchControl>
-    )
-  }
-
   return (
-    <TreeView.Item
+    <TreeView.BranchControl
       cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
       opacity={isDisabledForActiveDrag ? 0.4 : undefined}
+      onKeyDown={(event) => {
+        if (!isExpandable && (event.key === 'ArrowRight' || event.key === '*')) {
+          event.preventDefault()
+        }
+      }}
       py="0"
       h="9"
     >
@@ -230,12 +211,13 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
       {insertionIndicators}
       <TreeItemVisual
         icon={Icon}
-        isBranch={false}
+        isBranch={true}
+        isExpandable={isExpandable}
         isPositioned={true}
-        label={component.name}
+        label={getProjectTreeNodeLabel(node)}
         leading={dragHandle}
         trailing={!isInReorderMode && <ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />}
       />
-    </TreeView.Item>
+    </TreeView.BranchControl>
   )
 }

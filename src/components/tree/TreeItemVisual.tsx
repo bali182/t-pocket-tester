@@ -1,5 +1,5 @@
 import { Box, TreeView } from '@chakra-ui/react'
-import type { FC, ReactNode } from 'react'
+import { useCallback, type FC, type MouseEvent, type ReactNode } from 'react'
 import type { IconType } from 'react-icons'
 
 import { PiCaretRight } from 'react-icons/pi'
@@ -7,6 +7,7 @@ import { PiCaretRight } from 'react-icons/pi'
 type TreeItemVisualProps = {
   icon: IconType
   isBranch: boolean
+  isExpandable: boolean
   isPositioned: boolean
   label: string
   leading: ReactNode
@@ -16,18 +17,29 @@ type TreeItemVisualProps = {
 export const TreeItemVisual: FC<TreeItemVisualProps> = ({
   icon: Icon,
   isBranch,
+  isExpandable,
   isPositioned,
   label,
   leading,
   trailing,
 }) => {
+  const handleDisabledBranchTriggerClickCapture = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation()
+  }, [])
+
   const branchTrigger = isBranch ? (
-    <TreeView.BranchTrigger>
+    <TreeView.BranchTrigger
+      aria-disabled={!isExpandable}
+      cursor={isExpandable ? undefined : 'not-allowed'}
+      onClickCapture={!isExpandable ? handleDisabledBranchTriggerClickCapture : undefined}
+      opacity={isExpandable ? undefined : 0.4}
+    >
       <TreeView.BranchIndicator asChild>
         <PiCaretRight />
       </TreeView.BranchIndicator>
     </TreeView.BranchTrigger>
   ) : null
+
   const text = isBranch ? (
     <TreeView.BranchText>{label}</TreeView.BranchText>
   ) : (

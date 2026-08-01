@@ -1,4 +1,4 @@
-import { IconButton, TreeView, type TreeViewNodeState } from '@chakra-ui/react'
+import { IconButton, TreeView } from '@chakra-ui/react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { useCallback, useMemo, type FC } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
@@ -18,7 +18,6 @@ type HoleTreeItemProps = {
   indexPath: number[]
   isInReorderMode: boolean
   node: HoleTreeNode
-  nodeState: TreeViewNodeState
 }
 
 export const HoleTreeItem: FC<HoleTreeItemProps> = ({
@@ -26,13 +25,13 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   indexPath,
   isInReorderMode,
   node,
-  nodeState,
 }) => {
   const { hole } = node
   const isActiveHole = activeDragData?.kind === 'hole' && activeDragData.holeId === hole.id
   const canAcceptStitchLine =
     activeDragData?.kind === 'stitch-line' && activeDragData.stitchLineType === 'component-bounds-stitch-line'
   const isDisabledForActiveDrag = isDefined(activeDragData) && !isActiveHole && !canAcceptStitchLine
+  const isExpandable = node.children.length > 0
 
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     data: {
@@ -84,32 +83,15 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   ) : null
   const dropFeedback = isOver ? <DropInsideIndicator /> : null
 
-  if (nodeState.isBranch) {
-    return (
-      <TreeView.BranchControl
-        cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
-        opacity={isDisabledForActiveDrag ? 0.4 : undefined}
-        ref={setTreeNodeRef}
-        py="0"
-        h="9"
-      >
-        {dropFeedback}
-        <TreeItemVisual
-          icon={Icon}
-          isBranch={true}
-          isPositioned={true}
-          label={label}
-          leading={dragHandle}
-          trailing={!isInReorderMode && <HoleActionsMenu size="2xs" />}
-        />
-      </TreeView.BranchControl>
-    )
-  }
-
   return (
-    <TreeView.Item
+    <TreeView.BranchControl
       cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
       opacity={isDisabledForActiveDrag ? 0.4 : undefined}
+      onKeyDown={(event) => {
+        if (!isExpandable && (event.key === 'ArrowRight' || event.key === '*')) {
+          event.preventDefault()
+        }
+      }}
       ref={setTreeNodeRef}
       py="0"
       h="9"
@@ -117,12 +99,13 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
       {dropFeedback}
       <TreeItemVisual
         icon={Icon}
-        isBranch={false}
+        isBranch={true}
+        isExpandable={isExpandable}
         isPositioned={true}
         label={label}
         leading={dragHandle}
         trailing={!isInReorderMode && <HoleActionsMenu size="2xs" />}
       />
-    </TreeView.Item>
+    </TreeView.BranchControl>
   )
 }

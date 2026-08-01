@@ -1,4 +1,4 @@
-import { IconButton, TreeView, type TreeViewNodeState } from '@chakra-ui/react'
+import { IconButton, TreeView } from '@chakra-ui/react'
 import { useDraggable } from '@dnd-kit/core'
 import type { FC } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
@@ -15,7 +15,6 @@ type StitchLineTreeItemProps = {
   indexPath: number[]
   isInReorderMode: boolean
   node: StitchLineTreeNode
-  nodeState: TreeViewNodeState
   onDelete: (stitchLineId: string) => void
 }
 
@@ -52,6 +51,7 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
       <TreeItemVisual
         icon={getProjectTreeNodeIcon(node)}
         isBranch={false}
+        isExpandable={false}
         isPositioned={false}
         label={getProjectTreeNodeLabel(node)}
         leading={

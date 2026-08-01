@@ -52,6 +52,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
   const collection = useMemo<TreeCollection<ProjectTreeNode>>(() => {
     return createTreeCollection<ProjectTreeNode>({
       nodeToChildren: (node) => node.children,
+      nodeToChildrenCount: (node) => (node.kind === 'stitch-line' ? undefined : node.children.length),
       nodeToString: getProjectTreeNodeLabel,
       nodeToValue: (node) => node.id,
       rootNode: createTreeRootNode(project),
@@ -215,7 +216,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
                       indexPath={indexPath}
                       isInReorderMode={isInReorderMode}
                       node={node}
-                      nodeState={nodeState}
                     />
                   )
                 case 'stitch-line':
@@ -225,7 +225,6 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
                       indexPath={indexPath}
                       isInReorderMode={isInReorderMode}
                       node={node}
-                      nodeState={nodeState}
                       onDelete={handleStitchLineDelete}
                     />
                   )
@@ -233,9 +232,7 @@ export const ComponentTree: FC<ComponentTreeProps> = ({ isInReorderMode = true }
             }}
           />
         </TreeView.Tree>
-        <DragOverlay dropAnimation={null}>
-          {isDefined(activeDragData) && <TreeDragPreview dragData={activeDragData} />}
-        </DragOverlay>
+        <DragOverlay>{isDefined(activeDragData) && <TreeDragPreview dragData={activeDragData} />}</DragOverlay>
       </TreeView.Root>
     </DndContext>
   )
@@ -247,7 +244,8 @@ type TreeDragPreviewProps = {
 
 const TreeDragPreview: FC<TreeDragPreviewProps> = ({ dragData }) => {
   const { node } = dragData
-  const isBranch = node.children.length > 0
+  const isBranch = node.kind !== 'stitch-line'
+  const isExpandable = node.children.length > 0
   const dragHandle = (
     <IconButton pointerEvents="none" size="2xs" variant="ghost" _hover={{ bg: 'transparent' }}>
       <PiDotsSixVertical />
@@ -259,6 +257,7 @@ const TreeDragPreview: FC<TreeDragPreviewProps> = ({ dragData }) => {
     <TreeItemVisual
       icon={getProjectTreeNodeIcon(node)}
       isBranch={isBranch}
+      isExpandable={isExpandable}
       isPositioned={isPositioned}
       label={getProjectTreeNodeLabel(node)}
       leading={dragHandle}
@@ -271,12 +270,12 @@ const TreeDragPreview: FC<TreeDragPreviewProps> = ({ dragData }) => {
       <ArkTreeView.NodeProvider indexPath={dragData.indexPath} node={node}>
         {isBranch ? (
           <TreeView.Branch>
-            <TreeView.BranchControl bg="bg.muted" h="9" py="0">
+            <TreeView.BranchControl bg="bg.info/90" h="9" py="0">
               {visual}
             </TreeView.BranchControl>
           </TreeView.Branch>
         ) : (
-          <TreeView.Item bg="bg.muted" h="9" py="0">
+          <TreeView.Item bg="bg.info/90" h="9" py="0">
             {visual}
           </TreeView.Item>
         )}
