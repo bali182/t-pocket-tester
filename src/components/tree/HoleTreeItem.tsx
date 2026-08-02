@@ -3,6 +3,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { isDefined } from '../../utils/isDefined'
 import { DropInsideIndicator } from './ComponentTreeDropIndicators'
 import { HoleActionsMenu } from './HoleActionsMenu'
@@ -26,6 +27,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   node,
   onDelete,
 }) => {
+  const { selection } = useDrawAreaContext()
   const { hole } = node
   const isActiveHole = activeDragData?.kind === 'hole' && activeDragData.holeId === hole.id
   const canAcceptStitchLine =
@@ -36,6 +38,14 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
   const handleDragHandleClick = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
     event.stopPropagation()
   }, [])
+
+  const handlePointerEnter = useCallback((): void => {
+    selection.setHoveredTreeSelection({ holeId: hole.id, type: 'hole' })
+  }, [hole.id, selection])
+
+  const handlePointerLeave = useCallback((): void => {
+    selection.setHoveredTreeSelection(undefined)
+  }, [selection])
 
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     data: {
@@ -91,6 +101,8 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({
     <TreeView.BranchControl
       cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
       opacity={isDisabledForActiveDrag ? 0.4 : undefined}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
       onKeyDown={(event) => {
         if (!isExpandable && (event.key === 'ArrowRight' || event.key === '*')) {
           event.preventDefault()

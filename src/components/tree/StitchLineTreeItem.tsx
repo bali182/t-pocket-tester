@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/core'
 import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { StitchLineActionsMenu } from '../StitchLineActionsMenu'
 import { TreeItemVisual } from './TreeItemVisual'
 import type { TreeDragData } from './types/dragDataTypes'
@@ -23,12 +24,21 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
   node,
   onDelete,
 }) => {
+  const { selection } = useDrawAreaContext()
   const { stitchLine } = node
   const isActiveStitchLine = activeDragData?.kind === 'stitch-line' && activeDragData.stitchLineId === stitchLine.id
   const isDisabledForActiveDrag = activeDragData !== undefined && !isActiveStitchLine
   const handleDragHandleClick = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
     event.stopPropagation()
   }, [])
+  const handlePointerEnter = useCallback((): void => {
+    selection.setHoveredTreeSelection({ stitchLineId: stitchLine.id, type: 'stitch-line' })
+  }, [selection, stitchLine.id])
+
+  const handlePointerLeave = useCallback((): void => {
+    selection.setHoveredTreeSelection(undefined)
+  }, [selection])
+
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     data: {
       indexPath,
@@ -44,6 +54,8 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
     <TreeView.Item
       cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
       opacity={isDisabledForActiveDrag ? 0.4 : undefined}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
       ref={setNodeRef}
       py="0"
       h="9"

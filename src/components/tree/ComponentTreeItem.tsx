@@ -3,6 +3,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { hasComponentChildren } from '../../operations/project/utils/hasComponentChildren'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentActionsMenu } from '../ComponentActionsMenu'
@@ -33,6 +34,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   nodeState,
   onAddChild,
 }) => {
+  const { selection } = useDrawAreaContext()
   const { component } = node
   const isActiveComponent = activeDragData?.kind === 'component' && activeDragData.componentId === component.id
   const isDraggable = component.type !== 'root-panel'
@@ -42,6 +44,14 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   const handleDragHandleClick = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
     event.stopPropagation()
   }, [])
+
+  const handlePointerEnter = useCallback((): void => {
+    selection.setHoveredTreeSelection({ componentId: component.id, type: 'component' })
+  }, [component.id, selection])
+
+  const handlePointerLeave = useCallback((): void => {
+    selection.setHoveredTreeSelection(undefined)
+  }, [selection])
 
   const canAcceptAttachment = useMemo<boolean>(() => {
     if (!isDefined(activeDragData)) {
@@ -202,6 +212,8 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
     <TreeView.BranchControl
       cursor={isDisabledForActiveDrag ? 'not-allowed' : undefined}
       opacity={isDisabledForActiveDrag ? 0.4 : undefined}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
       onKeyDown={(event) => {
         if (!isExpandable && (event.key === 'ArrowRight' || event.key === '*')) {
           event.preventDefault()

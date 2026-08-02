@@ -13,6 +13,7 @@ export type DrawAreaSelection = {
   selectedStitchLine: StitchLineSchema | undefined
   selectedHole: HoleSchema | undefined
   hoveredStitchLineId: string | undefined
+  hoveredTreeSelection: EditorSelectionSchema | undefined
   editorSelection: EditorSelectionSchema | undefined
   clearSelection: () => void
   isComponentSelected: (componentId: string) => boolean
@@ -20,6 +21,7 @@ export type DrawAreaSelection = {
   selectStitchLine: (stitchLineId: string) => void
   selectHole: (holeId: string) => void
   setHoveredStitchLine: (stitchLineId: string | undefined) => void
+  setHoveredTreeSelection: (selection: EditorSelectionSchema | undefined) => void
 }
 
 export type DrawAreaComponentStyles = {
@@ -82,6 +84,7 @@ const drawAreaDefaultSelection: DrawAreaSelection = {
   selectedStitchLine: undefined,
   selectedHole: undefined,
   hoveredStitchLineId: undefined,
+  hoveredTreeSelection: undefined,
   editorSelection: undefined,
   clearSelection: noop,
   isComponentSelected: () => false,
@@ -89,6 +92,7 @@ const drawAreaDefaultSelection: DrawAreaSelection = {
   selectStitchLine: noop,
   selectHole: noop,
   setHoveredStitchLine: noop,
+  setHoveredTreeSelection: noop,
 }
 
 const drawAreaDefaultStitchLineStyles: DrawAreaStitchLineStyles = {

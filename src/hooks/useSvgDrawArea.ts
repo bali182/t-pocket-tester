@@ -24,10 +24,12 @@ const drawAreaSelection: DrawAreaSelection = {
   selectStitchLine: noop,
   selectHole: noop,
   setHoveredStitchLine: noop,
+  setHoveredTreeSelection: noop,
   selectedComponent: undefined,
   selectedStitchLine: undefined,
   selectedHole: undefined,
   hoveredStitchLineId: undefined,
+  hoveredTreeSelection: undefined,
   editorSelection: undefined,
 }
 
