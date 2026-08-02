@@ -2,6 +2,7 @@ import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
 import { addComputedSizes } from './addComputedSizes'
 import { adjustCornerRadiiToParent } from './adjustCornerRadiiToParent'
 import { adjustStitchLines } from './adjustStitchLines'
+import { deleteOrphanedHoles } from './deleteOrphanedHoles'
 import { deleteOrphanedStitchLines } from './deleteOrphanedStitchLines'
 
 type PatcherFunctionSchema = (project: ProjectSchema, computedProject: ComputedProjectSchema) => ProjectSchema
@@ -9,6 +10,7 @@ type PatcherFunctionSchema = (project: ProjectSchema, computedProject: ComputedP
 const patchers: PatcherFunctionSchema[] = [
   addComputedSizes,
   adjustCornerRadiiToParent,
+  deleteOrphanedHoles,
   deleteOrphanedStitchLines,
   adjustStitchLines,
 ]

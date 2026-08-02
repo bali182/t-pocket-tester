@@ -12,20 +12,22 @@ export const calculateHoles = (
   holes: HoleSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedHoleSchema[] => {
-  return holes.map((hole) => {
+  return holes.flatMap((hole): ComputedHoleSchema[] => {
     const ownerComponent = computedComponents[hole.componentId]
 
     if (!isDefined(ownerComponent)) {
-      throw new Error(`Hole owner component not found: ${hole.componentId}`)
+      return []
     }
 
     const geometry = calculateHoleGeometry(hole, ownerComponent)
 
-    return {
-      holeId: hole.id,
-      componentId: hole.componentId,
-      ...geometry,
-    }
+    return [
+      {
+        holeId: hole.id,
+        componentId: hole.componentId,
+        ...geometry,
+      },
+    ]
   })
 }
 
