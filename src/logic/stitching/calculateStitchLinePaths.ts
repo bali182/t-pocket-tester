@@ -219,7 +219,7 @@ const getStitchCornerRadius = (
     case 'component':
       return BigNumber.maximum(cornerRadius.minus(margin), ZERO)
     case 'hole':
-      return cornerRadius.plus(margin)
+      return cornerRadius.isZero() ? ZERO : cornerRadius.plus(margin)
   }
 }
 
