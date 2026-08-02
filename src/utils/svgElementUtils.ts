@@ -3,16 +3,16 @@ export type FloatingEditorAnchor = {
   getBoundingClientRect: () => DOMRect
 }
 
-export const getComponentSvgElement = (componentId: string): SVGGraphicsElement | undefined => {
+const getComponentSvgElement = (componentId: string): SVGGraphicsElement | undefined => {
   return document.querySelector<SVGGraphicsElement>(`[data-component-id="${CSS.escape(componentId)}"]`) ?? undefined
-}
-
-const getStitchLineRouteElements = (stitchLineId: string): SVGGElement[] => {
-  return Array.from(document.querySelectorAll<SVGGElement>(`[data-stitch-line-id="${CSS.escape(stitchLineId)}"]`))
 }
 
 const getHoleHighlightElement = (holeId: string): SVGGElement | undefined => {
   return document.querySelector<SVGPathElement>(`[data-hole-id="${CSS.escape(holeId)}"]`) ?? undefined
+}
+
+const getStitchLineRouteElements = (stitchLineId: string): SVGGElement[] => {
+  return Array.from(document.querySelectorAll<SVGGElement>(`[data-stitch-line-id="${CSS.escape(stitchLineId)}"]`))
 }
 
 export const getSvgElementFloatingAnchor = (element: SVGGraphicsElement): FloatingEditorAnchor => {
@@ -24,6 +24,11 @@ export const getSvgElementFloatingAnchor = (element: SVGGraphicsElement): Floati
 
 export const getHoleFloatingAnchor = (holeId: string): FloatingEditorAnchor | undefined => {
   const holeElement = getHoleHighlightElement(holeId)
+  return holeElement === undefined ? undefined : getSvgElementFloatingAnchor(holeElement)
+}
+
+export const getComponentFloatingAchor = (componentId: string): FloatingEditorAnchor | undefined => {
+  const holeElement = getComponentSvgElement(componentId)
   return holeElement === undefined ? undefined : getSvgElementFloatingAnchor(holeElement)
 }
 

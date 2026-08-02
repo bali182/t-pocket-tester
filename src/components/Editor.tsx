@@ -9,10 +9,9 @@ import { useProject } from '../hooks/useProject'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
 import {
-  getComponentSvgElement,
+  getComponentFloatingAchor as getComponentFloatingAnchor,
   getHoleFloatingAnchor,
   getStitchLineFloatingAnchor,
-  getSvgElementFloatingAnchor,
 } from '../utils/svgElementUtils'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { DrawArea } from './DrawArea'
@@ -28,10 +27,10 @@ const defaultPanelSizes: string[] = ['auto', '350px']
 
 export const Editor: FC = () => {
   const t = useTranslation()
+  const { project } = useProject()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const projectMenuRef = useRef<HTMLDivElement>(null)
-  const { project } = useProject()
   const drawAreaContextValue = useEditorDrawArea()
   const { clearSelection, selectedComponent, selectedHole, selectedStitchLine } = drawAreaContextValue.selection
 
@@ -39,31 +38,16 @@ export const Editor: FC = () => {
 
   const handleExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
 
-  const componentAnchorComponentId = selectedComponent?.id
-
   const componentAnchorElement = useMemo(() => {
-    if (!isDefined(componentAnchorComponentId)) {
-      return undefined
-    }
-
-    const componentSvgElement = getComponentSvgElement(componentAnchorComponentId)
-    return isDefined(componentSvgElement) ? getSvgElementFloatingAnchor(componentSvgElement) : undefined
-  }, [componentAnchorComponentId])
+    return isDefined(selectedComponent) ? getComponentFloatingAnchor(selectedComponent.id) : undefined
+  }, [selectedComponent])
 
   const stitchLineAnchorElement = useMemo(() => {
-    if (!isDefined(selectedStitchLine)) {
-      return undefined
-    }
-
-    return getStitchLineFloatingAnchor(selectedStitchLine.id)
+    return isDefined(selectedStitchLine) ? getStitchLineFloatingAnchor(selectedStitchLine.id) : undefined
   }, [selectedStitchLine])
 
   const holeAnchorElement = useMemo(() => {
-    if (!isDefined(selectedHole)) {
-      return undefined
-    }
-
-    return getHoleFloatingAnchor(selectedHole.id)
+    return isDefined(selectedHole) ? getHoleFloatingAnchor(selectedHole.id) : undefined
   }, [selectedHole])
 
   return (
