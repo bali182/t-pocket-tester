@@ -7,7 +7,7 @@ import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'
 import { useTranslation } from '../translations/translation'
-import { getComponentSvgElement } from '../utils/getComponentSvgElement'
+import { getComponentSvgElement, getStitchLineFloatingAnchor, getSvgElementFloatingAnchor } from '../utils/svgElementUtils'
 import { isDefined } from '../utils/isDefined'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { DrawArea } from './DrawArea'
@@ -28,20 +28,36 @@ export const Editor: FC = () => {
   const projectMenuRef = useRef<HTMLDivElement>(null)
   const { project } = useProject()
   const drawAreaContextValue = useEditorDrawArea()
-  const { highlightedComponentId, clearSelection, selectedComponent, selectedHole, selectedStitchLine } =
-    drawAreaContextValue.selection
+  const { clearSelection, selectedComponent, selectedHole, selectedStitchLine } = drawAreaContextValue.selection
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
 
   const handleExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
 
-  const anchorElement = useMemo<SVGGraphicsElement | undefined>(() => {
-    if (!isDefined(highlightedComponentId)) {
+  const componentAnchorComponentId = useMemo<string | undefined>(() => {
+    if (isDefined(selectedComponent)) {
+      return selectedComponent.id
+    }
+
+    return selectedHole?.componentId
+  }, [selectedComponent, selectedHole])
+
+  const componentAnchorElement = useMemo(() => {
+    if (!isDefined(componentAnchorComponentId)) {
       return undefined
     }
 
-    return getComponentSvgElement(highlightedComponentId)
-  }, [highlightedComponentId])
+    const componentSvgElement = getComponentSvgElement(componentAnchorComponentId)
+    return isDefined(componentSvgElement) ? getSvgElementFloatingAnchor(componentSvgElement) : undefined
+  }, [componentAnchorComponentId])
+
+  const stitchLineAnchorElement = useMemo(() => {
+    if (!isDefined(selectedStitchLine)) {
+      return undefined
+    }
+
+    return getStitchLineFloatingAnchor(selectedStitchLine.id)
+  }, [selectedStitchLine])
 
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
@@ -80,22 +96,22 @@ export const Editor: FC = () => {
                 </IconButton>
               </Card.Body>
             </Card.Root>
-            {isDefined(selectedComponent) && isDefined(anchorElement) && (
+            {isDefined(selectedComponent) && isDefined(componentAnchorElement) && (
               <ComponentFloatingEditor
                 component={selectedComponent}
-                anchorElement={anchorElement}
+                anchorElement={componentAnchorElement}
                 onClose={clearSelection}
               />
             )}
-            {isDefined(selectedStitchLine) && isDefined(anchorElement) && (
+            {isDefined(selectedStitchLine) && isDefined(stitchLineAnchorElement) && (
               <StitchLineFloatingEditor
                 stitchLine={selectedStitchLine}
-                anchorElement={anchorElement}
+                anchorElement={stitchLineAnchorElement}
                 onClose={clearSelection}
               />
             )}
-            {isDefined(selectedHole) && isDefined(anchorElement) && (
-              <HoleFloatingEditor hole={selectedHole} anchorElement={anchorElement} onClose={clearSelection} />
+            {isDefined(selectedHole) && isDefined(componentAnchorElement) && (
+              <HoleFloatingEditor hole={selectedHole} anchorElement={componentAnchorElement} onClose={clearSelection} />
             )}
             <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
             <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />

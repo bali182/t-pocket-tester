@@ -1,5 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
-import { CARD_COLOR, SELECTED_STROKE_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
+import {
+  CARD_COLOR,
+  SELECTED_STITCH_LINE_HOLE_COLOR,
+  SELECTED_STITCH_LINE_STROKE_COLOR,
+  SELECTED_STROKE_COLOR,
+  STROKE_COLOR,
+  STROKE_THICKNESS,
+} from '../constants/drawing'
 import {
   DrawAreaCardStyles,
   DrawAreaComponentStyles,
@@ -47,6 +54,7 @@ const markerStyles: DrawAreaMarkerStyles = {
 
 export const useEditorDrawArea = (): DrawAreaContextValue => {
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
+  const [hoveredStitchLineId, setHoveredStitchLine] = useState<string | undefined>()
   const { project, touchComponent } = useProject()
 
   const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
@@ -73,31 +81,10 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     return project.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
   }, [project.stitchLines, selection])
 
-  const highlightedComponentId = useMemo<string | undefined>(() => {
-    if (isDefined(selectedComponent)) {
-      return selectedComponent.id
-    }
-
-    if (isDefined(selectedHole)) {
-      return selectedHole.componentId
-    }
-
-    if (isDefined(selectedStitchLine)) {
-      if (selectedStitchLine.targetType === 'component') {
-        return selectedStitchLine.targetId
-      }
-
-      const targetHole = project.holes.find((hole) => hole.id === selectedStitchLine.targetId)
-
-      return isDefined(targetHole) ? targetHole.componentId : undefined
-    }
-
-    return undefined
-  }, [project.holes, selectedComponent, selectedHole, selectedStitchLine])
-
   const selectComponent = useCallback(
     (componentId: string): void => {
       touchComponent(componentId)
+      setHoveredStitchLine(undefined)
       setSelection({ componentId, type: 'component' })
     },
     [touchComponent],
@@ -108,16 +95,18 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   }, [])
 
   const selectHole = useCallback((holeId: string): void => {
+    setHoveredStitchLine(undefined)
     setSelection({ holeId, type: 'hole' })
   }, [])
 
   const clearSelection = useCallback((): void => {
+    setHoveredStitchLine(undefined)
     setSelection(undefined)
   }, [])
 
   const isComponentSelected = useCallback(
-    (componentId: string): boolean => componentId === highlightedComponentId,
-    [highlightedComponentId],
+    (componentId: string): boolean => isDefined(selectedComponent) && componentId === selectedComponent.id,
+    [selectedComponent],
   )
 
   const drawAreaSelection = useMemo<DrawAreaSelection>(
@@ -130,8 +119,9 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       selectedHole,
       selectedComponent,
       selectedStitchLine,
-      highlightedComponentId,
+      hoveredStitchLineId,
       editorSelection: selection,
+      setHoveredStitchLine,
     }),
     [
       clearSelection,
@@ -142,7 +132,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       selectedHole,
       selectedComponent,
       selectedStitchLine,
-      highlightedComponentId,
+      hoveredStitchLineId,
       selection,
     ],
   )
@@ -189,12 +179,20 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   const stitchLineStyles = useMemo<DrawAreaStitchLineStyles>(
     () => ({
       getLineColor: (stitchLine) => {
+        if (selectedStitchLine?.id === stitchLine.id || hoveredStitchLineId === stitchLine.id) {
+          return SELECTED_STITCH_LINE_STROKE_COLOR
+        }
+
         return stitchLine.stitchLineColor ?? project.stitchingSettings.stitchLineColor
       },
       getLineThickness: (stitchLine) => {
         return stitchLine.stitchLineThickness ?? project.stitchingSettings.stitchLineThickness
       },
       getStitchHoleColor: (stitchLine) => {
+        if (selectedStitchLine?.id === stitchLine.id || hoveredStitchLineId === stitchLine.id) {
+          return SELECTED_STITCH_LINE_HOLE_COLOR
+        }
+
         return stitchLine.stitchHoleColor ?? project.stitchingSettings.stitchHoleColor
       },
       getStitchHoleThickness: (stitchLine) => {
@@ -206,6 +204,8 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       project.stitchingSettings.stitchHoleThickness,
       project.stitchingSettings.stitchLineColor,
       project.stitchingSettings.stitchLineThickness,
+      hoveredStitchLineId,
+      selectedStitchLine?.id,
     ],
   )
 

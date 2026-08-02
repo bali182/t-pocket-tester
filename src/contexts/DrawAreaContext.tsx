@@ -9,16 +9,17 @@ import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
 
 export type DrawAreaSelection = {
-  highlightedComponentId: string | undefined
   selectedComponent: ComponentSchema | undefined
   selectedStitchLine: StitchLineSchema | undefined
   selectedHole: HoleSchema | undefined
+  hoveredStitchLineId: string | undefined
   editorSelection: EditorSelectionSchema | undefined
   clearSelection: () => void
   isComponentSelected: (componentId: string) => boolean
   selectComponent: (componentId: string) => void
   selectStitchLine: (stitchLineId: string) => void
   selectHole: (holeId: string) => void
+  setHoveredStitchLine: (stitchLineId: string | undefined) => void
 }
 
 export type DrawAreaComponentStyles = {
@@ -70,16 +71,17 @@ export type DrawAreaContextValue = {
 }
 
 const drawAreaDefaultSelection: DrawAreaSelection = {
-  highlightedComponentId: undefined,
   selectedComponent: undefined,
   selectedStitchLine: undefined,
   selectedHole: undefined,
+  hoveredStitchLineId: undefined,
   editorSelection: undefined,
   clearSelection: noop,
   isComponentSelected: () => false,
   selectComponent: noop,
   selectStitchLine: noop,
   selectHole: noop,
+  setHoveredStitchLine: noop,
 }
 
 const drawAreaDefaultStitchLineStyles: DrawAreaStitchLineStyles = {

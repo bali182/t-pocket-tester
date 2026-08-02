@@ -2,6 +2,7 @@ import { type FC } from 'react'
 
 import { useEditableHole } from '../../hooks/useEditableHole'
 import type { HoleSchema } from '../../schemas/hole'
+import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
@@ -9,7 +10,7 @@ import { HoleActionsMenu } from '../tree/HoleActionsMenu'
 import { HoleEditor } from './HoleEditor'
 
 type HoleFloatingEditorProps = {
-  anchorElement: SVGGraphicsElement
+  anchorElement: FloatingEditorAnchor
   hole: HoleSchema
   onClose: () => void
 }
