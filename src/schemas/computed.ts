@@ -55,6 +55,7 @@ export type ComputedHoleSchema = {
   componentId: string
   boundingRect: RectSchema
   path: PathSchema
+  highlightPath: PathSchema
 }
 
 export type ComputedStitchRouteSchema = {

@@ -11,11 +11,20 @@ const getStitchLineRouteElements = (stitchLineId: string): SVGGElement[] => {
   return Array.from(document.querySelectorAll<SVGGElement>(`[data-stitch-line-id="${CSS.escape(stitchLineId)}"]`))
 }
 
+const getHoleHighlightElement = (holeId: string): SVGGElement | undefined => {
+  return document.querySelector<SVGPathElement>(`[data-hole-id="${CSS.escape(holeId)}"]`) ?? undefined
+}
+
 export const getSvgElementFloatingAnchor = (element: SVGGraphicsElement): FloatingEditorAnchor => {
   return {
     contextElement: element,
     getBoundingClientRect: () => element.getBoundingClientRect(),
   }
+}
+
+export const getHoleFloatingAnchor = (holeId: string): FloatingEditorAnchor | undefined => {
+  const holeElement = getHoleHighlightElement(holeId)
+  return holeElement === undefined ? undefined : getSvgElementFloatingAnchor(holeElement)
 }
 
 export const getStitchLineFloatingAnchor = (stitchLineId: string): FloatingEditorAnchor | undefined => {

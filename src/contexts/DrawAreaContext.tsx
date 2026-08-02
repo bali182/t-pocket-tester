@@ -42,6 +42,12 @@ export type DrawAreaStitchLineStyles = {
   getStitchHoleThickness: (stitchLine: StitchLineSchema) => number | undefined
 }
 
+export type DrawAreaHoleStyles = {
+  getFillColor: (hole: HoleSchema, isHovered: boolean) => string | undefined
+  getStrokeColor: (hole: HoleSchema, isHovered: boolean) => string | undefined
+  getStrokeThickness: (hole: HoleSchema, isHovered: boolean) => number | undefined
+}
+
 export type DrawAreaExportTextStyles = {
   getNameText: (element: SvgExportElementSchema) => string | undefined
   getNameTextColor: (element: SvgExportElementSchema) => string | undefined
@@ -63,6 +69,7 @@ export type DrawAreaContextValue = {
   isInteractive: boolean
   isShowingCards: boolean
   selection: DrawAreaSelection
+  holeStyles: DrawAreaHoleStyles
   stitchLineStyles: DrawAreaStitchLineStyles
   componentStyles: DrawAreaComponentStyles
   cardStyles: DrawAreaCardStyles
@@ -89,6 +96,12 @@ const drawAreaDefaultStitchLineStyles: DrawAreaStitchLineStyles = {
   getLineThickness: produce(undefined),
   getStitchHoleColor: produce(undefined),
   getStitchHoleThickness: produce(undefined),
+}
+
+const drawAreaDefaultHoleStyles: DrawAreaHoleStyles = {
+  getFillColor: produce(undefined),
+  getStrokeColor: produce(undefined),
+  getStrokeThickness: produce(undefined),
 }
 
 const drawAreaDefaultComponentStyles: DrawAreaComponentStyles = {
@@ -125,6 +138,7 @@ const defaultDrawAreaContext: DrawAreaContextValue = {
   isInteractive: false,
   isShowingCards: false,
   selection: drawAreaDefaultSelection,
+  holeStyles: drawAreaDefaultHoleStyles,
   stitchLineStyles: drawAreaDefaultStitchLineStyles,
   componentStyles: drawAreaDefaultComponentStyles,
   cardStyles: drawAreaDefaultCardStyles,

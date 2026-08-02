@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import {
   CARD_COLOR,
+  SELECTED_HOLE_FILL_COLOR,
+  SELECTED_HOLE_STROKE_COLOR,
   SELECTED_STITCH_LINE_HOLE_COLOR,
   SELECTED_STITCH_LINE_STROKE_COLOR,
   SELECTED_STROKE_COLOR,
@@ -12,6 +14,7 @@ import {
   DrawAreaComponentStyles,
   DrawAreaContextValue,
   DrawAreaExportTextStyles,
+  DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
@@ -183,6 +186,21 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     [isComponentSelected],
   )
 
+  const holeStyles = useMemo<DrawAreaHoleStyles>(
+    () => ({
+      getFillColor: (hole, isHovered) => {
+        return selectedHole?.id === hole.id || isHovered ? SELECTED_HOLE_FILL_COLOR : 'transparent'
+      },
+      getStrokeColor: (hole, isHovered) => {
+        return selectedHole?.id === hole.id || isHovered ? SELECTED_HOLE_STROKE_COLOR : 'transparent'
+      },
+      getStrokeThickness: (_hole, _isHovered) => {
+        return STROKE_THICKNESS
+      },
+    }),
+    [selectedHole?.id],
+  )
+
   const stitchLineStyles = useMemo<DrawAreaStitchLineStyles>(
     () => ({
       getLineColor: (stitchLine) => {
@@ -221,13 +239,14 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       isInteractive: true,
       isShowingCards: true,
       selection: drawAreaSelection,
+      holeStyles,
       componentStyles,
       cardStyles,
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
     }),
-    [cardStyles, componentStyles, drawAreaSelection, stitchLineStyles],
+    [cardStyles, componentStyles, drawAreaSelection, holeStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

@@ -5,6 +5,7 @@ import {
   DrawAreaComponentStyles,
   DrawAreaContextValue,
   DrawAreaExportTextStyles,
+  DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
@@ -65,6 +66,15 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
     [project.stitchingSettings.stitchHoleThickness, project.stitchingSettings.stitchLineThickness],
   )
 
+  const holeStyles = useMemo<DrawAreaHoleStyles>(
+    () => ({
+      getFillColor: produce('transparent'),
+      getStrokeColor: produce('transparent'),
+      getStrokeThickness: produce(STROKE_THICKNESS),
+    }),
+    [],
+  )
+
   const exportTextStyles = useMemo<DrawAreaExportTextStyles>(
     () => ({
       getNameText: (element) => {
@@ -113,13 +123,14 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
       isInteractive: false,
       isShowingCards: false,
       selection: drawAreaSelection,
+      holeStyles,
       componentStyles,
       cardStyles,
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
     }),
-    [cardStyles, componentStyles, exportTextStyles, markerStyles, stitchLineStyles],
+    [cardStyles, componentStyles, exportTextStyles, holeStyles, markerStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

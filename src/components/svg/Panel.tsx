@@ -6,6 +6,7 @@ import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
 import type { PanelSchema } from '../../schemas/components'
 import type { ComputedPanelSchema } from '../../schemas/computed'
+import { HoleHighlights } from './HoleHighlights'
 import { PocketCluster } from './PocketCluster'
 import { StitchLines } from './StitchLines'
 
@@ -51,6 +52,7 @@ export const Panel: FC<PanelProps> = ({ componentId, nestingLevel }) => {
 
       <StitchLines componentId={panel.id} />
 
+      <HoleHighlights componentId={panel.id} />
       {computedPanel.children.map((component) => {
         switch (component.type) {
           case 'computed-panel':

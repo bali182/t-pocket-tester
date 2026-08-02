@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js'
 import Flatten from '@flatten-js/core'
+import BigNumber from 'bignumber.js'
 
 import type { PathCommand, PathSchema, PointSchema } from '../schemas/geometry'
 import { getClosedPathLoops } from './pathSegments'
@@ -12,6 +12,14 @@ export const subtractClosedPaths = (subject: PathSchema, holes: readonly PathSch
   )
 
   return fromFlattenPolygon(polygon)
+}
+
+export const isClosedPathCoveredBy = (path: PathSchema, coveringPath: PathSchema): boolean => {
+  return Flatten.Relations.covered(toFlattenPolygon(path), toFlattenPolygon(coveringPath))
+}
+
+export const intersectClosedPaths = (first: PathSchema, second: PathSchema): PathSchema => {
+  return fromFlattenPolygon(Flatten.BooleanOperations.intersect(toFlattenPolygon(first), toFlattenPolygon(second)))
 }
 
 const toFlattenPolygon = (path: PathSchema): Flatten.Polygon => {

@@ -6,6 +6,7 @@ import type { HoleAnchorSchema, HoleSchema } from '../schemas/hole'
 import { isDefined } from '../utils/isDefined'
 import { calculateRectPath } from './calculateRectPath'
 import { getNormalizedCornerRadius } from './cornerRadiusUtils'
+import { intersectClosedPaths, isClosedPathCoveredBy } from './flattenJsUtils'
 
 export const calculateHoles = (
   holes: HoleSchema[],
@@ -18,7 +19,7 @@ export const calculateHoles = (
       throw new Error(`Hole owner component not found: ${hole.componentId}`)
     }
 
-    const geometry = calculateHoleGeometry(hole, ownerComponent.boundingRect)
+    const geometry = calculateHoleGeometry(hole, ownerComponent)
 
     return {
       holeId: hole.id,
@@ -30,18 +31,23 @@ export const calculateHoles = (
 
 const calculateHoleGeometry = (
   hole: HoleSchema,
-  ownerBoundingRect: RectSchema,
-): Pick<ComputedHoleSchema, 'boundingRect' | 'path'> => {
+  ownerComponent: ComputedComponentSchema,
+): Pick<ComputedHoleSchema, 'boundingRect' | 'path' | 'highlightPath'> => {
   const boundingRect = calculateHoleBoundingRect(
-    ownerBoundingRect,
+    ownerComponent.boundingRect,
     new BigNumber(hole.width),
     new BigNumber(hole.height),
     hole,
   )
 
+  const path = calculateRectPath(boundingRect, getNormalizedCornerRadius(hole))
+
   return {
     boundingRect,
-    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(hole)),
+    path,
+    highlightPath: isClosedPathCoveredBy(path, ownerComponent.path)
+      ? path
+      : intersectClosedPaths(path, ownerComponent.path),
   }
 }
 const calculateHoleBoundingRect = (

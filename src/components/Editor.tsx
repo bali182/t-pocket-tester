@@ -7,8 +7,13 @@ import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useProject } from '../hooks/useProject'
 import { useTranslation } from '../translations/translation'
-import { getComponentSvgElement, getStitchLineFloatingAnchor, getSvgElementFloatingAnchor } from '../utils/svgElementUtils'
 import { isDefined } from '../utils/isDefined'
+import {
+  getComponentSvgElement,
+  getHoleFloatingAnchor,
+  getStitchLineFloatingAnchor,
+  getSvgElementFloatingAnchor,
+} from '../utils/svgElementUtils'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { DrawArea } from './DrawArea'
 import { HoleFloatingEditor } from './hole-editors/HoleFloatingEditor'
@@ -34,13 +39,7 @@ export const Editor: FC = () => {
 
   const handleExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
 
-  const componentAnchorComponentId = useMemo<string | undefined>(() => {
-    if (isDefined(selectedComponent)) {
-      return selectedComponent.id
-    }
-
-    return selectedHole?.componentId
-  }, [selectedComponent, selectedHole])
+  const componentAnchorComponentId = selectedComponent?.id
 
   const componentAnchorElement = useMemo(() => {
     if (!isDefined(componentAnchorComponentId)) {
@@ -58,6 +57,14 @@ export const Editor: FC = () => {
 
     return getStitchLineFloatingAnchor(selectedStitchLine.id)
   }, [selectedStitchLine])
+
+  const holeAnchorElement = useMemo(() => {
+    if (!isDefined(selectedHole)) {
+      return undefined
+    }
+
+    return getHoleFloatingAnchor(selectedHole.id)
+  }, [selectedHole])
 
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
@@ -110,8 +117,8 @@ export const Editor: FC = () => {
                 onClose={clearSelection}
               />
             )}
-            {isDefined(selectedHole) && isDefined(componentAnchorElement) && (
-              <HoleFloatingEditor hole={selectedHole} anchorElement={componentAnchorElement} onClose={clearSelection} />
+            {isDefined(selectedHole) && isDefined(holeAnchorElement) && (
+              <HoleFloatingEditor hole={selectedHole} anchorElement={holeAnchorElement} onClose={clearSelection} />
             )}
             <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
             <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />
