@@ -19,9 +19,7 @@ import {
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
-import { getComponentDescendants } from '../operations/project/utils/getComponentDescendants'
 import { ComponentSchema } from '../schemas/components'
-import { ProjectSchema } from '../schemas/project'
 import { EditorSelectionSchema } from '../schemas/selection'
 import { StitchLineSchema } from '../schemas/stitching'
 import { getComponentColor } from '../utils/getComponentColor'
@@ -30,6 +28,7 @@ import { produce } from '../utils/produce'
 import { useProject } from './useProject'
 
 import { formatHex8, parse } from 'culori'
+import { getSelectionObstructingComponentIds } from '../logic/getSelectionObstructingComponentIds'
 import { HoleSchema } from '../schemas/hole'
 
 const addAlpha = (color: string): string => {
@@ -86,9 +85,9 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     return project.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
   }, [project.stitchLines, selection])
 
-  const selectedStitchLineCoveredComponentIds = useMemo<Set<string>>(
-    () => getSelectedStitchLineCoveredComponentIds(selectedStitchLine, project),
-    [project, selectedStitchLine],
+  const selectionObstructingComponentIds = useMemo<ReadonlySet<string>>(
+    () => getSelectionObstructingComponentIds(selection, project),
+    [project, selection],
   )
 
   const selectComponent = useCallback(
@@ -151,13 +150,13 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     () => ({
       getBackgroundColor: (component, nestingLevel) => {
         const color = component.color ?? getComponentColor(project.componentSettings.baseColor, nestingLevel)
-        return selectedStitchLineCoveredComponentIds.has(component.id) ? addAlpha(color) : color
+        return selectionObstructingComponentIds.has(component.id) ? addAlpha(color) : color
       },
       getBorderColor: (component, isHovered) => {
         if (isComponentSelected(component.id) || isHovered) {
           return SELECTED_STROKE_COLOR
         }
-        return selectedStitchLineCoveredComponentIds.has(component.id) ? addAlpha(STROKE_COLOR) : STROKE_COLOR
+        return selectionObstructingComponentIds.has(component.id) ? addAlpha(STROKE_COLOR) : STROKE_COLOR
       },
       getBorderThickness: (_component, _isHovered) => {
         return STROKE_THICKNESS
@@ -168,7 +167,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
           : undefined
       },
     }),
-    [isComponentSelected, project.componentSettings.baseColor, selectedStitchLineCoveredComponentIds],
+    [isComponentSelected, project.componentSettings.baseColor, selectionObstructingComponentIds],
   )
 
   const cardStyles = useMemo<DrawAreaCardStyles>(
@@ -250,39 +249,4 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   )
 
   return drawAreaContextValue
-}
-
-const getSelectedStitchLineCoveredComponentIds = (
-  selectedStitchLine: StitchLineSchema | undefined,
-  project: ProjectSchema,
-): Set<string> => {
-  if (!isDefined(selectedStitchLine)) {
-    return new Set<string>()
-  }
-
-  const ownerComponent = getStitchLineOwnerComponent(selectedStitchLine, project)
-
-  if (!isDefined(ownerComponent)) {
-    return new Set<string>()
-  }
-
-  const coveredComponentIds = new Set(getComponentDescendants(ownerComponent, project))
-  coveredComponentIds.delete(ownerComponent.id)
-
-  if (ownerComponent.type === 'pocket-cluster' && selectedStitchLine.type === 'pocket-cluster-stitch-line') {
-    coveredComponentIds.add(ownerComponent.id)
-  }
-
-  return coveredComponentIds
-}
-
-const getStitchLineOwnerComponent = (
-  stitchLine: StitchLineSchema,
-  project: ProjectSchema,
-): ComponentSchema | undefined => {
-  if (stitchLine.targetType === 'component') {
-    return project.components[stitchLine.targetId]
-  }
-  const targetHole = project.holes.find((hole) => hole.id === stitchLine.targetId)
-  return isDefined(targetHole) ? project.components[targetHole.componentId] : undefined
 }
