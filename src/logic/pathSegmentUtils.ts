@@ -6,6 +6,7 @@ import type { ArcPathSegment, LinePathSegment, PathSegment } from './pathSegment
 const ZERO = new BigNumber(0)
 const TWO = new BigNumber(2)
 const TWO_PI = Math.PI * 2
+const ARC_DISTANCE_SQUARED_EPSILON = new BigNumber('0.000000000001')
 
 export const createArcPathSegment = (start: PointSchema, command: PathArcToSchema): ArcPathSegment => {
   const chordDx = command.point.x.minus(start.x)
@@ -121,8 +122,9 @@ export const isPointOnPathSegment = (point: PointSchema, segment: PathSegment): 
   }
 
   const distanceSquared = point.x.minus(segment.center.x).pow(2).plus(point.y.minus(segment.center.y).pow(2))
+  const radiusSquared = segment.radius.pow(2)
 
-  return distanceSquared.isEqualTo(segment.radius.pow(2)) && isPointOnArc(point, segment)
+  return distanceSquared.minus(radiusSquared).abs().isLessThanOrEqualTo(ARC_DISTANCE_SQUARED_EPSILON) && isPointOnArc(point, segment)
 }
 
 export const isPointOnArc = (point: PointSchema, arc: ArcPathSegment): boolean => {

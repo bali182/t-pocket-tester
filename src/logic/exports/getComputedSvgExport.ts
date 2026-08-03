@@ -124,8 +124,7 @@ const getSvgExportPanel = (
     stitchLines: getSvgExportStitchLines(
       project,
       computedProject,
-      computedComponent.path,
-      component.id,
+      computedComponent,
       params.stitchLineMode,
     ),
   }
@@ -175,8 +174,7 @@ const getSvgExportFrontPocket = (
     stitchLines: getSvgExportStitchLines(
       project,
       computedProject,
-      computedComponent.frontPocket.path,
-      ownerComponent.id,
+      computedComponent.frontPocket,
       params.stitchLineMode,
     ),
   }
@@ -206,8 +204,7 @@ const getSvgExportTPocket = (
     stitchLines: getSvgExportStitchLines(
       project,
       computedProject,
-      pocket.path,
-      ownerComponent.id,
+      pocket,
       params.stitchLineMode,
     ),
   }

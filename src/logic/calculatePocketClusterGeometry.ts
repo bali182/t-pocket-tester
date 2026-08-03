@@ -58,6 +58,7 @@ export const calculatePocketClusterGeometry = (
     frontPocket: {
       type: 'computed-top-pocket',
       id: `${pocketCluster.id}-top-pocket`,
+      ownerComponentId: pocketCluster.id,
       boundingRect: topPocketRect,
       path: calculateRectPath(topPocketRect, calculateTopPocketRadius(normalizedPocketCluster)),
       card: calculatePocketCard(normalizedPocketCluster, topPocketCardBoundingRect),
@@ -67,6 +68,7 @@ export const calculatePocketClusterGeometry = (
 
       return {
         type: 'computed-t-pocket',
+        ownerComponentId: pocketCluster.id,
         id: `${pocketCluster.id}-t-pocket-${index}`,
         boundingRect: pocketRect,
         path: calculateTPocketPath(pocketRect, normalizedPocketCluster, index === 0 ? cornerRadius : zeroCornerRadius),
