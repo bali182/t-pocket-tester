@@ -121,12 +121,7 @@ const getSvgExportPanel = (
     childMarkerPaths: params.childMarkers
       ? getSvgExportChildMarkerPaths(computedComponent.children, computedComponent.boundingRect)
       : [],
-    stitchLines: getSvgExportStitchLines(
-      project,
-      computedProject,
-      computedComponent,
-      params.stitchLineMode,
-    ),
+    stitchLines: getSvgExportStitchLines(project, computedProject, computedComponent, params.stitchLineMode),
   }
 }
 
@@ -201,11 +196,6 @@ const getSvgExportTPocket = (
           cutHelperBoundingRect,
         }
       : {}),
-    stitchLines: getSvgExportStitchLines(
-      project,
-      computedProject,
-      pocket,
-      params.stitchLineMode,
-    ),
+    stitchLines: getSvgExportStitchLines(project, computedProject, pocket, params.stitchLineMode),
   }
 }

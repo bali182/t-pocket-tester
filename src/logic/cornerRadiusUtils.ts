@@ -24,10 +24,7 @@ export const getNormalizedCornerRadius = (component: HasCornerRadiusSchema): Cor
   }
 }
 
-export const getFittedCornerRadius = (
-  rect: RectSchema,
-  radius: CornerRadiusSchema,
-): FittedCornerRadiusSchema => {
+export const getFittedCornerRadius = (rect: RectSchema, radius: CornerRadiusSchema): FittedCornerRadiusSchema => {
   const topLeft = new BigNumber(radius.topLeft)
   const topRight = new BigNumber(radius.topRight)
   const bottomRight = new BigNumber(radius.bottomRight)

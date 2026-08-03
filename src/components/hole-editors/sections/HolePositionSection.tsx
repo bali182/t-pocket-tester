@@ -76,7 +76,13 @@ export function HolePositionSection<T extends HolePositionSchema>({
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.hole.editor.position.xOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <NumberInput issue={issues.xOffset} onChange={handleXOffsetChange} step={1} unit="mm" value={editable.xOffset} />
+        <NumberInput
+          issue={issues.xOffset}
+          onChange={handleXOffsetChange}
+          step={1}
+          unit="mm"
+          value={editable.xOffset}
+        />
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.hole.editor.position.yAnchor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
@@ -98,7 +104,13 @@ export function HolePositionSection<T extends HolePositionSchema>({
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.hole.editor.position.yOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <NumberInput issue={issues.yOffset} onChange={handleYOffsetChange} step={1} unit="mm" value={editable.yOffset} />
+        <NumberInput
+          issue={issues.yOffset}
+          onChange={handleYOffsetChange}
+          step={1}
+          unit="mm"
+          value={editable.yOffset}
+        />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

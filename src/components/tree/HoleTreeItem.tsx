@@ -21,12 +21,7 @@ type HoleTreeItemProps = {
   onDelete: (holeId: string) => void
 }
 
-export const HoleTreeItem: FC<HoleTreeItemProps> = ({
-  activeDragData,
-  indexPath,
-  node,
-  onDelete,
-}) => {
+export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath, node, onDelete }) => {
   const { selection } = useDrawAreaContext()
   const { hole } = node
   const isActiveHole = activeDragData?.kind === 'hole' && activeDragData.holeId === hole.id

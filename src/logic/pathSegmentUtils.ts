@@ -124,7 +124,10 @@ export const isPointOnPathSegment = (point: PointSchema, segment: PathSegment): 
   const distanceSquared = point.x.minus(segment.center.x).pow(2).plus(point.y.minus(segment.center.y).pow(2))
   const radiusSquared = segment.radius.pow(2)
 
-  return distanceSquared.minus(radiusSquared).abs().isLessThanOrEqualTo(ARC_DISTANCE_SQUARED_EPSILON) && isPointOnArc(point, segment)
+  return (
+    distanceSquared.minus(radiusSquared).abs().isLessThanOrEqualTo(ARC_DISTANCE_SQUARED_EPSILON) &&
+    isPointOnArc(point, segment)
+  )
 }
 
 export const isPointOnArc = (point: PointSchema, arc: ArcPathSegment): boolean => {

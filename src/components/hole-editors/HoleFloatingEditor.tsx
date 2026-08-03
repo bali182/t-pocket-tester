@@ -22,12 +22,7 @@ export const HoleFloatingEditor: FC<HoleFloatingEditorProps> = ({ anchorElement,
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
       <FloatingEditorHeader menu={<HoleActionsMenu hole={editedHole} size="xs" />} title={`#${editedHole.id}`} />
       <SectionGroup.Root>
-        <HoleEditor
-          editable={editableHole}
-          hole={editedHole}
-          issues={validationIssues}
-          onChange={setHole}
-        />
+        <HoleEditor editable={editableHole} hole={editedHole} issues={validationIssues} onChange={setHole} />
       </SectionGroup.Root>
     </FloatingEditor>
   )

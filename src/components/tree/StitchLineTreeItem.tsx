@@ -18,12 +18,7 @@ type StitchLineTreeItemProps = {
   onDelete: (stitchLineId: string) => void
 }
 
-export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
-  activeDragData,
-  indexPath,
-  node,
-  onDelete,
-}) => {
+export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({ activeDragData, indexPath, node, onDelete }) => {
   const { selection } = useDrawAreaContext()
   const { stitchLine } = node
   const isActiveStitchLine = activeDragData?.kind === 'stitch-line' && activeDragData.stitchLineId === stitchLine.id

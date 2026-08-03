@@ -99,18 +99,16 @@ export const useProject = () => {
     ),
   )
 
-  const addHole = useAtomCallback(
-    (get, set, componentId: string): HoleSchema => {
-      const project = getRequiredProject(get)
-      const hole = createHole({
-        componentId,
-        id: idPure(),
-        name: getUnusedHoleName(project, t),
-      })
-      set(projectAtom, addHolePure(project, { hole }))
-      return hole
-    },
-  )
+  const addHole = useAtomCallback((get, set, componentId: string): HoleSchema => {
+    const project = getRequiredProject(get)
+    const hole = createHole({
+      componentId,
+      id: idPure(),
+      name: getUnusedHoleName(project, t),
+    })
+    set(projectAtom, addHolePure(project, { hole }))
+    return hole
+  })
 
   const cloneComponent = useAtomCallback(
     useCallback(
