@@ -22,6 +22,8 @@ export const projectAtom = atom(
       return undefined
     }
 
+    console.log(updatedProject)
+
     const computedProject = getComputedProject(updatedProject)
     const patchedProject = getPatchedProject(updatedProject, computedProject)
 

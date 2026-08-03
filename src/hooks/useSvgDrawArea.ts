@@ -4,6 +4,7 @@ import {
   DrawAreaCardStyles,
   DrawAreaComponentStyles,
   DrawAreaContextValue,
+  DrawAreaExportIdentifiers,
   DrawAreaExportTextStyles,
   DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
@@ -77,8 +78,21 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
     [],
   )
 
-  const exportTextStyles = useMemo<DrawAreaExportTextStyles>(
+  const exportIdentifiers = useMemo<DrawAreaExportIdentifiers>(
     () => ({
+      getElementId: (element) => {
+        switch (element.type) {
+          case 'svg-export-panel':
+            return element.component.id
+          case 'svg-export-front-pocket':
+            return `${element.ownerComponent.id}--front-pocket`
+          case 'svg-export-t-pocket':
+            return `${element.ownerComponent.id}--t-pocket-${element.pocketIndex}`
+        }
+      },
+      getStitchLineId: (stitchLine) => {
+        return stitchLine.id
+      },
       getNameText: (element) => {
         if (!params.showNames) {
           return undefined
@@ -93,6 +107,12 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
             return t.svgExport.tPocketName(element.ownerComponent.name, element.pocketIndex + 1)
         }
       },
+    }),
+    [params.showNames, t.svgExport],
+  )
+
+  const exportTextStyles = useMemo<DrawAreaExportTextStyles>(
+    () => ({
       getNameTextColor: produce(COMPONENT_NAME_COLOR),
       getNameTextFontFamily: produce('sans-serif'),
       getNameTextFontSize: produce(3),
@@ -109,7 +129,7 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
       getDimensionsTextFontSize: produce(2.5),
       getNameDimensionsGap: produce(1),
     }),
-    [params.showDimensions, params.showNames, t],
+    [params.showDimensions, t],
   )
 
   const markerStyles = useMemo<DrawAreaMarkerStyles>(
@@ -131,8 +151,9 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
+      exportIdentifiers,
     }),
-    [cardStyles, componentStyles, exportTextStyles, holeStyles, markerStyles, stitchLineStyles],
+    [cardStyles, componentStyles, exportIdentifiers, exportTextStyles, holeStyles, markerStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

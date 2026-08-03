@@ -13,11 +13,11 @@ type ExportFrontPocketProps = {
 }
 
 export const ExportFrontPocket: FC<ExportFrontPocketProps> = ({ element }) => {
-  const { componentStyles } = useDrawAreaContext()
+  const { componentStyles, exportIdentifiers } = useDrawAreaContext()
   const pathData = usePath(element.pocket.path)
 
   return (
-    <g>
+    <g data-element-id={exportIdentifiers.getElementId(element)}>
       {isDefined(element.cutHelper) && <ExportMarkerPath path={element.cutHelper} />}
       <path
         d={pathData}

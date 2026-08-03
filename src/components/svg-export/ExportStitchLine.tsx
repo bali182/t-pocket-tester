@@ -35,11 +35,12 @@ export const ExportStitchLine: FC<ExportStitchLineProps> = ({ stitchLine }) => {
 }
 
 const ExportStitchPath: FC<ExportStitchPathProps> = ({ path, stitchLine }) => {
-  const { stitchLineStyles } = useDrawAreaContext()
+  const { stitchLineStyles, exportIdentifiers } = useDrawAreaContext()
   const pathData = usePath(path)
 
   return (
     <path
+      data-stitch-line={exportIdentifiers.getStitchLineId(stitchLine.stitchLine)}
       d={pathData}
       fill="none"
       stroke={stitchLineStyles.getLineColor(stitchLine.stitchLine)}

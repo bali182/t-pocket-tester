@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react'
 import { ComponentSchema, PocketClusterSchema } from '../schemas/components'
 import { HoleSchema } from '../schemas/hole'
 import { EditorSelectionSchema } from '../schemas/selection'
-import { StitchLineSchema } from '../schemas/stitching'
+import { ResolvedStitchLineSchema, StitchLineSchema } from '../schemas/stitching'
 import { SvgExportElementSchema } from '../schemas/svgExport'
 import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
@@ -50,8 +50,13 @@ export type DrawAreaHoleStyles = {
   getStrokeThickness: (hole: HoleSchema, isHovered: boolean) => number | undefined
 }
 
-export type DrawAreaExportTextStyles = {
+export type DrawAreaExportIdentifiers = {
+  getElementId: (element: SvgExportElementSchema) => string | undefined
+  getStitchLineId: (element: ResolvedStitchLineSchema) => string | undefined
   getNameText: (element: SvgExportElementSchema) => string | undefined
+}
+
+export type DrawAreaExportTextStyles = {
   getNameTextColor: (element: SvgExportElementSchema) => string | undefined
   getNameTextFontFamily: (element: SvgExportElementSchema) => string | undefined
   getNameTextFontSize: (element: SvgExportElementSchema) => number | undefined
@@ -76,6 +81,7 @@ export type DrawAreaContextValue = {
   componentStyles: DrawAreaComponentStyles
   cardStyles: DrawAreaCardStyles
   exportTextStyles: DrawAreaExportTextStyles
+  exportIdentifiers: DrawAreaExportIdentifiers
   markerStyles: DrawAreaMarkerStyles
 }
 
@@ -122,7 +128,6 @@ const drawAreaDefaultCardStyles: DrawAreaCardStyles = {
 }
 
 const drawAreaDefaultExportTextStyles: DrawAreaExportTextStyles = {
-  getNameText: produce(undefined),
   getNameTextColor: produce(undefined),
   getNameTextFontFamily: produce(undefined),
   getNameTextFontSize: produce(undefined),
@@ -131,6 +136,11 @@ const drawAreaDefaultExportTextStyles: DrawAreaExportTextStyles = {
   getDimensionsTextFontFamily: produce(undefined),
   getDimensionsTextFontSize: produce(undefined),
   getNameDimensionsGap: produce(undefined),
+}
+const drawAreaExportIdentifiers: DrawAreaExportIdentifiers = {
+  getElementId: produce(undefined),
+  getStitchLineId: produce(undefined),
+  getNameText: produce(undefined),
 }
 
 const drawAreaDefaultMarkerStyles: DrawAreaMarkerStyles = {
@@ -148,6 +158,7 @@ const defaultDrawAreaContext: DrawAreaContextValue = {
   cardStyles: drawAreaDefaultCardStyles,
   exportTextStyles: drawAreaDefaultExportTextStyles,
   markerStyles: drawAreaDefaultMarkerStyles,
+  exportIdentifiers: drawAreaExportIdentifiers,
 }
 
 export const DrawAreaContext = createContext<DrawAreaContextValue>(defaultDrawAreaContext)

@@ -11,8 +11,8 @@ type ExportElementTextProps = {
 }
 
 export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
-  const { exportTextStyles } = useDrawAreaContext()
-  const nameText = exportTextStyles.getNameText(element)
+  const { exportTextStyles, exportIdentifiers } = useDrawAreaContext()
+  const nameText = exportIdentifiers.getNameText(element)
   const nameTextColor = exportTextStyles.getNameTextColor(element)
   const nameTextFontFamily = exportTextStyles.getNameTextFontFamily(element)
   const nameTextFontSize = exportTextStyles.getNameTextFontSize(element)
@@ -47,7 +47,7 @@ export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
       : centerY
 
   return (
-    <text textAnchor="middle">
+    <text textAnchor="middle" data-text-for-component={exportIdentifiers.getElementId(element)}>
       {hasName && (
         <tspan
           dominantBaseline="middle"

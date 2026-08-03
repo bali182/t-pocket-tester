@@ -13,6 +13,7 @@ import {
   DrawAreaCardStyles,
   DrawAreaComponentStyles,
   DrawAreaContextValue,
+  DrawAreaExportIdentifiers,
   DrawAreaExportTextStyles,
   DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
@@ -39,8 +40,13 @@ const addAlpha = (color: string): string => {
   return formatHex8({ ...parsed, alpha: 0.3 })
 }
 
-const exportTextStyles: DrawAreaExportTextStyles = {
+const exportIdentifiers: DrawAreaExportIdentifiers = {
+  getElementId: produce(undefined),
   getNameText: produce(undefined),
+  getStitchLineId: produce(undefined),
+}
+
+const exportTextStyles: DrawAreaExportTextStyles = {
   getNameTextColor: produce(undefined),
   getNameTextFontFamily: produce(undefined),
   getNameTextFontSize: produce(undefined),
@@ -283,6 +289,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
+      exportIdentifiers,
     }),
     [cardStyles, componentStyles, drawAreaSelection, holeStyles, stitchLineStyles],
   )

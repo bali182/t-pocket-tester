@@ -119,7 +119,7 @@ const getSvgExportPanel = (
       : {}),
     path: computedComponent.path,
     childMarkerPaths: params.childMarkers
-      ? getSvgExportChildMarkerPaths(computedComponent.children, computedComponent.path)
+      ? getSvgExportChildMarkerPaths(computedComponent.children, computedComponent.boundingRect)
       : [],
     stitchLines: getSvgExportStitchLines(
       project,

@@ -71,7 +71,10 @@ const getPathCommandsFromShape = (shape: Flatten.Segment | Flatten.Arc): PathCom
     return [{ type: 'lineTo', point: fromFlattenPoint(shape.end) }]
   }
 
-  return shape.breakToFunctional().map((arc) => getPathCommandFromArc(arc))
+  return shape
+    .breakToFunctional()
+    .filter((arc) => !Flatten.Utils.EQ(arc.start.x, arc.end.x) || !Flatten.Utils.EQ(arc.start.y, arc.end.y))
+    .map(getPathCommandFromArc)
 }
 
 const getPathCommandFromArc = (arc: Flatten.Arc): PathCommand => {

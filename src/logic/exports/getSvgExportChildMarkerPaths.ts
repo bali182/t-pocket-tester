@@ -1,14 +1,14 @@
 import type { ComputedComponentSchema } from '../../schemas/computed'
 import type { PathSchema, RectSchema } from '../../schemas/geometry'
-import { createPathFromConnectedSegments, getPathSegments } from '../pathSegments'
+import { createPathFromConnectedSegments } from '../pathSegments'
 import type { LinePathSegment } from '../pathSegmentTypes'
-import { doLinePathSegmentsOverlap, isLinePathSegment } from '../pathSegmentUtils'
+import { doLinePathSegmentsOverlap } from '../pathSegmentUtils'
 
 export const getSvgExportChildMarkerPaths = (
   children: ComputedComponentSchema[],
-  parentPath: PathSchema,
+  parentBoundingRect: RectSchema,
 ): PathSchema[] => {
-  const parentLineSegments = getPathSegments(parentPath).filter(isLinePathSegment)
+  const parentMarkerLines = getBoundingRectMarkerLines(parentBoundingRect)
   const boundingRects = children.flatMap((child) => {
     switch (child.type) {
       case 'computed-root-panel':
@@ -21,7 +21,7 @@ export const getSvgExportChildMarkerPaths = (
 
   const markerLines = boundingRects.flatMap((boundingRect) => {
     return getBoundingRectMarkerLines(boundingRect).filter(
-      (markerLine) => !parentLineSegments.some((parentLine) => doLinePathSegmentsOverlap(markerLine, parentLine)),
+      (markerLine) => !parentMarkerLines.some((parentLine) => doLinePathSegmentsOverlap(markerLine, parentLine)),
     )
   })
 
