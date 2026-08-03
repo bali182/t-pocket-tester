@@ -8,6 +8,7 @@ export const HU = {
       add: 'Hozzáadás',
       cancel: 'Mégse',
       apply: 'Alkalmaz',
+      export: 'Exportálás',
       remove: 'Törlés',
       scaling: 'Skálázás',
       clone: 'Duplikálás',
@@ -46,6 +47,10 @@ export const HU = {
     },
   },
   editor: {
+    menus: {
+      file: 'Fájl',
+      view: 'Nézet',
+    },
     scalingDialog: {
       title: 'Skálázás',
       description:

@@ -11,7 +11,6 @@ export const DrawArea: FC = () => {
   return (
     <Box
       alignItems="center"
-      bg="bg.emphasized"
       boxSizing="border-box"
       display="flex"
       height="100%"

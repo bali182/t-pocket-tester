@@ -12,6 +12,7 @@ export const EN: typeof HU = {
       remove: 'Delete',
       scaling: 'Scaling',
       apply: 'Apply',
+      export: 'Export',
       clone: 'Clone',
       flipHorizontal: 'Flip horizontal',
       flipVertical: 'Flip vertical',
@@ -48,6 +49,10 @@ export const EN: typeof HU = {
     },
   },
   editor: {
+    menus: {
+      file: 'File',
+      view: 'View',
+    },
     scalingDialog: {
       title: 'Scaling',
       description:
