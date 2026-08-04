@@ -40,7 +40,7 @@ export const getComputedSvgExport = (
   }
 }
 
-const getSvgExportElementsForComponent = (
+export const getSvgExportElementsForComponent = (
   project: ProjectSchema,
   computedProject: ComputedProjectSchema,
   componentId: string,
@@ -109,6 +109,7 @@ const getSvgExportPanel = (
 
   return {
     type: 'svg-export-panel',
+    id: component.id,
     component,
     boundingRect: computedComponent.boundingRect,
     ...(isDefined(cutHelperBoundingRect)
@@ -158,6 +159,7 @@ const getSvgExportFrontPocket = (
 
   return {
     type: 'svg-export-front-pocket',
+    id: `${ownerComponent.id}--front-pocket`,
     ownerComponent,
     pocket: computedComponent.frontPocket,
     ...(isDefined(cutHelperBoundingRect)
@@ -187,6 +189,7 @@ const getSvgExportTPocket = (
 
   return {
     type: 'svg-export-t-pocket',
+    id: `${ownerComponent.id}--t-pocket-${pocketIndex}`,
     ownerComponent,
     pocketIndex,
     pocket,

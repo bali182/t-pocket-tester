@@ -1,6 +1,6 @@
 import { STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR, STROKE_THICKNESS } from './constants/drawing'
 import { StitchLineCommonConfigSchema } from './schemas/stitching'
-import type { SvgExportParamsSchema } from './schemas/svgExport'
+import type { PdfExportParamsSchema, SvgExportParamsSchema } from './schemas/svgExport'
 
 export const defaultStitchingSettings: StitchLineCommonConfigSchema = {
   stitchMargin: 4,
@@ -20,4 +20,11 @@ export const defaultSvgExportParams: SvgExportParamsSchema = {
   showDimensions: true,
   childMarkers: true,
   cutHelperDistance: 0,
+}
+
+export const defaultPdfExportParams: PdfExportParamsSchema = {
+  ...defaultSvgExportParams,
+  page: 'A4',
+  orientation: 'portrait',
+  layout: 'compact',
 }

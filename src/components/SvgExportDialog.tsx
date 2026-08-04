@@ -83,10 +83,9 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
         return
       }
 
-      const params = submitValidationResult.value
-      const svg = renderSvgToString(project, computedProject, params)
+      const svg = renderSvgToString(project, computedProject, submitValidationResult.value)
       downloadSvg(svg, `${project.name}.svg`)
-      setStoredParams(params)
+      setStoredParams(submitValidationResult.value)
       onOpenChange(false)
     },
     [computedProject, context, editableParams, exportParams, onOpenChange, project, setStoredParams],

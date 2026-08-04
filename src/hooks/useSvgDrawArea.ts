@@ -81,14 +81,7 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
   const exportIdentifiers = useMemo<DrawAreaExportIdentifiers>(
     () => ({
       getElementId: (element) => {
-        switch (element.type) {
-          case 'svg-export-panel':
-            return element.component.id
-          case 'svg-export-front-pocket':
-            return `${element.ownerComponent.id}--front-pocket`
-          case 'svg-export-t-pocket':
-            return `${element.ownerComponent.id}--t-pocket-${element.pocketIndex}`
-        }
+        return element.id
       },
       getStitchLineId: (stitchLine) => {
         return stitchLine.id

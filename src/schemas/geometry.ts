@@ -28,8 +28,8 @@ export type RectSchema = {
 }
 
 export type SizeSchema = {
-  width: number
-  height: number
+  width: BigNumber
+  height: BigNumber
 }
 
 export type FillableSizeSchema = {

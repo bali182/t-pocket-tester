@@ -12,66 +12,107 @@ type ExportElementTextProps = {
 
 export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
   const { exportTextStyles, exportIdentifiers } = useDrawAreaContext()
-  const nameText = exportIdentifiers.getNameText(element)
-  const nameTextColor = exportTextStyles.getNameTextColor(element)
-  const nameTextFontFamily = exportTextStyles.getNameTextFontFamily(element)
-  const nameTextFontSize = exportTextStyles.getNameTextFontSize(element)
-  const dimensionsText = exportTextStyles.getDimensionsText(element)
-  const dimensionsTextColor = exportTextStyles.getDimensionsTextColor(element)
-  const dimensionsTextFontFamily = exportTextStyles.getDimensionsTextFontFamily(element)
-  const dimensionsTextFontSize = exportTextStyles.getDimensionsTextFontSize(element)
-  const nameDimensionsGap = exportTextStyles.getNameDimensionsGap(element)
+  const lines = [
+    getExportTextLine(
+      exportIdentifiers.getNameText(element),
+      exportTextStyles.getNameTextColor(element),
+      exportTextStyles.getNameTextFontFamily(element),
+      exportTextStyles.getNameTextFontSize(element),
+    ),
+    getExportTextLine(
+      exportTextStyles.getDimensionsText(element),
+      exportTextStyles.getDimensionsTextColor(element),
+      exportTextStyles.getDimensionsTextFontFamily(element),
+      exportTextStyles.getDimensionsTextFontSize(element),
+    ),
+  ].filter(isDefined)
 
-  const hasName = isDefined(nameText) && isDefined(nameTextFontSize)
-  const hasDimensions = isDefined(dimensionsText) && isDefined(dimensionsTextFontSize)
-
-  if (!hasName && !hasDimensions) {
+  if (lines.length === 0) {
     return null
   }
 
   const boundingRect = getSvgExportElementBoundingRect(element)
-  const centerX = boundingRect.x.plus(boundingRect.width.dividedBy(2))
-  const centerY = boundingRect.y.plus(boundingRect.height.dividedBy(2))
-  const gap = isDefined(nameDimensionsGap) ? new BigNumber(nameDimensionsGap) : new BigNumber(0)
-  const nameY =
-    hasName && hasDimensions
-      ? centerY
-          .minus(new BigNumber(nameTextFontSize).plus(gap).plus(dimensionsTextFontSize).dividedBy(2))
-          .plus(new BigNumber(nameTextFontSize).dividedBy(2))
-      : centerY
-  const dimensionsY =
-    hasName && hasDimensions
-      ? centerY
-          .plus(new BigNumber(nameTextFontSize).plus(gap).plus(dimensionsTextFontSize).dividedBy(2))
-          .minus(new BigNumber(dimensionsTextFontSize).dividedBy(2))
-      : centerY
+  const positionedLines = getExportTextLinePositions(
+    lines,
+    boundingRect.x.plus(boundingRect.width.dividedBy(2)),
+    boundingRect.y.plus(boundingRect.height.dividedBy(2)),
+    new BigNumber(exportTextStyles.getNameDimensionsGap(element) ?? 0),
+  )
 
   return (
-    <text textAnchor="middle" data-text-for-component={exportIdentifiers.getElementId(element)}>
-      {hasName && (
-        <tspan
+    <g data-text-for-component={exportIdentifiers.getElementId(element)}>
+      {positionedLines.map((position) => (
+        <text
+          alignmentBaseline="middle"
           dominantBaseline="middle"
-          fill={nameTextColor}
-          fontFamily={nameTextFontFamily}
-          fontSize={nameTextFontSize}
-          x={centerX.toString()}
-          y={nameY.toString()}
+          fill={position.line.color}
+          fontFamily={position.line.fontFamily}
+          fontSize={position.line.fontSize}
+          key={position.line.text}
+          textAnchor="middle"
+          x={position.x.toString()}
+          y={position.y.toString()}
         >
-          {nameText}
-        </tspan>
-      )}
-      {hasDimensions && (
-        <tspan
-          dominantBaseline="middle"
-          fill={dimensionsTextColor}
-          fontFamily={dimensionsTextFontFamily}
-          fontSize={dimensionsTextFontSize}
-          x={centerX.toString()}
-          y={dimensionsY.toString()}
-        >
-          {dimensionsText}
-        </tspan>
-      )}
-    </text>
+          {position.line.text}
+        </text>
+      ))}
+    </g>
   )
+}
+
+type ExportTextLine = {
+  text: string
+  color: string | undefined
+  fontFamily: string | undefined
+  fontSize: number
+}
+
+type ExportTextLinePosition = {
+  line: ExportTextLine
+  x: BigNumber
+  y: BigNumber
+}
+
+const getExportTextLine = (
+  text: string | undefined,
+  color: string | undefined,
+  fontFamily: string | undefined,
+  fontSize: number | undefined,
+): ExportTextLine | undefined => {
+  if (isDefined(text) && isDefined(fontSize)) {
+    return {
+      text,
+      color,
+      fontFamily,
+      fontSize,
+    }
+  }
+
+  return undefined
+}
+
+const getExportTextLinePositions = (
+  lines: ExportTextLine[],
+  centerX: BigNumber,
+  centerY: BigNumber,
+  gap: BigNumber,
+): ExportTextLinePosition[] => {
+  const linesHeight = lines.reduce((height, line) => height.plus(line.fontSize), new BigNumber(0))
+  const contentHeight = linesHeight.plus(gap.times(lines.length - 1))
+  const contentTop = centerY.minus(contentHeight.dividedBy(2))
+
+  return lines.map((line, lineIndex) => {
+    const previousLinesHeight = lines
+      .slice(0, lineIndex)
+      .reduce((height, previousLine) => height.plus(previousLine.fontSize), new BigNumber(0))
+
+    return {
+      line,
+      x: centerX,
+      y: contentTop
+        .plus(previousLinesHeight)
+        .plus(gap.times(lineIndex))
+        .plus(new BigNumber(line.fontSize).dividedBy(2)),
+    }
+  })
 }
