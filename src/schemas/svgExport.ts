@@ -30,6 +30,8 @@ export type PdfExportParamsSchema = SvgExportParamsSchema & {
 export type PdfExportPlacementSchema = {
   boundingRect: RectSchema
   rotation: 0 | 90
+  x: BigNumber
+  y: BigNumber
 }
 
 export type PdfExportPageSchema = {

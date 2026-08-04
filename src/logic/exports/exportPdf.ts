@@ -1,5 +1,4 @@
-import { jsPDF } from 'jspdf'
-import 'svg2pdf.js'
+import { pdf } from '@react-pdf/renderer'
 
 import type { ProjectSchema } from '../../schemas/project'
 import type {
@@ -8,7 +7,7 @@ import type {
   SvgExportElementSchema,
 } from '../../schemas/svgExport'
 import { getPdfExportPageSize } from './getPdfExportLayout'
-import { renderPdfExportPageToString } from './renderPdfExportPageToString'
+import { renderPdfDocument } from './renderPdfDocument'
 
 export const exportPdf = async (
   project: ProjectSchema,
@@ -17,38 +16,18 @@ export const exportPdf = async (
   layout: SuccessfulPdfExportLayoutSchema,
 ): Promise<void> => {
   const pageSize = getPdfExportPageSize(params)
-  const pdf = new jsPDF({
-    format: [pageSize.width.toNumber(), pageSize.height.toNumber()],
-    orientation: params.orientation,
-    unit: 'mm',
-  })
+  const blob = await pdf(renderPdfDocument(project, params, elements, layout, pageSize)).toBlob()
 
-  for (const [index, page] of layout.pages.entries()) {
-    if (index > 0) {
-      pdf.addPage([pageSize.width.toNumber(), pageSize.height.toNumber()], params.orientation)
-    }
-
-    const svg = renderPdfExportPageToString(project, params, elements, page, pageSize)
-    const svgElement = getSvgElement(svg)
-
-    await pdf.svg(svgElement, {
-      height: pageSize.height.toNumber(),
-      width: pageSize.width.toNumber(),
-      x: 0,
-      y: 0,
-    })
-  }
-
-  pdf.save(`${project.name}.pdf`)
+  downloadPdf(blob, `${project.name}.pdf`)
 }
 
-const getSvgElement = (svg: string): SVGSVGElement => {
-  const documentFragment = new DOMParser().parseFromString(svg, 'image/svg+xml')
-  const svgElement = documentFragment.documentElement
+const downloadPdf = (blob: Blob, filename: string): void => {
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
 
-  if (!(svgElement instanceof SVGSVGElement)) {
-    throw new Error('Expected an SVG export root')
-  }
+  anchor.href = url
+  anchor.download = filename
+  anchor.click()
 
-  return svgElement
+  URL.revokeObjectURL(url)
 }

@@ -6,6 +6,7 @@ import type {
   PdfExportLayoutSchema,
   PdfExportPageSchema,
   PdfExportParamsSchema,
+  PdfExportPlacementSchema,
   SvgExportElementSchema,
   SvgExportPanelSchema,
 } from '../../schemas/svgExport'
@@ -131,10 +132,10 @@ const layoutVertically = (
       nextY = usableRect.y
     }
 
-    page.placements.set(element.id, {
-      boundingRect: createRect(usableRect.x, nextY, sourceRect.width, sourceRect.height),
-      rotation: 0,
-    })
+    page.placements.set(
+      element.id,
+      createPdfExportPlacement(sourceRect, createRect(usableRect.x, nextY, sourceRect.width, sourceRect.height), 0),
+    )
     nextY = nextY.plus(sourceRect.height).plus(gapValue)
   })
 
@@ -162,10 +163,10 @@ const layoutHorizontally = (
       nextX = usableRect.x
     }
 
-    page.placements.set(element.id, {
-      boundingRect: createRect(nextX, usableRect.y, sourceRect.width, sourceRect.height),
-      rotation: 0,
-    })
+    page.placements.set(
+      element.id,
+      createPdfExportPlacement(sourceRect, createRect(nextX, usableRect.y, sourceRect.width, sourceRect.height), 0),
+    )
     nextX = nextX.plus(sourceRect.width).plus(gapValue)
   })
 
@@ -207,10 +208,10 @@ const layoutCompactly = (
       throw new Error(`Page not found: ${placement.pageIndex}`)
     }
 
-    compactPage.page.placements.set(element.id, {
-      boundingRect: placement.boundingRect,
-      rotation: placement.rotation,
-    })
+    compactPage.page.placements.set(
+      element.id,
+      createPdfExportPlacement(sourceRect, placement.boundingRect, placement.rotation),
+    )
     compactPage.freeRects = splitFreeRects(compactPage.freeRects, getFootprint(placement.boundingRect, gapValue))
   })
 
@@ -218,6 +219,28 @@ const layoutCompactly = (
 }
 
 const createPage = (): PdfExportPageSchema => ({ placements: new Map() })
+
+const createPdfExportPlacement = (
+  sourceRect: RectSchema,
+  boundingRect: RectSchema,
+  rotation: PdfExportPlacementSchema['rotation'],
+): PdfExportPlacementSchema => {
+  if (rotation === 0) {
+    return {
+      boundingRect,
+      rotation,
+      x: boundingRect.x,
+      y: boundingRect.y,
+    }
+  }
+
+  return {
+    boundingRect,
+    rotation,
+    x: boundingRect.x.plus(boundingRect.width.dividedBy(2)).minus(sourceRect.width.dividedBy(2)),
+    y: boundingRect.y.plus(boundingRect.height.dividedBy(2)).minus(sourceRect.height.dividedBy(2)),
+  }
+}
 
 const createCompactPage = (usableRect: RectSchema, gap: BigNumber): CompactPage => ({
   freeRects: [createRect(usableRect.x, usableRect.y, usableRect.width.plus(gap), usableRect.height.plus(gap))],
