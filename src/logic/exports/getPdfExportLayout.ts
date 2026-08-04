@@ -253,41 +253,55 @@ const findCompactPlacement = (
   usableRect: RectSchema,
   gap: BigNumber,
 ): CompactPlacementCandidate | undefined => {
+  const unrotatedCandidate = findCompactPlacementForRotation(pages, sourceRect, usableRect, gap, 0)
+
+  if (isDefined(unrotatedCandidate)) {
+    return unrotatedCandidate
+  }
+
+  return findCompactPlacementForRotation(pages, sourceRect, usableRect, gap, 90)
+}
+
+const findCompactPlacementForRotation = (
+  pages: CompactPage[],
+  sourceRect: RectSchema,
+  usableRect: RectSchema,
+  gap: BigNumber,
+  rotation: PdfExportPlacementSchema['rotation'],
+): CompactPlacementCandidate | undefined => {
   let bestCandidate: CompactPlacementCandidate | undefined
 
   pages.forEach((page, pageIndex) => {
     page.freeRects.forEach((freeRect, freeRectIndex) => {
-      ;([0, 90] as const).forEach((rotation) => {
-        const width = rotation === 0 ? sourceRect.width : sourceRect.height
-        const height = rotation === 0 ? sourceRect.height : sourceRect.width
-        const footprintWidth = width.plus(gap)
-        const footprintHeight = height.plus(gap)
+      const width = rotation === 0 ? sourceRect.width : sourceRect.height
+      const height = rotation === 0 ? sourceRect.height : sourceRect.width
+      const footprintWidth = width.plus(gap)
+      const footprintHeight = height.plus(gap)
 
-        if (footprintWidth.isGreaterThan(freeRect.width) || footprintHeight.isGreaterThan(freeRect.height)) {
-          return
-        }
+      if (footprintWidth.isGreaterThan(freeRect.width) || footprintHeight.isGreaterThan(freeRect.height)) {
+        return
+      }
 
-        const boundingRect = createRect(freeRect.x, freeRect.y, width, height)
+      const boundingRect = createRect(freeRect.x, freeRect.y, width, height)
 
-        if (!isWithinUsableRect(boundingRect, usableRect)) {
-          return
-        }
+      if (!isWithinUsableRect(boundingRect, usableRect)) {
+        return
+      }
 
-        const horizontalRemainder = freeRect.width.minus(footprintWidth)
-        const verticalRemainder = freeRect.height.minus(footprintHeight)
-        const candidate: CompactPlacementCandidate = {
-          pageIndex,
-          freeRectIndex,
-          rotation,
-          scoreShortSide: BigNumber.minimum(horizontalRemainder, verticalRemainder),
-          scoreLongSide: BigNumber.maximum(horizontalRemainder, verticalRemainder),
-          boundingRect,
-        }
+      const horizontalRemainder = freeRect.width.minus(footprintWidth)
+      const verticalRemainder = freeRect.height.minus(footprintHeight)
+      const candidate: CompactPlacementCandidate = {
+        pageIndex,
+        freeRectIndex,
+        rotation,
+        scoreShortSide: BigNumber.minimum(horizontalRemainder, verticalRemainder),
+        scoreLongSide: BigNumber.maximum(horizontalRemainder, verticalRemainder),
+        boundingRect,
+      }
 
-        if (!isDefined(bestCandidate) || compareCompactPlacementCandidates(candidate, bestCandidate) < 0) {
-          bestCandidate = candidate
-        }
-      })
+      if (!isDefined(bestCandidate) || compareCompactPlacementCandidates(candidate, bestCandidate) < 0) {
+        bestCandidate = candidate
+      }
     })
   })
 
