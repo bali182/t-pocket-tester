@@ -1,8 +1,9 @@
-import { Box, Tabs } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { type FC } from 'react'
 
 import { EditorContent } from './EditorContent'
 import { EditorMenu } from './EditorMenu'
+import { EditorSubProjectTabs } from './EditorSubProjectTabs'
 
 export const Editor: FC = () => {
   return (
@@ -22,11 +23,7 @@ export const Editor: FC = () => {
         <EditorContent />
       </Box>
       <Box flexShrink="0">
-        <Tabs.Root defaultValue="sub-project" size="sm" variant="line" width="100%">
-          <Tabs.List>
-            <Tabs.Trigger value="sub-project">Sub-project</Tabs.Trigger>
-          </Tabs.List>
-        </Tabs.Root>
+        <EditorSubProjectTabs />
       </Box>
     </Box>
   )
