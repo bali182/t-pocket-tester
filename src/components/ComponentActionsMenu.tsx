@@ -85,19 +85,19 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
           <Menu.Positioner>
             <Menu.Content>
               <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
-              <Menu.Item value="hole" onClick={handleAddHole}>
+              <Menu.Item value="hole" onSelect={handleAddHole}>
                 <PiRectangleDashed />
                 <Menu.ItemText>{t.common.actions.addByName(t.hole.title)}</Menu.ItemText>
               </Menu.Item>
               <Menu.Separator />
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
-              <Menu.Item onClick={handleClone} value="clone" disabled={!canClone}>
+              <Menu.Item value="clone" onSelect={handleClone} disabled={!canClone}>
                 <PiCopy />
                 <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item
                 disabled={!canDelete}
-                onClick={handleDelete}
+                onSelect={handleDelete}
                 value="delete"
                 color="fg.error"
                 _hover={{ bg: 'bg.error', color: 'fg.error' }}
@@ -147,7 +147,7 @@ const AddChildComponentMenuSection: FC<AddChildComponentMenuProps> = ({ onAddChi
       {possibleTypes.map((type) => {
         const Icon = getComponentIcon(type)
         return (
-          <Menu.Item key={type} value={type} onClick={() => onAddChild(type)}>
+          <Menu.Item key={type} value={type} onSelect={() => onAddChild(type)}>
             <Icon />
             <Menu.ItemText>{labels[type]}</Menu.ItemText>
           </Menu.Item>
@@ -191,7 +191,7 @@ export const AddComponentStitchLineMenu: FC<AddComponentStitchLineMenuProps> = (
     <>
       {possibleTypes.map((type) => {
         return (
-          <Menu.Item key={type} value={type} onClick={() => onAddStitchLine(type)}>
+          <Menu.Item key={type} value={type} onSelect={() => onAddStitchLine(type)}>
             <PiNeedle />
             <Menu.ItemText>{labels[type]}</Menu.ItemText>
           </Menu.Item>

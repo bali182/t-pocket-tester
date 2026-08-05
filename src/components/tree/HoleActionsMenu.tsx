@@ -44,17 +44,17 @@ export const HoleActionsMenu: FC<HoleActionsMenuProps> = ({ hole, size, onDelete
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
-              <Menu.Item onClick={handleAddStitchLine} value="stitch-line">
+              <Menu.Item onSelect={handleAddStitchLine} value="stitch-line">
                 <PiNeedle />
                 <Menu.ItemText>{t.common.actions.addByName(t.stitchLine.types.componentBounds)}</Menu.ItemText>
               </Menu.Item>
               <Menu.Separator />
-              <Menu.Item onClick={handleClone} value="clone">
+              <Menu.Item onSelect={handleClone} value="clone">
                 <PiCopy />
                 <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item
-                onClick={handleDelete}
+                onSelect={handleDelete}
                 value="delete"
                 color="fg.error"
                 _hover={{ bg: 'bg.error', color: 'fg.error' }}

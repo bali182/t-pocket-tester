@@ -71,7 +71,7 @@ export const EditorMenu = () => {
                     <Menu.Item
                       disabled={!isDefined(activeSubProject)}
                       value="export-svg"
-                      onClick={handleSvgExportClick}
+                      onSelect={handleSvgExportClick}
                     >
                       <PiExport />
                       <Menu.ItemText>{t.common.actions.exportSvg}</Menu.ItemText>
@@ -79,7 +79,7 @@ export const EditorMenu = () => {
                     <Menu.Item
                       disabled={!isDefined(activeSubProject)}
                       value="export-pdf"
-                      onClick={handlePdfExportClick}
+                      onSelect={handlePdfExportClick}
                     >
                       <PiExport />
                       <Menu.ItemText>{t.common.actions.exportPdf}</Menu.ItemText>
@@ -98,7 +98,7 @@ export const EditorMenu = () => {
               <Portal>
                 <Menu.Positioner>
                   <Menu.Content>
-                    <Menu.Item value="scaling" onClick={handleScalingButtonClick}>
+                    <Menu.Item value="scaling" onSelect={handleScalingButtonClick}>
                       <PiRuler />
                       <Menu.ItemText>{t.common.actions.scaling}</Menu.ItemText>
                     </Menu.Item>
