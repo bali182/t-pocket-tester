@@ -27,7 +27,7 @@ export const getHoleFloatingAnchor = (holeId: string): FloatingEditorAnchor | un
   return holeElement === undefined ? undefined : getSvgElementFloatingAnchor(holeElement)
 }
 
-export const getComponentFloatingAchor = (componentId: string): FloatingEditorAnchor | undefined => {
+export const getComponentFloatingAnchor = (componentId: string): FloatingEditorAnchor | undefined => {
   const holeElement = getComponentSvgElement(componentId)
   return holeElement === undefined ? undefined : getSvgElementFloatingAnchor(holeElement)
 }

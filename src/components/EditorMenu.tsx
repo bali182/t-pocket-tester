@@ -30,7 +30,7 @@ export const EditorMenu = () => {
 
   return (
     <>
-      <Card.Root ref={menuRef} position="absolute" left="3" top="2" right="3">
+      <Card.Root ref={menuRef}>
         <Card.Body padding="2" flexDirection="row" alignItems="center">
           <Link to={`/projects`}>
             <IconButton size="sm" variant="ghost">
