@@ -4,7 +4,7 @@ import { useMemo, type FC, type ReactNode } from 'react'
 import { DrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useSvgDrawArea } from '../../hooks/useSvgDrawArea'
 import { getSvgExportElementLayoutBoundingRect } from '../../logic/exports/getSvgExportElementLayoutBoundingRect'
-import type { ProjectSchema } from '../../schemas/project'
+import type { SubProjectSchema } from '../../schemas/subProject'
 import type {
   PdfExportPageSchema,
   PdfExportParamsSchema,
@@ -20,7 +20,7 @@ type PdfPageRootProps = {
   elements: SvgExportElementSchema[]
   page: PdfExportPageSchema
   params: PdfExportParamsSchema
-  project: ProjectSchema
+  subProject: SubProjectSchema
 }
 
 type PdfPageElementProps = {
@@ -28,8 +28,8 @@ type PdfPageElementProps = {
   placement: PdfExportPlacementSchema
 }
 
-export const PdfPageRoot: FC<PdfPageRootProps> = ({ elements, page, params, project }) => {
-  const drawAreaContextValue = useSvgDrawArea(project, params)
+export const PdfPageRoot: FC<PdfPageRootProps> = ({ elements, page, params, subProject }) => {
+  const drawAreaContextValue = useSvgDrawArea(subProject, params)
   const elementsById = new Map(elements.map((element) => [element.id, element]))
 
   return (

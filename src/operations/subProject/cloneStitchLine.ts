@@ -1,4 +1,4 @@
-import type { ProjectSchema } from '../../schemas/project'
+import type { SubProjectSchema } from '../../schemas/subProject'
 import type { StitchLineSchema } from '../../schemas/stitching'
 
 export type CloneStitchLineParams = {
@@ -8,17 +8,17 @@ export type CloneStitchLineParams = {
 }
 
 export const cloneStitchLine = (
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   { stitchLineId, getUnusedId, getUnusedName }: CloneStitchLineParams,
-): ProjectSchema => {
-  const sourceStitchLineIndex = project.stitchLines.findIndex((stitchLine) => stitchLine.id === stitchLineId)
+): SubProjectSchema => {
+  const sourceStitchLineIndex = subProject.stitchLines.findIndex((stitchLine) => stitchLine.id === stitchLineId)
 
   if (sourceStitchLineIndex < 0) {
-    return project
+    return subProject
   }
 
-  const sourceStitchLine = project.stitchLines[sourceStitchLineIndex]
-  const usedNames = new Set(project.stitchLines.map((stitchLine) => stitchLine.name))
+  const sourceStitchLine = subProject.stitchLines[sourceStitchLineIndex]
+  const usedNames = new Set(subProject.stitchLines.map((stitchLine) => stitchLine.name))
   const clonedStitchLine: StitchLineSchema = {
     ...sourceStitchLine,
     id: getUnusedId(),
@@ -26,11 +26,11 @@ export const cloneStitchLine = (
   }
 
   return {
-    ...project,
+    ...subProject,
     stitchLines: [
-      ...project.stitchLines.slice(0, sourceStitchLineIndex + 1),
+      ...subProject.stitchLines.slice(0, sourceStitchLineIndex + 1),
       clonedStitchLine,
-      ...project.stitchLines.slice(sourceStitchLineIndex + 1),
+      ...subProject.stitchLines.slice(sourceStitchLineIndex + 1),
     ],
   }
 }

@@ -26,7 +26,7 @@ import { StitchLineSchema } from '../schemas/stitching'
 import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { produce } from '../utils/produce'
-import { useProject } from './useProject'
+import { useSubProject } from './useSubProject'
 
 import { formatHex8, parse } from 'culori'
 import { getSelectionObstructingComponentIds } from '../logic/getSelectionObstructingComponentIds'
@@ -66,35 +66,35 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const [hoveredStitchLineId, setHoveredStitchLine] = useState<string | undefined>()
   const [hoveredTreeSelection, setHoveredTreeSelection] = useState<EditorSelectionSchema | undefined>()
-  const { project, touchComponent } = useProject()
+  const { subProject, touchComponent } = useSubProject()
 
   const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'component') {
       return undefined
     }
 
-    return project.components[selection.componentId]
-  }, [project.components, selection])
+    return subProject.components[selection.componentId]
+  }, [subProject.components, selection])
 
   const selectedHole = useMemo<HoleSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'hole') {
       return undefined
     }
 
-    return project.holes.find((hole) => hole.id === selection.holeId)
-  }, [project.holes, selection])
+    return subProject.holes.find((hole) => hole.id === selection.holeId)
+  }, [subProject.holes, selection])
 
   const selectedStitchLine = useMemo<StitchLineSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'stitch-line') {
       return undefined
     }
 
-    return project.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
-  }, [project.stitchLines, selection])
+    return subProject.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
+  }, [subProject.stitchLines, selection])
 
   const selectionObstructingComponentIds = useMemo<ReadonlySet<string>>(
-    () => getSelectionObstructingComponentIds(hoveredTreeSelection ?? selection, project),
-    [hoveredTreeSelection, project, selection],
+    () => getSelectionObstructingComponentIds(hoveredTreeSelection ?? selection, subProject),
+    [hoveredTreeSelection, subProject, selection],
   )
 
   const selectComponent = useCallback(
@@ -176,7 +176,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
       getBackgroundColor: (component, nestingLevel) => {
-        const color = component.color ?? getComponentColor(project.componentSettings.baseColor, nestingLevel)
+        const color = component.color ?? getComponentColor(subProject.componentSettings.baseColor, nestingLevel)
         return selectionObstructingComponentIds.has(component.id) ? addAlpha(color) : color
       },
       getBorderColor: (component, isHovered) => {
@@ -197,7 +197,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     [
       isComponentSelected,
       isComponentTreeHovered,
-      project.componentSettings.baseColor,
+      subProject.componentSettings.baseColor,
       selectionObstructingComponentIds,
     ],
   )
@@ -247,10 +247,10 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
           return SELECTED_STITCH_LINE_STROKE_COLOR
         }
 
-        return stitchLine.stitchLineColor ?? project.stitchingSettings.stitchLineColor
+        return stitchLine.stitchLineColor ?? subProject.stitchingSettings.stitchLineColor
       },
       getLineThickness: (stitchLine) => {
-        return stitchLine.stitchLineThickness ?? project.stitchingSettings.stitchLineThickness
+        return stitchLine.stitchLineThickness ?? subProject.stitchingSettings.stitchLineThickness
       },
       getStitchHoleColor: (stitchLine) => {
         if (
@@ -261,17 +261,17 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
           return SELECTED_STITCH_LINE_HOLE_COLOR
         }
 
-        return stitchLine.stitchHoleColor ?? project.stitchingSettings.stitchHoleColor
+        return stitchLine.stitchHoleColor ?? subProject.stitchingSettings.stitchHoleColor
       },
       getStitchHoleThickness: (stitchLine) => {
-        return stitchLine.stitchHoleThickness ?? project.stitchingSettings.stitchHoleThickness
+        return stitchLine.stitchHoleThickness ?? subProject.stitchingSettings.stitchHoleThickness
       },
     }),
     [
-      project.stitchingSettings.stitchHoleColor,
-      project.stitchingSettings.stitchHoleThickness,
-      project.stitchingSettings.stitchLineColor,
-      project.stitchingSettings.stitchLineThickness,
+      subProject.stitchingSettings.stitchHoleColor,
+      subProject.stitchingSettings.stitchHoleThickness,
+      subProject.stitchingSettings.stitchLineColor,
+      subProject.stitchingSettings.stitchLineThickness,
       hoveredStitchLineId,
       isStitchLineTreeHovered,
       selectedStitchLine?.id,

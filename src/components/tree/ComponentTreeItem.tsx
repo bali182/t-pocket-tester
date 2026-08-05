@@ -4,7 +4,7 @@ import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { hasComponentChildren } from '../../operations/project/utils/hasComponentChildren'
+import { hasComponentChildren } from '../../operations/subProject/utils/hasComponentChildren'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentActionsMenu } from '../ComponentActionsMenu'
 import { DropInsideIndicator, ReorderDropIndicator } from './ComponentTreeDropIndicators'

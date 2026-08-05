@@ -8,8 +8,8 @@ import { useTranslation } from '../translations/translation'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { validateStitchLineSchema } from '../validators/validateStitchLineSchema'
 import { useEditableModel } from './useEditableModel'
-import { useProject } from './useProject'
 import { useStitchLine } from './useStitchLine'
+import { useSubProject } from './useSubProject'
 
 export type UseEditableStitchLineResult = {
   editableStitchLine: EditableSchema<StitchLineSchema>
@@ -22,11 +22,11 @@ export type UseEditableStitchLineResult = {
 export const useEditableStitchLine = (stitchLineId: string): UseEditableStitchLineResult => {
   const stitchLine = useStitchLine(stitchLineId)
 
-  const { computedProject, project, updateStitchLine } = useProject()
+  const { computedSubProject, subProject, updateStitchLine } = useSubProject()
   const t = useTranslation()
   const context = useMemo<ComponentBasedValidationContextSchema>(
-    () => ({ computedProject, language: LANGUAGE, project, t }),
-    [computedProject, project, t],
+    () => ({ computedSubProject, language: LANGUAGE, subProject, t }),
+    [computedSubProject, subProject, t],
   )
 
   const commit = useCallback(
@@ -44,10 +44,10 @@ export const useEditableStitchLine = (stitchLineId: string): UseEditableStitchLi
   })
   const resolvedEditableStitchLine = useMemo(
     () => ({
-      ...getEditableSchema(project.stitchingSettings, { language: LANGUAGE }),
+      ...getEditableSchema(subProject.stitchingSettings, { language: LANGUAGE }),
       ...editableValue,
     }),
-    [editableValue, project.stitchingSettings],
+    [editableValue, subProject.stitchingSettings],
   )
 
   return {

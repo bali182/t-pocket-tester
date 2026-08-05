@@ -1,24 +1,24 @@
-import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
 
 export const deleteOrphanedStitchLines = (
-  project: ProjectSchema,
-  _computedProject: ComputedProjectSchema,
-): ProjectSchema => {
-  const stitchLines = project.stitchLines.filter((stitchLine) => {
+  subProject: SubProjectSchema,
+  _computedProject: ComputedSubProjectSchema,
+): SubProjectSchema => {
+  const stitchLines = subProject.stitchLines.filter((stitchLine) => {
     if (stitchLine.targetType === 'hole') {
-      return project.holes.some((hole) => hole.id === stitchLine.targetId)
+      return subProject.holes.some((hole) => hole.id === stitchLine.targetId)
     }
 
-    return isDefined(project.components[stitchLine.targetId])
+    return isDefined(subProject.components[stitchLine.targetId])
   })
 
-  if (stitchLines.length === project.stitchLines.length) {
-    return project
+  if (stitchLines.length === subProject.stitchLines.length) {
+    return subProject
   }
 
   return {
-    ...project,
+    ...subProject,
     stitchLines,
   }
 }

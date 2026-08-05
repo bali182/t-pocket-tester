@@ -1,27 +1,27 @@
 import type { ComponentSchema } from '../../../schemas/components'
 import type { ComputedComponentSchema } from '../../../schemas/computed'
-import type { ComputedProjectSchema, ProjectSchema } from '../../../schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../../../schemas/subProject'
 
 export const updateProjectComponents = (
-  project: ProjectSchema,
-  computedProject: ComputedProjectSchema,
+  subProject: SubProjectSchema,
+  computedProject: ComputedSubProjectSchema,
   mapper: (id: string, component: ComponentSchema, computedComponent: ComputedComponentSchema) => ComponentSchema,
-): ProjectSchema => {
-  let components = project.components
+): SubProjectSchema => {
+  let components = subProject.components
 
-  for (const [id, component] of Object.entries(project.components)) {
+  for (const [id, component] of Object.entries(subProject.components)) {
     const updatedComponent = mapper(id, component, computedProject.components[id])
 
     if (updatedComponent === component) {
       continue
     }
 
-    if (components === project.components) {
-      components = { ...project.components }
+    if (components === subProject.components) {
+      components = { ...subProject.components }
     }
 
     components[id] = updatedComponent
   }
 
-  return components === project.components ? project : { ...project, components }
+  return components === subProject.components ? subProject : { ...subProject, components }
 }

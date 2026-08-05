@@ -30,7 +30,7 @@ export const validateComponentBoundsStitchLineSchema = (
   currentValue: ComponentBoundsStitchLineSchema,
   context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<ComponentBoundsStitchLineSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
+  const nameResult = validateName(input.name, currentValue.name, input.id, context.subProject.stitchLines, context)
   const commonConfigResult = validateStitchLineCommonConfigOverridesSchema(input, currentValue, context)
   const topStitchDirectionResult = validatePrimitiveUnion(
     input.topStitchDirection,

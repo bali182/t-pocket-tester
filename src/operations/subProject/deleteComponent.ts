@@ -1,4 +1,4 @@
-import { ProjectSchema } from '../../schemas/project'
+import { SubProjectSchema } from '../../schemas/subProject'
 import { isDefined } from '../../utils/isDefined'
 import { getComponentDescendants } from './utils/getComponentDescendants'
 import { hasComponentChildren } from './utils/hasComponentChildren'
@@ -7,19 +7,22 @@ export type DeleteComponentParams = {
   componentId: string
 }
 
-export const deleteComponent = (project: ProjectSchema, { componentId }: DeleteComponentParams): ProjectSchema => {
-  const component = project.components[componentId]
+export const deleteComponent = (
+  subProject: SubProjectSchema,
+  { componentId }: DeleteComponentParams,
+): SubProjectSchema => {
+  const component = subProject.components[componentId]
 
   if (!isDefined(component) || component.type === 'root-panel') {
-    return project
+    return subProject
   }
 
-  const deletedIds = new Set([componentId, ...getComponentDescendants(component, project)])
+  const deletedIds = new Set([componentId, ...getComponentDescendants(component, subProject)])
 
   return {
-    ...project,
+    ...subProject,
     components: Object.fromEntries(
-      Object.entries(project.components)
+      Object.entries(subProject.components)
         .filter(([id]) => !deletedIds.has(id))
         .map((tuple) => {
           const [id, component] = tuple

@@ -12,7 +12,7 @@ import { useAtomValue } from 'jotai'
 import { useCallback, useMemo, useState, type FC, type ReactElement } from 'react'
 import { PiPlus } from 'react-icons/pi'
 
-import { useProject } from '../hooks/useProject'
+import { useSubProject } from '../hooks/useSubProject'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
@@ -27,23 +27,23 @@ type AddStitchLinePopoverProps = {
 
 export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger }) => {
   const t = useTranslation()
-  const { project, addStitchLineToComponent } = useProject()
+  const { subProject, addStitchLineToComponent } = useSubProject()
   const lastTouchedComponent = useAtomValue(lastTouchedComponentAtom)
   const defaultComponentId = useMemo((): string => {
     if (
       isDefined(lastTouchedComponent) &&
-      lastTouchedComponent.projectId === project.id &&
-      isDefined(project.components[lastTouchedComponent.componentId])
+      lastTouchedComponent.projectId === subProject.id &&
+      isDefined(subProject.components[lastTouchedComponent.componentId])
     ) {
       return lastTouchedComponent.componentId
     }
 
-    return project.root
-  }, [lastTouchedComponent, project.components, project.id, project.root])
+    return subProject.root
+  }, [lastTouchedComponent, subProject.components, subProject.id, subProject.root])
   const [isOpen, setIsOpen] = useState(false)
   const [componentId, setComponentId] = useState<string>(defaultComponentId)
   const [stitchLineType, setStitchLineType] = useState<StitchLineSchema['type']>('component-bounds-stitch-line')
-  const component = isDefined(componentId) ? project.components[componentId] : undefined
+  const component = isDefined(componentId) ? subProject.components[componentId] : undefined
   const stitchLineTypeOptions = useMemo<StitchLineTypeOption[]>(
     () => getStitchLineTypeOptions(component, t),
     [component, t],
@@ -75,13 +75,13 @@ export const AddStitchLinePopover: FC<AddStitchLinePopoverProps> = ({ trigger })
 
   const handleComponentChange = useCallback(
     (nextComponentId: string): void => {
-      const nextComponent = project.components[nextComponentId]
+      const nextComponent = subProject.components[nextComponentId]
       if (!isDefined(nextComponent)) {
         return
       }
       setComponentId(nextComponentId)
     },
-    [project.components],
+    [subProject.components],
   )
 
   const handleStitchLineTypeChange = useCallback((details: SelectValueChangeDetails<StitchLineTypeOption>): void => {

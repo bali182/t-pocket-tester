@@ -1,10 +1,9 @@
 import { ComponentType, useMemo } from 'react'
-import { ProjectRoute } from './components/routes/ProjectRoute'
 import { ProjectsRoute } from './components/routes/ProjectsRoute'
+import { SubProjectRoute } from './components/routes/SubProjectRoute'
 import { useTranslation } from './translations/translation'
 
 type RouteConfig = {
-  label: string
   path: string
   Component: ComponentType
 }
@@ -19,14 +18,17 @@ export const useRoutes = (): UseRoutesOutput => {
   const routes = useMemo<RouteConfig[]>(() => {
     return [
       {
-        label: t.navigation.home,
         path: '/projects',
         Component: ProjectsRoute,
       },
       {
-        label: t.navigation.project,
         path: '/projects/:projectId',
-        Component: ProjectRoute,
+        Component: SubProjectRoute,
+      },
+      {
+        path: '/projects/:projectId/:subProjectId',
+        // TODO
+        Component: undefined!,
       },
     ]
   }, [t])

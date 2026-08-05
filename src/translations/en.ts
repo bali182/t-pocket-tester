@@ -1,10 +1,6 @@
 import type { HU } from './hu'
 
 export const EN: typeof HU = {
-  navigation: {
-    home: 'Home',
-    project: 'Project',
-  },
   common: {
     actions: {
       add: 'Add',
@@ -266,7 +262,7 @@ export const EN: typeof HU = {
     },
   },
   defaults: {
-    projectName: 'New project',
+    subProjectName: 'New project',
     rootComponentName: 'Base',
     stitchLineName: (number: number) => `Stitch line ${number}`,
   },

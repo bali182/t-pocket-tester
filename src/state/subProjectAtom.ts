@@ -1,19 +1,19 @@
 import { atom } from 'jotai'
 import type { SetStateAction } from 'react'
 
-import { getPatchedProject } from '../component-patches/getPatchedProject'
+import { getPatchedSubProject } from '../component-patches/getPatchedSubProject'
 import { getComputedProject } from '../logic/getComputedProject'
-import type { ProjectSchema } from '../schemas/project'
+import type { SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
 import { projectsAtom } from './projectsAtom'
 
-// Stores the final project model after automatic patches have been applied.
-const subProjectStorageAtom = atom<ProjectSchema | undefined>(undefined)
+// Stores the final subProject model after automatic patches have been applied.
+const subProjectStorageAtom = atom<SubProjectSchema | undefined>(undefined)
 
-// Public project atom. Writes apply the caller's update and then automatic project patches.
+// Public subProject atom. Writes apply the caller's update and then automatic subProject patches.
 export const subProjectAtom = atom(
-  (get): ProjectSchema | undefined => get(subProjectStorageAtom),
-  (get, set, update: SetStateAction<ProjectSchema | undefined>): ProjectSchema | undefined => {
+  (get): SubProjectSchema | undefined => get(subProjectStorageAtom),
+  (get, set, update: SetStateAction<SubProjectSchema | undefined>): SubProjectSchema | undefined => {
     const currentProject = get(subProjectStorageAtom)
     const updatedProject = typeof update === 'function' ? update(currentProject) : update
 
@@ -25,11 +25,11 @@ export const subProjectAtom = atom(
     console.log(updatedProject)
 
     const computedProject = getComputedProject(updatedProject)
-    const patchedProject = getPatchedProject(updatedProject, computedProject)
+    const patchedProject = getPatchedSubProject(updatedProject, computedProject)
 
     set(subProjectStorageAtom, patchedProject)
     set(projectsAtom, (projects) =>
-      projects.map((project) => (project.id === patchedProject.id ? patchedProject : project)),
+      projects.map((subProject) => (subProject.id === patchedProject.id ? patchedProject : subProject)),
     )
 
     return patchedProject
@@ -38,11 +38,11 @@ export const subProjectAtom = atom(
 
 // Read-only computed representation of the final project model.
 export const computedSubProjectAtom = atom((get) => {
-  const project = get(subProjectAtom)
+  const subProject = get(subProjectAtom)
 
-  if (!isDefined(project)) {
+  if (!isDefined(subProject)) {
     return undefined
   }
 
-  return getComputedProject(project)
+  return getComputedProject(subProject)
 })

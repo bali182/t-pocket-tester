@@ -1,4 +1,4 @@
-import { ProjectSchema } from '../../schemas/project'
+import { SubProjectSchema } from '../../schemas/subProject'
 import { isDefined } from '../../utils/isDefined'
 import { getComponentDescendants } from './utils/getComponentDescendants'
 import { getComponentParent } from './utils/getComponentParent'
@@ -11,24 +11,24 @@ export type MoveComponentParams = {
 }
 
 export const moveComponent = (
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   { beforeComponentId, componentId, targetParentId }: MoveComponentParams,
-): ProjectSchema => {
-  const movedComponent = project.components[componentId]
-  const targetParent = project.components[targetParentId]
+): SubProjectSchema => {
+  const movedComponent = subProject.components[componentId]
+  const targetParent = subProject.components[targetParentId]
 
   if (!isDefined(movedComponent) || movedComponent.type === 'root-panel' || !hasComponentChildren(targetParent)) {
-    return project
+    return subProject
   }
 
-  if (getComponentDescendants(movedComponent, project).includes(targetParentId)) {
-    return project
+  if (getComponentDescendants(movedComponent, subProject).includes(targetParentId)) {
+    return subProject
   }
 
-  const sourceParent = getComponentParent(componentId, project)
+  const sourceParent = getComponentParent(componentId, subProject)
 
   if (!isDefined(sourceParent)) {
-    return project
+    return subProject
   }
 
   const sourceChildren = removeChild(sourceParent.children, componentId)
@@ -36,17 +36,17 @@ export const moveComponent = (
   const updatedTargetChildren = insertChildBefore(targetChildren, componentId, beforeComponentId)
 
   if (!isDefined(updatedTargetChildren)) {
-    return project
+    return subProject
   }
 
   if (sourceParent.id === targetParent.id && areEqualChildren(sourceParent.children, updatedTargetChildren)) {
-    return project
+    return subProject
   }
 
   return {
-    ...project,
+    ...subProject,
     components: {
-      ...project.components,
+      ...subProject.components,
       [sourceParent.id]: {
         ...sourceParent,
         children: sourceChildren,

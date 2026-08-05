@@ -1,10 +1,13 @@
-import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import type { ComponentBoundsStitchLineSchema } from '../schemas/stitching'
 
-export const adjustStitchLines = (project: ProjectSchema, _computedProject: ComputedProjectSchema): ProjectSchema => {
-  let stitchLines = project.stitchLines
+export const adjustStitchLines = (
+  subProject: SubProjectSchema,
+  _computedProject: ComputedSubProjectSchema,
+): SubProjectSchema => {
+  let stitchLines = subProject.stitchLines
 
-  project.stitchLines.forEach((stitchLine, index) => {
+  subProject.stitchLines.forEach((stitchLine, index) => {
     if (stitchLine.type !== 'component-bounds-stitch-line') {
       return
     }
@@ -15,14 +18,14 @@ export const adjustStitchLines = (project: ProjectSchema, _computedProject: Comp
       return
     }
 
-    if (stitchLines === project.stitchLines) {
-      stitchLines = [...project.stitchLines]
+    if (stitchLines === subProject.stitchLines) {
+      stitchLines = [...subProject.stitchLines]
     }
 
     stitchLines[index] = adjustedStitchLine
   })
 
-  return stitchLines === project.stitchLines ? project : { ...project, stitchLines }
+  return stitchLines === subProject.stitchLines ? subProject : { ...subProject, stitchLines }
 }
 
 const adjustComponentBoundsStitchLine = (

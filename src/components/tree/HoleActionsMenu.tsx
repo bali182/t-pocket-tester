@@ -1,7 +1,7 @@
 import { Box, IconButton, Menu, Portal, type IconButtonProps } from '@chakra-ui/react'
 import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
-import { useProject } from '../../hooks/useProject'
+import { useSubProject } from '../../hooks/useSubProject'
 import type { HoleSchema } from '../../schemas/hole'
 import { useTranslation } from '../../translations/translation'
 import { noop } from '../../utils/noop'
@@ -14,7 +14,7 @@ type HoleActionsMenuProps = {
 
 export const HoleActionsMenu: FC<HoleActionsMenuProps> = ({ hole, size, onDelete = noop }) => {
   const t = useTranslation()
-  const { addStitchLineToHole, cloneHole, deleteHole } = useProject()
+  const { addStitchLineToHole, cloneHole, deleteHole } = useSubProject()
 
   const handleClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()

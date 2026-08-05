@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { defaultPdfExportParams } from '../defaultStates'
-import { useProject } from '../hooks/useProject'
+import { useSubProject } from '../hooks/useSubProject'
 import { exportPdf } from '../logic/exports/exportPdf'
 import { getComputedPdfExport } from '../logic/exports/getComputedPdfExport'
 import { useTranslation } from '../translations/translation'
@@ -13,24 +13,24 @@ import { SvgExportDialog } from './SvgExportDialog'
 
 export const EditorMenu = () => {
   const t = useTranslation()
-  const { computedProject, project } = useProject()
+  const { computedSubProject, subProject } = useSubProject()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
-  const projectMenuRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
 
   const handleSvgExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
   const handlePdfExportClick = useCallback(() => {
-    const pdfExport = getComputedPdfExport(project, computedProject, defaultPdfExportParams)
+    const pdfExport = getComputedPdfExport(subProject, computedSubProject, defaultPdfExportParams)
     if (pdfExport.layout.type !== 'successful-pdf-export') {
       return
     }
-    void exportPdf(project, defaultPdfExportParams, pdfExport.elements, pdfExport.layout)
-  }, [computedProject, project])
+    void exportPdf(subProject, defaultPdfExportParams, pdfExport.elements, pdfExport.layout)
+  }, [computedSubProject, subProject])
 
   return (
     <>
-      <Card.Root ref={projectMenuRef} position="absolute" left="3" top="2" right="3">
+      <Card.Root ref={menuRef} position="absolute" left="3" top="2" right="3">
         <Card.Body padding="2" flexDirection="row" alignItems="center">
           <Link to={`/projects`}>
             <IconButton size="sm" variant="ghost">
@@ -38,10 +38,10 @@ export const EditorMenu = () => {
             </IconButton>
           </Link>
           <ProjectSettingsPopover
-            anchorRef={projectMenuRef}
+            anchorRef={menuRef}
             trigger={
               <Button size="sm" variant="ghost">
-                {project.name}
+                {subProject.name}
               </Button>
             }
           />

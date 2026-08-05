@@ -1,5 +1,5 @@
 import type { EditableSchema } from '../schemas/editable'
-import type { ProjectSchema } from '../schemas/project'
+import type { SubProjectSchema } from '../schemas/subProject'
 import type {
   ProjectBasedValidationContextSchema,
   ValidationIssuesSchema,
@@ -11,10 +11,10 @@ import { validateName } from './validateName'
 import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
 
 export const validateProjectSchema = (
-  input: EditableSchema<ProjectSchema>,
-  currentValue: ProjectSchema,
+  input: EditableSchema<SubProjectSchema>,
+  currentValue: SubProjectSchema,
   context: ProjectBasedValidationContextSchema,
-): ValidationResultSchema<ProjectSchema> => {
+): ValidationResultSchema<SubProjectSchema> => {
   const nameResult = validateName(input.name, currentValue.name, currentValue.id, context.projects, context)
   const stitchingSettingsResult = validateStitchLineCommonConfigSchema(
     input.stitchingSettings,
@@ -26,7 +26,7 @@ export const validateProjectSchema = (
     currentValue.componentSettings.baseColor,
     context,
   )
-  const issues: ValidationIssuesSchema<ProjectSchema> = {
+  const issues: ValidationIssuesSchema<SubProjectSchema> = {
     components: {},
     editingSettings: {
       addComputedSizesToAutoSized: undefined,
@@ -43,7 +43,7 @@ export const validateProjectSchema = (
     },
     stitchingSettings: stitchingSettingsResult.issues,
   }
-  const committedValue: ProjectSchema = {
+  const committedValue: SubProjectSchema = {
     components: currentValue.components,
     editingSettings: currentValue.editingSettings,
     id: currentValue.id,

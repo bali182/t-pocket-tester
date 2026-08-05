@@ -1,11 +1,11 @@
 import { LEATHER_BASE_COLOR } from '../constants/drawing'
 import { defaultStitchingSettings } from '../defaultStates'
 import type { RootPanelSchema } from '../schemas/components'
-import type { ProjectSchema } from '../schemas/project'
+import type { SubProjectSchema } from '../schemas/subProject'
 import type { TranslationSchema } from '../translations/translationSchema'
 import { id } from './id'
 
-export const createProject = (name: string, t: TranslationSchema): ProjectSchema => {
+export const createSubProject = (name: string, t: TranslationSchema): SubProjectSchema => {
   const root: RootPanelSchema = {
     borderRadius: 0,
     topLeftRadius: 0,

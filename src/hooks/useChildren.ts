@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 
-import { getComponentChildren } from '../operations/project/utils/getComponentChildren'
+import { getComponentChildren } from '../operations/subProject/utils/getComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
-import { useProject } from './useProject'
+import { useSubProject } from './useSubProject'
 
 export const useChildren = (component: ComponentSchema): ComponentSchema[] => {
-  const { project } = useProject()
+  const { subProject } = useSubProject()
 
   return useMemo<ComponentSchema[]>(() => {
-    return getComponentChildren(component, project)
-  }, [component, project])
+    return getComponentChildren(component, subProject)
+  }, [component, subProject])
 }

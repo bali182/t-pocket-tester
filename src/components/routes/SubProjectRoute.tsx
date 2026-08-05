@@ -5,26 +5,26 @@ import { PiWarningCircle } from 'react-icons/pi'
 import { useParams } from 'react-router'
 
 import { useProjects } from '../../hooks/useProjects'
-import { subProjectAtom } from '../../state/projectAtom'
+import { subProjectAtom } from '../../state/subProjectAtom'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { Editor } from '../Editor'
 
-export const ProjectRoute: FC = () => {
+export const SubProjectRoute: FC = () => {
   const { projectId } = useParams()
   const t = useTranslation()
   const { projects } = useProjects()
-  const activeProject = useAtomValue(subProjectAtom)
+  const activeSubProject = useAtomValue(subProjectAtom)
   const setProject = useSetAtom(subProjectAtom)
-  const project = projects.find((candidate) => candidate.id === projectId)
+  const subProject = projects.find((candidate) => candidate.id === projectId)
 
   useLayoutEffect(() => {
-    if (isDefined(project)) {
-      setProject(project)
+    if (isDefined(subProject)) {
+      setProject(subProject)
     }
-  }, [project, setProject])
+  }, [subProject, setProject])
 
-  if (!isDefined(project)) {
+  if (!isDefined(subProject)) {
     return (
       <EmptyState.Root height="100%">
         <EmptyState.Content>
@@ -38,7 +38,7 @@ export const ProjectRoute: FC = () => {
     )
   }
 
-  if (!isDefined(activeProject) || activeProject.id !== project.id) {
+  if (!isDefined(activeSubProject) || activeSubProject.id !== subProject.id) {
     return null
   }
 

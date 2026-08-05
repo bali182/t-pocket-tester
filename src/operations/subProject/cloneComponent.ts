@@ -1,5 +1,5 @@
 import type { ComponentSchema } from '../../schemas/components'
-import type { ProjectSchema } from '../../schemas/project'
+import type { SubProjectSchema } from '../../schemas/subProject'
 import { isDefined } from '../../utils/isDefined'
 import { getComponentParent } from './utils/getComponentParent'
 import { hasComponentChildren } from './utils/hasComponentChildren'
@@ -12,20 +12,20 @@ export type CloneComponentParams = {
 
 export type CloneComponentResult = {
   clonedRootId: string
-  project: ProjectSchema
+  subProject: SubProjectSchema
 }
 
 export const cloneComponent = (
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   { componentId, getUnusedId, getUnusedName }: CloneComponentParams,
 ): CloneComponentResult | undefined => {
-  const componentsToClone = getClonedComponents(project, componentId)
+  const componentsToClone = getClonedComponents(subProject, componentId)
 
   if (!isDefined(componentsToClone)) {
     return undefined
   }
 
-  const sourceParent = getComponentParent(componentId, project)
+  const sourceParent = getComponentParent(componentId, subProject)
 
   if (!isDefined(sourceParent)) {
     return undefined
@@ -39,7 +39,7 @@ export const cloneComponent = (
 
   const clonedComponentIdBySourceComponentId = getClonedComponentIdMapping(componentsToClone, getUnusedId)
   const clonedComponentNameById = getClonedComponentNameById(
-    project,
+    subProject,
     componentsToClone,
     clonedComponentIdBySourceComponentId,
     getUnusedName,
@@ -51,10 +51,10 @@ export const cloneComponent = (
   )
   const clonedRootId = clonedComponentIdBySourceComponentId[componentId]
 
-  const projectWithClone: ProjectSchema = {
-    ...project,
+  const projectWithClone: SubProjectSchema = {
+    ...subProject,
     components: {
-      ...project.components,
+      ...subProject.components,
       ...componentClones,
       [sourceParent.id]: {
         ...sourceParent,
@@ -67,11 +67,11 @@ export const cloneComponent = (
     },
   }
 
-  return { clonedRootId, project: projectWithClone }
+  return { clonedRootId, subProject: projectWithClone }
 }
 
-const getClonedComponents = (project: ProjectSchema, componentId: string): ComponentSchema[] | undefined => {
-  const sourceComponent = project.components[componentId]
+const getClonedComponents = (subProject: SubProjectSchema, componentId: string): ComponentSchema[] | undefined => {
+  const sourceComponent = subProject.components[componentId]
 
   if (!isDefined(sourceComponent) || sourceComponent.type === 'root-panel') {
     return undefined
@@ -79,7 +79,7 @@ const getClonedComponents = (project: ProjectSchema, componentId: string): Compo
 
   const clonedComponents: ComponentSchema[] = []
 
-  if (!collectClonedComponents(project, sourceComponent, clonedComponents, new Set<string>())) {
+  if (!collectClonedComponents(subProject, sourceComponent, clonedComponents, new Set<string>())) {
     return undefined
   }
 
@@ -87,7 +87,7 @@ const getClonedComponents = (project: ProjectSchema, componentId: string): Compo
 }
 
 const collectClonedComponents = (
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   component: ComponentSchema,
   collectedComponents: ComponentSchema[],
   visitedComponentIds: Set<string>,
@@ -104,9 +104,9 @@ const collectClonedComponents = (
   }
 
   for (const childId of component.children) {
-    const child = project.components[childId]
+    const child = subProject.components[childId]
 
-    if (!isDefined(child) || !collectClonedComponents(project, child, collectedComponents, visitedComponentIds)) {
+    if (!isDefined(child) || !collectClonedComponents(subProject, child, collectedComponents, visitedComponentIds)) {
       return false
     }
   }
@@ -122,12 +122,12 @@ const getClonedComponentIdMapping = (
 }
 
 const getClonedComponentNameById = (
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   componentsToClone: ComponentSchema[],
   clonedComponentIdBySourceComponentId: Record<string, string>,
   getUnusedName: (sourceName: string, usedComponentNames: Set<string>) => string,
 ): Record<string, string> => {
-  const usedComponentNames = new Set(Object.values(project.components).map((component) => component.name))
+  const usedComponentNames = new Set(Object.values(subProject.components).map((component) => component.name))
   const clonedComponentNameById: Record<string, string> = {}
 
   for (const component of componentsToClone) {

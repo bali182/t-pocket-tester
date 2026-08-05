@@ -21,7 +21,7 @@ export const validatePocketClusterStitchLineSchema = (
   currentValue: PocketClusterStitchLineSchema,
   context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<PocketClusterStitchLineSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, context.project.stitchLines, context)
+  const nameResult = validateName(input.name, currentValue.name, input.id, context.subProject.stitchLines, context)
   const commonConfigResult = validateStitchLineCommonConfigOverridesSchema(input, currentValue, context)
   const startOffsetResult = validateNumber(input.startOffset, currentValue.startOffset, context)
   const endOffsetResult = validateNumber(input.endOffset, currentValue.endOffset, context)

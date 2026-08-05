@@ -1,15 +1,18 @@
-import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
 
-export const deleteOrphanedHoles = (project: ProjectSchema, _computedProject: ComputedProjectSchema): ProjectSchema => {
-  const holes = project.holes.filter((hole) => isDefined(project.components[hole.componentId]))
+export const deleteOrphanedHoles = (
+  subProject: SubProjectSchema,
+  _computedProject: ComputedSubProjectSchema,
+): SubProjectSchema => {
+  const holes = subProject.holes.filter((hole) => isDefined(subProject.components[hole.componentId]))
 
-  if (holes.length === project.holes.length) {
-    return project
+  if (holes.length === subProject.holes.length) {
+    return subProject
   }
 
   return {
-    ...project,
+    ...subProject,
     holes,
   }
 }

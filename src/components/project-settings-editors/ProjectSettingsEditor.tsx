@@ -2,7 +2,7 @@ import { Spacer, Tabs } from '@chakra-ui/react'
 import type { FC, ReactNode } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { ProjectSchema } from '../../schemas/project'
+import type { SubProjectSchema } from '../../schemas/subProject'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { SectionGroup } from '../common/SectionGroup'
@@ -11,10 +11,10 @@ import { ProjectComponentSettingsSection } from './ProjectComponentSettingsSecti
 import { ProjectStitchingSection } from './ProjectStitchingSection'
 
 type ProjectSettingsEditorProps = {
-  editable: EditableSchema<ProjectSchema>
-  issues: ValidationIssuesSchema<ProjectSchema>
+  editable: EditableSchema<SubProjectSchema>
+  issues: ValidationIssuesSchema<SubProjectSchema>
   menu?: ReactNode
-  onChange: (updated: EditableSchema<ProjectSchema>) => void
+  onChange: (updated: EditableSchema<SubProjectSchema>) => void
 }
 
 export const ProjectSettingsEditor: FC<ProjectSettingsEditorProps> = ({ editable, issues, menu, onChange }) => {

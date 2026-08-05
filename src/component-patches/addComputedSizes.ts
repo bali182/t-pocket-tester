@@ -1,12 +1,15 @@
-import { updateProjectComponents } from '../operations/project/utils/updateProjectComponents'
-import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
+import { updateProjectComponents } from '../operations/subProject/utils/updateProjectComponents'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 
-export const addComputedSizes = (project: ProjectSchema, computedProject: ComputedProjectSchema): ProjectSchema => {
-  if (!project.editingSettings.addComputedSizesToAutoSized) {
-    return project
+export const addComputedSizes = (
+  subProject: SubProjectSchema,
+  computedProject: ComputedSubProjectSchema,
+): SubProjectSchema => {
+  if (!subProject.editingSettings.addComputedSizesToAutoSized) {
+    return subProject
   }
 
-  return updateProjectComponents(project, computedProject, (_id, component, computedComponent) => {
+  return updateProjectComponents(subProject, computedProject, (_id, component, computedComponent) => {
     switch (component.type) {
       case 'root-panel':
         return component

@@ -7,6 +7,7 @@ import { useProjects } from '../../hooks/useProjects'
 import { useTranslation } from '../../translations/translation'
 import { CreateProjectDialog } from '../CreateProjectDialog'
 
+// TODO Should list real projects, not subProjects.
 export const ProjectsRoute: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const { projects } = useProjects()

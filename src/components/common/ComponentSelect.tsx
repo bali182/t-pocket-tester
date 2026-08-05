@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC } from 'react'
 
-import { useProject } from '../../hooks/useProject'
+import { useSubProject } from '../../hooks/useSubProject'
 import type { ComponentSchema } from '../../schemas/components'
 import { useTranslation } from '../../translations/translation'
 import { getComponentIcon } from '../../utils/getComponentIcon'
@@ -22,19 +22,19 @@ type ComponentSelectProps = {
 
 export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, componentTypes, onChange }) => {
   const t = useTranslation()
-  const { project } = useProject()
-  const component = isDefined(componentId) ? project.components[componentId] : undefined
+  const { subProject } = useSubProject()
+  const component = isDefined(componentId) ? subProject.components[componentId] : undefined
   const Icon = getComponentIcon(component?.type ?? 'panel')
   const collection = useMemo<ListCollection<ComponentSchema>>(
     () =>
       createListCollection<ComponentSchema>({
         itemToString: (item) => item.name,
         itemToValue: (item) => item.id,
-        items: Object.values(project.components).filter(
+        items: Object.values(subProject.components).filter(
           (component) => !isDefined(componentTypes) || componentTypes.includes(component.type),
         ),
       }),
-    [componentTypes, project.components],
+    [componentTypes, subProject.components],
   )
 
   const handleValueChange = useCallback(

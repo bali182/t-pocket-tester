@@ -1,10 +1,10 @@
-import type { ProjectSchema } from '../../../schemas/project'
+import type { SubProjectSchema } from '../../../schemas/subProject'
 import { getComponentChildIds } from './getComponentChildIds'
 
-export const getComponentAncestorIds = (componentId: string, project: ProjectSchema): string[] => {
+export const getComponentAncestorIds = (componentId: string, subProject: SubProjectSchema): string[] => {
   const parentIdsByChildId = new Map<string, string>()
 
-  for (const component of Object.values(project.components)) {
+  for (const component of Object.values(subProject.components)) {
     for (const childId of getComponentChildIds(component)) {
       parentIdsByChildId.set(childId, component.id)
     }

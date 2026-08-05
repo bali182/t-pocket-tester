@@ -8,7 +8,7 @@ import type {
   ComputedRootPanelSchema,
 } from '../schemas/computed'
 import type { RectSchema } from '../schemas/geometry'
-import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import type { ResolvedStitchLineSchema } from '../schemas/stitching'
 import { getResolvedStitchLine } from '../utils/getResolvedStitchLine'
 import { isDefined } from '../utils/isDefined'
@@ -20,16 +20,16 @@ import { calculateRectPath } from './calculateRectPath'
 import { getNormalizedCornerRadius } from './cornerRadiusUtils'
 import { calculateStitchLines } from './stitching/calculateStitchLines'
 
-export const getComputedProject = (project: ProjectSchema): ComputedProjectSchema => {
-  const rootComponent = project.components[project.root]
+export const getComputedProject = (subProject: SubProjectSchema): ComputedSubProjectSchema => {
+  const rootComponent = subProject.components[subProject.root]
 
   if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {
-    throw new Error(`Root component not found: ${project.root}`)
+    throw new Error(`Root component not found: ${subProject.root}`)
   }
 
   const computedComponents: Record<string, ComputedComponentSchema> = {}
-  const resolvedStitchLines = project.stitchLines.map((stitchLine) =>
-    getResolvedStitchLine(stitchLine, project.stitchingSettings),
+  const resolvedStitchLines = subProject.stitchLines.map((stitchLine) =>
+    getResolvedStitchLine(stitchLine, subProject.stitchingSettings),
   )
   const rootBoundingRect: RectSchema = {
     x: new BigNumber(0),
@@ -37,20 +37,20 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
     width: new BigNumber(rootComponent.width),
     height: new BigNumber(rootComponent.height),
   }
-  const root = computeRootPanel(rootComponent, rootBoundingRect, project, resolvedStitchLines, computedComponents)
-  const holes = calculateHoles(project.holes, computedComponents)
+  const root = computeRootPanel(rootComponent, rootBoundingRect, subProject, resolvedStitchLines, computedComponents)
+  const holes = calculateHoles(subProject.holes, computedComponents)
   const stitchLines = calculateStitchLines(
     resolvedStitchLines,
-    project.components,
+    subProject.components,
     computedComponents,
-    project.holes,
+    subProject.holes,
     holes,
   )
   applyHolePathsToComputedComponents(computedComponents, holes)
 
   return {
-    id: project.id,
-    name: project.name,
+    id: subProject.id,
+    name: subProject.name,
     root: root.componentId,
     components: computedComponents,
     holes,
@@ -61,15 +61,15 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
 const computeComponent = (
   component: ComponentSchema,
   boundingRect: RectSchema,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedComponentSchema => {
   switch (component.type) {
     case 'root-panel':
-      return computeRootPanel(component, boundingRect, project, resolvedStitchLines, computedComponents)
+      return computeRootPanel(component, boundingRect, subProject, resolvedStitchLines, computedComponents)
     case 'panel':
-      return computePanel(component, boundingRect, project, resolvedStitchLines, computedComponents)
+      return computePanel(component, boundingRect, subProject, resolvedStitchLines, computedComponents)
     case 'pocket-cluster':
       return computePocketCluster(component, boundingRect, resolvedStitchLines, computedComponents)
   }
@@ -78,7 +78,7 @@ const computeComponent = (
 const computeRootPanel = (
   rootPanel: RootPanelSchema,
   boundingRect: RectSchema,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedRootPanelSchema => {
@@ -87,7 +87,7 @@ const computeRootPanel = (
     componentId: rootPanel.id,
     boundingRect,
     path: calculateRectPath(boundingRect, getNormalizedCornerRadius(rootPanel)),
-    children: computeLayoutChildren(rootPanel, boundingRect, project, resolvedStitchLines, computedComponents),
+    children: computeLayoutChildren(rootPanel, boundingRect, subProject, resolvedStitchLines, computedComponents),
   }
 
   computedComponents[rootPanel.id] = computed
@@ -98,7 +98,7 @@ const computeRootPanel = (
 const computePanel = (
   panel: PanelSchema,
   boundingRect: RectSchema,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedPanelSchema => {
@@ -107,7 +107,7 @@ const computePanel = (
     componentId: panel.id,
     boundingRect,
     path: calculateRectPath(boundingRect, getNormalizedCornerRadius(panel)),
-    children: computeLayoutChildren(panel, boundingRect, project, resolvedStitchLines, computedComponents),
+    children: computeLayoutChildren(panel, boundingRect, subProject, resolvedStitchLines, computedComponents),
   }
 
   computedComponents[panel.id] = computed
@@ -139,11 +139,11 @@ const computePocketCluster = (
 const computeLayoutChildren = (
   component: RootPanelSchema | PanelSchema,
   boundingRect: RectSchema,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedComponentSchema[] => {
-  return calculateLayoutBoundingBoxes(component, project, boundingRect).map(([child, childBoundingRect]) =>
-    computeComponent(child, childBoundingRect, project, resolvedStitchLines, computedComponents),
+  return calculateLayoutBoundingBoxes(component, subProject, boundingRect).map(([child, childBoundingRect]) =>
+    computeComponent(child, childBoundingRect, subProject, resolvedStitchLines, computedComponents),
   )
 }

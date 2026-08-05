@@ -1,16 +1,16 @@
 import { useCallback, type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { ProjectSchema } from '../../schemas/project'
+import type { SubProjectSchema } from '../../schemas/subProject'
 import type { StitchLineCommonConfigSchema } from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { SectionGroup } from '../common/SectionGroup'
 import { StitchingSettingsSection } from '../stitch-line-editors/sections/StitchingSettingsSection'
 
 type ProjectStitchingSectionProps = {
-  editable: EditableSchema<ProjectSchema>
-  issues: ValidationIssuesSchema<ProjectSchema>
-  onChange: (updated: EditableSchema<ProjectSchema>) => void
+  editable: EditableSchema<SubProjectSchema>
+  issues: ValidationIssuesSchema<SubProjectSchema>
+  onChange: (updated: EditableSchema<SubProjectSchema>) => void
 }
 
 export const ProjectStitchingSection: FC<ProjectStitchingSectionProps> = ({ editable, issues, onChange }) => {

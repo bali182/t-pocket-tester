@@ -1,8 +1,8 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
-import { useProject } from '../hooks/useProject'
-import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
+import { useSubProject } from '../hooks/useSubProject'
+import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
@@ -25,7 +25,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   onDelete = noop,
 }) => {
   const t = useTranslation()
-  const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useProject()
+  const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useSubProject()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
   const canClone = useMemo((): boolean => component.type !== 'root-panel', [component.type])

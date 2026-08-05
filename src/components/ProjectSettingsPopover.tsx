@@ -3,8 +3,8 @@ import { useMemo, type FC, type ReactElement, type RefObject } from 'react'
 
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
-import { useProject } from '../hooks/useProject'
 import { useProjects } from '../hooks/useProjects'
+import { useSubProject } from '../hooks/useSubProject'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
 import { validateProjectSchema } from '../validators/validateProjectSchema'
@@ -16,10 +16,11 @@ type ProjectSettingsPopoverProps = {
   trigger: ReactElement
 }
 
+// TODO this editing should be done on the real Project, not SubProject
 export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchorRef, trigger }) => {
   const t = useTranslation()
 
-  const { project, setProject } = useProject()
+  const { subProject, setSubProject } = useSubProject()
   const { projects } = useProjects()
 
   const context = useMemo<ProjectBasedValidationContextSchema>(
@@ -37,10 +38,10 @@ export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchor
   )
 
   const { editableValue, setValue, validationIssues } = useEditableModel({
-    commit: setProject,
+    commit: setSubProject,
     context,
     validate: validateProjectSchema,
-    value: project,
+    value: subProject,
   })
 
   return (
@@ -51,7 +52,7 @@ export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchor
           <ProjectSettingsEditor
             editable={editableValue}
             issues={validationIssues}
-            menu={<ProjectActionsMenu projectId={project.id} size="xs" />}
+            menu={<ProjectActionsMenu projectId={subProject.id} size="xs" />}
             onChange={setValue}
           />
         </Popover.Content>

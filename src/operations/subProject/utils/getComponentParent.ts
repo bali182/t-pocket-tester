@@ -1,12 +1,12 @@
 import type { PanelSchema, RootPanelSchema } from '../../../schemas/components'
-import type { ProjectSchema } from '../../../schemas/project'
+import type { SubProjectSchema } from '../../../schemas/subProject'
 import { hasComponentChildren } from './hasComponentChildren'
 
 export const getComponentParent = (
   componentId: string,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
 ): RootPanelSchema | PanelSchema | undefined => {
-  return Object.values(project.components).find(
+  return Object.values(subProject.components).find(
     (component): component is RootPanelSchema | PanelSchema =>
       hasComponentChildren(component) && component.children.includes(componentId),
   )

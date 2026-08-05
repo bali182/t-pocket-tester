@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 
 import { useEditableComponent } from '../../hooks/useEditableComponent'
-import { useProject } from '../../hooks/useProject'
+import { useSubProject } from '../../hooks/useSubProject'
 import type { ComponentSchema } from '../../schemas/components'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
@@ -17,7 +17,7 @@ type ComponentFloatingEditorProps = {
 }
 
 export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anchorElement, component, onClose }) => {
-  const { project } = useProject()
+  const { subProject } = useSubProject()
   const {
     component: editedComponent,
     editableComponent,
@@ -33,7 +33,7 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
       />
       <SectionGroup.Root>
         <ComponentEditor
-          baseColor={project.componentSettings.baseColor}
+          baseColor={subProject.componentSettings.baseColor}
           component={editedComponent}
           editable={editableComponent}
           issues={validationIssues}

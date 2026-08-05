@@ -1,22 +1,22 @@
 import type { ComponentSchema } from '../../../schemas/components'
-import type { ProjectSchema } from '../../../schemas/project'
+import type { SubProjectSchema } from '../../../schemas/subProject'
 import { isDefined } from '../../../utils/isDefined'
 import { hasComponentChildren } from './hasComponentChildren'
 
-export const getComponentNestingLevel = (componentId: string, project: ProjectSchema): number => {
-  const rootComponent = project.components[project.root]
+export const getComponentNestingLevel = (componentId: string, subProject: SubProjectSchema): number => {
+  const rootComponent = subProject.components[subProject.root]
 
   if (!isDefined(rootComponent)) {
     return 0
   }
 
-  return findComponentNestingLevel(componentId, rootComponent, project) ?? 0
+  return findComponentNestingLevel(componentId, rootComponent, subProject) ?? 0
 }
 
 const findComponentNestingLevel = (
   componentId: string,
   component: ComponentSchema,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   currentNestingLevel = 0,
 ): number | undefined => {
   if (component.id === componentId) {
@@ -28,13 +28,13 @@ const findComponentNestingLevel = (
   }
 
   for (const childId of component.children) {
-    const child = project.components[childId]
+    const child = subProject.components[childId]
 
     if (!isDefined(child)) {
       continue
     }
 
-    const childNestingLevel = findComponentNestingLevel(componentId, child, project, currentNestingLevel + 1)
+    const childNestingLevel = findComponentNestingLevel(componentId, child, subProject, currentNestingLevel + 1)
 
     if (isDefined(childNestingLevel)) {
       return childNestingLevel

@@ -1,15 +1,15 @@
 import typia from 'typia'
 
-import type { ProjectSchema } from '../schemas/project'
+import type { SubProjectSchema } from '../schemas/subProject'
 import type { SvgExportParamsSchema } from '../schemas/svgExport'
 
 type StorageKey = 'projects' | 'scaling' | 'svg-export-params'
 
-export const readProjectsFromStorage = (): ProjectSchema[] => {
-  return safeReadStorage<ProjectSchema[]>('projects', [], (raw) => typia.assert<ProjectSchema[]>(raw))
+export const readProjectsFromStorage = (): SubProjectSchema[] => {
+  return safeReadStorage<SubProjectSchema[]>('projects', [], (raw) => typia.assert<SubProjectSchema[]>(raw))
 }
 
-export const saveProjectsToStorage = (projects: ProjectSchema[]): void => {
+export const saveProjectsToStorage = (projects: SubProjectSchema[]): void => {
   safeWriteStorage('projects', projects)
 }
 
