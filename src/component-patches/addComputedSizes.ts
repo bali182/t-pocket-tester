@@ -1,11 +1,13 @@
 import { updateProjectComponents } from '../operations/subProject/utils/updateProjectComponents'
+import type { ProjectEditingSettingSchema } from '../schemas/editingSettings'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 
 export const addComputedSizes = (
   subProject: SubProjectSchema,
   computedProject: ComputedSubProjectSchema,
+  editingSettings: ProjectEditingSettingSchema,
 ): SubProjectSchema => {
-  if (!subProject.editingSettings.addComputedSizesToAutoSized) {
+  if (!editingSettings.addComputedSizesToAutoSized) {
     return subProject
   }
 

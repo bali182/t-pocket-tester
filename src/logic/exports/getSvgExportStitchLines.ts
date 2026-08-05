@@ -26,6 +26,7 @@ export const getSvgExportStitchLines = (
   computedSubProject: ComputedSubProjectSchema,
   target: ComputedSvgExportStitchLineTarget,
   stitchLineMode: SvgExportStitchLineModeSchema,
+  stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportStitchLineSchema[] => {
   const candidateStitchLines = getCandidateStitchLines(
     subProject.stitchLines,
@@ -46,7 +47,7 @@ export const getSvgExportStitchLines = (
     const svgExportStitchLine = getSvgExportStitchLine(
       stitchLine,
       computedStitchLine,
-      subProject.stitchingSettings,
+      stitchingSettings,
       target.path,
       getExportRoutes(computedSubProject, stitchLine, computedStitchLine, target, stitchLineMode),
     )

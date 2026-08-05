@@ -1,5 +1,5 @@
 import type { EditableSchema } from '../schemas/editable'
-import type { SubProjectSchema } from '../schemas/subProject'
+import type { ProjectSchema } from '../schemas/project'
 import type {
   ProjectBasedValidationContextSchema,
   ValidationIssuesSchema,
@@ -11,10 +11,10 @@ import { validateName } from './validateName'
 import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
 
 export const validateProjectSchema = (
-  input: EditableSchema<SubProjectSchema>,
-  currentValue: SubProjectSchema,
+  input: EditableSchema<ProjectSchema>,
+  currentValue: ProjectSchema,
   context: ProjectBasedValidationContextSchema,
-): ValidationResultSchema<SubProjectSchema> => {
+): ValidationResultSchema<ProjectSchema> => {
   const nameResult = validateName(input.name, currentValue.name, currentValue.id, context.projects, context)
   const stitchingSettingsResult = validateStitchLineCommonConfigSchema(
     input.stitchingSettings,
@@ -26,8 +26,7 @@ export const validateProjectSchema = (
     currentValue.componentSettings.baseColor,
     context,
   )
-  const issues: ValidationIssuesSchema<SubProjectSchema> = {
-    components: {},
+  const issues: ValidationIssuesSchema<ProjectSchema> = {
     editingSettings: {
       addComputedSizesToAutoSized: undefined,
       adjustCornerRadiiToParent: undefined,
@@ -35,22 +34,17 @@ export const validateProjectSchema = (
     },
     id: undefined,
     name: nameResult.issues,
-    root: undefined,
-    holes: [],
-    stitchLines: [],
+    subProjects: [],
     componentSettings: {
       baseColor: componentSettingsResult.issues,
     },
     stitchingSettings: stitchingSettingsResult.issues,
   }
-  const committedValue: SubProjectSchema = {
-    components: currentValue.components,
+  const committedValue: ProjectSchema = {
     editingSettings: currentValue.editingSettings,
     id: currentValue.id,
     name: nameResult.committedValue,
-    root: currentValue.root,
-    holes: currentValue.holes,
-    stitchLines: currentValue.stitchLines,
+    subProjects: currentValue.subProjects,
     stitchingSettings: stitchingSettingsResult.committedValue,
     componentSettings: {
       baseColor: componentSettingsResult.committedValue,

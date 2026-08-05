@@ -1,6 +1,7 @@
 import type { DecimalLocale } from 'validator/es/lib/isDecimal'
 
 import type { TranslationSchema } from '../translations/translationSchema'
+import type { ProjectSchema } from './project'
 import type { ComputedSubProjectSchema, SubProjectSchema } from './subProject'
 
 export type SeveritySchema = 'error' | 'warning' | 'info'
@@ -38,10 +39,11 @@ export type BaseValidationContextSchema = {
 }
 
 export type ComponentBasedValidationContextSchema = BaseValidationContextSchema & {
+  project: ProjectSchema
   subProject: SubProjectSchema
   computedSubProject: ComputedSubProjectSchema
 }
 
 export type ProjectBasedValidationContextSchema = BaseValidationContextSchema & {
-  projects: readonly SubProjectSchema[]
+  projects: readonly ProjectSchema[]
 }

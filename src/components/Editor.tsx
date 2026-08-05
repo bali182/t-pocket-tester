@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react'
 import { type FC } from 'react'
+import { Outlet } from 'react-router'
 
-import { EditorContent } from './EditorContent'
 import { EditorMenu } from './EditorMenu'
 import { EditorSubProjectTabs } from './EditorSubProjectTabs'
 
@@ -20,7 +20,7 @@ export const Editor: FC = () => {
     >
       <EditorMenu />
       <Box flex="1" minHeight="0" minWidth="0" overflow="hidden">
-        <EditorContent />
+        <Outlet />
       </Box>
       <Box flexShrink="0">
         <EditorSubProjectTabs />

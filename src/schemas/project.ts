@@ -1,7 +1,7 @@
 import { HasIdentitySchema } from './common'
 import { ComponentBaseSettings, ProjectEditingSettingSchema } from './editingSettings'
 import { StitchLineCommonConfigSchema } from './stitching'
-import { SubProjectSchema } from './subProject'
+import { ComputedSubProjectSchema, SubProjectSchema } from './subProject'
 
 export type ProjectSchema = HasIdentitySchema & {
   subProjects: SubProjectSchema[]
@@ -11,5 +11,5 @@ export type ProjectSchema = HasIdentitySchema & {
 }
 
 export type ComputedProjectSchema = HasIdentitySchema & {
-  subProjects: ComputedProjectSchema[]
+  subProjects: ComputedSubProjectSchema[]
 }

@@ -19,11 +19,11 @@ export const validateStitchLineCommonConfigOverridesSchema = (
   context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<StitchLineCommonConfigOverridesSchema> => {
   const resolvedEditable = {
-    ...getEditableSchema(context.subProject.stitchingSettings, { language: context.language }),
+    ...getEditableSchema(context.project.stitchingSettings, { language: context.language }),
     ...input,
   }
   const resolvedCurrentValue = {
-    ...context.subProject.stitchingSettings,
+    ...context.project.stitchingSettings,
     ...currentValue,
   }
   const resolvedResult = validateStitchLineCommonConfigSchema(resolvedEditable, resolvedCurrentValue, context)

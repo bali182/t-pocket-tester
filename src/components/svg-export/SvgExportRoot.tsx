@@ -4,18 +4,20 @@ import type { FC } from 'react'
 import { DrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useSvgDrawArea } from '../../hooks/useSvgDrawArea'
 import type { SubProjectSchema } from '../../schemas/subProject'
+import type { ProjectSchema } from '../../schemas/project'
 import type { SvgExportSchema } from '../../schemas/svgExport'
 import { ExportFrontPocket } from './ExportFrontPocket'
 import { ExportPanel } from './ExportPanel'
 import { ExportTPocket } from './ExportTPocket'
 
 type SvgExportRootProps = {
+  project: ProjectSchema
   subProject: SubProjectSchema
   svgExport: SvgExportSchema
 }
 
-export const SvgExportRoot: FC<SvgExportRootProps> = ({ subProject, svgExport }) => {
-  const drawAreaContextValue = useSvgDrawArea(subProject, svgExport.params)
+export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, subProject, svgExport }) => {
+  const drawAreaContextValue = useSvgDrawArea(subProject, project.stitchingSettings, svgExport.params)
   const padding = new BigNumber(svgExport.params.padding)
   const width = svgExport.contentWidth.plus(padding.times(2))
   const height = svgExport.contentHeight.plus(padding.times(2))

@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router'
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
 import { useProjects } from '../hooks/useProjects'
-import type { SubProjectSchema } from '../schemas/subProject'
+import type { ProjectSchema } from '../schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
-import { createSubProject } from '../utils/createSubProject'
+import { createProject } from '../utils/createProject'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
 import { validateProjectSchema } from '../validators/validateProjectSchema'
 import { ProjectSettingsEditor } from './project-settings-editors/ProjectSettingsEditor'
@@ -23,14 +23,14 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
   const { addProject, projects } = useProjects()
   const navigate = useNavigate()
   const t = useTranslation()
-  const [subProject, setSubProject] = useState<SubProjectSchema>(() => createSubProject(t.defaults.subProjectName, t))
+  const [project, setProject] = useState<ProjectSchema>(() => createProject(t.defaults.subProjectName, t))
 
   useEffect(() => {
     if (!isOpen) {
       return
     }
 
-    setSubProject(createSubProject(t.defaults.subProjectName, t))
+    setProject(createProject(t.defaults.subProjectName, t))
   }, [isOpen, t])
 
   const context = useMemo<ProjectBasedValidationContextSchema>(
@@ -38,18 +38,18 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
     [projects, t],
   )
 
-  const commit = useCallback((updatedSubProject: SubProjectSchema): void => {
-    setSubProject(updatedSubProject)
+  const commit = useCallback((updatedProject: ProjectSchema): void => {
+    setProject(updatedProject)
   }, [])
 
   const { editableValue, setValue, validationIssues } = useEditableModel({
     commit,
     context,
     validate: validateProjectSchema,
-    value: subProject,
+    value: project,
   })
 
-  const hasErrors = useMemo(() => hasValidationErrors<SubProjectSchema>(validationIssues), [validationIssues])
+  const hasErrors = useMemo(() => hasValidationErrors<ProjectSchema>(validationIssues), [validationIssues])
 
   const handleOpenChange = useCallback(
     (details: Dialog.OpenChangeDetails): void => {
@@ -62,7 +62,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
     (event: FormEvent<HTMLFormElement>): void => {
       event.preventDefault()
 
-      const validationResult = validateProjectSchema(editableValue, subProject, context)
+      const validationResult = validateProjectSchema(editableValue, project, context)
 
       if (!validationResult.isValid) {
         return
@@ -73,7 +73,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
       onOpenChange(false)
       navigate(`/projects/${createdProject.id}`)
     },
-    [addProject, context, editableValue, navigate, onOpenChange, subProject],
+    [addProject, context, editableValue, navigate, onOpenChange, project],
   )
 
   return (

@@ -23,7 +23,7 @@ type SvgExportDialogProps = {
 }
 
 export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange }) => {
-  const { computedSubProject, subProject } = useSubProject()
+  const { computedSubProject, project, subProject } = useSubProject()
   const [storedParams, setStoredParams] = useAtom(svgExportParamsAtom)
   const t = useTranslation()
   const context = useMemo<BaseValidationContextSchema>(() => ({ language: LANGUAGE, t }), [t])
@@ -83,12 +83,12 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
         return
       }
 
-      const svg = renderSvgToString(subProject, computedSubProject, submitValidationResult.value)
+      const svg = renderSvgToString(project, subProject, computedSubProject, submitValidationResult.value)
       downloadSvg(svg, `${subProject.name}.svg`)
       setStoredParams(submitValidationResult.value)
       onOpenChange(false)
     },
-    [computedSubProject, context, editableParams, exportParams, onOpenChange, subProject, setStoredParams],
+    [computedSubProject, context, editableParams, exportParams, onOpenChange, project, subProject, setStoredParams],
   )
 
   return (

@@ -4,7 +4,7 @@ import { useMemo, type FC, type ReactElement, type RefObject } from 'react'
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
 import { useProjects } from '../hooks/useProjects'
-import { useSubProject } from '../hooks/useSubProject'
+import { useProject } from '../hooks/useProject'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
 import { validateProjectSchema } from '../validators/validateProjectSchema'
@@ -20,7 +20,7 @@ type ProjectSettingsPopoverProps = {
 export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchorRef, trigger }) => {
   const t = useTranslation()
 
-  const { subProject, setSubProject } = useSubProject()
+  const { project, setProject } = useProject()
   const { projects } = useProjects()
 
   const context = useMemo<ProjectBasedValidationContextSchema>(
@@ -38,10 +38,10 @@ export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchor
   )
 
   const { editableValue, setValue, validationIssues } = useEditableModel({
-    commit: setSubProject,
+    commit: setProject,
     context,
     validate: validateProjectSchema,
-    value: subProject,
+    value: project,
   })
 
   return (
@@ -52,7 +52,7 @@ export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchor
           <ProjectSettingsEditor
             editable={editableValue}
             issues={validationIssues}
-            menu={<ProjectActionsMenu projectId={subProject.id} size="xs" />}
+            menu={<ProjectActionsMenu projectId={project.id} size="xs" />}
             onChange={setValue}
           />
         </Popover.Content>

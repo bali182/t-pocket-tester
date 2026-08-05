@@ -13,6 +13,7 @@ import {
 } from '../contexts/DrawAreaContext'
 import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
 import type { SubProjectSchema } from '../schemas/subProject'
+import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { SvgExportParamsSchema } from '../schemas/svgExport'
 import { useTranslation } from '../translations/translation'
 import { noop } from '../utils/noop'
@@ -34,7 +35,11 @@ const drawAreaSelection: DrawAreaSelection = {
   editorSelection: undefined,
 }
 
-export const useSvgDrawArea = (subProject: SubProjectSchema, params: SvgExportParamsSchema): DrawAreaContextValue => {
+export const useSvgDrawArea = (
+  subProject: SubProjectSchema,
+  stitchingSettings: StitchLineCommonConfigSchema,
+  params: SvgExportParamsSchema,
+): DrawAreaContextValue => {
   const t = useTranslation()
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
@@ -59,14 +64,14 @@ export const useSvgDrawArea = (subProject: SubProjectSchema, params: SvgExportPa
     () => ({
       getLineColor: produce(STROKE_COLOR),
       getLineThickness: (stitchLine) => {
-        return stitchLine.stitchLineThickness ?? subProject.stitchingSettings.stitchLineThickness
+        return stitchLine.stitchLineThickness ?? stitchingSettings.stitchLineThickness
       },
       getStitchHoleColor: produce(STROKE_COLOR),
       getStitchHoleThickness: (stitchLine) => {
-        return stitchLine.stitchHoleThickness ?? subProject.stitchingSettings.stitchHoleThickness
+        return stitchLine.stitchHoleThickness ?? stitchingSettings.stitchHoleThickness
       },
     }),
-    [subProject.stitchingSettings.stitchHoleThickness, subProject.stitchingSettings.stitchLineThickness],
+    [stitchingSettings.stitchHoleThickness, stitchingSettings.stitchLineThickness],
   )
 
   const holeStyles = useMemo<DrawAreaHoleStyles>(

@@ -1,5 +1,7 @@
+import type { Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+
 import { addComponent as addComponentPure } from '../operations/subProject/addComponent'
 import { addHole as addHolePure } from '../operations/subProject/addHole'
 import { addStitchLine as addStitchLinePure } from '../operations/subProject/addStitchLine'
@@ -21,218 +23,249 @@ import { createStitchLine } from '../operations/subProject/utils/createStitchLin
 import { getUnusedComponentName } from '../operations/subProject/utils/getUnusedComponentName'
 import { getUnusedHoleName } from '../operations/subProject/utils/getUnusedHoleName'
 import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
-import { ComponentSchema } from '../schemas/components'
-import { HoleSchema } from '../schemas/hole'
-import { StitchLineSchema } from '../schemas/stitching'
-import { lastTouchedComponentAtom } from '../state/lastTouchedComponentAtom'
-import { subProjectAtom } from '../state/subProjectAtom'
+import type { ComponentSchema } from '../schemas/components'
+import type { HoleSchema } from '../schemas/hole'
+import type { ProjectSchema } from '../schemas/project'
+import type { StitchLineSchema } from '../schemas/stitching'
+import type { SubProjectSchema } from '../schemas/subProject'
+import { projectAtomFamily, subProjectAtomFamily, type SubProjectAtomReferenceSchema } from '../state/projectAtoms'
 import { useTranslation } from '../translations/translation'
-import { getRequiredSubProject } from '../utils/atomUtils'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
-import { id as idPure } from '../utils/id'
+import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
+import { useOptionalSubProject } from './useOptionalSubProject'
 
 export const useSubProjectOperations = () => {
+  const value = useOptionalSubProject()
   const t = useTranslation()
 
-  // In the future if this becomes a problem, do a uniqueness-check before assigning an id.
-  const componentId = useCallback(() => idPure(), [])
-  const stitchLineId = useCallback(() => idPure(), [])
+  const reference = useMemo<SubProjectAtomReferenceSchema>(
+    () => ({
+      projectId: value?.project.id,
+      subProjectId: value?.subProject.id,
+    }),
+    [value?.project.id, value?.subProject.id],
+  )
 
   const addComponent = useAtomCallback(
     useCallback(
       (get, set, parentId: string, type: ComponentSchema['type']): ComponentSchema => {
-        const subProject = getRequiredSubProject(get)
+        const [project, subProject] = ensureProject(get, reference)
         const component = createComponent({
           type,
-          color: subProject.editingSettings.addBaseColorByDefault ? subProject.componentSettings.baseColor : undefined,
-          id: componentId(),
+          color: project.editingSettings.addBaseColorByDefault ? project.componentSettings.baseColor : undefined,
+          id: id(),
           name: getUnusedComponentName(type, subProject, t),
         })
-        set(subProjectAtom, addComponentPure(subProject, { parentId, component }))
-        set(lastTouchedComponentAtom, { projectId: subProject.id, componentId: component.id })
+        set(subProjectAtomFamily(reference), addComponentPure(subProject, { parentId, component }))
         return component
       },
-      [componentId, t],
+      [reference, t],
     ),
   )
 
   const addStitchLineToComponent = useAtomCallback(
     useCallback(
-      (get, set, componentId: string, stitchLineType: StitchLineSchema['type']): StitchLineSchema => {
-        const subProject = getRequiredSubProject(get)
+      (get, set, componentId: string, type: StitchLineSchema['type']): StitchLineSchema => {
+        const [, subProject] = ensureProject(get, reference)
         const stitchLine = createStitchLine(
-          stitchLineType,
+          type,
           { targetId: componentId, targetType: 'component' },
-          stitchLineId(),
+          id(),
           getUnusedStitchLineName(subProject, t),
         )
-        set(subProjectAtom, addStitchLinePure(subProject, { stitchLine }))
+        set(subProjectAtomFamily(reference), addStitchLinePure(subProject, { stitchLine }))
         return stitchLine
       },
-      [stitchLineId, t],
+      [reference, t],
     ),
   )
 
   const addStitchLineToHole = useAtomCallback(
     useCallback(
       (get, set, holeId: string): StitchLineSchema => {
-        const subProject = getRequiredSubProject(get)
+        const [, subProject] = ensureProject(get, reference)
         const stitchLine = createStitchLine(
           'component-bounds-stitch-line',
           { targetId: holeId, targetType: 'hole' },
-          stitchLineId(),
+          id(),
           getUnusedStitchLineName(subProject, t),
         )
-
-        set(subProjectAtom, addStitchLinePure(subProject, { stitchLine }))
+        set(subProjectAtomFamily(reference), addStitchLinePure(subProject, { stitchLine }))
         return stitchLine
       },
-      [stitchLineId, t],
+      [reference, t],
     ),
   )
 
-  const addHole = useAtomCallback((get, set, componentId: string): HoleSchema => {
-    const subProject = getRequiredSubProject(get)
-    const hole = createHole({
-      componentId,
-      id: idPure(),
-      name: getUnusedHoleName(subProject, t),
-    })
-    set(subProjectAtom, addHolePure(subProject, { hole }))
-    return hole
-  })
+  const addHole = useAtomCallback(
+    useCallback(
+      (get, set, componentId: string): HoleSchema => {
+        const [, subProject] = ensureProject(get, reference)
+        const hole = createHole({
+          componentId,
+          id: id(),
+          name: getUnusedHoleName(subProject, t),
+        })
+        set(subProjectAtomFamily(reference), addHolePure(subProject, { hole }))
+        return hole
+      },
+      [reference, t],
+    ),
+  )
 
   const cloneComponent = useAtomCallback(
     useCallback(
-      (get, set, sourceComponentId: string): void => {
-        const subProject = getRequiredSubProject(get)
-        const cloneResult = cloneComponentPure(subProject, {
-          componentId: sourceComponentId,
-          getUnusedId: componentId,
-          getUnusedName: getUnusedName,
+      (get, set, componentId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        const result = cloneComponentPure(subProject, {
+          componentId,
+          getUnusedId: id,
+          getUnusedName,
         })
-
-        if (!isDefined(cloneResult)) {
+        if (!isDefined(result)) {
           return
         }
-
-        set(subProjectAtom, cloneResult.subProject)
-        set(lastTouchedComponentAtom, { projectId: subProject.id, componentId: cloneResult.clonedRootId })
+        set(subProjectAtomFamily(reference), result.subProject)
       },
-      [componentId],
+      [reference],
     ),
   )
 
   const deleteComponent = useAtomCallback(
-    useCallback((get, set, componentId: string): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, deleteComponentPure(subProject, { componentId }))
-    }, []),
+    useCallback(
+      (get, set, componentId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), deleteComponentPure(subProject, { componentId }))
+      },
+      [reference],
+    ),
   )
 
   const cloneHole = useAtomCallback(
-    useCallback((get, set, holeId: string): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, cloneHolePure(subProject, { holeId, getUnusedId: idPure, getUnusedName }))
-    }, []),
+    useCallback(
+      (get, set, holeId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), cloneHolePure(subProject, { holeId, getUnusedId: id, getUnusedName }))
+      },
+      [reference],
+    ),
   )
 
   const deleteHole = useAtomCallback(
-    useCallback((get, set, holeId: string): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, deleteHolePure(subProject, { holeId }))
-    }, []),
+    useCallback(
+      (get, set, holeId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), deleteHolePure(subProject, { holeId }))
+      },
+      [reference],
+    ),
   )
 
   const cloneStitchLine = useAtomCallback(
     useCallback(
-      (get, set, sourceStitchLineId: string): void => {
-        const subProject = getRequiredSubProject(get)
-        const withClonedStitchLine = cloneStitchLinePure(subProject, {
-          stitchLineId: sourceStitchLineId,
-          getUnusedId: stitchLineId,
-          getUnusedName,
-        })
-        set(subProjectAtom, withClonedStitchLine)
+      (get, set, stitchLineId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(
+          subProjectAtomFamily(reference),
+          cloneStitchLinePure(subProject, { stitchLineId, getUnusedId: id, getUnusedName }),
+        )
       },
-      [stitchLineId],
+      [reference],
     ),
   )
 
   const deleteStitchLine = useAtomCallback(
-    useCallback((get, set, stitchLineId: string): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, deleteStitchLinePure(subProject, { stitchLineId }))
-    }, []),
+    useCallback(
+      (get, set, stitchLineId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), deleteStitchLinePure(subProject, { stitchLineId }))
+      },
+      [reference],
+    ),
   )
 
   const moveComponent = useAtomCallback(
-    useCallback((get, set, componentId: string, targetParentId: string, beforeCompId: string | undefined): void => {
-      const subProject = getRequiredSubProject(get)
-      set(
-        subProjectAtom,
-        moveComponentPure(subProject, { beforeComponentId: beforeCompId, componentId, targetParentId }),
-      )
-    }, []),
+    useCallback(
+      (get, set, componentId: string, targetParentId: string, beforeComponentId: string | undefined): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(
+          subProjectAtomFamily(reference),
+          moveComponentPure(subProject, { beforeComponentId, componentId, targetParentId }),
+        )
+      },
+      [reference],
+    ),
   )
 
   const moveHole = useAtomCallback(
-    useCallback((get, set, holeId: string, targetComponentId: string): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, moveHolePure(subProject, { holeId, targetComponentId }))
-    }, []),
+    useCallback(
+      (get, set, holeId: string, targetComponentId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), moveHolePure(subProject, { holeId, targetComponentId }))
+      },
+      [reference],
+    ),
   )
 
   const moveStitchLineToComponent = useAtomCallback(
-    useCallback((get, set, stitchLineId: string, componentId: string): void => {
-      const subProject = getRequiredSubProject(get)
-      set(
-        subProjectAtom,
-        moveStitchLinePure(subProject, { stitchLineId, targetId: componentId, targetType: 'component' }),
-      )
-    }, []),
+    useCallback(
+      (get, set, stitchLineId: string, componentId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(
+          subProjectAtomFamily(reference),
+          moveStitchLinePure(subProject, {
+            stitchLineId,
+            targetId: componentId,
+            targetType: 'component',
+          }),
+        )
+      },
+      [reference],
+    ),
   )
 
   const moveStitchLineToHole = useAtomCallback(
-    useCallback((get, set, stitchLineId: string, holeId: string): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, moveStitchLinePure(subProject, { stitchLineId, targetId: holeId, targetType: 'hole' }))
-    }, []),
+    useCallback(
+      (get, set, stitchLineId: string, holeId: string): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(
+          subProjectAtomFamily(reference),
+          moveStitchLinePure(subProject, { stitchLineId, targetId: holeId, targetType: 'hole' }),
+        )
+      },
+      [reference],
+    ),
   )
 
   const updateComponent = useAtomCallback(
-    useCallback((get, set, component: ComponentSchema): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, updateComponentPure(subProject, { component }))
-      set(lastTouchedComponentAtom, { projectId: subProject.id, componentId: component.id })
-    }, []),
+    useCallback(
+      (get, set, component: ComponentSchema): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), updateComponentPure(subProject, { component }))
+      },
+      [reference],
+    ),
   )
 
   const updateHole = useAtomCallback(
-    useCallback((get, set, hole: HoleSchema): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, updateHolePure(subProject, { hole }))
-    }, []),
+    useCallback(
+      (get, set, hole: HoleSchema): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), updateHolePure(subProject, { hole }))
+      },
+      [reference],
+    ),
   )
 
   const updateStitchLine = useAtomCallback(
-    useCallback((get, set, stitchLine: StitchLineSchema): void => {
-      const subProject = getRequiredSubProject(get)
-      set(subProjectAtom, updateStitchLinePure(subProject, { stitchLine }))
-    }, []),
-  )
-
-  const touchComponent = useAtomCallback(
-    useCallback((get, set, componentId: string): void => {
-      const subProject = getRequiredSubProject(get)
-
-      if (!isDefined(subProject.components[componentId])) {
-        return
-      }
-
-      set(lastTouchedComponentAtom, { projectId: subProject.id, componentId })
-    }, []),
+    useCallback(
+      (get, set, stitchLine: StitchLineSchema): void => {
+        const [, subProject] = ensureProject(get, reference)
+        set(subProjectAtomFamily(reference), updateStitchLinePure(subProject, { stitchLine }))
+      },
+      [reference],
+    ),
   )
 
   return {
@@ -252,7 +285,17 @@ export const useSubProjectOperations = () => {
     moveStitchLineToHole,
     updateComponent,
     updateHole,
-    touchComponent,
     updateStitchLine,
   }
+}
+
+const ensureProject = (get: Getter, reference: SubProjectAtomReferenceSchema): [ProjectSchema, SubProjectSchema] => {
+  const project = get(projectAtomFamily(reference.projectId))
+  const subProject = get(subProjectAtomFamily(reference))
+
+  if (!isDefined(project) || !isDefined(subProject)) {
+    throw new Error('A valid subproject is required')
+  }
+
+  return [project, subProject]
 }

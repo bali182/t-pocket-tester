@@ -1,5 +1,3 @@
-import { LEATHER_BASE_COLOR } from '../constants/drawing'
-import { defaultStitchingSettings } from '../defaultStates'
 import type { RootPanelSchema } from '../schemas/components'
 import type { SubProjectSchema } from '../schemas/subProject'
 import type { TranslationSchema } from '../translations/translationSchema'
@@ -33,14 +31,5 @@ export const createSubProject = (name: string, t: TranslationSchema): SubProject
     },
     holes: [],
     stitchLines: [],
-    componentSettings: {
-      baseColor: LEATHER_BASE_COLOR,
-    },
-    editingSettings: {
-      addComputedSizesToAutoSized: true,
-      adjustCornerRadiiToParent: true,
-      addBaseColorByDefault: false,
-    },
-    stitchingSettings: { ...defaultStitchingSettings },
   }
 }

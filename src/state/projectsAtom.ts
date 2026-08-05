@@ -1,14 +1,14 @@
 import { atom } from 'jotai'
 import type { SetStateAction } from 'react'
 
-import type { SubProjectSchema } from '../schemas/subProject'
+import type { ProjectSchema } from '../schemas/project'
 import { readProjectsFromStorage, saveProjectsToStorage } from './storage'
 
-const projectsStorageAtom = atom<SubProjectSchema[]>(readProjectsFromStorage())
+const projectsStorageAtom = atom<ProjectSchema[]>(readProjectsFromStorage())
 
 export const projectsAtom = atom(
-  (get): SubProjectSchema[] => get(projectsStorageAtom),
-  (get, set, update: SetStateAction<SubProjectSchema[]>): void => {
+  (get): ProjectSchema[] => get(projectsStorageAtom),
+  (get, set, update: SetStateAction<ProjectSchema[]>): void => {
     const currentProjects = get(projectsStorageAtom)
     const updatedProjects = typeof update === 'function' ? update(currentProjects) : update
 

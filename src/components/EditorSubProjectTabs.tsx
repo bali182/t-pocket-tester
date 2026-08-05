@@ -1,12 +1,25 @@
-import { Tabs } from '@chakra-ui/react'
-import { FC } from 'react'
+import { Button, HStack, Tabs } from '@chakra-ui/react'
+import { type FC } from 'react'
+import { Link, useParams } from 'react-router'
 
-// TODO present the sub-projects under the selected project as tabs
+import { useProject } from '../hooks/useProject'
+import { CreateSubProjectDialog } from './CreateSubProjectDialog'
+
 export const EditorSubProjectTabs: FC = () => {
+  const { project } = useProject()
+  const { subProjectId } = useParams()
+
   return (
-    <Tabs.Root defaultValue="sub-project" size="sm" variant="line" width="100%">
+    <Tabs.Root size="sm" value={subProjectId} variant="line" width="100%">
       <Tabs.List>
-        <Tabs.Trigger value="sub-project">Sub-project</Tabs.Trigger>
+        {project.subProjects.map((subProject) => (
+          <HStack gap="0" key={subProject.id}>
+            <Tabs.Trigger asChild value={subProject.id}>
+              <Link to={`/projects/${project.id}/${subProject.id}`}>{subProject.name}</Link>
+            </Tabs.Trigger>
+          </HStack>
+        ))}
+        <CreateSubProjectDialog trigger={<Button size="xs">+</Button>} />
       </Tabs.List>
     </Tabs.Root>
   )

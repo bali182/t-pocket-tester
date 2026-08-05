@@ -10,7 +10,7 @@ type StitchLinesProps = {
 }
 
 export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
-  const { subProject, computedSubProject } = useSubProject()
+  const { project, subProject, computedSubProject } = useSubProject()
   const stitchLines = subProject.stitchLines.filter((stitchLine) => stitchLine.type === 'component-bounds-stitch-line')
 
   return (
@@ -28,7 +28,7 @@ export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
           return null
         }
 
-        const resolvedStitchLine = getResolvedStitchLine(stitchLine, subProject.stitchingSettings)
+        const resolvedStitchLine = getResolvedStitchLine(stitchLine, project.stitchingSettings)
 
         return (
           <StitchLine

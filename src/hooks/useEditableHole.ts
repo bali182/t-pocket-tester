@@ -9,6 +9,7 @@ import { validateHoleSchema } from '../validators/validateHoleSchema'
 import { useEditableModel } from './useEditableModel'
 import { useHole } from './useHole'
 import { useSubProject } from './useSubProject'
+import { useSubProjectOperations } from './useSubProjectOperations'
 
 export type UseEditableHoleResult = {
   editableHole: EditableSchema<HoleSchema>
@@ -19,11 +20,12 @@ export type UseEditableHoleResult = {
 
 export const useEditableHole = (holeId: string): UseEditableHoleResult => {
   const hole = useHole(holeId)
-  const { computedSubProject, subProject, updateHole } = useSubProject()
+  const { computedSubProject, project, subProject } = useSubProject()
+  const { updateHole } = useSubProjectOperations()
   const t = useTranslation()
   const context = useMemo<ComponentBasedValidationContextSchema>(
-    () => ({ computedSubProject, language: LANGUAGE, subProject, t }),
-    [computedSubProject, subProject, t],
+    () => ({ computedSubProject, language: LANGUAGE, project, subProject, t }),
+    [computedSubProject, project, subProject, t],
   )
   const commit = useCallback(
     (updatedHole: HoleSchema): void => {

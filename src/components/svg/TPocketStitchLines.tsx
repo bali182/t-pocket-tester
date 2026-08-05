@@ -12,7 +12,7 @@ type TPocketStitchLinesProps = {
 }
 
 export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ componentId, pocketIndex }) => {
-  const { subProject, computedSubProject } = useSubProject()
+  const { project, subProject, computedSubProject } = useSubProject()
   const stitchLines = subProject.stitchLines.filter(
     (stitchLine): stitchLine is PocketClusterStitchLineSchema =>
       stitchLine.targetId === componentId && stitchLine.type === 'pocket-cluster-stitch-line',
@@ -35,7 +35,7 @@ export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ componentId, p
           return null
         }
 
-        const resolvedStitchLine = getResolvedStitchLine(stitchLine, subProject.stitchingSettings)
+        const resolvedStitchLine = getResolvedStitchLine(stitchLine, project.stitchingSettings)
 
         return (
           <StitchLineRoute

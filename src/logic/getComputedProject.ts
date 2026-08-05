@@ -9,7 +9,7 @@ import type {
 } from '../schemas/computed'
 import type { RectSchema } from '../schemas/geometry'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
-import type { ResolvedStitchLineSchema } from '../schemas/stitching'
+import type { ResolvedStitchLineSchema, StitchLineCommonConfigSchema } from '../schemas/stitching'
 import { getResolvedStitchLine } from '../utils/getResolvedStitchLine'
 import { isDefined } from '../utils/isDefined'
 import { applyHolePathsToComputedComponents } from './applyHolePathsToComputedComponents'
@@ -20,7 +20,10 @@ import { calculateRectPath } from './calculateRectPath'
 import { getNormalizedCornerRadius } from './cornerRadiusUtils'
 import { calculateStitchLines } from './stitching/calculateStitchLines'
 
-export const getComputedProject = (subProject: SubProjectSchema): ComputedSubProjectSchema => {
+export const getComputedSubProject = (
+  subProject: SubProjectSchema,
+  stitchingSettings: StitchLineCommonConfigSchema,
+): ComputedSubProjectSchema => {
   const rootComponent = subProject.components[subProject.root]
 
   if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {
@@ -29,7 +32,7 @@ export const getComputedProject = (subProject: SubProjectSchema): ComputedSubPro
 
   const computedComponents: Record<string, ComputedComponentSchema> = {}
   const resolvedStitchLines = subProject.stitchLines.map((stitchLine) =>
-    getResolvedStitchLine(stitchLine, subProject.stitchingSettings),
+    getResolvedStitchLine(stitchLine, stitchingSettings),
   )
   const rootBoundingRect: RectSchema = {
     x: new BigNumber(0),

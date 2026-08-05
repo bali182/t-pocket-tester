@@ -24,6 +24,7 @@ import { PiDotsSixVertical } from 'react-icons/pi'
 import typia from 'typia'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useSubProject } from '../../hooks/useSubProject'
+import { useSubProjectOperations } from '../../hooks/useSubProjectOperations'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentTreeItem } from './ComponentTreeItem'
 import { HoleTreeItem } from './HoleTreeItem'
@@ -40,7 +41,8 @@ import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './utils/
 import { useTreeDropAnimation } from './utils/useTreeDropAnimation'
 
 export const ComponentTree: FC = () => {
-  const { subProject, moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole } = useSubProject()
+  const { subProject } = useSubProject()
+  const { moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole } = useSubProjectOperations()
   const { selection } = useDrawAreaContext()
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>(() => [getComponentNodeId(subProject.root)])
   const [activeDragData, setActiveDragData] = useState<TreeDragData | undefined>()

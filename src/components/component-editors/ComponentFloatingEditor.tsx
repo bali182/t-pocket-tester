@@ -17,7 +17,7 @@ type ComponentFloatingEditorProps = {
 }
 
 export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anchorElement, component, onClose }) => {
-  const { subProject } = useSubProject()
+  const { project } = useSubProject()
   const {
     component: editedComponent,
     editableComponent,
@@ -33,7 +33,7 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
       />
       <SectionGroup.Root>
         <ComponentEditor
-          baseColor={subProject.componentSettings.baseColor}
+          baseColor={project.componentSettings.baseColor}
           component={editedComponent}
           editable={editableComponent}
           issues={validationIssues}

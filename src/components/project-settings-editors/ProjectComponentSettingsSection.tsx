@@ -2,7 +2,7 @@ import { Field } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { SubProjectSchema } from '../../schemas/subProject'
+import type { ProjectSchema } from '../../schemas/project'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
@@ -10,9 +10,9 @@ import { ColorInput } from '../common/ColorInput'
 import { SectionGroup } from '../common/SectionGroup'
 
 type ProjectComponentSettingsSectionProps = {
-  editable: EditableSchema<SubProjectSchema>
-  issues: ValidationIssuesSchema<SubProjectSchema>
-  onChange: (updated: EditableSchema<SubProjectSchema>) => void
+  editable: EditableSchema<ProjectSchema>
+  issues: ValidationIssuesSchema<ProjectSchema>
+  onChange: (updated: EditableSchema<ProjectSchema>) => void
 }
 
 export const ProjectComponentSettingsSection: FC<ProjectComponentSettingsSectionProps> = ({

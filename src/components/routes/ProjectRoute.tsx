@@ -1,16 +1,17 @@
 import { EmptyState } from '@chakra-ui/react'
 import type { FC } from 'react'
 import { PiWarningCircle } from 'react-icons/pi'
-import { useOptionalSubProject } from '../../hooks/useOptionalSubProject'
+
+import { useOptionalProject } from '../../hooks/useOptionalProject'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
-import { EditorContent } from '../EditorContent'
+import { Editor } from '../Editor'
 
-export const SubProjectRoute: FC = () => {
+export const ProjectRoute: FC = () => {
+  const [project] = useOptionalProject()
   const t = useTranslation()
-  const subProject = useOptionalSubProject()
 
-  if (!isDefined(subProject)) {
+  if (!isDefined(project)) {
     return (
       <EmptyState.Root height="100%">
         <EmptyState.Content>
@@ -24,5 +25,5 @@ export const SubProjectRoute: FC = () => {
     )
   }
 
-  return <EditorContent />
+  return <Editor />
 }

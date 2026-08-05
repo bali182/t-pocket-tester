@@ -3,14 +3,16 @@ import BigNumber from 'bignumber.js'
 import { getNormalizedCornerRadius } from '../logic/cornerRadiusUtils'
 import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
 import type { ComponentSchema, PanelSchema, RootPanelSchema } from '../schemas/components'
+import type { ProjectEditingSettingSchema } from '../schemas/editingSettings'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
 
 export const adjustCornerRadiiToParent = (
   subProject: SubProjectSchema,
   computedProject: ComputedSubProjectSchema,
+  editingSettings: ProjectEditingSettingSchema,
 ): SubProjectSchema => {
-  if (!subProject.editingSettings.adjustCornerRadiiToParent) {
+  if (!editingSettings.adjustCornerRadiiToParent) {
     return subProject
   }
 

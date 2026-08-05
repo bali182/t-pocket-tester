@@ -1,21 +1,12 @@
-import { useAtom, useAtomValue } from 'jotai'
-import { computedSubProjectAtom, subProjectAtom } from '../state/subProjectAtom'
 import { isDefined } from '../utils/isDefined'
-import { useSubProjectOperations } from './useSubProjectOperations'
+import { useOptionalSubProject } from './useOptionalSubProject'
 
 export const useSubProject = () => {
-  const [subProject, setSubProject] = useAtom(subProjectAtom)
-  const computedSubProject = useAtomValue(computedSubProjectAtom)
-  const operations = useSubProjectOperations()
+  const value = useOptionalSubProject()
 
-  if (!isDefined(subProject) || !isDefined(computedSubProject)) {
-    throw new Error('useProject requires an opened project')
+  if (!isDefined(value)) {
+    throw new Error('useSubProject requires a valid subproject route')
   }
 
-  return {
-    ...operations,
-    setSubProject,
-    subProject,
-    computedSubProject,
-  }
+  return value
 }
