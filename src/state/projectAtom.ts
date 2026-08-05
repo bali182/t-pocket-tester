@@ -8,17 +8,17 @@ import { isDefined } from '../utils/isDefined'
 import { projectsAtom } from './projectsAtom'
 
 // Stores the final project model after automatic patches have been applied.
-const projectStorageAtom = atom<ProjectSchema | undefined>(undefined)
+const subProjectStorageAtom = atom<ProjectSchema | undefined>(undefined)
 
 // Public project atom. Writes apply the caller's update and then automatic project patches.
-export const projectAtom = atom(
-  (get): ProjectSchema | undefined => get(projectStorageAtom),
+export const subProjectAtom = atom(
+  (get): ProjectSchema | undefined => get(subProjectStorageAtom),
   (get, set, update: SetStateAction<ProjectSchema | undefined>): ProjectSchema | undefined => {
-    const currentProject = get(projectStorageAtom)
+    const currentProject = get(subProjectStorageAtom)
     const updatedProject = typeof update === 'function' ? update(currentProject) : update
 
     if (!isDefined(updatedProject)) {
-      set(projectStorageAtom, undefined)
+      set(subProjectStorageAtom, undefined)
       return undefined
     }
 
@@ -27,7 +27,7 @@ export const projectAtom = atom(
     const computedProject = getComputedProject(updatedProject)
     const patchedProject = getPatchedProject(updatedProject, computedProject)
 
-    set(projectStorageAtom, patchedProject)
+    set(subProjectStorageAtom, patchedProject)
     set(projectsAtom, (projects) =>
       projects.map((project) => (project.id === patchedProject.id ? patchedProject : project)),
     )
@@ -37,8 +37,8 @@ export const projectAtom = atom(
 )
 
 // Read-only computed representation of the final project model.
-export const computedProjectAtom = atom((get) => {
-  const project = get(projectAtom)
+export const computedSubProjectAtom = atom((get) => {
+  const project = get(subProjectAtom)
 
   if (!isDefined(project)) {
     return undefined

@@ -5,7 +5,7 @@ import { PiWarningCircle } from 'react-icons/pi'
 import { useParams } from 'react-router'
 
 import { useProjects } from '../../hooks/useProjects'
-import { projectAtom } from '../../state/projectAtom'
+import { subProjectAtom } from '../../state/projectAtom'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { Editor } from '../Editor'
@@ -14,8 +14,8 @@ export const ProjectRoute: FC = () => {
   const { projectId } = useParams()
   const t = useTranslation()
   const { projects } = useProjects()
-  const activeProject = useAtomValue(projectAtom)
-  const setProject = useSetAtom(projectAtom)
+  const activeProject = useAtomValue(subProjectAtom)
+  const setProject = useSetAtom(subProjectAtom)
   const project = projects.find((candidate) => candidate.id === projectId)
 
   useLayoutEffect(() => {
