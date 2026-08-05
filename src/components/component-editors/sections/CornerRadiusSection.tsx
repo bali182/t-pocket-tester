@@ -1,8 +1,14 @@
-import { Grid, Switch } from '@chakra-ui/react'
+import { Grid, SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
-import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
+import {
+  TbRadiusBottomLeft,
+  TbRadiusBottomRight,
+  TbRadiusTopLeft,
+  TbRadiusTopRight,
+  TbSquareRounded,
+} from 'react-icons/tb'
 
-import type { HasCornerRadiusSchema } from '../../../schemas/components'
+import { HasCornerRadiusSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
@@ -10,13 +16,23 @@ import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
 type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
-  component: T
   editable: EditableSchema<T>
   issues: ValidationIssuesSchema<HasCornerRadiusSchema>
   onChange: (updated: EditableSchema<T>) => void
 }
 
 type IndividualRadiusKey = 'topLeftRadius' | 'topRightRadius' | 'bottomRightRadius' | 'bottomLeftRadius'
+type RadiusTypeValue = 'individual' | 'uniform'
+
+const RadiusTypeValues: Record<RadiusTypeValue, boolean> = {
+  individual: true,
+  uniform: false,
+}
+
+const RadiusTypes: Record<RadiusTypeValue, RadiusTypeValue> = {
+  individual: 'individual',
+  uniform: 'uniform',
+}
 
 export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   editable,
@@ -25,11 +41,9 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
 }: CornerRadiusSectionProps<T>): ReactNode {
   const t = useTranslation()
   const handleIndividualRadiiChange = useCallback(
-    (details: Switch.CheckedChangeDetails) => {
-      onChange({
-        ...editable,
-        individualRadii: details.checked,
-      })
+    (details: SegmentGroup.ValueChangeDetails) => {
+      const value = details.value as RadiusTypeValue
+      onChange({ ...editable, individualRadii: RadiusTypeValues[value] })
     },
     [editable, onChange],
   )
@@ -59,17 +73,21 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
       <SectionGroup.SectionHeader>{t.component.editor.cornerRadius.title}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.type}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor>
-        <Switch.Root checked={editable.individualRadii} onCheckedChange={handleIndividualRadiiChange} size="md">
-          <Switch.HiddenInput />
-          <Switch.Control>
-            <Switch.Thumb />
-          </Switch.Control>
-          <Switch.Label>
-            {editable.individualRadii
-              ? t.component.editor.cornerRadius.individual
-              : t.component.editor.cornerRadius.uniform}
-          </Switch.Label>
-        </Switch.Root>
+        <SegmentGroup.Root
+          onValueChange={handleIndividualRadiiChange}
+          size="sm"
+          value={editable.individualRadii ? RadiusTypes.individual : RadiusTypes.uniform}
+        >
+          <SegmentGroup.Indicator />
+          <SegmentGroup.Item aria-label={t.component.editor.cornerRadius.uniform} value={RadiusTypes.uniform}>
+            <SegmentGroup.ItemHiddenInput />
+            <TbSquareRounded /> {t.component.editor.cornerRadius.uniform}
+          </SegmentGroup.Item>
+          <SegmentGroup.Item aria-label={t.component.editor.cornerRadius.individual} value={RadiusTypes.individual}>
+            <SegmentGroup.ItemHiddenInput />
+            <TbRadiusTopLeft /> {t.component.editor.cornerRadius.individual}
+          </SegmentGroup.Item>
+        </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
 
       {!editable.individualRadii && (

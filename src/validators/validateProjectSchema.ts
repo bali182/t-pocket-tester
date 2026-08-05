@@ -36,6 +36,7 @@ export const validateProjectSchema = (
     id: undefined,
     name: nameResult.issues,
     root: undefined,
+    holes: [],
     stitchLines: [],
     componentSettings: {
       baseColor: componentSettingsResult.issues,
@@ -48,6 +49,7 @@ export const validateProjectSchema = (
     id: currentValue.id,
     name: nameResult.committedValue,
     root: currentValue.root,
+    holes: currentValue.holes,
     stitchLines: currentValue.stitchLines,
     stitchingSettings: stitchingSettingsResult.committedValue,
     componentSettings: {

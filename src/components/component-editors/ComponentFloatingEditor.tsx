@@ -3,6 +3,7 @@ import { type FC } from 'react'
 import { useEditableComponent } from '../../hooks/useEditableComponent'
 import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
+import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
@@ -10,7 +11,7 @@ import { ComponentActionsMenu } from '../ComponentActionsMenu'
 import { ComponentEditor } from './ComponentEditor'
 
 type ComponentFloatingEditorProps = {
-  anchorElement: SVGGraphicsElement
+  anchorElement: FloatingEditorAnchor
   component: ComponentSchema
   onClose: () => void
 }

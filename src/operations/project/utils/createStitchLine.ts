@@ -1,34 +1,24 @@
-import { HasIdentitySchema } from '../../../schemas/components'
+import type { HasTargetSchema } from '../../../schemas/common'
 import type {
   ComponentBoundsStitchLineOwnSchema,
-  ComponentBoundsStitchLineSchema,
   PocketClusterStitchLineOwnSchema,
-  PocketClusterStitchLineSchema,
-  StitchLineComponentReferencesSchema,
+  StitchLineSchema,
 } from '../../../schemas/stitching'
 
-type StitchLineByTypeName = {
-  'component-bounds-stitch-line': ComponentBoundsStitchLineSchema
-  'pocket-cluster-stitch-line': PocketClusterStitchLineSchema
-}
-
-type CreateStitchLineParams<T> = {
-  type: T
-  id: string
-  componentId: string
-  name: string
-}
-
-export const createStitchLine = <T extends keyof StitchLineByTypeName>(
-  params: CreateStitchLineParams<T>,
-): StitchLineByTypeName[T] => {
-  const defaults = DEFAULT_STITCH_LINES[params.type]
-  return {
-    ...defaults,
-    id: params.id,
-    type: params.type,
-    componentId: params.componentId,
-    name: params.name,
+export const createStitchLine = (
+  type: StitchLineSchema['type'],
+  target: HasTargetSchema,
+  id: string,
+  name: string,
+): StitchLineSchema => {
+  switch (type) {
+    case 'component-bounds-stitch-line':
+      return { ...defaultStitchLine, ...target, id, name, type }
+    case 'pocket-cluster-stitch-line':
+      if (target.targetType === 'hole') {
+        throw new Error('Pocket cluster stitch lines cannot target holes')
+      }
+      return { ...defaultPocketClusterStitchLine, ...target, id, name, type }
   }
 }
 
@@ -60,23 +50,4 @@ const defaultPocketClusterStitchLine: PocketClusterStitchLineOwnSchema = {
   endOffset: 0,
   startOffset: 0,
   stitchDirection: 'start-to-end',
-}
-
-const junkIdentityProps: HasIdentitySchema & StitchLineComponentReferencesSchema = {
-  componentId: '',
-  id: '',
-  name: '',
-}
-
-const DEFAULT_STITCH_LINES: StitchLineByTypeName = {
-  'component-bounds-stitch-line': {
-    ...defaultStitchLine,
-    ...junkIdentityProps,
-    type: 'component-bounds-stitch-line',
-  },
-  'pocket-cluster-stitch-line': {
-    ...defaultPocketClusterStitchLine,
-    ...junkIdentityProps,
-    type: 'pocket-cluster-stitch-line',
-  },
 }

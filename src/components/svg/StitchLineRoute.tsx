@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { useCallback, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
@@ -13,20 +13,62 @@ type StitchLineRouteProps = {
 }
 
 export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchHoleLength, stitchLine }) => {
-  const { stitchLineStyles } = useDrawAreaContext()
+  const { isInteractive, selection, stitchLineStyles } = useDrawAreaContext()
   const pathData = usePath(route.path)
+  const stitchLineThickness = stitchLineStyles.getLineThickness(stitchLine)
+  const stitchHoleThickness = stitchLineStyles.getStitchHoleThickness(stitchLine)
+  const hitAreaThickness =
+    1 + Math.max(stitchLineThickness ?? 0, stitchHoleLength / Math.SQRT2 + (stitchHoleThickness ?? 0))
+
+  const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
+    selection.setHoveredStitchLine(stitchLine.id)
+  }, [selection, stitchLine.id])
+
+  const handlePointerLeave = useCallback<PointerEventHandler<SVGGElement>>(
+    (event) => {
+      if (isSameStitchLineRoute(event.relatedTarget, stitchLine.id)) {
+        return
+      }
+      selection.setHoveredStitchLine(undefined)
+    },
+    [selection, stitchLine.id],
+  )
+
+  const handleClick = useCallback<MouseEventHandler<SVGGElement>>(
+    (event) => {
+      event.stopPropagation()
+      selection.selectStitchLine(stitchLine.id)
+    },
+    [selection, stitchLine.id],
+  )
 
   return (
-    <g>
+    <g
+      data-stitch-line-id={stitchLine.id}
+      onClick={isInteractive ? handleClick : undefined}
+      onPointerEnter={isInteractive ? handlePointerEnter : undefined}
+      onPointerLeave={isInteractive ? handlePointerLeave : undefined}
+    >
       <path
         d={pathData}
         fill="none"
         stroke={stitchLineStyles.getLineColor(stitchLine)}
-        strokeWidth={stitchLineStyles.getLineThickness(stitchLine)}
+        strokeWidth={stitchLineThickness}
       />
       {route.holes.map((hole, index) => (
         <StitchHole key={index} hole={hole} stitchHoleLength={stitchHoleLength} stitchLine={stitchLine} />
       ))}
+      {isInteractive && (
+        <path d={pathData} fill="none" pointerEvents="stroke" stroke="transparent" strokeWidth={hitAreaThickness} />
+      )}
     </g>
   )
+}
+
+const isSameStitchLineRoute = (target: EventTarget | null, stitchLineId: string): boolean => {
+  if (!(target instanceof Element)) {
+    return false
+  }
+
+  return target.closest(`[data-stitch-line-id="${CSS.escape(stitchLineId)}"]`) !== null
 }

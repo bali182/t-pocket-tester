@@ -6,8 +6,9 @@ import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
 
 type NumberInputProps = {
-  value: string
+  value: string | undefined
   issue: IssueSchema | undefined
+  placeholder?: string
   onChange: (value: string) => void
   onReset?: () => void
   isResetEnabled?: boolean
@@ -29,6 +30,7 @@ export const NumberInput: FC<NumberInputProps> = ({
   step,
   unit,
   value,
+  placeholder,
   isResetEnabled,
 }) => {
   const isInvalid = isDefined(issue) && issue.severity === 'error'
@@ -42,6 +44,7 @@ export const NumberInput: FC<NumberInputProps> = ({
       step={step}
       type="number"
       value={value}
+      placeholder={placeholder}
       size={size}
     />
   )

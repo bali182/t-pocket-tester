@@ -31,6 +31,7 @@ export const createProject = (name: string, t: TranslationSchema): ProjectSchema
     components: {
       [root.id]: root,
     },
+    holes: [],
     stitchLines: [],
     componentSettings: {
       baseColor: LEATHER_BASE_COLOR,

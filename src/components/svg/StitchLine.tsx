@@ -12,7 +12,7 @@ type StitchLineProps = {
 
 export const StitchLine: FC<StitchLineProps> = ({ computedStitchLine, stitchHoleLength, stitchLine }) => {
   return (
-    <g data-stitch-line-id={stitchLine.id} pointerEvents="none">
+    <g>
       {computedStitchLine.routes.map((route, index) => (
         <StitchLineRoute key={index} route={route} stitchHoleLength={stitchHoleLength} stitchLine={stitchLine} />
       ))}

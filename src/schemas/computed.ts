@@ -1,3 +1,4 @@
+import { HasTargetSchema } from './common'
 import { PathSchema, RectSchema } from './geometry'
 import { StitchHoleSchema } from './stitching'
 import { CardSchema } from './valuables'
@@ -21,6 +22,7 @@ export type ComputedPanelSchema = BaseComputedSchema & {
 export type ComputedTopPocketSchema = {
   type: 'computed-top-pocket'
   id: string
+  ownerComponentId: string
   boundingRect: RectSchema
   path: PathSchema
   card?: ComputedCardSchema
@@ -29,6 +31,7 @@ export type ComputedTopPocketSchema = {
 export type ComputedTPocketSchema = {
   type: 'computed-t-pocket'
   id: string
+  ownerComponentId: string
   boundingRect: RectSchema
   path: PathSchema
   card?: ComputedCardSchema
@@ -49,12 +52,20 @@ export type ComputedPocketClusterSchema = BaseComputedSchema & {
 
 export type ComputedComponentSchema = ComputedRootPanelSchema | ComputedPanelSchema | ComputedPocketClusterSchema
 
+export type ComputedHoleSchema = {
+  holeId: string
+  componentId: string
+  boundingRect: RectSchema
+  path: PathSchema
+  highlightPath: PathSchema
+}
+
 export type ComputedStitchRouteSchema = {
   path: PathSchema
   holes: StitchHoleSchema[]
 }
 
-export type ComputedStitchLineSchema = {
+export type ComputedStitchLineSchema = HasTargetSchema & {
   stitchLineId: string
   componentId: string
   routes: ComputedStitchRouteSchema[]

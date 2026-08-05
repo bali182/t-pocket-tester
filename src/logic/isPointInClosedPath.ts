@@ -1,6 +1,6 @@
 import type { PathSchema, PointSchema } from '../schemas/geometry'
-import type { ArcPathSegment, PathSegment } from './pathSegmentTypes'
 import { getPathSegments } from './pathSegments'
+import type { ArcPathSegment, PathSegment } from './pathSegmentTypes'
 import { isPointOnPathSegment } from './pathSegmentUtils'
 
 export const isPointInClosedPath = (point: PointSchema, path: PathSchema): boolean => {

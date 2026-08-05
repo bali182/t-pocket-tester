@@ -2,6 +2,7 @@ import { type FC } from 'react'
 
 import { useEditableStitchLine } from '../../hooks/useEditableStitchLine'
 import type { StitchLineSchema } from '../../schemas/stitching'
+import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
@@ -9,7 +10,7 @@ import { StitchLineActionsMenu } from '../StitchLineActionsMenu'
 import { StitchLineEditor } from './StitchLineEditor'
 
 type StitchLineFloatingEditorProps = {
-  anchorElement: SVGGraphicsElement
+  anchorElement: FloatingEditorAnchor
   onClose: () => void
   stitchLine: StitchLineSchema
 }

@@ -2,13 +2,13 @@ import { EmptyState } from '@chakra-ui/react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useLayoutEffect, type FC } from 'react'
 import { PiWarningCircle } from 'react-icons/pi'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
+import { useProjects } from '../../hooks/useProjects'
 import { projectAtom } from '../../state/projectAtom'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { Editor } from '../Editor'
-import { useProjects } from '../../hooks/useProjects'
 
 export const ProjectRoute: FC = () => {
   const { projectId } = useParams()

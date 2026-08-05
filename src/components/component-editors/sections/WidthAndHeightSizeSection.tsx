@@ -1,20 +1,23 @@
-import { useCallback, type FC } from 'react'
+import { useCallback, type ReactNode } from 'react'
 
-import type { RootPanelSchema } from '../../../schemas/components'
+import type { HasSizeSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type WidthAndHeightSizeSectionProps = {
-  component: RootPanelSchema
-  editable: EditableSchema<RootPanelSchema>
-  issues: ValidationIssuesSchema<RootPanelSchema>
-  onChange: (updated: EditableSchema<RootPanelSchema>) => void
+type WidthAndHeightSizeSectionProps<T extends HasSizeSchema> = {
+  editable: EditableSchema<T>
+  issues: ValidationIssuesSchema<HasSizeSchema>
+  onChange: (updated: EditableSchema<T>) => void
 }
 
-export const WidthAndHeightSizeSection: FC<WidthAndHeightSizeSectionProps> = ({ editable, issues, onChange }) => {
+export function WidthAndHeightSizeSection<T extends HasSizeSchema>({
+  editable,
+  issues,
+  onChange,
+}: WidthAndHeightSizeSectionProps<T>): ReactNode {
   const t = useTranslation()
   const handleWidthChange = useCallback(
     (width: string) => {

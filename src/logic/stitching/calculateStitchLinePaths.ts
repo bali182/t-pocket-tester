@@ -1,16 +1,15 @@
 import BigNumber from 'bignumber.js'
 
-import type { ComponentSchema } from '../../schemas/components'
-import type { ComputedComponentSchema } from '../../schemas/computed'
 import type { PathCommand, PathSchema, PointSchema } from '../../schemas/geometry'
 import type {
   ResolvedComponentBoundsStitchLineSchema,
   StitchCornerSchema,
   StitchSideSchema,
 } from '../../schemas/stitching'
-import { getNormalizedCornerRadius } from '../getNormalizedCornerRadius'
 import { arePointsEqual } from '../../utils/arePointsEqual'
 import { isDefined } from '../../utils/isDefined'
+import { getFittedCornerRadius } from '../cornerRadiusUtils'
+import { ComponentBoundsStitchLineTarget } from './helperTypes'
 
 const ZERO = new BigNumber(0)
 
@@ -43,10 +42,9 @@ type SelectableStitchPathFragment = StitchPathFragment & {
 
 export const calculateStitchLinePaths = (
   stitchLine: ResolvedComponentBoundsStitchLineSchema,
-  component: ComponentSchema,
-  computedComponent: ComputedComponentSchema,
+  target: ComponentBoundsStitchLineTarget,
 ): CalculatedStitchLinePath[] => {
-  const fragments = calculateStitchLinePathFragments(stitchLine, component, computedComponent)
+  const fragments = calculateStitchLinePathFragments(stitchLine, target)
 
   return groupStitchLinePathFragments(fragments)
     .map((routeFragments) => ({
@@ -59,20 +57,19 @@ export const calculateStitchLinePaths = (
 
 const calculateStitchLinePathFragments = (
   stitchLine: ResolvedComponentBoundsStitchLineSchema,
-  component: ComponentSchema,
-  computedComponent: ComputedComponentSchema,
+  target: ComponentBoundsStitchLineTarget,
 ): SelectableStitchPathFragment[] => {
-  const { boundingRect } = computedComponent
   const margin = new BigNumber(stitchLine.stitchMargin)
-  const cornerRadius = getNormalizedCornerRadius(component)
-  const topLeftRadius = getInnerCornerRadius(cornerRadius.topLeft, margin)
-  const topRightRadius = getInnerCornerRadius(cornerRadius.topRight, margin)
-  const bottomRightRadius = getInnerCornerRadius(cornerRadius.bottomRight, margin)
-  const bottomLeftRadius = getInnerCornerRadius(cornerRadius.bottomLeft, margin)
-  const left = boundingRect.x.plus(margin)
-  const top = boundingRect.y.plus(margin)
-  const right = boundingRect.x.plus(boundingRect.width).minus(margin)
-  const bottom = boundingRect.y.plus(boundingRect.height).minus(margin)
+  const boundingRect = getStitchLineBoundingRect(target, margin, stitchLine.targetType)
+  const cornerRadius = getFittedCornerRadius(target.boundingRect, target.cornerRadius)
+  const topLeftRadius = getStitchCornerRadius(cornerRadius.topLeft, margin, stitchLine.targetType)
+  const topRightRadius = getStitchCornerRadius(cornerRadius.topRight, margin, stitchLine.targetType)
+  const bottomRightRadius = getStitchCornerRadius(cornerRadius.bottomRight, margin, stitchLine.targetType)
+  const bottomLeftRadius = getStitchCornerRadius(cornerRadius.bottomLeft, margin, stitchLine.targetType)
+  const left = boundingRect.x
+  const top = boundingRect.y
+  const right = boundingRect.x.plus(boundingRect.width)
+  const bottom = boundingRect.y.plus(boundingRect.height)
   const topLeftCorner = stitchLine.topLeftCorner && (stitchLine.top || stitchLine.left)
   const topRightCorner = stitchLine.topRightCorner && (stitchLine.top || stitchLine.right)
   const bottomRightCorner = stitchLine.bottomRightCorner && (stitchLine.right || stitchLine.bottom)
@@ -190,8 +187,40 @@ const calculateStitchLinePathFragments = (
   ]
 }
 
-const getInnerCornerRadius = (cornerRadius: number, margin: BigNumber): BigNumber => {
-  return BigNumber.maximum(new BigNumber(cornerRadius).minus(margin), ZERO)
+const getStitchLineBoundingRect = (
+  target: ComponentBoundsStitchLineTarget,
+  margin: BigNumber,
+  targetType: ResolvedComponentBoundsStitchLineSchema['targetType'],
+): ComponentBoundsStitchLineTarget['boundingRect'] => {
+  switch (targetType) {
+    case 'component':
+      return {
+        x: target.boundingRect.x.plus(margin),
+        y: target.boundingRect.y.plus(margin),
+        width: target.boundingRect.width.minus(margin.times(2)),
+        height: target.boundingRect.height.minus(margin.times(2)),
+      }
+    case 'hole':
+      return {
+        x: target.boundingRect.x.minus(margin),
+        y: target.boundingRect.y.minus(margin),
+        width: target.boundingRect.width.plus(margin.times(2)),
+        height: target.boundingRect.height.plus(margin.times(2)),
+      }
+  }
+}
+
+const getStitchCornerRadius = (
+  cornerRadius: BigNumber,
+  margin: BigNumber,
+  targetType: ResolvedComponentBoundsStitchLineSchema['targetType'],
+): BigNumber => {
+  switch (targetType) {
+    case 'component':
+      return BigNumber.maximum(cornerRadius.minus(margin), ZERO)
+    case 'hole':
+      return cornerRadius.isZero() ? ZERO : cornerRadius.plus(margin)
+  }
 }
 
 const groupStitchLinePathFragments = (fragments: SelectableStitchPathFragment[]): StitchPathFragment[][] => {
@@ -230,7 +259,7 @@ const createPathFromFragments = (fragments: StitchPathFragment[]): PathSchema =>
     }
 
     if (fragment.radius.isGreaterThan(ZERO)) {
-      commands.push({ type: 'arcTo', radius: fragment.radius, point: fragment.end })
+      commands.push({ type: 'arcTo', radius: fragment.radius, point: fragment.end, reversed: false })
     }
   }
 

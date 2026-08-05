@@ -1,6 +1,6 @@
 import type { EditableSchema } from '../schemas/editable'
-import type { BaseValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import type { BaseValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateNumber } from './validateNumber'
 

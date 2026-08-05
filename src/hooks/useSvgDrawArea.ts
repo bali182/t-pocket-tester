@@ -4,7 +4,9 @@ import {
   DrawAreaCardStyles,
   DrawAreaComponentStyles,
   DrawAreaContextValue,
+  DrawAreaExportIdentifiers,
   DrawAreaExportTextStyles,
+  DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
   DrawAreaSelection,
   DrawAreaStitchLineStyles,
@@ -21,9 +23,15 @@ const drawAreaSelection: DrawAreaSelection = {
   isComponentSelected: produce(false),
   selectComponent: noop,
   selectStitchLine: noop,
+  selectHole: noop,
+  setHoveredStitchLine: noop,
+  setHoveredTreeSelection: noop,
   selectedComponent: undefined,
   selectedStitchLine: undefined,
-  highlightedComponentId: undefined,
+  selectedHole: undefined,
+  hoveredStitchLineId: undefined,
+  hoveredTreeSelection: undefined,
+  editorSelection: undefined,
 }
 
 export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSchema): DrawAreaContextValue => {
@@ -61,8 +69,30 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
     [project.stitchingSettings.stitchHoleThickness, project.stitchingSettings.stitchLineThickness],
   )
 
-  const exportTextStyles = useMemo<DrawAreaExportTextStyles>(
+  const holeStyles = useMemo<DrawAreaHoleStyles>(
     () => ({
+      getFillColor: produce('transparent'),
+      getStrokeColor: produce('transparent'),
+      getStrokeThickness: produce(STROKE_THICKNESS),
+    }),
+    [],
+  )
+
+  const exportIdentifiers = useMemo<DrawAreaExportIdentifiers>(
+    () => ({
+      getElementId: (element) => {
+        switch (element.type) {
+          case 'svg-export-panel':
+            return element.component.id
+          case 'svg-export-front-pocket':
+            return `${element.ownerComponent.id}--front-pocket`
+          case 'svg-export-t-pocket':
+            return `${element.ownerComponent.id}--t-pocket-${element.pocketIndex}`
+        }
+      },
+      getStitchLineId: (stitchLine) => {
+        return stitchLine.id
+      },
       getNameText: (element) => {
         if (!params.showNames) {
           return undefined
@@ -77,6 +107,12 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
             return t.svgExport.tPocketName(element.ownerComponent.name, element.pocketIndex + 1)
         }
       },
+    }),
+    [params.showNames, t.svgExport],
+  )
+
+  const exportTextStyles = useMemo<DrawAreaExportTextStyles>(
+    () => ({
       getNameTextColor: produce(COMPONENT_NAME_COLOR),
       getNameTextFontFamily: produce('sans-serif'),
       getNameTextFontSize: produce(3),
@@ -93,7 +129,7 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
       getDimensionsTextFontSize: produce(2.5),
       getNameDimensionsGap: produce(1),
     }),
-    [params.showDimensions, params.showNames, t],
+    [params.showDimensions, t],
   )
 
   const markerStyles = useMemo<DrawAreaMarkerStyles>(
@@ -109,13 +145,15 @@ export const useSvgDrawArea = (project: ProjectSchema, params: SvgExportParamsSc
       isInteractive: false,
       isShowingCards: false,
       selection: drawAreaSelection,
+      holeStyles,
       componentStyles,
       cardStyles,
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
+      exportIdentifiers,
     }),
-    [cardStyles, componentStyles, exportTextStyles, markerStyles, stitchLineStyles],
+    [cardStyles, componentStyles, exportIdentifiers, exportTextStyles, holeStyles, markerStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

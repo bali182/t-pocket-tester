@@ -12,15 +12,12 @@ export const EN: typeof HU = {
       remove: 'Delete',
       scaling: 'Scaling',
       apply: 'Apply',
+      export: 'Export',
       clone: 'Clone',
       flipHorizontal: 'Flip horizontal',
       flipVertical: 'Flip vertical',
       settings: 'Settings',
       addByName: (name: string) => `Add ${name.toLowerCase()}`,
-    },
-    reorder: {
-      reorder: 'Reorder',
-      finishReorder: 'Finish reordering',
     },
     labels: {
       general: 'General',
@@ -37,6 +34,7 @@ export const EN: typeof HU = {
       measure: 'Measurement',
     },
     placeholders: {
+      fill: 'Fill',
       selectComponent: 'Select a component',
     },
     directions: {
@@ -51,6 +49,10 @@ export const EN: typeof HU = {
     },
   },
   editor: {
+    menus: {
+      file: 'File',
+      view: 'View',
+    },
     scalingDialog: {
       title: 'Scaling',
       description:
@@ -143,8 +145,8 @@ export const EN: typeof HU = {
       cornerRadius: {
         title: 'Corner radius',
         type: 'Type',
-        individual: 'Individual corner radii',
-        uniform: 'Uniform corner radius',
+        individual: 'Individual',
+        uniform: 'Uniform',
         individualMeasure: 'Measurement',
         uniformMeasure: 'Measurement',
       },
@@ -153,15 +155,35 @@ export const EN: typeof HU = {
         card: 'Card',
         noCard: 'None',
         opening: 'Opening',
-        fromTop: 'From the top',
-        fromBottom: 'From the bottom',
-        fromLeft: 'From the left',
-        fromRight: 'From the right',
+        fromTop: 'Top',
+        fromBottom: 'Bottom',
+        fromLeft: 'Left',
+        fromRight: 'Right',
       },
       tPocket: {
         title: 'T-pockets',
         flapWidth: 'Tab width',
         taper: 'Taper',
+      },
+    },
+  },
+  hole: {
+    title: 'Hole',
+    editor: {
+      position: {
+        title: 'Position',
+        xAnchor: 'Horizontal alignment',
+        yAnchor: 'Vertical alignment',
+        xOffset: 'X offset',
+        yOffset: 'Y offset',
+        left: 'Left',
+        center: 'Center',
+        right: 'Right',
+        top: 'Top',
+        bottom: 'Bottom',
+      },
+      size: {
+        radius: 'Radius',
       },
     },
   },

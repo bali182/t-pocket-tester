@@ -1,7 +1,7 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import { useProjects } from '../hooks/useProjects'
 import { useTranslation } from '../translations/translation'

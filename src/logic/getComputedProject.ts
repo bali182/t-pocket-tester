@@ -12,15 +12,15 @@ import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
 import type { ResolvedStitchLineSchema } from '../schemas/stitching'
 import { getResolvedStitchLine } from '../utils/getResolvedStitchLine'
 import { isDefined } from '../utils/isDefined'
+import { applyHolePathsToComputedComponents } from './applyHolePathsToComputedComponents'
+import { calculateHoles } from './calculateHoles'
 import { calculateLayoutBoundingBoxes } from './calculateLayoutBoundingBoxes'
 import { calculatePocketClusterGeometry } from './calculatePocketClusterGeometry'
 import { calculateRectPath } from './calculateRectPath'
-import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
+import { getNormalizedCornerRadius } from './cornerRadiusUtils'
 import { calculateStitchLines } from './stitching/calculateStitchLines'
 
 export const getComputedProject = (project: ProjectSchema): ComputedProjectSchema => {
-  console.log(project)
-
   const rootComponent = project.components[project.root]
 
   if (!isDefined(rootComponent) || rootComponent.type !== 'root-panel') {
@@ -38,13 +38,22 @@ export const getComputedProject = (project: ProjectSchema): ComputedProjectSchem
     height: new BigNumber(rootComponent.height),
   }
   const root = computeRootPanel(rootComponent, rootBoundingRect, project, resolvedStitchLines, computedComponents)
-  const stitchLines = calculateStitchLines(resolvedStitchLines, project.components, computedComponents)
+  const holes = calculateHoles(project.holes, computedComponents)
+  const stitchLines = calculateStitchLines(
+    resolvedStitchLines,
+    project.components,
+    computedComponents,
+    project.holes,
+    holes,
+  )
+  applyHolePathsToComputedComponents(computedComponents, holes)
 
   return {
     id: project.id,
     name: project.name,
     root: root.componentId,
     components: computedComponents,
+    holes,
     stitchLines,
   }
 }

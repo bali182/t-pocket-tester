@@ -8,6 +8,7 @@ export const HU = {
       add: 'Hozzáadás',
       cancel: 'Mégse',
       apply: 'Alkalmaz',
+      export: 'Exportálás',
       remove: 'Törlés',
       scaling: 'Skálázás',
       clone: 'Duplikálás',
@@ -15,10 +16,6 @@ export const HU = {
       flipVertical: 'Függőleges tükrözés',
       settings: 'Beállítások',
       addByName: (name: string) => `${name} hozzáadása`,
-    },
-    reorder: {
-      reorder: 'Átrendezés',
-      finishReorder: 'Átrendezés befejezése',
     },
     labels: {
       general: 'Általános',
@@ -35,6 +32,7 @@ export const HU = {
       measure: 'Mérték',
     },
     placeholders: {
+      fill: 'Kitöltés',
       selectComponent: 'Komponens kiválasztása',
     },
     directions: {
@@ -49,6 +47,10 @@ export const HU = {
     },
   },
   editor: {
+    menus: {
+      file: 'Fájl',
+      view: 'Nézet',
+    },
     scalingDialog: {
       title: 'Skálázás',
       description:
@@ -141,8 +143,8 @@ export const HU = {
       cornerRadius: {
         title: 'Lekerekítés',
         type: 'Típus',
-        individual: 'Egyedi lekerekítések',
-        uniform: 'Egységes lekerekítés',
+        individual: 'Egyedi',
+        uniform: 'Egységes',
         individualMeasure: 'Mérték',
         uniformMeasure: 'Mérték',
       },
@@ -160,6 +162,26 @@ export const HU = {
         title: 'T-zsebek',
         flapWidth: 'Fül szélesség',
         taper: 'Szűkülés',
+      },
+    },
+  },
+  hole: {
+    title: 'Lyuk',
+    editor: {
+      position: {
+        title: 'Pozíció',
+        xAnchor: 'Vízszintes igazítás',
+        yAnchor: 'Függőleges igazítás',
+        xOffset: 'X eltolás',
+        yOffset: 'Y eltolás',
+        left: 'Bal',
+        center: 'Közép',
+        right: 'Jobb',
+        top: 'Fent',
+        bottom: 'Lent',
+      },
+      size: {
+        radius: 'Sugár',
       },
     },
   },

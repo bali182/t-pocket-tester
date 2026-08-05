@@ -6,6 +6,7 @@ import type { ArcPathSegment, LinePathSegment, PathSegment } from './pathSegment
 const ZERO = new BigNumber(0)
 const TWO = new BigNumber(2)
 const TWO_PI = Math.PI * 2
+const ARC_DISTANCE_SQUARED_EPSILON = new BigNumber('0.000000000001')
 
 export const createArcPathSegment = (start: PointSchema, command: PathArcToSchema): ArcPathSegment => {
   const chordDx = command.point.x.minus(start.x)
@@ -35,12 +36,16 @@ export const createArcPathSegment = (start: PointSchema, command: PathArcToSchem
     x: midpoint.x.minus(perpendicularX),
     y: midpoint.y.minus(perpendicularY),
   }
-  const center = getSweepOneCenter(start, command.point, firstCenter, secondCenter)
+  const center = command.reversed
+    ? getSweepZeroCenter(start, command.point, firstCenter, secondCenter)
+    : getSweepOneCenter(start, command.point, firstCenter, secondCenter)
   const startAngle = getAngle(center, start)
   const endAngle = getAngle(center, command.point)
-  const sweepAngle = getPositiveAngleDifference(startAngle, endAngle)
+  const sweepAngle = command.reversed
+    ? -getPositiveAngleDifference(endAngle, startAngle)
+    : getPositiveAngleDifference(startAngle, endAngle)
 
-  if (sweepAngle > Math.PI) {
+  if (Math.abs(sweepAngle) > Math.PI) {
     throw new Error('Arc path commands must use the small sweep')
   }
 
@@ -49,6 +54,7 @@ export const createArcPathSegment = (start: PointSchema, command: PathArcToSchem
     start,
     end: command.point,
     radius: command.radius,
+    reversed: command.reversed,
     center,
     startAngle,
     sweepAngle,
@@ -107,15 +113,21 @@ export const isPointOnPathSegment = (point: PointSchema, segment: PathSegment): 
       return false
     }
 
-    return point.x.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.x, segment.end.x)) &&
+    return (
+      point.x.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.x, segment.end.x)) &&
       point.x.isLessThanOrEqualTo(BigNumber.maximum(segment.start.x, segment.end.x)) &&
       point.y.isGreaterThanOrEqualTo(BigNumber.minimum(segment.start.y, segment.end.y)) &&
       point.y.isLessThanOrEqualTo(BigNumber.maximum(segment.start.y, segment.end.y))
+    )
   }
 
   const distanceSquared = point.x.minus(segment.center.x).pow(2).plus(point.y.minus(segment.center.y).pow(2))
+  const radiusSquared = segment.radius.pow(2)
 
-  return distanceSquared.isEqualTo(segment.radius.pow(2)) && isPointOnArc(point, segment)
+  return (
+    distanceSquared.minus(radiusSquared).abs().isLessThanOrEqualTo(ARC_DISTANCE_SQUARED_EPSILON) &&
+    isPointOnArc(point, segment)
+  )
 }
 
 export const isPointOnArc = (point: PointSchema, arc: ArcPathSegment): boolean => {
@@ -125,7 +137,11 @@ export const isPointOnArc = (point: PointSchema, arc: ArcPathSegment): boolean =
 }
 
 export const getArcProgress = (arc: ArcPathSegment, angle: number): number => {
-  return getPositiveAngleDifference(arc.startAngle, angle) / arc.sweepAngle
+  if (arc.sweepAngle >= 0) {
+    return getPositiveAngleDifference(arc.startAngle, angle) / arc.sweepAngle
+  }
+
+  return getPositiveAngleDifference(angle, arc.startAngle) / -arc.sweepAngle
 }
 
 export const getAngle = (center: PointSchema, point: PointSchema): number => {
@@ -166,20 +182,10 @@ export const doLinePathSegmentsOverlap = (first: LinePathSegment, second: LinePa
   }
 
   if (!firstDx.isZero()) {
-    return doRangesOverlap(
-      first.start.x,
-      first.end.x,
-      second.start.x,
-      second.end.x,
-    )
+    return doRangesOverlap(first.start.x, first.end.x, second.start.x, second.end.x)
   }
 
-  return doRangesOverlap(
-    first.start.y,
-    first.end.y,
-    second.start.y,
-    second.end.y,
-  )
+  return doRangesOverlap(first.start.y, first.end.y, second.start.y, second.end.y)
 }
 
 const getPathSegmentRange = (segment: PathSegment, startProgress: BigNumber, endProgress: BigNumber): PathSegment => {
@@ -194,6 +200,7 @@ const getPathSegmentRange = (segment: PathSegment, startProgress: BigNumber, end
     ...segment,
     start,
     end,
+    reversed: segment.reversed,
     startAngle: segment.startAngle + segment.sweepAngle * startProgress.toNumber(),
     sweepAngle: segment.sweepAngle * endProgress.minus(startProgress).toNumber(),
   }
@@ -217,11 +224,28 @@ const doRangesOverlap = (
   return overlapStart.isLessThan(overlapEnd)
 }
 
-const getSweepOneCenter = (start: PointSchema, end: PointSchema, first: PointSchema, second: PointSchema): PointSchema => {
+const getSweepOneCenter = (
+  start: PointSchema,
+  end: PointSchema,
+  first: PointSchema,
+  second: PointSchema,
+): PointSchema => {
   const firstStartAngle = getAngle(first, start)
   const firstEndAngle = getAngle(first, end)
 
   return getPositiveAngleDifference(firstStartAngle, firstEndAngle) <= Math.PI ? first : second
+}
+
+const getSweepZeroCenter = (
+  start: PointSchema,
+  end: PointSchema,
+  first: PointSchema,
+  second: PointSchema,
+): PointSchema => {
+  const firstStartAngle = getAngle(first, start)
+  const firstEndAngle = getAngle(first, end)
+
+  return getPositiveAngleDifference(firstEndAngle, firstStartAngle) <= Math.PI ? first : second
 }
 
 const getPositiveAngleDifference = (start: number, end: number): number => {

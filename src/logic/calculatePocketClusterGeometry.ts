@@ -15,7 +15,7 @@ import { calculatePocketBoundingBox } from './calculatePocketBoundingBox'
 import { calculatePocketCard } from './calculatePocketCard'
 import { calculateRectPath } from './calculateRectPath'
 import { calculateTPocketPath } from './calculateTPocketPath'
-import { getNormalizedCornerRadius } from './getNormalizedCornerRadius'
+import { getNormalizedCornerRadius } from './cornerRadiusUtils'
 import { normalizePocketCluster } from './normalizePocketCluster'
 
 export type PocketClusterGeometry = {
@@ -58,20 +58,17 @@ export const calculatePocketClusterGeometry = (
     frontPocket: {
       type: 'computed-top-pocket',
       id: `${pocketCluster.id}-top-pocket`,
+      ownerComponentId: pocketCluster.id,
       boundingRect: topPocketRect,
       path: calculateRectPath(topPocketRect, calculateTopPocketRadius(normalizedPocketCluster)),
       card: calculatePocketCard(normalizedPocketCluster, topPocketCardBoundingRect),
     },
     tPockets: initial(pocketRects).map((pocketRect, index) => {
-      const cardBoundingRect = getPocketCardBoundingRect(
-        normalizedPocketCluster,
-        pocketRect,
-        resolvedStitchLines,
-        true,
-      )
+      const cardBoundingRect = getPocketCardBoundingRect(normalizedPocketCluster, pocketRect, resolvedStitchLines, true)
 
       return {
         type: 'computed-t-pocket',
+        ownerComponentId: pocketCluster.id,
         id: `${pocketCluster.id}-t-pocket-${index}`,
         boundingRect: pocketRect,
         path: calculateTPocketPath(pocketRect, normalizedPocketCluster, index === 0 ? cornerRadius : zeroCornerRadius),
@@ -88,20 +85,24 @@ const getPocketCardBoundingRect = (
   isTPocket: boolean,
 ): RectSchema => {
   const componentBoundsStitchLines = resolvedStitchLines.filter(
-    (stitchLine): stitchLine is ResolvedComponentBoundsStitchLineSchema =>
-      stitchLine.type === 'component-bounds-stitch-line' && stitchLine.componentId === pocketCluster.id,
+    (stitchLine): stitchLine is ResolvedComponentBoundsStitchLineSchema => {
+      if (stitchLine.type !== 'component-bounds-stitch-line') {
+        return false
+      }
+      return stitchLine.targetType === 'component' && stitchLine.targetId === pocketCluster.id
+    },
   )
   const pocketClusterStitchLines = resolvedStitchLines.filter(
     (stitchLine): stitchLine is ResolvedPocketClusterStitchLineSchema =>
-      stitchLine.type === 'pocket-cluster-stitch-line' && stitchLine.componentId === pocketCluster.id && stitchLine.enabled,
+      stitchLine.type === 'pocket-cluster-stitch-line' &&
+      stitchLine.targetId === pocketCluster.id &&
+      stitchLine.enabled,
   )
   const leftInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.left))
   const rightInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.right))
   const topInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.top))
   const bottomInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.bottom))
-  const pocketClusterStitchInset = isTPocket
-    ? getMaximumStitchClearance(pocketClusterStitchLines)
-    : ZERO
+  const pocketClusterStitchInset = isTPocket ? getMaximumStitchClearance(pocketClusterStitchLines) : ZERO
 
   let left = pocketBoundingRect.x
   let top = pocketBoundingRect.y
@@ -147,7 +148,9 @@ const getMaximumStitchClearance = (stitchLines: StitchLineCommonConfigSchema[]):
 }
 
 const getStitchClearance = (stitchLine: StitchLineCommonConfigSchema): BigNumber => {
-  return new BigNumber(stitchLine.stitchMargin).plus(new BigNumber(stitchLine.stitchHoleLength).dividedBy(2 * Math.sqrt(2)))
+  return new BigNumber(stitchLine.stitchMargin).plus(
+    new BigNumber(stitchLine.stitchHoleLength).dividedBy(2 * Math.sqrt(2)),
+  )
 }
 
 const calculatePocketBoundingBoxes = (pocketCluster: PocketClusterSchema, rect: RectSchema): RectSchema[] => {

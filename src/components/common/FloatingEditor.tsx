@@ -2,9 +2,10 @@ import { Popover, usePopover } from '@chakra-ui/react'
 import { FC, MouseEvent, ReactNode, useCallback, useEffect, useMemo } from 'react'
 
 import { isDefined } from '../../utils/isDefined'
+import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 
 type FloatingEditorProps = {
-  anchorElement: SVGGraphicsElement
+  anchorElement: FloatingEditorAnchor
   children: ReactNode
   onClose: () => void
 }
@@ -12,8 +13,8 @@ type FloatingEditorProps = {
 export const FloatingEditor: FC<FloatingEditorProps> = ({ anchorElement, children, onClose }) => {
   const positioningTarget = useMemo(
     () => ({
-      getBoundingClientRect: () => anchorElement.getBoundingClientRect(),
-      contextElement: anchorElement,
+      getBoundingClientRect: anchorElement.getBoundingClientRect,
+      contextElement: anchorElement.contextElement,
     }),
     [anchorElement],
   )
@@ -35,7 +36,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ anchorElement, childre
   })
 
   useEffect(() => {
-    const editorElement = anchorElement.ownerSVGElement?.parentElement
+    const editorElement = anchorElement.contextElement.ownerSVGElement?.parentElement
 
     if (!isDefined(editorElement)) {
       return
@@ -50,7 +51,7 @@ export const FloatingEditor: FC<FloatingEditorProps> = ({ anchorElement, childre
     return (): void => {
       observer.disconnect()
     }
-  }, [anchorElement, popover])
+  }, [anchorElement.contextElement, popover])
 
   const captureClick = useCallback((event: MouseEvent) => {
     event.stopPropagation()

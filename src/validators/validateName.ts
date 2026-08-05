@@ -1,4 +1,4 @@
-import type { HasIdentitySchema } from '../schemas/components'
+import { HasIdentitySchema } from '../schemas/common'
 import type { BaseValidationContextSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 

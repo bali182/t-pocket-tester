@@ -85,7 +85,8 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
               onChange={handleWidthChange}
               step={1}
               unit="mm"
-              value={editable.width}
+              value={editable.autoWidth ? '' : editable.width}
+              placeholder={editable.autoWidth ? t.common.placeholders.fill : ''}
             />
           </Box>
         </HStack>
@@ -111,7 +112,8 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
               onChange={handleHeightChange}
               step={1}
               unit="mm"
-              value={editable.height}
+              value={editable.autoHeight ? '' : editable.height}
+              placeholder={editable.autoHeight ? t.common.placeholders.fill : ''}
             />
           </Box>
         </HStack>

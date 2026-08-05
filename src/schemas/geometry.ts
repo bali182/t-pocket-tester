@@ -58,6 +58,7 @@ export type PathArcToSchema = {
   type: 'arcTo'
   radius: BigNumber
   point: PointSchema
+  reversed: boolean
 }
 
 export type PathCloseSchema = {

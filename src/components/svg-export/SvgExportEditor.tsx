@@ -8,8 +8,8 @@ import {
 import { useCallback, useMemo, type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
 import type { SvgExportParamsSchema, SvgExportStitchLineModeSchema } from '../../schemas/svgExport'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { NumberInput } from '../common/NumberInput'
@@ -110,7 +110,13 @@ export const SvgExportEditor: FC<SvgExportEditorProps> = ({ editable, issues, on
         </SectionGroup.SectionRowEditor>
         <SectionGroup.SectionRowTitle>{t.svgExport.dialog.labels.padding}</SectionGroup.SectionRowTitle>
         <SectionGroup.SectionRowEditor>
-          <NumberInput issue={issues.padding} onChange={handlePaddingChange} step={1} unit="mm" value={editable.padding} />
+          <NumberInput
+            issue={issues.padding}
+            onChange={handlePaddingChange}
+            step={1}
+            unit="mm"
+            value={editable.padding}
+          />
         </SectionGroup.SectionRowEditor>
       </SectionGroup.Section>
 

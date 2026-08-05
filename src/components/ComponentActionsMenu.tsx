@@ -1,6 +1,6 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
-import { PiCopy, PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
+import { PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
 import { useProject } from '../hooks/useProject'
 import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
@@ -25,7 +25,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   onDelete = noop,
 }) => {
   const t = useTranslation()
-  const { addComponent, addStitchLine, cloneComponent, deleteComponent } = useProject()
+  const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useProject()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
   const canClone = useMemo((): boolean => component.type !== 'root-panel', [component.type])
@@ -63,11 +63,15 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
 
   const handleAddStitchLine = useCallback(
     (type: StitchLineSchema['type']): void => {
-      addStitchLine(component.id, type)
+      addStitchLineToComponent(component.id, type)
       onAddStitchLine(component.id, type)
     },
-    [addStitchLine, component, onAddStitchLine],
+    [addStitchLineToComponent, component, onAddStitchLine],
   )
+
+  const handleAddHole = useCallback((): void => {
+    addHole(component.id)
+  }, [addHole, component.id])
 
   return (
     <Box onClick={handleActionsClick}>
@@ -81,6 +85,11 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
           <Menu.Positioner>
             <Menu.Content>
               <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
+              <Menu.Item value="hole" onClick={handleAddHole}>
+                <PiRectangleDashed />
+                <Menu.ItemText>{t.common.actions.addByName(t.hole.title)}</Menu.ItemText>
+              </Menu.Item>
+              <Menu.Separator />
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
               <Menu.Item onClick={handleClone} value="clone" disabled={!canClone}>
                 <PiCopy />

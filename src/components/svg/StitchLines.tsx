@@ -11,9 +11,7 @@ type StitchLinesProps = {
 
 export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
   const { project, computedProject } = useProject()
-  const stitchLines = project.stitchLines.filter(
-    (stitchLine) => stitchLine.componentId === componentId && stitchLine.type === 'component-bounds-stitch-line',
-  )
+  const stitchLines = project.stitchLines.filter((stitchLine) => stitchLine.type === 'component-bounds-stitch-line')
 
   return (
     <>
@@ -24,6 +22,10 @@ export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
 
         if (!isDefined(computedStitchLine)) {
           throw new Error(`Computed stitch line not found: ${stitchLine.id}`)
+        }
+
+        if (computedStitchLine.componentId !== componentId) {
+          return null
         }
 
         const resolvedStitchLine = getResolvedStitchLine(stitchLine, project.stitchingSettings)

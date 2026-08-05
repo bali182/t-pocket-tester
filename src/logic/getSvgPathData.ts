@@ -7,7 +7,7 @@ const getSvgPathCommandData = (command: PathCommand): string => {
     case 'lineTo':
       return `L ${command.point.x.toString()} ${command.point.y.toString()}`
     case 'arcTo':
-      return `A ${command.radius.toString()} ${command.radius.toString()} 0 0 1 ${command.point.x.toString()} ${command.point.y.toString()}`
+      return `A ${command.radius.toString()} ${command.radius.toString()} 0 0 ${command.reversed ? '0' : '1'} ${command.point.x.toString()} ${command.point.y.toString()}`
     case 'close':
       return 'Z'
   }
