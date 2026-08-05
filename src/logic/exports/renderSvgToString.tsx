@@ -11,6 +11,5 @@ export const renderSvgToString = (
   params: SvgExportParamsSchema,
 ): string => {
   const svgExport = getComputedSvgExport(project, computedProject, params)
-
   return renderToString(<SvgExportRoot project={project} svgExport={svgExport} />)
 }

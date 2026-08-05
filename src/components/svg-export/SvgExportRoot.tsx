@@ -26,6 +26,7 @@ export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, svgExport }) =>
       <svg
         width={`${width.toString()}mm`}
         height={`${height.toString()}mm`}
+        xmlns="http://www.w3.org/2000/svg"
         style={{ display: 'block' }}
         viewBox={viewBox}
       >

@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import { G, Text } from '@react-pdf/renderer'
 import type { FC } from 'react'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
@@ -6,23 +7,33 @@ import { getSvgExportElementBoundingRect } from '../../logic/exports/getSvgExpor
 import type { SvgExportElementSchema } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
 
-type ExportElementTextProps = {
+type PdfElementTextProps = {
   element: SvgExportElementSchema
 }
 
-export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
+type PdfTextLine = {
+  text: string
+  color: string | undefined
+  fontSize: number
+}
+
+type PdfTextLinePosition = {
+  line: PdfTextLine
+  x: BigNumber
+  y: BigNumber
+}
+
+export const PdfElementText: FC<PdfElementTextProps> = ({ element }) => {
   const { exportTextStyles, exportIdentifiers } = useDrawAreaContext()
   const lines = [
-    getExportTextLine(
+    getPdfTextLine(
       exportIdentifiers.getNameText(element),
       exportTextStyles.getNameTextColor(element),
-      exportTextStyles.getNameTextFontFamily(element),
       exportTextStyles.getNameTextFontSize(element),
     ),
-    getExportTextLine(
+    getPdfTextLine(
       exportTextStyles.getDimensionsText(element),
       exportTextStyles.getDimensionsTextColor(element),
-      exportTextStyles.getDimensionsTextFontFamily(element),
       exportTextStyles.getDimensionsTextFontSize(element),
     ),
   ].filter(isDefined)
@@ -32,7 +43,7 @@ export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
   }
 
   const boundingRect = getSvgExportElementBoundingRect(element)
-  const positionedLines = getExportTextLinePositions(
+  const positionedLines = getPdfTextLinePositions(
     lines,
     boundingRect.x.plus(boundingRect.width.dividedBy(2)),
     boundingRect.y.plus(boundingRect.height.dividedBy(2)),
@@ -40,63 +51,42 @@ export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
   )
 
   return (
-    <g data-text-for-component={exportIdentifiers.getElementId(element)}>
+    <G>
       {positionedLines.map((position) => (
-        <text
-          alignmentBaseline="middle"
+        <Text
           dominantBaseline="middle"
           fill={position.line.color}
-          fontFamily={position.line.fontFamily}
-          fontSize={position.line.fontSize}
           key={position.line.text}
           textAnchor="middle"
           x={position.x.toString()}
           y={position.y.toString()}
+          {...{ fontSize: position.line.fontSize }}
         >
           {position.line.text}
-        </text>
+        </Text>
       ))}
-    </g>
+    </G>
   )
 }
 
-type ExportTextLine = {
-  text: string
-  color: string | undefined
-  fontFamily: string | undefined
-  fontSize: number
-}
-
-type ExportTextLinePosition = {
-  line: ExportTextLine
-  x: BigNumber
-  y: BigNumber
-}
-
-const getExportTextLine = (
+const getPdfTextLine = (
   text: string | undefined,
   color: string | undefined,
-  fontFamily: string | undefined,
   fontSize: number | undefined,
-): ExportTextLine | undefined => {
+): PdfTextLine | undefined => {
   if (isDefined(text) && isDefined(fontSize)) {
-    return {
-      text,
-      color,
-      fontFamily,
-      fontSize,
-    }
+    return { text, color, fontSize }
   }
 
   return undefined
 }
 
-const getExportTextLinePositions = (
-  lines: ExportTextLine[],
+const getPdfTextLinePositions = (
+  lines: PdfTextLine[],
   centerX: BigNumber,
   centerY: BigNumber,
   gap: BigNumber,
-): ExportTextLinePosition[] => {
+): PdfTextLinePosition[] => {
   const linesHeight = lines.reduce((height, line) => height.plus(line.fontSize), new BigNumber(0))
   const contentHeight = linesHeight.plus(gap.times(lines.length - 1))
   const contentTop = centerY.minus(contentHeight.dividedBy(2))
