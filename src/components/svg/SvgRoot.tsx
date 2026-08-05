@@ -1,13 +1,13 @@
 import { STROKE_THICKNESS, VIEWBOX_PADDING } from '../../constants/drawing'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
-import { useProject } from '../../hooks/useProject'
+import { useSubProject } from '../../hooks/useSubProject'
 import type { ComputedRootPanelSchema } from '../../schemas/computed'
 import { getViewBox } from '../../utils/getViewBox'
 import { RootPanel } from './RootPanel'
 
 export const SvgRoot = () => {
-  const { computedProject } = useProject()
+  const { computedSubProject: computedProject } = useSubProject()
   const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(computedProject.root)
   const { isInteractive } = useDrawAreaContext()
 

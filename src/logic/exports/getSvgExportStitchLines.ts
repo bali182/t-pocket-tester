@@ -7,7 +7,7 @@ import type {
   ComputedTPocketSchema,
 } from '../../schemas/computed'
 import type { PathSchema } from '../../schemas/geometry'
-import type { ComputedProjectSchema, ProjectSchema } from '../../schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
 import type { StitchLineCommonConfigSchema, StitchLineSchema } from '../../schemas/stitching'
 import type { SvgExportStitchLineModeSchema, SvgExportStitchLineSchema } from '../../schemas/svgExport'
 import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
@@ -22,20 +22,21 @@ type ComputedSvgExportStitchLineTarget =
   | ComputedTPocketSchema
 
 export const getSvgExportStitchLines = (
-  project: ProjectSchema,
-  computedProject: ComputedProjectSchema,
+  subProject: SubProjectSchema,
+  computedSubProject: ComputedSubProjectSchema,
   target: ComputedSvgExportStitchLineTarget,
   stitchLineMode: SvgExportStitchLineModeSchema,
+  stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportStitchLineSchema[] => {
   const candidateStitchLines = getCandidateStitchLines(
-    project.stitchLines,
-    computedProject.stitchLines,
+    subProject.stitchLines,
+    computedSubProject.stitchLines,
     getTargetComponentId(target),
     stitchLineMode,
   )
 
   return candidateStitchLines.flatMap((stitchLine) => {
-    const computedStitchLine = computedProject.stitchLines.find(
+    const computedStitchLine = computedSubProject.stitchLines.find(
       (candidateComputedStitchLine) => candidateComputedStitchLine.stitchLineId === stitchLine.id,
     )
 
@@ -46,9 +47,9 @@ export const getSvgExportStitchLines = (
     const svgExportStitchLine = getSvgExportStitchLine(
       stitchLine,
       computedStitchLine,
-      project.stitchingSettings,
+      stitchingSettings,
       target.path,
-      getExportRoutes(computedProject, stitchLine, computedStitchLine, target, stitchLineMode),
+      getExportRoutes(computedSubProject, stitchLine, computedStitchLine, target, stitchLineMode),
     )
 
     return isDefined(svgExportStitchLine) ? [svgExportStitchLine] : []
@@ -109,7 +110,7 @@ const getSvgExportStitchLine = (
 }
 
 const getExportRoutes = (
-  computedProject: ComputedProjectSchema,
+  computedProject: ComputedSubProjectSchema,
   stitchLine: StitchLineSchema,
   computedStitchLine: ComputedStitchLineSchema,
   target: ComputedSvgExportStitchLineTarget,

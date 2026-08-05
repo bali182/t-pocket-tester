@@ -1,20 +1,22 @@
 import BigNumber from 'bignumber.js'
 
 import { getNormalizedCornerRadius } from '../logic/cornerRadiusUtils'
-import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
+import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
 import type { ComponentSchema, PanelSchema, RootPanelSchema } from '../schemas/components'
-import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
+import type { ProjectEditingSettingSchema } from '../schemas/editingSettings'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
 
 export const adjustCornerRadiiToParent = (
-  project: ProjectSchema,
-  computedProject: ComputedProjectSchema,
-): ProjectSchema => {
-  if (!project.editingSettings.adjustCornerRadiiToParent) {
-    return project
+  subProject: SubProjectSchema,
+  computedProject: ComputedSubProjectSchema,
+  editingSettings: ProjectEditingSettingSchema,
+): SubProjectSchema => {
+  if (!editingSettings.adjustCornerRadiiToParent) {
+    return subProject
   }
 
-  let components = project.components
+  let components = subProject.components
 
   const visitChildren = (parent: RootPanelSchema | PanelSchema): void => {
     const parentBoundingRect = computedProject.components[parent.id].boundingRect
@@ -110,8 +112,8 @@ export const adjustCornerRadiiToParent = (
           }
 
       if (updatedChild !== child) {
-        if (components === project.components) {
-          components = { ...project.components }
+        if (components === subProject.components) {
+          components = { ...subProject.components }
         }
 
         components[childId] = updatedChild
@@ -123,13 +125,13 @@ export const adjustCornerRadiiToParent = (
     }
   }
 
-  const root = components[project.root]
+  const root = components[subProject.root]
 
   if (!isDefined(root) || root.type !== 'root-panel') {
-    throw new Error(`Root component not found: ${project.root}`)
+    throw new Error(`Root component not found: ${subProject.root}`)
   }
 
   visitChildren(root)
 
-  return components === project.components ? project : { ...project, components }
+  return components === subProject.components ? subProject : { ...subProject, components }
 }

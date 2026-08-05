@@ -1,9 +1,9 @@
 import type { ComputedComponentSchema } from '../schemas/computed'
 import { isDefined } from '../utils/isDefined'
-import { useProject } from './useProject'
+import { useSubProject } from './useSubProject'
 
 export const useComputedComponent = <T extends ComputedComponentSchema = ComputedComponentSchema>(id: string): T => {
-  const { computedProject } = useProject()
+  const { computedSubProject: computedProject } = useSubProject()
   const computedComponent = computedProject.components[id]
 
   if (!isDefined(computedComponent)) {

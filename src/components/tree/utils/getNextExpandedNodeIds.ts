@@ -1,53 +1,53 @@
-import { getComponentAncestorIds } from '../../../operations/project/utils/getComponentAncestorIds'
-import { ProjectSchema } from '../../../schemas/project'
+import { getComponentAncestorIds } from '../../../operations/subProject/utils/getComponentAncestorIds'
+import { SubProjectSchema } from '../../../schemas/subProject'
 import { EditorSelectionSchema } from '../../../schemas/selection'
 import { isDefined } from '../../../utils/isDefined'
 import { getComponentNodeId, getHoleNodeId } from './treeNodeIds'
 
 export const getNextExpandedNodeIds = (
   selection: EditorSelectionSchema,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   expandedIds: string[],
 ): string[] => {
   switch (selection.type) {
     case 'component':
-      return getNextExpandedNodeIdsForComponent(selection.componentId, project, expandedIds)
+      return getNextExpandedNodeIdsForComponent(selection.componentId, subProject, expandedIds)
     case 'stitch-line':
-      return getNextExpandedIdsForStitchLine(selection.stitchLineId, project, expandedIds)
+      return getNextExpandedIdsForStitchLine(selection.stitchLineId, subProject, expandedIds)
     case 'hole':
-      return getNextExpandedIdsForHole(selection.holeId, project, expandedIds)
+      return getNextExpandedIdsForHole(selection.holeId, subProject, expandedIds)
   }
 }
 
 const getNextExpandedNodeIdsForComponent = (
   componentId: string,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   expandedIds: string[],
 ): string[] => {
-  return uniqueExpandedIds(expandedIds, getComponentRelatedIds(componentId, project, false))
+  return uniqueExpandedIds(expandedIds, getComponentRelatedIds(componentId, subProject, false))
 }
 
 const getNextExpandedIdsForStitchLine = (
   stitchLineId: string,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   expandedIds: string[],
 ): string[] => {
-  const stitchLine = project.stitchLines.find((candidate) => candidate.id === stitchLineId)
+  const stitchLine = subProject.stitchLines.find((candidate) => candidate.id === stitchLineId)
   if (!isDefined(stitchLine)) {
     return expandedIds
   }
 
   switch (stitchLine.targetType) {
     case 'component': {
-      return uniqueExpandedIds(expandedIds, getComponentRelatedIds(stitchLine.targetId, project, true))
+      return uniqueExpandedIds(expandedIds, getComponentRelatedIds(stitchLine.targetId, subProject, true))
     }
     case 'hole': {
-      const hole = project.holes.find((candidate) => candidate.id === stitchLine.targetId)
+      const hole = subProject.holes.find((candidate) => candidate.id === stitchLine.targetId)
       if (!isDefined(hole)) {
         return expandedIds
       }
       return uniqueExpandedIds(expandedIds, [
-        ...getComponentRelatedIds(hole.componentId, project, true),
+        ...getComponentRelatedIds(hole.componentId, subProject, true),
         getHoleNodeId(hole.id),
       ])
     }
@@ -57,18 +57,22 @@ const getNextExpandedIdsForStitchLine = (
   }
 }
 
-const getNextExpandedIdsForHole = (holeId: string, project: ProjectSchema, expandedIds: string[]): string[] => {
-  const hole = project.holes.find((candidate) => candidate.id === holeId)
+const getNextExpandedIdsForHole = (holeId: string, subProject: SubProjectSchema, expandedIds: string[]): string[] => {
+  const hole = subProject.holes.find((candidate) => candidate.id === holeId)
 
   if (!isDefined(hole)) {
     return expandedIds
   }
 
-  return uniqueExpandedIds(expandedIds, getComponentRelatedIds(hole.componentId, project, true))
+  return uniqueExpandedIds(expandedIds, getComponentRelatedIds(hole.componentId, subProject, true))
 }
 
-const getComponentRelatedIds = (componentId: string, project: ProjectSchema, includeComponent: boolean): string[] => {
-  const ancestorNodeIds = getComponentAncestorIds(componentId, project).map(getComponentNodeId)
+const getComponentRelatedIds = (
+  componentId: string,
+  subProject: SubProjectSchema,
+  includeComponent: boolean,
+): string[] => {
+  const ancestorNodeIds = getComponentAncestorIds(componentId, subProject).map(getComponentNodeId)
   return includeComponent ? [...ancestorNodeIds, getComponentNodeId(componentId)] : ancestorNodeIds
 }
 

@@ -38,7 +38,7 @@ export const ProjectActionsMenu: FC<ProjectActionsMenuProps> = ({ size, projectI
             <Menu.Positioner>
               <Menu.Content>
                 <Menu.Item
-                  onClick={handleDelete}
+                  onSelect={handleDelete}
                   value="delete"
                   color="fg.error"
                   _hover={{ bg: 'bg.error', color: 'fg.error' }}

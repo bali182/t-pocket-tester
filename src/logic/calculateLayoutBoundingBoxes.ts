@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js'
 
-import { getComponentChildren } from '../operations/project/utils/getComponentChildren'
+import { getComponentChildren } from '../operations/subProject/utils/getComponentChildren'
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { RectSchema } from '../schemas/geometry'
-import type { ProjectSchema } from '../schemas/project'
+import type { SubProjectSchema } from '../schemas/subProject'
 import { clamp } from '../utils/clamp'
 
 type LayoutComponent = RootPanelSchema | PanelSchema
@@ -13,10 +13,10 @@ const ZERO = new BigNumber(0)
 
 export const calculateLayoutBoundingBoxes = (
   component: LayoutComponent,
-  project: ProjectSchema,
+  subProject: SubProjectSchema,
   rect: RectSchema,
 ): [LayoutChildComponent, RectSchema][] => {
-  const children = getComponentChildren(component, project)
+  const children = getComponentChildren(component, subProject)
   const layoutChildren = assertLayoutChildren(children)
 
   return calculateChildBoundingBoxes(layoutChildren, rect, component)

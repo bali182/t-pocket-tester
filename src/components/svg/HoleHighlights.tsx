@@ -2,7 +2,7 @@ import { useCallback, useState, type FC, type MouseEventHandler, type PointerEve
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
-import { useProject } from '../../hooks/useProject'
+import { useSubProject } from '../../hooks/useSubProject'
 import type { ComputedHoleSchema } from '../../schemas/computed'
 import type { HoleSchema } from '../../schemas/hole'
 import { isDefined } from '../../utils/isDefined'
@@ -17,8 +17,8 @@ type HoleHighlightProps = {
 }
 
 export const HoleHighlights: FC<HoleHighlightsProps> = ({ componentId }) => {
-  const { computedProject, project } = useProject()
-  const holes = project.holes.filter((hole) => hole.componentId === componentId)
+  const { computedSubProject: computedProject, subProject } = useSubProject()
+  const holes = subProject.holes.filter((hole) => hole.componentId === componentId)
 
   return (
     <>

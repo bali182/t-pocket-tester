@@ -5,8 +5,10 @@ import { Link } from 'react-router'
 
 import { useProjects } from '../../hooks/useProjects'
 import { useTranslation } from '../../translations/translation'
+import { isDefined } from '../../utils/isDefined'
 import { CreateProjectDialog } from '../CreateProjectDialog'
 
+// TODO Should list real projects, not subProjects.
 export const ProjectsRoute: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const { projects } = useProjects()
@@ -28,15 +30,20 @@ export const ProjectsRoute: FC = () => {
             {t.projects.actions.create}
           </Button>
         </Card.Root>
-        {projects.map((project) => (
-          <Link key={project.id} to={`/projects/${project.id}`}>
+        {projects.map((project) => {
+          const firstSubProject = project.subProjects[0]
+          const target = isDefined(firstSubProject) ? `/projects/${project.id}/${firstSubProject.id}` : `/projects/${project.id}`
+
+          return (
+          <Link key={project.id} to={target}>
             <Card.Root height="160px" transition="box-shadow 0.2s" _hover={{ shadow: 'md' }}>
               <Card.Body>
                 <Card.Title>{project.name}</Card.Title>
               </Card.Body>
             </Card.Root>
           </Link>
-        ))}
+          )
+        })}
       </Grid>
       <CreateProjectDialog isOpen={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
     </Box>

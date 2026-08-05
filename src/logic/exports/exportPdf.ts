@@ -1,5 +1,6 @@
 import { pdf } from '@react-pdf/renderer'
 
+import type { SubProjectSchema } from '../../schemas/subProject'
 import type { ProjectSchema } from '../../schemas/project'
 import type {
   PdfExportParamsSchema,
@@ -11,14 +12,15 @@ import { renderPdfDocument } from './renderPdfDocument'
 
 export const exportPdf = async (
   project: ProjectSchema,
+  subProject: SubProjectSchema,
   params: PdfExportParamsSchema,
   elements: SvgExportElementSchema[],
   layout: SuccessfulPdfExportLayoutSchema,
 ): Promise<void> => {
   const pageSize = getPdfExportPageSize(params)
-  const blob = await pdf(renderPdfDocument(project, params, elements, layout, pageSize)).toBlob()
+  const blob = await pdf(renderPdfDocument(project, subProject, params, elements, layout, pageSize)).toBlob()
 
-  downloadPdf(blob, `${project.name}.pdf`)
+  downloadPdf(blob, `${subProject.name}.pdf`)
 }
 
 const downloadPdf = (blob: Blob, filename: string): void => {

@@ -5,6 +5,7 @@ import type { ProjectSchema } from '../schemas/project'
 import { projectsAtom } from '../state/projectsAtom'
 import { isDefined } from '../utils/isDefined'
 
+// TODO this should contain real projects
 export const useProjects = () => {
   const projects = useAtomValue(projectsAtom)
 

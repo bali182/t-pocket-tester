@@ -1,8 +1,4 @@
 export const HU = {
-  navigation: {
-    home: 'Kezdőlap',
-    project: 'Projekt',
-  },
   common: {
     actions: {
       add: 'Hozzáadás',
@@ -264,7 +260,7 @@ export const HU = {
     },
   },
   defaults: {
-    projectName: 'Új projekt',
+    subProjectName: 'Új projekt',
     rootComponentName: 'Alap',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },

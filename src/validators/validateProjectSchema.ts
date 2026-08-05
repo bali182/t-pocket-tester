@@ -27,7 +27,6 @@ export const validateProjectSchema = (
     context,
   )
   const issues: ValidationIssuesSchema<ProjectSchema> = {
-    components: {},
     editingSettings: {
       addComputedSizesToAutoSized: undefined,
       adjustCornerRadiiToParent: undefined,
@@ -35,22 +34,17 @@ export const validateProjectSchema = (
     },
     id: undefined,
     name: nameResult.issues,
-    root: undefined,
-    holes: [],
-    stitchLines: [],
+    subProjects: [],
     componentSettings: {
       baseColor: componentSettingsResult.issues,
     },
     stitchingSettings: stitchingSettingsResult.issues,
   }
   const committedValue: ProjectSchema = {
-    components: currentValue.components,
     editingSettings: currentValue.editingSettings,
     id: currentValue.id,
     name: nameResult.committedValue,
-    root: currentValue.root,
-    holes: currentValue.holes,
-    stitchLines: currentValue.stitchLines,
+    subProjects: currentValue.subProjects,
     stitchingSettings: stitchingSettingsResult.committedValue,
     componentSettings: {
       baseColor: componentSettingsResult.committedValue,

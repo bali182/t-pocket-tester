@@ -23,7 +23,8 @@ import { PiDotsSixVertical } from 'react-icons/pi'
 
 import typia from 'typia'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { useProject } from '../../hooks/useProject'
+import { useSubProject } from '../../hooks/useSubProject'
+import { useSubProjectOperations } from '../../hooks/useSubProjectOperations'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentTreeItem } from './ComponentTreeItem'
 import { HoleTreeItem } from './HoleTreeItem'
@@ -40,9 +41,10 @@ import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './utils/
 import { useTreeDropAnimation } from './utils/useTreeDropAnimation'
 
 export const ComponentTree: FC = () => {
-  const { project, moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole } = useProject()
+  const { subProject } = useSubProject()
+  const { moveComponent, moveHole, moveStitchLineToComponent, moveStitchLineToHole } = useSubProjectOperations()
   const { selection } = useDrawAreaContext()
-  const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>(() => [getComponentNodeId(project.root)])
+  const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>(() => [getComponentNodeId(subProject.root)])
   const [activeDragData, setActiveDragData] = useState<TreeDragData | undefined>()
   const { dropTargetRectRef, handleDropAnimation } = useTreeDropAnimation()
   const sensors = useSensors(useSensor(PointerSensor))
@@ -53,9 +55,9 @@ export const ComponentTree: FC = () => {
       nodeToChildrenCount: (node) => (node.kind === 'stitch-line' ? undefined : node.children.length),
       nodeToString: getProjectTreeNodeLabel,
       nodeToValue: (node) => node.id,
-      rootNode: createTreeRootNode(project),
+      rootNode: createTreeRootNode(subProject),
     })
-  }, [project])
+  }, [subProject])
 
   const selectedValue = useMemo((): string[] => {
     const { editorSelection } = selection
@@ -82,9 +84,9 @@ export const ComponentTree: FC = () => {
   useEffect(() => {
     const { editorSelection } = selection
     if (isDefined(editorSelection)) {
-      setExpandedNodeIds((expandedIds) => getNextExpandedNodeIds(editorSelection, project, expandedIds))
+      setExpandedNodeIds((expandedIds) => getNextExpandedNodeIds(editorSelection, subProject, expandedIds))
     }
-  }, [project, selection])
+  }, [subProject, selection])
 
   const handleExpandedChange = useCallback((details: TreeViewExpandedChangeDetails<ProjectTreeNode>): void => {
     setExpandedNodeIds(details.expandedValue)

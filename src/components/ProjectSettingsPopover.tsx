@@ -3,8 +3,8 @@ import { useMemo, type FC, type ReactElement, type RefObject } from 'react'
 
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
-import { useProject } from '../hooks/useProject'
 import { useProjects } from '../hooks/useProjects'
+import { useProject } from '../hooks/useProject'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
 import { validateProjectSchema } from '../validators/validateProjectSchema'
@@ -16,6 +16,7 @@ type ProjectSettingsPopoverProps = {
   trigger: ReactElement
 }
 
+// TODO this editing should be done on the real Project, not SubProject
 export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchorRef, trigger }) => {
   const t = useTranslation()
 

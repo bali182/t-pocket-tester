@@ -15,7 +15,7 @@ export const validateHoleSchema = (
   currentValue: HoleSchema,
   context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<HoleSchema> => {
-  const nameResult = validateName(input.name, currentValue.name, input.id, context.project.holes, context)
+  const nameResult = validateName(input.name, currentValue.name, input.id, context.subProject.holes, context)
   const positionResult = validateHolePositionSchema(input, currentValue, context)
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 1 })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 1 })

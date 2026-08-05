@@ -2,7 +2,7 @@ import { Button, HStack } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import { PiTrash } from 'react-icons/pi'
 
-import { useProject } from '../../hooks/useProject'
+import { useSubProjectOperations } from '../../hooks/useSubProjectOperations'
 import type { StitchLineSchema } from '../../schemas/stitching'
 import { useTranslation } from '../../translations/translation'
 
@@ -13,7 +13,7 @@ type StitchLineEditorHeaderMenuProps = {
 
 export const StitchLineEditorHeaderMenu: FC<StitchLineEditorHeaderMenuProps> = ({ onClose, stitchLine }) => {
   const t = useTranslation()
-  const { deleteStitchLine } = useProject()
+  const { deleteStitchLine } = useSubProjectOperations()
 
   const handleDelete = useCallback((): void => {
     onClose()

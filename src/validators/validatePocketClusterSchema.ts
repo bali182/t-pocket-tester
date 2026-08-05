@@ -35,7 +35,7 @@ export const validatePocketClusterSchema = (
     input.name,
     currentValue.name,
     input.id,
-    Object.values(context.project.components),
+    Object.values(context.subProject.components),
     context,
   )
   const colorResult = validateOptionalHexColor(input.color, currentValue.color, context)

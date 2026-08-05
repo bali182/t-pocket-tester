@@ -1,7 +1,7 @@
 import { Box, IconButton, Menu, Portal, type IconButtonProps } from '@chakra-ui/react'
 import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
-import { useProject } from '../../hooks/useProject'
+import { useSubProjectOperations } from '../../hooks/useSubProjectOperations'
 import type { HoleSchema } from '../../schemas/hole'
 import { useTranslation } from '../../translations/translation'
 import { noop } from '../../utils/noop'
@@ -14,7 +14,7 @@ type HoleActionsMenuProps = {
 
 export const HoleActionsMenu: FC<HoleActionsMenuProps> = ({ hole, size, onDelete = noop }) => {
   const t = useTranslation()
-  const { addStitchLineToHole, cloneHole, deleteHole } = useProject()
+  const { addStitchLineToHole, cloneHole, deleteHole } = useSubProjectOperations()
 
   const handleClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
@@ -44,17 +44,17 @@ export const HoleActionsMenu: FC<HoleActionsMenuProps> = ({ hole, size, onDelete
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
-              <Menu.Item onClick={handleAddStitchLine} value="stitch-line">
+              <Menu.Item onSelect={handleAddStitchLine} value="stitch-line">
                 <PiNeedle />
                 <Menu.ItemText>{t.common.actions.addByName(t.stitchLine.types.componentBounds)}</Menu.ItemText>
               </Menu.Item>
               <Menu.Separator />
-              <Menu.Item onClick={handleClone} value="clone">
+              <Menu.Item onSelect={handleClone} value="clone">
                 <PiCopy />
                 <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item
-                onClick={handleDelete}
+                onSelect={handleDelete}
                 value="delete"
                 color="fg.error"
                 _hover={{ bg: 'bg.error', color: 'fg.error' }}

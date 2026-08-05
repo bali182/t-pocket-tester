@@ -26,7 +26,7 @@ import { StitchLineSchema } from '../schemas/stitching'
 import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { produce } from '../utils/produce'
-import { useProject } from './useProject'
+import { useSubProject } from './useSubProject'
 
 import { formatHex8, parse } from 'culori'
 import { getSelectionObstructingComponentIds } from '../logic/getSelectionObstructingComponentIds'
@@ -66,44 +66,43 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const [hoveredStitchLineId, setHoveredStitchLine] = useState<string | undefined>()
   const [hoveredTreeSelection, setHoveredTreeSelection] = useState<EditorSelectionSchema | undefined>()
-  const { project, touchComponent } = useProject()
+  const { project, subProject } = useSubProject()
 
   const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'component') {
       return undefined
     }
 
-    return project.components[selection.componentId]
-  }, [project.components, selection])
+    return subProject.components[selection.componentId]
+  }, [subProject.components, selection])
 
   const selectedHole = useMemo<HoleSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'hole') {
       return undefined
     }
 
-    return project.holes.find((hole) => hole.id === selection.holeId)
-  }, [project.holes, selection])
+    return subProject.holes.find((hole) => hole.id === selection.holeId)
+  }, [subProject.holes, selection])
 
   const selectedStitchLine = useMemo<StitchLineSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'stitch-line') {
       return undefined
     }
 
-    return project.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
-  }, [project.stitchLines, selection])
+    return subProject.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
+  }, [subProject.stitchLines, selection])
 
   const selectionObstructingComponentIds = useMemo<ReadonlySet<string>>(
-    () => getSelectionObstructingComponentIds(hoveredTreeSelection ?? selection, project),
-    [hoveredTreeSelection, project, selection],
+    () => getSelectionObstructingComponentIds(hoveredTreeSelection ?? selection, subProject),
+    [hoveredTreeSelection, subProject, selection],
   )
 
   const selectComponent = useCallback(
     (componentId: string): void => {
-      touchComponent(componentId)
       setHoveredStitchLine(undefined)
       setSelection({ componentId, type: 'component' })
     },
-    [touchComponent],
+    [],
   )
 
   const selectStitchLine = useCallback((stitchLineId: string): void => {

@@ -1,26 +1,15 @@
-import { ComponentSchema } from './components'
-import { ComputedComponentSchema, ComputedHoleSchema, ComputedStitchLineSchema } from './computed'
+import { HasIdentitySchema } from './common'
 import { ComponentBaseSettings, ProjectEditingSettingSchema } from './editingSettings'
-import { HoleSchema } from './hole'
-import { StitchLineCommonConfigSchema, StitchLineSchema } from './stitching'
+import { StitchLineCommonConfigSchema } from './stitching'
+import { ComputedSubProjectSchema, SubProjectSchema } from './subProject'
 
-export type ProjectSchema = {
-  id: string
-  name: string
-  root: string
-  components: Record<string, ComponentSchema>
-  holes: HoleSchema[]
-  stitchLines: StitchLineSchema[]
+export type ProjectSchema = HasIdentitySchema & {
+  subProjects: SubProjectSchema[]
   editingSettings: ProjectEditingSettingSchema
   stitchingSettings: StitchLineCommonConfigSchema
   componentSettings: ComponentBaseSettings
 }
 
-export type ComputedProjectSchema = {
-  id: string
-  name: string
-  root: string
-  components: Record<string, ComputedComponentSchema>
-  holes: ComputedHoleSchema[]
-  stitchLines: ComputedStitchLineSchema[]
+export type ComputedProjectSchema = HasIdentitySchema & {
+  subProjects: ComputedSubProjectSchema[]
 }

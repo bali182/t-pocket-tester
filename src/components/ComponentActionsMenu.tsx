@@ -1,8 +1,8 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
-import { useProject } from '../hooks/useProject'
-import { hasComponentChildren } from '../operations/project/utils/hasComponentChildren'
+import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
+import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
@@ -25,7 +25,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   onDelete = noop,
 }) => {
   const t = useTranslation()
-  const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useProject()
+  const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useSubProjectOperations()
   const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
   const canClone = useMemo((): boolean => component.type !== 'root-panel', [component.type])
@@ -85,19 +85,19 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
           <Menu.Positioner>
             <Menu.Content>
               <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
-              <Menu.Item value="hole" onClick={handleAddHole}>
+              <Menu.Item value="hole" onSelect={handleAddHole}>
                 <PiRectangleDashed />
                 <Menu.ItemText>{t.common.actions.addByName(t.hole.title)}</Menu.ItemText>
               </Menu.Item>
               <Menu.Separator />
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
-              <Menu.Item onClick={handleClone} value="clone" disabled={!canClone}>
+              <Menu.Item value="clone" onSelect={handleClone} disabled={!canClone}>
                 <PiCopy />
                 <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item
                 disabled={!canDelete}
-                onClick={handleDelete}
+                onSelect={handleDelete}
                 value="delete"
                 color="fg.error"
                 _hover={{ bg: 'bg.error', color: 'fg.error' }}
@@ -147,7 +147,7 @@ const AddChildComponentMenuSection: FC<AddChildComponentMenuProps> = ({ onAddChi
       {possibleTypes.map((type) => {
         const Icon = getComponentIcon(type)
         return (
-          <Menu.Item key={type} value={type} onClick={() => onAddChild(type)}>
+          <Menu.Item key={type} value={type} onSelect={() => onAddChild(type)}>
             <Icon />
             <Menu.ItemText>{labels[type]}</Menu.ItemText>
           </Menu.Item>
@@ -191,7 +191,7 @@ export const AddComponentStitchLineMenu: FC<AddComponentStitchLineMenuProps> = (
     <>
       {possibleTypes.map((type) => {
         return (
-          <Menu.Item key={type} value={type} onClick={() => onAddStitchLine(type)}>
+          <Menu.Item key={type} value={type} onSelect={() => onAddStitchLine(type)}>
             <PiNeedle />
             <Menu.ItemText>{labels[type]}</Menu.ItemText>
           </Menu.Item>

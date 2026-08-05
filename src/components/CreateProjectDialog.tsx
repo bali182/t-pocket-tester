@@ -18,18 +18,19 @@ type CreateProjectDialogProps = {
   onOpenChange: (isOpen: boolean) => void
 }
 
+// Should be for creating real Projects not SubProjects
 export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOpenChange }) => {
   const { addProject, projects } = useProjects()
   const navigate = useNavigate()
   const t = useTranslation()
-  const [project, setProject] = useState<ProjectSchema>(() => createProject(t.defaults.projectName, t))
+  const [project, setProject] = useState<ProjectSchema>(() => createProject(t.defaults.subProjectName, t))
 
   useEffect(() => {
     if (!isOpen) {
       return
     }
 
-    setProject(createProject(t.defaults.projectName, t))
+    setProject(createProject(t.defaults.subProjectName, t))
   }, [isOpen, t])
 
   const context = useMemo<ProjectBasedValidationContextSchema>(
