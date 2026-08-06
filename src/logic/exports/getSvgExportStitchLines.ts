@@ -7,9 +7,10 @@ import type {
   ComputedTPocketSchema,
 } from '../../schemas/computed'
 import type { PathSchema } from '../../schemas/geometry'
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
+import { ExportStitchLineModeSchema } from '../../schemas/settings'
 import type { StitchLineCommonConfigSchema, StitchLineSchema } from '../../schemas/stitching'
-import type { SvgExportStitchLineModeSchema, SvgExportStitchLineSchema } from '../../schemas/svgExport'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
+import type { SvgExportStitchLineSchema } from '../../schemas/svgExport'
 import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
 import { isDefined } from '../../utils/isDefined'
 import { clipPathToClosedPath } from '../clipPathToClosedPath'
@@ -25,7 +26,7 @@ export const getSvgExportStitchLines = (
   subProject: SubProjectSchema,
   computedSubProject: ComputedSubProjectSchema,
   target: ComputedSvgExportStitchLineTarget,
-  stitchLineMode: SvgExportStitchLineModeSchema,
+  stitchLineMode: ExportStitchLineModeSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportStitchLineSchema[] => {
   const candidateStitchLines = getCandidateStitchLines(
@@ -71,7 +72,7 @@ const getCandidateStitchLines = (
   stitchLines: StitchLineSchema[],
   computedStitchLines: ComputedStitchLineSchema[],
   ownComponentId: string,
-  stitchLineMode: SvgExportStitchLineModeSchema,
+  stitchLineMode: ExportStitchLineModeSchema,
 ): StitchLineSchema[] => {
   switch (stitchLineMode) {
     case 'own-stitch-lines':
@@ -114,7 +115,7 @@ const getExportRoutes = (
   stitchLine: StitchLineSchema,
   computedStitchLine: ComputedStitchLineSchema,
   target: ComputedSvgExportStitchLineTarget,
-  stitchLineMode: SvgExportStitchLineModeSchema,
+  stitchLineMode: ExportStitchLineModeSchema,
 ): ComputedStitchRouteSchema[] => {
   if (stitchLineMode === 'all-stitch-lines' || stitchLine.type !== 'pocket-cluster-stitch-line') {
     return computedStitchLine.routes

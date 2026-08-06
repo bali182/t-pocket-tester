@@ -12,9 +12,9 @@ import {
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
 import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
-import type { SubProjectSchema } from '../schemas/subProject'
+import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import type { SubProjectSchema } from '../schemas/subProject'
 import { useTranslation } from '../translations/translation'
 import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
@@ -38,7 +38,7 @@ const drawAreaSelection: DrawAreaSelection = {
 export const useSvgDrawArea = (
   subProject: SubProjectSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
-  params: SvgExportParamsSchema,
+  params: BaseExportSettingsSchema,
 ): DrawAreaContextValue => {
   const t = useTranslation()
   const componentStyles = useMemo<DrawAreaComponentStyles>(

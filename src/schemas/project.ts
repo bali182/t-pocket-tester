@@ -1,5 +1,5 @@
 import { HasIdentitySchema } from './common'
-import { ComponentBaseSettings, ProjectEditingSettingSchema } from './editingSettings'
+import { ComponentBaseSettings, ProjectEditingSettingSchema } from './settings'
 import { StitchLineCommonConfigSchema } from './stitching'
 import { ComputedSubProjectSchema, SubProjectSchema } from './subProject'
 

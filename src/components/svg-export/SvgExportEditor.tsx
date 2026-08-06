@@ -8,7 +8,7 @@ import {
 import { useCallback, useMemo, type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
-import type { SvgExportParamsSchema, SvgExportStitchLineModeSchema } from '../../schemas/svgExport'
+import { BaseExportSettingsSchema, ExportStitchLineModeSchema } from '../../schemas/settings'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
@@ -17,13 +17,13 @@ import { SectionGroup } from '../common/SectionGroup'
 
 type SvgExportStitchLineModeOption = {
   label: string
-  value: SvgExportStitchLineModeSchema
+  value: ExportStitchLineModeSchema
 }
 
 type SvgExportEditorProps = {
-  editable: EditableSchema<SvgExportParamsSchema>
-  issues: ValidationIssuesSchema<SvgExportParamsSchema>
-  onChange: (updated: EditableSchema<SvgExportParamsSchema>) => void
+  editable: EditableSchema<BaseExportSettingsSchema>
+  issues: ValidationIssuesSchema<BaseExportSettingsSchema>
+  onChange: (updated: EditableSchema<BaseExportSettingsSchema>) => void
 }
 
 export const SvgExportEditor: FC<SvgExportEditorProps> = ({ editable, issues, onChange }) => {
@@ -74,7 +74,7 @@ export const SvgExportEditor: FC<SvgExportEditorProps> = ({ editable, issues, on
         return
       }
 
-      onChange({ ...editable, stitchLineMode: stitchLineMode as SvgExportStitchLineModeSchema })
+      onChange({ ...editable, stitchLineMode: stitchLineMode as ExportStitchLineModeSchema })
     },
     [editable, onChange],
   )

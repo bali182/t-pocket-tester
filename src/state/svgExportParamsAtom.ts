@@ -1,14 +1,16 @@
 import { atom } from 'jotai'
 
 import { defaultSvgExportParams } from '../defaultStates'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import { BaseExportSettingsSchema } from '../schemas/settings'
 import { readSvgExportParamsFromStorage, saveSvgExportParamsToStorage } from './storage'
 
-const svgExportParamsStorageAtom = atom<SvgExportParamsSchema>(readSvgExportParamsFromStorage(defaultSvgExportParams))
+const svgExportParamsStorageAtom = atom<BaseExportSettingsSchema>(
+  readSvgExportParamsFromStorage(defaultSvgExportParams),
+)
 
 export const svgExportParamsAtom = atom(
-  (get): SvgExportParamsSchema => get(svgExportParamsStorageAtom),
-  (_get, set, nextParams: SvgExportParamsSchema): void => {
+  (get): BaseExportSettingsSchema => get(svgExportParamsStorageAtom),
+  (_get, set, nextParams: BaseExportSettingsSchema): void => {
     set(svgExportParamsStorageAtom, nextParams)
     saveSvgExportParamsToStorage(nextParams)
   },

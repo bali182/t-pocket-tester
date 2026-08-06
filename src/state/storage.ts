@@ -1,7 +1,7 @@
 import typia from 'typia'
 
 import type { ProjectSchema } from '../schemas/project'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import { BaseExportSettingsSchema } from '../schemas/settings'
 
 type StorageKey = 'projects' | 'scaling' | 'svg-export-params'
 
@@ -21,13 +21,13 @@ export const saveScalingToStorage = (scaling: number): void => {
   safeWriteStorage('scaling', scaling)
 }
 
-export const readSvgExportParamsFromStorage = (defaultValue: SvgExportParamsSchema): SvgExportParamsSchema => {
-  return safeReadStorage<SvgExportParamsSchema>('svg-export-params', defaultValue, (raw) =>
-    typia.assert<SvgExportParamsSchema>(raw),
+export const readSvgExportParamsFromStorage = (defaultValue: BaseExportSettingsSchema): BaseExportSettingsSchema => {
+  return safeReadStorage<BaseExportSettingsSchema>('svg-export-params', defaultValue, (raw) =>
+    typia.assert<BaseExportSettingsSchema>(raw),
   )
 }
 
-export const saveSvgExportParamsToStorage = (params: SvgExportParamsSchema): void => {
+export const saveSvgExportParamsToStorage = (params: BaseExportSettingsSchema): void => {
   safeWriteStorage('svg-export-params', params)
 }
 

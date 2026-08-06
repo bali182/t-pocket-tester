@@ -1,14 +1,16 @@
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
+import { PdfExportLayoutSchema, PdfExportSettingsSchema } from '../../schemas/pdfExport'
 import type { ProjectSchema } from '../../schemas/project'
-import type { PdfExportLayoutSchema, PdfExportParamsSchema, SvgExportElementSchema } from '../../schemas/svgExport'
-import { getPdfExportLayout } from './getPdfExportLayout'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
+import type { SvgExportElementSchema } from '../../schemas/svgExport'
 import { getSvgExportElementsForComponent } from './getComputedSvgExport'
+import { getPdfExportLayout } from './getPdfExportLayout'
 
+// TODO WTF IS THIS RETURN TYPE????
 export const getComputedPdfExport = (
   project: ProjectSchema,
   subProject: SubProjectSchema,
   computedProject: ComputedSubProjectSchema,
-  params: PdfExportParamsSchema,
+  params: PdfExportSettingsSchema,
 ): {
   elements: SvgExportElementSchema[]
   layout: PdfExportLayoutSchema

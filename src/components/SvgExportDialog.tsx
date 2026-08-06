@@ -7,7 +7,7 @@ import { LANGUAGE } from '../constants/language'
 import { useSubProject } from '../hooks/useSubProject'
 import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import type { EditableSchema } from '../schemas/editable'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema } from '../schemas/validation'
 import { svgExportParamsAtom } from '../state/svgExportParamsAtom'
 import { useTranslation } from '../translations/translation'
@@ -27,9 +27,9 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   const [storedParams, setStoredParams] = useAtom(svgExportParamsAtom)
   const t = useTranslation()
   const context = useMemo<BaseValidationContextSchema>(() => ({ language: LANGUAGE, t }), [t])
-  const [exportParams, setExportParams] = useState<SvgExportParamsSchema>(storedParams)
+  const [exportParams, setExportParams] = useState<BaseExportSettingsSchema>(storedParams)
 
-  const [editableParams, setEditableParams] = useState<EditableSchema<SvgExportParamsSchema>>(() =>
+  const [editableParams, setEditableParams] = useState<EditableSchema<BaseExportSettingsSchema>>(() =>
     getEditableSchema(storedParams, context),
   )
 
@@ -39,7 +39,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   const hasErrors = useMemo(
-    () => hasValidationErrors<SvgExportParamsSchema>(validationResult.issues),
+    () => hasValidationErrors<BaseExportSettingsSchema>(validationResult.issues),
     [validationResult.issues],
   )
 
@@ -64,7 +64,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   const handleParamsChange = useCallback(
-    (updatedEditableParams: EditableSchema<SvgExportParamsSchema>): void => {
+    (updatedEditableParams: EditableSchema<BaseExportSettingsSchema>): void => {
       const updatedValidationResult = validateSvgExportParamsSchema(updatedEditableParams, exportParams, context)
 
       setEditableParams(updatedEditableParams)

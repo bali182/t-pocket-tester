@@ -2,20 +2,17 @@ import { Document, Page } from '@react-pdf/renderer'
 import type { FC } from 'react'
 
 import type { SizeSchema } from '../../schemas/geometry'
-import type { SubProjectSchema } from '../../schemas/subProject'
+import { PdfExportSettingsSchema, PdfExportSuccessfulLayoutSchema } from '../../schemas/pdfExport'
 import type { ProjectSchema } from '../../schemas/project'
-import type {
-  PdfExportParamsSchema,
-  SuccessfulPdfExportLayoutSchema,
-  SvgExportElementSchema,
-} from '../../schemas/svgExport'
+import type { SubProjectSchema } from '../../schemas/subProject'
+import type { SvgExportElementSchema } from '../../schemas/svgExport'
 import { PdfPageRoot } from './PdfPageRoot'
 
 type PdfDocumentProps = {
   elements: SvgExportElementSchema[]
-  layout: SuccessfulPdfExportLayoutSchema
+  layout: PdfExportSuccessfulLayoutSchema
   pageSize: SizeSchema
-  params: PdfExportParamsSchema
+  params: PdfExportSettingsSchema
   project: ProjectSchema
   subProject: SubProjectSchema
 }

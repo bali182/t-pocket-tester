@@ -2,14 +2,14 @@ import BigNumber from 'bignumber.js'
 
 import { pages } from '../../data/pages'
 import type { RectSchema, SizeSchema } from '../../schemas/geometry'
-import type {
+import {
   PdfExportLayoutSchema,
   PdfExportPageSchema,
-  PdfExportParamsSchema,
+  PdfExportSettingsSchema,
+  PdfExportPlacementRotation,
   PdfExportPlacementSchema,
-  SvgExportElementSchema,
-  SvgExportPanelSchema,
-} from '../../schemas/svgExport'
+} from '../../schemas/pdfExport'
+import type { SvgExportElementSchema, SvgExportPanelSchema } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
 import { getSvgExportElementLayoutBoundingRect } from './getSvgExportElementLayoutBoundingRect'
 
@@ -29,7 +29,7 @@ type CompactPage = {
 
 const ZERO = new BigNumber(0)
 
-export const getPdfExportPageSize = (params: PdfExportParamsSchema): SizeSchema => {
+export const getPdfExportPageSize = (params: PdfExportSettingsSchema): SizeSchema => {
   const page = pages.find((candidate) => candidate.id === params.page)
 
   if (!isDefined(page)) {
@@ -43,7 +43,7 @@ export const getPdfExportPageSize = (params: PdfExportParamsSchema): SizeSchema 
 
 export const getPdfExportLayout = (
   elements: SvgExportElementSchema[],
-  params: PdfExportParamsSchema,
+  params: PdfExportSettingsSchema,
 ): PdfExportLayoutSchema => {
   const pageSize = getPdfExportPageSize(params)
   const usableRect = getUsableRect(pageSize, params.padding)
@@ -80,13 +80,16 @@ const getUsableRect = (pageSize: SizeSchema, padding: number): RectSchema => {
 const getUnplaceableElements = (
   elements: SvgExportElementSchema[],
   usableRect: RectSchema,
-  layout: PdfExportParamsSchema['layout'],
+  layout: PdfExportSettingsSchema['layout'],
 ): SvgExportElementSchema[] => {
   return elements.filter((element) => {
     const boundingRect = getSvgExportElementLayoutBoundingRect(element)
 
     if (layout === 'compact') {
-      return !canFit(boundingRect.width, boundingRect.height, usableRect) && !canFit(boundingRect.height, boundingRect.width, usableRect)
+      return (
+        !canFit(boundingRect.width, boundingRect.height, usableRect) &&
+        !canFit(boundingRect.height, boundingRect.width, usableRect)
+      )
     }
 
     return !canFit(boundingRect.width, boundingRect.height, usableRect)
@@ -101,7 +104,7 @@ const layoutElements = (
   elements: SvgExportElementSchema[],
   usableRect: RectSchema,
   gap: number,
-  layout: PdfExportParamsSchema['layout'],
+  layout: PdfExportSettingsSchema['layout'],
 ): PdfExportPageSchema[] => {
   switch (layout) {
     case 'vertical':
@@ -223,7 +226,7 @@ const createPage = (): PdfExportPageSchema => ({ placements: new Map() })
 const createPdfExportPlacement = (
   sourceRect: RectSchema,
   boundingRect: RectSchema,
-  rotation: PdfExportPlacementSchema['rotation'],
+  rotation: PdfExportPlacementRotation,
 ): PdfExportPlacementSchema => {
   if (rotation === 0) {
     return {

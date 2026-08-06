@@ -1,21 +1,21 @@
 import type { EditableSchema } from '../schemas/editable'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateNumber } from './validateNumber'
 
 export const validateSvgExportParamsSchema = (
-  input: EditableSchema<SvgExportParamsSchema>,
-  currentValue: SvgExportParamsSchema,
+  input: EditableSchema<BaseExportSettingsSchema>,
+  currentValue: BaseExportSettingsSchema,
   context: BaseValidationContextSchema,
-): ValidationResultSchema<SvgExportParamsSchema> => {
+): ValidationResultSchema<BaseExportSettingsSchema> => {
   const gapResult = validateNumber(input.gap, currentValue.gap, context, { min: 0 })
   const paddingResult = validateNumber(input.padding, currentValue.padding, context, { min: 0 })
   const cutHelperDistanceResult = validateNumber(input.cutHelperDistance, currentValue.cutHelperDistance, context, {
     min: 0,
   })
 
-  const issues: ValidationIssuesSchema<SvgExportParamsSchema> = {
+  const issues: ValidationIssuesSchema<BaseExportSettingsSchema> = {
     gap: gapResult.issues,
     padding: paddingResult.issues,
     cutHelperDistance: cutHelperDistanceResult.issues,
@@ -24,7 +24,7 @@ export const validateSvgExportParamsSchema = (
     showDimensions: undefined,
     childMarkers: undefined,
   }
-  const committedValue: SvgExportParamsSchema = {
+  const committedValue: BaseExportSettingsSchema = {
     gap: gapResult.committedValue,
     padding: paddingResult.committedValue,
     cutHelperDistance: cutHelperDistanceResult.committedValue,
