@@ -1,26 +1,20 @@
 import { PdfDocument } from '../../components/pdf-export/PdfDocument'
 import type { SizeSchema } from '../../schemas/geometry'
-import { PdfExportSettingsSchema, PdfExportSuccessfulLayoutSchema } from '../../schemas/pdfExport'
+import type { PdfExportSettingsSchema, PdfExportSuccessfulLayoutSchema } from '../../schemas/pdfExport'
 import type { ProjectSchema } from '../../schemas/project'
-import type { SubProjectSchema } from '../../schemas/subProject'
-import type { SvgExportElementSchema } from '../../schemas/svgExport'
 
 export const renderPdfDocument = (
   project: ProjectSchema,
-  subProject: SubProjectSchema,
-  params: PdfExportSettingsSchema,
-  elements: SvgExportElementSchema[],
+  settings: PdfExportSettingsSchema,
   layout: PdfExportSuccessfulLayoutSchema,
   pageSize: SizeSchema,
 ) => {
   return (
     <PdfDocument
-      elements={elements}
       layout={layout}
       pageSize={pageSize}
-      params={params}
+      settings={settings}
       project={project}
-      subProject={subProject}
     />
   )
 }

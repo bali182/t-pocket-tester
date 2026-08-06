@@ -8,9 +8,9 @@ import { EditorContent } from '../EditorContent'
 
 export const SubProjectRoute: FC = () => {
   const t = useTranslation()
-  const subProject = useOptionalSubProject()
+  const { subProject, computedSubProject } = useOptionalSubProject()
 
-  if (!isDefined(subProject)) {
+  if (!isDefined(subProject) || !isDefined(computedSubProject)) {
     return (
       <EmptyState.Root height="100%">
         <EmptyState.Content>

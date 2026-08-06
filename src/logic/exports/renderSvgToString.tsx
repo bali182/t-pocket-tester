@@ -1,17 +1,15 @@
 import { renderToString } from 'react-dom/server'
 
 import { SvgExportRoot } from '../../components/svg-export/SvgExportRoot'
-import type { ProjectSchema } from '../../schemas/project'
-import { BaseExportSettingsSchema } from '../../schemas/settings'
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
+import type { ComputedProjectSchema, ProjectSchema } from '../../schemas/project'
+import type { BaseExportSettingsSchema } from '../../schemas/settings'
 import { getComputedSvgExport } from './getComputedSvgExport'
 
 export const renderSvgToString = (
   project: ProjectSchema,
-  subProject: SubProjectSchema,
-  computedSubProject: ComputedSubProjectSchema,
-  params: BaseExportSettingsSchema,
+  computedProject: ComputedProjectSchema,
+  settings: BaseExportSettingsSchema,
 ): string => {
-  const svgExport = getComputedSvgExport(subProject, computedSubProject, params, project.stitchingSettings)
-  return renderToString(<SvgExportRoot project={project} subProject={subProject} svgExport={svgExport} />)
+  const svgExport = getComputedSvgExport(project, computedProject, settings)
+  return renderToString(<SvgExportRoot project={project} svgExport={svgExport} />)
 }

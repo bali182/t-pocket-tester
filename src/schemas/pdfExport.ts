@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import { RectSchema } from './geometry'
 import { PageSchemaId } from './page'
 import { BaseExportSettingsSchema } from './settings'
+import type { SvgExportElementSchema } from './svgExport'
 import { SvgExportPanelSchema } from './svgExport'
 
 export type PageOrientationSchema = 'portrait' | 'landscape'
@@ -21,8 +22,13 @@ export type PdfExportPlacementSchema = {
   y: BigNumber
 }
 
+export type PdfExportElement = {
+  element: SvgExportElementSchema
+  placement: PdfExportPlacementSchema
+}
+
 export type PdfExportPageSchema = {
-  placements: Map<string, PdfExportPlacementSchema>
+  elements: PdfExportElement[]
 }
 
 export type PdfExportSuccessfulLayoutSchema = {

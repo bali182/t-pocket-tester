@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { defaultPdfExportParams } from '../defaultStates'
-import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
+import { useComputedProject } from '../hooks/useComputedProject'
 import { useProject } from '../hooks/useProject'
 import { exportPdf } from '../logic/exports/exportPdf'
 import { getComputedPdfExport } from '../logic/exports/getComputedPdfExport'
@@ -15,8 +15,8 @@ import { SvgExportDialog } from './SvgExportDialog'
 
 export const EditorMenu = () => {
   const t = useTranslation()
+  const computedProject = useComputedProject()
   const { project } = useProject()
-  const activeSubProject = useOptionalSubProject()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -24,20 +24,16 @@ export const EditorMenu = () => {
 
   const handleSvgExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
   const handlePdfExportClick = useCallback(() => {
-    if (!isDefined(activeSubProject)) {
+    if (project.subProjects.length === 0) {
       return
     }
-    const pdfExport = getComputedPdfExport(
-      project,
-      activeSubProject.subProject,
-      activeSubProject.computedSubProject,
-      defaultPdfExportParams,
-    )
-    if (pdfExport.layout.type !== 'successful-pdf-export') {
+    const pdfExportLayout = getComputedPdfExport(project, computedProject, defaultPdfExportParams)
+    if (pdfExportLayout.type !== 'successful-pdf-export') {
       return
     }
-    exportPdf(project, activeSubProject.subProject, defaultPdfExportParams, pdfExport.elements, pdfExport.layout)
-  }, [activeSubProject, project])
+    exportPdf(project, defaultPdfExportParams, pdfExportLayout)
+  }, [computedProject, project])
+  const isExportEnabled = isDefined(project) && project.subProjects.length > 0
 
   return (
     <>
@@ -68,19 +64,11 @@ export const EditorMenu = () => {
               <Portal>
                 <Menu.Positioner>
                   <Menu.Content>
-                    <Menu.Item
-                      disabled={!isDefined(activeSubProject)}
-                      value="export-svg"
-                      onSelect={handleSvgExportClick}
-                    >
+                    <Menu.Item disabled={!isExportEnabled} value="export-svg" onSelect={handleSvgExportClick}>
                       <PiExport />
                       <Menu.ItemText>{t.common.actions.exportSvg}</Menu.ItemText>
                     </Menu.Item>
-                    <Menu.Item
-                      disabled={!isDefined(activeSubProject)}
-                      value="export-pdf"
-                      onSelect={handlePdfExportClick}
-                    >
+                    <Menu.Item disabled={!isExportEnabled} value="export-pdf" onSelect={handlePdfExportClick}>
                       <PiExport />
                       <Menu.ItemText>{t.common.actions.exportPdf}</Menu.ItemText>
                     </Menu.Item>
@@ -113,9 +101,7 @@ export const EditorMenu = () => {
       {/* Modals */}
       <>
         <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
-        {isDefined(activeSubProject) && (
-          <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />
-        )}
+        {isExportEnabled && <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />}
       </>
     </>
   )

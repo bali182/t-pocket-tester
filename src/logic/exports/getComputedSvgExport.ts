@@ -1,7 +1,8 @@
 import type { ComponentSchema, PocketClusterSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedPocketClusterSchema } from '../../schemas/computed'
 import type { CornerRadiusSchema } from '../../schemas/geometry'
-import { BaseExportSettingsSchema } from '../../schemas/settings'
+import type { ProjectSchema, ComputedProjectSchema } from '../../schemas/project'
+import type { BaseExportSettingsSchema } from '../../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../../schemas/stitching'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
 import type {
@@ -26,22 +27,31 @@ const zeroCornerRadius: CornerRadiusSchema = {
 }
 
 export const getComputedSvgExport = (
-  subProject: SubProjectSchema,
-  computedProject: ComputedSubProjectSchema,
-  params: BaseExportSettingsSchema,
-  stitchingSettings: StitchLineCommonConfigSchema,
+  project: ProjectSchema,
+  computedProject: ComputedProjectSchema,
+  settings: BaseExportSettingsSchema,
 ): SvgExportSchema => {
-  const elements = getSvgExportElementsForComponent(
-    subProject,
-    computedProject,
-    subProject.root,
-    params,
-    stitchingSettings,
-  )
-  const layout = layoutSvgExportElements(elements, params.gap)
+  const elements = project.subProjects.flatMap((subProject) => {
+    const computedSubProject = computedProject.subProjects.find(
+      (candidate) => candidate.id === subProject.id,
+    )
+
+    if (!isDefined(computedSubProject)) {
+      throw new Error(`Computed subproject not found: ${subProject.id}`)
+    }
+
+    return getSvgExportElementsForComponent(
+      subProject,
+      computedSubProject,
+      subProject.root,
+      settings,
+      project.stitchingSettings,
+    )
+  })
+  const layout = layoutSvgExportElements(elements, settings.gap)
 
   return {
-    params,
+    settings,
     contentWidth: layout.contentWidth,
     contentHeight: layout.contentHeight,
     elements: layout.elements,
@@ -52,7 +62,7 @@ export const getSvgExportElementsForComponent = (
   subProject: SubProjectSchema,
   computedProject: ComputedSubProjectSchema,
   componentId: string,
-  params: BaseExportSettingsSchema,
+  settings: BaseExportSettingsSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportElementSchema[] => {
   const component = subProject.components[componentId]
@@ -70,7 +80,7 @@ export const getSvgExportElementsForComponent = (
         computedProject,
         component,
         computedComponent,
-        params,
+        settings,
         stitchingSettings,
       )
     case 'pocket-cluster':
@@ -79,7 +89,7 @@ export const getSvgExportElementsForComponent = (
         computedProject,
         component,
         computedComponent,
-        params,
+        settings,
         stitchingSettings,
       )
   }
@@ -90,7 +100,7 @@ const getSvgExportPanelElements = (
   computedProject: ComputedSubProjectSchema,
   component: ComponentSchema,
   computedComponent: ComputedComponentSchema,
-  params: BaseExportSettingsSchema,
+  settings: BaseExportSettingsSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportElementSchema[] => {
   if (
@@ -100,9 +110,9 @@ const getSvgExportPanelElements = (
     throw new Error(`Expected computed panel: ${component.id}`)
   }
 
-  const panel = getSvgExportPanel(subProject, computedProject, component.id, params, stitchingSettings)
+  const panel = getSvgExportPanel(subProject, computedProject, component.id, settings, stitchingSettings)
   const children = computedComponent.children.flatMap((child) => {
-    return getSvgExportElementsForComponent(subProject, computedProject, child.componentId, params, stitchingSettings)
+    return getSvgExportElementsForComponent(subProject, computedProject, child.componentId, settings, stitchingSettings)
   })
 
   return [panel, ...children]
@@ -112,7 +122,7 @@ const getSvgExportPanel = (
   subProject: SubProjectSchema,
   computedSubProject: ComputedSubProjectSchema,
   componentId: string,
-  params: BaseExportSettingsSchema,
+  settings: BaseExportSettingsSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportPanelSchema => {
   const component = subProject.components[componentId]
@@ -129,12 +139,13 @@ const getSvgExportPanel = (
 
   const cutHelperBoundingRect = getSvgExportCutHelperBoundingRect(
     computedComponent.boundingRect,
-    params.cutHelperDistance,
+    settings.cutHelperDistance,
   )
 
   return {
     type: 'svg-export-panel',
     id: component.id,
+    subProject,
     component,
     boundingRect: computedComponent.boundingRect,
     ...(isDefined(cutHelperBoundingRect)
@@ -144,14 +155,14 @@ const getSvgExportPanel = (
         }
       : {}),
     path: computedComponent.path,
-    childMarkerPaths: params.childMarkers
+    childMarkerPaths: settings.childMarkers
       ? getSvgExportChildMarkerPaths(computedComponent.children, computedComponent.boundingRect)
       : [],
     stitchLines: getSvgExportStitchLines(
       subProject,
       computedSubProject,
       computedComponent,
-      params.stitchLineMode,
+      settings.stitchLineMode,
       stitchingSettings,
     ),
   }
@@ -162,7 +173,7 @@ const getSvgExportPocketElements = (
   computedSubProject: ComputedSubProjectSchema,
   component: ComponentSchema,
   computedComponent: ComputedComponentSchema,
-  params: BaseExportSettingsSchema,
+  settings: BaseExportSettingsSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): [SvgExportFrontPocketSchema, ...SvgExportTPocketSchema[]] => {
   if (component.type !== 'pocket-cluster' || computedComponent.type !== 'computed-pocket-cluster') {
@@ -170,9 +181,9 @@ const getSvgExportPocketElements = (
   }
 
   return [
-    getSvgExportFrontPocket(subProject, computedSubProject, component, computedComponent, params, stitchingSettings),
+    getSvgExportFrontPocket(subProject, computedSubProject, component, computedComponent, settings, stitchingSettings),
     ...computedComponent.tPockets.map((pocket, pocketIndex) =>
-      getSvgExportTPocket(subProject, computedSubProject, component, pocket, pocketIndex, params, stitchingSettings),
+      getSvgExportTPocket(subProject, computedSubProject, component, pocket, pocketIndex, settings, stitchingSettings),
     ),
   ]
 }
@@ -182,17 +193,18 @@ const getSvgExportFrontPocket = (
   computedSubProject: ComputedSubProjectSchema,
   ownerComponent: PocketClusterSchema,
   computedComponent: ComputedPocketClusterSchema,
-  params: BaseExportSettingsSchema,
+  settings: BaseExportSettingsSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportFrontPocketSchema => {
   const cutHelperBoundingRect = getSvgExportCutHelperBoundingRect(
     computedComponent.frontPocket.boundingRect,
-    params.cutHelperDistance,
+    settings.cutHelperDistance,
   )
 
   return {
     type: 'svg-export-front-pocket',
     id: `${ownerComponent.id}--front-pocket`,
+    subProject,
     ownerComponent,
     pocket: computedComponent.frontPocket,
     ...(isDefined(cutHelperBoundingRect)
@@ -205,7 +217,7 @@ const getSvgExportFrontPocket = (
       subProject,
       computedSubProject,
       computedComponent.frontPocket,
-      params.stitchLineMode,
+      settings.stitchLineMode,
       stitchingSettings,
     ),
   }
@@ -217,14 +229,15 @@ const getSvgExportTPocket = (
   ownerComponent: PocketClusterSchema,
   pocket: ComputedPocketClusterSchema['tPockets'][number],
   pocketIndex: number,
-  params: BaseExportSettingsSchema,
+  settings: BaseExportSettingsSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): SvgExportTPocketSchema => {
-  const cutHelperBoundingRect = getSvgExportCutHelperBoundingRect(pocket.boundingRect, params.cutHelperDistance)
+  const cutHelperBoundingRect = getSvgExportCutHelperBoundingRect(pocket.boundingRect, settings.cutHelperDistance)
 
   return {
     type: 'svg-export-t-pocket',
     id: `${ownerComponent.id}--t-pocket-${pocketIndex}`,
+    subProject,
     ownerComponent,
     pocketIndex,
     pocket,
@@ -238,7 +251,7 @@ const getSvgExportTPocket = (
       subProject,
       computedSubProject,
       pocket,
-      params.stitchLineMode,
+      settings.stitchLineMode,
       stitchingSettings,
     ),
   }

@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { useSubProject } from '../../hooks/useSubProject'
+import { useProject } from '../../hooks/useProject'
 import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
 import { isDefined } from '../../utils/isDefined'
 import { StitchLine } from './StitchLine'
@@ -10,7 +11,8 @@ type StitchLinesProps = {
 }
 
 export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
-  const { project, subProject, computedSubProject } = useSubProject()
+  const { project } = useProject()
+  const { subProject, computedSubProject } = useSubProject()
   const stitchLines = subProject.stitchLines.filter((stitchLine) => stitchLine.type === 'component-bounds-stitch-line')
 
   return (

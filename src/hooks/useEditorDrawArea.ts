@@ -27,6 +27,7 @@ import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { produce } from '../utils/produce'
 import { useSubProject } from './useSubProject'
+import { useProject } from './useProject'
 
 import { formatHex8, parse } from 'culori'
 import { getSelectionObstructingComponentIds } from '../logic/getSelectionObstructingComponentIds'
@@ -66,7 +67,8 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
   const [hoveredStitchLineId, setHoveredStitchLine] = useState<string | undefined>()
   const [hoveredTreeSelection, setHoveredTreeSelection] = useState<EditorSelectionSchema | undefined>()
-  const { project, subProject } = useSubProject()
+  const { project } = useProject()
+  const { subProject } = useSubProject()
 
   const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
     if (!isDefined(selection) || selection.type !== 'component') {

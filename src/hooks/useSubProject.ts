@@ -1,12 +1,18 @@
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
 import { useOptionalSubProject } from './useOptionalSubProject'
 
-export const useSubProject = () => {
-  const value = useOptionalSubProject()
+type UseSubProjectResult = {
+  subProject: SubProjectSchema
+  computedSubProject: ComputedSubProjectSchema
+}
 
-  if (!isDefined(value)) {
+export const useSubProject = (): UseSubProjectResult => {
+  const { subProject, computedSubProject } = useOptionalSubProject()
+
+  if (!isDefined(subProject) || !isDefined(computedSubProject)) {
     throw new Error('useSubProject requires a valid subproject route')
   }
 
-  return value
+  return { computedSubProject, subProject }
 }
