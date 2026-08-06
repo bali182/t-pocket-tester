@@ -12,9 +12,9 @@ import {
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
 import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
-import type { SubProjectSchema } from '../schemas/subProject'
+import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import type { SubProjectSchema } from '../schemas/subProject'
 import { useTranslation } from '../translations/translation'
 import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
@@ -38,7 +38,7 @@ const drawAreaSelection: DrawAreaSelection = {
 export const useSvgDrawArea = (
   subProject: SubProjectSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
-  params: SvgExportParamsSchema,
+  settings: BaseExportSettingsSchema,
 ): DrawAreaContextValue => {
   const t = useTranslation()
   const componentStyles = useMemo<DrawAreaComponentStyles>(
@@ -92,7 +92,7 @@ export const useSvgDrawArea = (
         return stitchLine.id
       },
       getNameText: (element) => {
-        if (!params.showNames) {
+        if (!settings.showNames) {
           return undefined
         }
 
@@ -106,7 +106,7 @@ export const useSvgDrawArea = (
         }
       },
     }),
-    [params.showNames, t.svgExport],
+    [settings.showNames, t.svgExport],
   )
 
   const exportTextStyles = useMemo<DrawAreaExportTextStyles>(
@@ -115,7 +115,7 @@ export const useSvgDrawArea = (
       getNameTextFontFamily: produce('sans-serif'),
       getNameTextFontSize: produce(3),
       getDimensionsText: (element) => {
-        if (!params.showDimensions) {
+        if (!settings.showDimensions) {
           return undefined
         }
 
@@ -127,7 +127,7 @@ export const useSvgDrawArea = (
       getDimensionsTextFontSize: produce(2.5),
       getNameDimensionsGap: produce(1),
     }),
-    [params.showDimensions, t],
+    [settings.showDimensions, t],
   )
 
   const markerStyles = useMemo<DrawAreaMarkerStyles>(

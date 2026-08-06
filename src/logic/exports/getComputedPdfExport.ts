@@ -1,28 +1,13 @@
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
-import type { ProjectSchema } from '../../schemas/project'
-import type { PdfExportLayoutSchema, PdfExportParamsSchema, SvgExportElementSchema } from '../../schemas/svgExport'
+import type { PdfExportLayoutSchema, PdfExportSettingsSchema } from '../../schemas/pdfExport'
+import type { ComputedProjectSchema, ProjectSchema } from '../../schemas/project'
+import { getComputedSvgExport } from './getComputedSvgExport'
 import { getPdfExportLayout } from './getPdfExportLayout'
-import { getSvgExportElementsForComponent } from './getComputedSvgExport'
 
 export const getComputedPdfExport = (
   project: ProjectSchema,
-  subProject: SubProjectSchema,
-  computedProject: ComputedSubProjectSchema,
-  params: PdfExportParamsSchema,
-): {
-  elements: SvgExportElementSchema[]
-  layout: PdfExportLayoutSchema
-} => {
-  const elements = getSvgExportElementsForComponent(
-    subProject,
-    computedProject,
-    subProject.root,
-    params,
-    project.stitchingSettings,
-  )
-
-  return {
-    elements,
-    layout: getPdfExportLayout(elements, params),
-  }
+  computedProject: ComputedProjectSchema,
+  settings: PdfExportSettingsSchema,
+): PdfExportLayoutSchema => {
+  const svgExport = getComputedSvgExport(project, computedProject, settings)
+  return getPdfExportLayout(svgExport.elements, settings)
 }

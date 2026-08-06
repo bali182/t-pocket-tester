@@ -33,18 +33,20 @@ import { useTranslation } from '../translations/translation'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
+import { useOptionalProject } from './useOptionalProject'
 import { useOptionalSubProject } from './useOptionalSubProject'
 
 export const useSubProjectOperations = () => {
-  const value = useOptionalSubProject()
+  const { project } = useOptionalProject()
+  const { subProject } = useOptionalSubProject()
   const t = useTranslation()
 
   const reference = useMemo<SubProjectAtomReferenceSchema>(
     () => ({
-      projectId: value?.project.id,
-      subProjectId: value?.subProject.id,
+      projectId: project?.id,
+      subProjectId: subProject?.id,
     }),
-    [value?.project.id, value?.subProject.id],
+    [project?.id, subProject?.id],
   )
 
   const addComponent = useAtomCallback(

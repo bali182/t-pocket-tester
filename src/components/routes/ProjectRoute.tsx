@@ -8,7 +8,7 @@ import { isDefined } from '../../utils/isDefined'
 import { Editor } from '../Editor'
 
 export const ProjectRoute: FC = () => {
-  const [project] = useOptionalProject()
+  const { project } = useOptionalProject()
   const t = useTranslation()
 
   if (!isDefined(project)) {

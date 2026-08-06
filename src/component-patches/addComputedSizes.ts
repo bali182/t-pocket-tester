@@ -1,5 +1,5 @@
 import { updateProjectComponents } from '../operations/subProject/utils/updateProjectComponents'
-import type { ProjectEditingSettingSchema } from '../schemas/editingSettings'
+import type { ProjectEditingSettingSchema } from '../schemas/settings'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 
 export const addComputedSizes = (

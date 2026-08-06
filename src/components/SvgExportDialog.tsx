@@ -4,17 +4,18 @@ import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } fr
 import { PiX } from 'react-icons/pi'
 
 import { LANGUAGE } from '../constants/language'
-import { useSubProject } from '../hooks/useSubProject'
+import { useComputedProject } from '../hooks/useComputedProject'
+import { useProject } from '../hooks/useProject'
 import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import type { EditableSchema } from '../schemas/editable'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema } from '../schemas/validation'
 import { svgExportParamsAtom } from '../state/svgExportParamsAtom'
 import { useTranslation } from '../translations/translation'
 import { downloadSvg } from '../utils/downloadSvg'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
-import { validateSvgExportParamsSchema } from '../validators/validateSvgExportParamsSchema'
+import { validateBaseExportSettingsSchema } from '../validators/validateBaseExportSettingsSchema'
 import { SvgExportEditor } from './svg-export/SvgExportEditor'
 
 type SvgExportDialogProps = {
@@ -23,23 +24,24 @@ type SvgExportDialogProps = {
 }
 
 export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange }) => {
-  const { computedSubProject, project, subProject } = useSubProject()
+  const { project } = useProject()
+  const computedProject = useComputedProject()
   const [storedParams, setStoredParams] = useAtom(svgExportParamsAtom)
   const t = useTranslation()
   const context = useMemo<BaseValidationContextSchema>(() => ({ language: LANGUAGE, t }), [t])
-  const [exportParams, setExportParams] = useState<SvgExportParamsSchema>(storedParams)
+  const [exportParams, setExportParams] = useState<BaseExportSettingsSchema>(storedParams)
 
-  const [editableParams, setEditableParams] = useState<EditableSchema<SvgExportParamsSchema>>(() =>
+  const [editableParams, setEditableParams] = useState<EditableSchema<BaseExportSettingsSchema>>(() =>
     getEditableSchema(storedParams, context),
   )
 
   const validationResult = useMemo(
-    () => validateSvgExportParamsSchema(editableParams, exportParams, context),
+    () => validateBaseExportSettingsSchema(editableParams, exportParams, context),
     [context, editableParams, exportParams],
   )
 
   const hasErrors = useMemo(
-    () => hasValidationErrors<SvgExportParamsSchema>(validationResult.issues),
+    () => hasValidationErrors<BaseExportSettingsSchema>(validationResult.issues),
     [validationResult.issues],
   )
 
@@ -64,8 +66,8 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   const handleParamsChange = useCallback(
-    (updatedEditableParams: EditableSchema<SvgExportParamsSchema>): void => {
-      const updatedValidationResult = validateSvgExportParamsSchema(updatedEditableParams, exportParams, context)
+    (updatedEditableParams: EditableSchema<BaseExportSettingsSchema>): void => {
+      const updatedValidationResult = validateBaseExportSettingsSchema(updatedEditableParams, exportParams, context)
 
       setEditableParams(updatedEditableParams)
       setExportParams(updatedValidationResult.committedValue)
@@ -77,18 +79,18 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
     (event: FormEvent<HTMLFormElement>): void => {
       event.preventDefault()
 
-      const submitValidationResult = validateSvgExportParamsSchema(editableParams, exportParams, context)
+      const submitValidationResult = validateBaseExportSettingsSchema(editableParams, exportParams, context)
 
       if (!submitValidationResult.isValid) {
         return
       }
 
-      const svg = renderSvgToString(project, subProject, computedSubProject, submitValidationResult.value)
-      downloadSvg(svg, `${subProject.name}.svg`)
+      const svg = renderSvgToString(project, computedProject, submitValidationResult.value)
+      downloadSvg(svg, `${project.name}.svg`)
       setStoredParams(submitValidationResult.value)
       onOpenChange(false)
     },
-    [computedSubProject, context, editableParams, exportParams, onOpenChange, project, subProject, setStoredParams],
+    [computedProject, context, editableParams, exportParams, onOpenChange, project, setStoredParams],
   )
 
   return (

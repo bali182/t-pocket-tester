@@ -2,13 +2,9 @@ import { Button, Card, HStack, IconButton, Menu, Portal, Separator } from '@chak
 import { useCallback, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router'
-import { defaultPdfExportParams } from '../defaultStates'
-import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
-import { exportPdf } from '../logic/exports/exportPdf'
-import { getComputedPdfExport } from '../logic/exports/getComputedPdfExport'
 import { useTranslation } from '../translations/translation'
-import { isDefined } from '../utils/isDefined'
+import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { SvgExportDialog } from './SvgExportDialog'
@@ -16,28 +12,15 @@ import { SvgExportDialog } from './SvgExportDialog'
 export const EditorMenu = () => {
   const t = useTranslation()
   const { project } = useProject()
-  const activeSubProject = useOptionalSubProject()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
+  const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
 
   const handleSvgExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
-  const handlePdfExportClick = useCallback(() => {
-    if (!isDefined(activeSubProject)) {
-      return
-    }
-    const pdfExport = getComputedPdfExport(
-      project,
-      activeSubProject.subProject,
-      activeSubProject.computedSubProject,
-      defaultPdfExportParams,
-    )
-    if (pdfExport.layout.type !== 'successful-pdf-export') {
-      return
-    }
-    exportPdf(project, activeSubProject.subProject, defaultPdfExportParams, pdfExport.elements, pdfExport.layout)
-  }, [activeSubProject, project])
+  const handlePdfExportClick = useCallback(() => setPdfExportDialogOpen(true), [])
+  const isExportEnabled = project.subProjects.length > 0
 
   return (
     <>
@@ -68,19 +51,11 @@ export const EditorMenu = () => {
               <Portal>
                 <Menu.Positioner>
                   <Menu.Content>
-                    <Menu.Item
-                      disabled={!isDefined(activeSubProject)}
-                      value="export-svg"
-                      onSelect={handleSvgExportClick}
-                    >
+                    <Menu.Item disabled={!isExportEnabled} value="export-svg" onSelect={handleSvgExportClick}>
                       <PiExport />
                       <Menu.ItemText>{t.common.actions.exportSvg}</Menu.ItemText>
                     </Menu.Item>
-                    <Menu.Item
-                      disabled={!isDefined(activeSubProject)}
-                      value="export-pdf"
-                      onSelect={handlePdfExportClick}
-                    >
+                    <Menu.Item disabled={!isExportEnabled} value="export-pdf" onSelect={handlePdfExportClick}>
                       <PiExport />
                       <Menu.ItemText>{t.common.actions.exportPdf}</Menu.ItemText>
                     </Menu.Item>
@@ -113,9 +88,8 @@ export const EditorMenu = () => {
       {/* Modals */}
       <>
         <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
-        {isDefined(activeSubProject) && (
-          <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />
-        )}
+        {isExportEnabled && <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />}
+        {isExportEnabled && <PdfExportDialog isOpen={isPdfExportDialogOpen} onOpenChange={setPdfExportDialogOpen} />}
       </>
     </>
   )

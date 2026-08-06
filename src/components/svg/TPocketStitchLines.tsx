@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { useSubProject } from '../../hooks/useSubProject'
+import { useProject } from '../../hooks/useProject'
 import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
 import { isDefined } from '../../utils/isDefined'
@@ -12,7 +13,8 @@ type TPocketStitchLinesProps = {
 }
 
 export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ componentId, pocketIndex }) => {
-  const { project, subProject, computedSubProject } = useSubProject()
+  const { project } = useProject()
+  const { subProject, computedSubProject } = useSubProject()
   const stitchLines = subProject.stitchLines.filter(
     (stitchLine): stitchLine is PocketClusterStitchLineSchema =>
       stitchLine.targetId === componentId && stitchLine.type === 'pocket-cluster-stitch-line',

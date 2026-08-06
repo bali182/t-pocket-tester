@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 
 import { useEditableComponent } from '../../hooks/useEditableComponent'
-import { useSubProject } from '../../hooks/useSubProject'
+import { useProject } from '../../hooks/useProject'
 import type { ComponentSchema } from '../../schemas/components'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
@@ -17,7 +17,7 @@ type ComponentFloatingEditorProps = {
 }
 
 export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anchorElement, component, onClose }) => {
-  const { project } = useSubProject()
+  const { project } = useProject()
   const {
     component: editedComponent,
     editableComponent,

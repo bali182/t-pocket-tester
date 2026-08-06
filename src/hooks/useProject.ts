@@ -1,8 +1,14 @@
+import type { ProjectSchema } from '../schemas/project'
 import { isDefined } from '../utils/isDefined'
 import { useOptionalProject } from './useOptionalProject'
 
-export const useProject = () => {
-  const [project, setProject] = useOptionalProject()
+type UseProjectResult = {
+  project: ProjectSchema
+  setProject: (project: ProjectSchema) => void
+}
+
+export const useProject = (): UseProjectResult => {
+  const { project, setProject } = useOptionalProject()
 
   if (!isDefined(project)) {
     throw new Error('useProject requires a valid project route')

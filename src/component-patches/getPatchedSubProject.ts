@@ -1,5 +1,5 @@
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
-import type { ProjectEditingSettingSchema } from '../schemas/editingSettings'
+import type { ProjectEditingSettingSchema } from '../schemas/settings'
 import { addComputedSizes } from './addComputedSizes'
 import { adjustCornerRadiiToParent } from './adjustCornerRadiiToParent'
 import { adjustStitchLines } from './adjustStitchLines'

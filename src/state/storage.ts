@@ -1,9 +1,10 @@
 import typia from 'typia'
 
 import type { ProjectSchema } from '../schemas/project'
-import type { SvgExportParamsSchema } from '../schemas/svgExport'
+import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
+import type { BaseExportSettingsSchema } from '../schemas/settings'
 
-type StorageKey = 'projects' | 'scaling' | 'svg-export-params'
+type StorageKey = 'pdf-export-params' | 'projects' | 'scaling' | 'svg-export-params'
 
 export const readProjectsFromStorage = (): ProjectSchema[] => {
   return safeReadStorage<ProjectSchema[]>('projects', [], (raw) => typia.assert<ProjectSchema[]>(raw))
@@ -21,14 +22,24 @@ export const saveScalingToStorage = (scaling: number): void => {
   safeWriteStorage('scaling', scaling)
 }
 
-export const readSvgExportParamsFromStorage = (defaultValue: SvgExportParamsSchema): SvgExportParamsSchema => {
-  return safeReadStorage<SvgExportParamsSchema>('svg-export-params', defaultValue, (raw) =>
-    typia.assert<SvgExportParamsSchema>(raw),
+export const readSvgExportParamsFromStorage = (defaultValue: BaseExportSettingsSchema): BaseExportSettingsSchema => {
+  return safeReadStorage<BaseExportSettingsSchema>('svg-export-params', defaultValue, (raw) =>
+    typia.assert<BaseExportSettingsSchema>(raw),
   )
 }
 
-export const saveSvgExportParamsToStorage = (params: SvgExportParamsSchema): void => {
+export const saveSvgExportParamsToStorage = (params: BaseExportSettingsSchema): void => {
   safeWriteStorage('svg-export-params', params)
+}
+
+export const readPdfExportParamsFromStorage = (defaultValue: PdfExportSettingsSchema): PdfExportSettingsSchema => {
+  return safeReadStorage<PdfExportSettingsSchema>('pdf-export-params', defaultValue, (raw) =>
+    typia.assert<PdfExportSettingsSchema>(raw),
+  )
+}
+
+export const savePdfExportParamsToStorage = (params: PdfExportSettingsSchema): void => {
+  safeWriteStorage('pdf-export-params', params)
 }
 
 const safeReadStorage = <T>(key: StorageKey, defaultValue: T, assert: (raw: unknown) => void): T => {

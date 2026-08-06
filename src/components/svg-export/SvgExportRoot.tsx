@@ -3,46 +3,61 @@ import type { FC } from 'react'
 
 import { DrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useSvgDrawArea } from '../../hooks/useSvgDrawArea'
-import type { SubProjectSchema } from '../../schemas/subProject'
 import type { ProjectSchema } from '../../schemas/project'
-import type { SvgExportSchema } from '../../schemas/svgExport'
+import type { SvgExportElementSchema, SvgExportSchema } from '../../schemas/svgExport'
 import { ExportFrontPocket } from './ExportFrontPocket'
 import { ExportPanel } from './ExportPanel'
 import { ExportTPocket } from './ExportTPocket'
 
 type SvgExportRootProps = {
   project: ProjectSchema
-  subProject: SubProjectSchema
   svgExport: SvgExportSchema
 }
 
-export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, subProject, svgExport }) => {
-  const drawAreaContextValue = useSvgDrawArea(subProject, project.stitchingSettings, svgExport.params)
-  const padding = new BigNumber(svgExport.params.padding)
+export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, svgExport }) => {
+  const padding = new BigNumber(svgExport.settings.padding)
   const width = svgExport.contentWidth.plus(padding.times(2))
   const height = svgExport.contentHeight.plus(padding.times(2))
   const viewBox = `${padding.negated().toString()} ${padding.negated().toString()} ${width.toString()} ${height.toString()}`
 
   return (
+    <svg
+      width={`${width.toString()}mm`}
+      height={`${height.toString()}mm`}
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ display: 'block' }}
+      viewBox={viewBox}
+    >
+      {svgExport.elements.map((element) => (
+        <SvgExportElement element={element} key={`${element.subProject.id}:${element.id}`} project={project} settings={svgExport.settings} />
+      ))}
+    </svg>
+  )
+}
+
+type SvgExportElementProps = {
+  element: SvgExportElementSchema
+  project: ProjectSchema
+  settings: SvgExportSchema['settings']
+}
+
+const SvgExportElement: FC<SvgExportElementProps> = ({ element, project, settings }) => {
+  const drawAreaContextValue = useSvgDrawArea(element.subProject, project.stitchingSettings, settings)
+
+  return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
-      <svg
-        width={`${width.toString()}mm`}
-        height={`${height.toString()}mm`}
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ display: 'block' }}
-        viewBox={viewBox}
-      >
-        {svgExport.elements.map((element) => {
-          switch (element.type) {
-            case 'svg-export-panel':
-              return <ExportPanel element={element} key={element.component.id} />
-            case 'svg-export-front-pocket':
-              return <ExportFrontPocket element={element} key={element.pocket.id} />
-            case 'svg-export-t-pocket':
-              return <ExportTPocket element={element} key={element.pocket.id} />
-          }
-        })}
-      </svg>
+      {renderSvgExportElement(element)}
     </DrawAreaContext.Provider>
   )
+}
+
+const renderSvgExportElement = (element: SvgExportElementSchema) => {
+  switch (element.type) {
+    case 'svg-export-panel':
+      return <ExportPanel element={element} />
+    case 'svg-export-front-pocket':
+      return <ExportFrontPocket element={element} />
+    case 'svg-export-t-pocket':
+      return <ExportTPocket element={element} />
+  }
 }
