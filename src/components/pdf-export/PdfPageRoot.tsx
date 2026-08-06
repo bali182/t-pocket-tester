@@ -45,6 +45,7 @@ const PdfElement: FC<PdfElementProps> = ({ element: { element, placement }, proj
   return (
     <DrawAreaContext.Provider value={drawAreaContextValue}>
       <Svg
+        fixed
         height={`${sourceRect.height.toString()}mm`}
         style={{
           height: `${sourceRect.height.toString()}mm`,
