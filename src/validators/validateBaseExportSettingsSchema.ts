@@ -1,10 +1,16 @@
 import type { EditableSchema } from '../schemas/editable'
-import { BaseExportSettingsSchema } from '../schemas/settings'
+import type { BaseExportSettingsSchema, ExportStitchLineModeSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateNumber } from './validateNumber'
+import { validatePrimitiveUnion } from './validatePrimitiveUnion'
 
-export const validateSvgExportParamsSchema = (
+export const exportStitchLineModes: Record<ExportStitchLineModeSchema, boolean> = {
+  'all-stitch-lines': true,
+  'own-stitch-lines': true,
+}
+
+export const validateBaseExportSettingsSchema = (
   input: EditableSchema<BaseExportSettingsSchema>,
   currentValue: BaseExportSettingsSchema,
   context: BaseValidationContextSchema,
@@ -14,27 +20,38 @@ export const validateSvgExportParamsSchema = (
   const cutHelperDistanceResult = validateNumber(input.cutHelperDistance, currentValue.cutHelperDistance, context, {
     min: 0,
   })
+  const stitchLineModeResult = validatePrimitiveUnion(
+    input.stitchLineMode,
+    currentValue.stitchLineMode,
+    exportStitchLineModes,
+    context,
+  )
 
   const issues: ValidationIssuesSchema<BaseExportSettingsSchema> = {
+    childMarkers: undefined,
+    cutHelperDistance: cutHelperDistanceResult.issues,
     gap: gapResult.issues,
     padding: paddingResult.issues,
-    cutHelperDistance: cutHelperDistanceResult.issues,
-    stitchLineMode: undefined,
-    showNames: undefined,
     showDimensions: undefined,
-    childMarkers: undefined,
+    showNames: undefined,
+    stitchLineMode: stitchLineModeResult.issues,
   }
   const committedValue: BaseExportSettingsSchema = {
+    childMarkers: input.childMarkers,
+    cutHelperDistance: cutHelperDistanceResult.committedValue,
     gap: gapResult.committedValue,
     padding: paddingResult.committedValue,
-    cutHelperDistance: cutHelperDistanceResult.committedValue,
-    stitchLineMode: input.stitchLineMode,
-    showNames: input.showNames,
     showDimensions: input.showDimensions,
-    childMarkers: input.childMarkers,
+    showNames: input.showNames,
+    stitchLineMode: stitchLineModeResult.committedValue,
   }
 
-  if (!gapResult.isValid || !paddingResult.isValid || !cutHelperDistanceResult.isValid) {
+  if (
+    !gapResult.isValid ||
+    !paddingResult.isValid ||
+    !cutHelperDistanceResult.isValid ||
+    !stitchLineModeResult.isValid
+  ) {
     return createInvalidValidationResult(issues, committedValue)
   }
 

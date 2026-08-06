@@ -15,7 +15,7 @@ import { useTranslation } from '../translations/translation'
 import { downloadSvg } from '../utils/downloadSvg'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
-import { validateSvgExportParamsSchema } from '../validators/validateSvgExportParamsSchema'
+import { validateBaseExportSettingsSchema } from '../validators/validateBaseExportSettingsSchema'
 import { SvgExportEditor } from './svg-export/SvgExportEditor'
 
 type SvgExportDialogProps = {
@@ -36,7 +36,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   const validationResult = useMemo(
-    () => validateSvgExportParamsSchema(editableParams, exportParams, context),
+    () => validateBaseExportSettingsSchema(editableParams, exportParams, context),
     [context, editableParams, exportParams],
   )
 
@@ -67,7 +67,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
 
   const handleParamsChange = useCallback(
     (updatedEditableParams: EditableSchema<BaseExportSettingsSchema>): void => {
-      const updatedValidationResult = validateSvgExportParamsSchema(updatedEditableParams, exportParams, context)
+      const updatedValidationResult = validateBaseExportSettingsSchema(updatedEditableParams, exportParams, context)
 
       setEditableParams(updatedEditableParams)
       setExportParams(updatedValidationResult.committedValue)
@@ -79,7 +79,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
     (event: FormEvent<HTMLFormElement>): void => {
       event.preventDefault()
 
-      const submitValidationResult = validateSvgExportParamsSchema(editableParams, exportParams, context)
+      const submitValidationResult = validateBaseExportSettingsSchema(editableParams, exportParams, context)
 
       if (!submitValidationResult.isValid) {
         return

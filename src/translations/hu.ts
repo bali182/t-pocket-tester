@@ -58,6 +58,25 @@ export const HU = {
       stitching: 'Varrás',
     },
   },
+  exportSettings: {
+    sections: {
+      layout: 'Elrendezés',
+      content: 'Tartalom',
+    },
+    labels: {
+      gap: 'Térköz',
+      padding: 'Belső margó',
+      stitchLineMode: 'Varróvonalak',
+      showNames: 'Nevek megjelenítése',
+      showDimensions: 'Méretek megjelenítése',
+      childMarkers: 'Gyermekjelölők megjelenítése',
+      cutHelperDistance: 'Vágási segédtávolság',
+    },
+    stitchLineModes: {
+      ownStitchLines: 'Csak a saját varróvonalak',
+      allStitchLines: 'Összes varróvonal',
+    },
+  },
   svgExport: {
     frontPocketName: (ownerName: string) => `${ownerName} - első zseb`,
     tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. zseb`,
@@ -67,22 +86,34 @@ export const HU = {
       actions: {
         export: 'Exportálás',
       },
+    },
+  },
+  pdfExport: {
+    dialog: {
+      title: 'PDF exportálása',
+      actions: {
+        export: 'Exportálás',
+      },
       sections: {
-        layout: 'Elrendezés',
-        content: 'Tartalom',
+        page: 'Oldal',
       },
       labels: {
-        gap: 'Térköz',
-        padding: 'Belső margó',
-        stitchLineMode: 'Varróvonalak',
-        showNames: 'Nevek megjelenítése',
-        showDimensions: 'Méretek megjelenítése',
-        childMarkers: 'Gyermekjelölők megjelenítése',
-        cutHelperDistance: 'Vágási segédtávolság',
+        page: 'Papírméret',
+        orientation: 'Tájolás',
+        layout: 'Elrendezés',
       },
-      stitchLineModes: {
-        ownStitchLines: 'Csak a saját varróvonalak',
-        allStitchLines: 'Összes varróvonal',
+      orientations: {
+        portrait: 'Álló',
+        landscape: 'Fekvő',
+      },
+      layouts: {
+        vertical: 'Függőleges',
+        horizontal: 'Vízszintes',
+        compact: 'Tömör',
+      },
+      errors: {
+        exportFailed: 'A PDF exportálása nem sikerült.',
+        unplaceablePanels: 'Egy vagy több panel nem fér el a kiválasztott oldalra.',
       },
     },
   },

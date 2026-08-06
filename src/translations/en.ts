@@ -60,6 +60,25 @@ export const EN: typeof HU = {
       stitching: 'Stitching',
     },
   },
+  exportSettings: {
+    sections: {
+      layout: 'Layout',
+      content: 'Content',
+    },
+    labels: {
+      gap: 'Gap',
+      padding: 'Padding',
+      stitchLineMode: 'Stitch lines',
+      showNames: 'Show names',
+      showDimensions: 'Show dimensions',
+      childMarkers: 'Show child markers',
+      cutHelperDistance: 'Cut helper distance',
+    },
+    stitchLineModes: {
+      ownStitchLines: 'Own stitch lines only',
+      allStitchLines: 'All stitch lines',
+    },
+  },
   svgExport: {
     frontPocketName: (ownerName: string) => `${ownerName} - front pocket`,
     tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. pocket`,
@@ -69,22 +88,34 @@ export const EN: typeof HU = {
       actions: {
         export: 'Export',
       },
+    },
+  },
+  pdfExport: {
+    dialog: {
+      title: 'Export PDF',
+      actions: {
+        export: 'Export',
+      },
       sections: {
-        layout: 'Layout',
-        content: 'Content',
+        page: 'Page',
       },
       labels: {
-        gap: 'Gap',
-        padding: 'Padding',
-        stitchLineMode: 'Stitch lines',
-        showNames: 'Show names',
-        showDimensions: 'Show dimensions',
-        childMarkers: 'Show child markers',
-        cutHelperDistance: 'Cut helper distance',
+        page: 'Paper size',
+        orientation: 'Orientation',
+        layout: 'Layout',
       },
-      stitchLineModes: {
-        ownStitchLines: 'Own stitch lines only',
-        allStitchLines: 'All stitch lines',
+      orientations: {
+        portrait: 'Portrait',
+        landscape: 'Landscape',
+      },
+      layouts: {
+        vertical: 'Vertical',
+        horizontal: 'Horizontal',
+        compact: 'Compact',
+      },
+      errors: {
+        exportFailed: 'The PDF export failed.',
+        unplaceablePanels: 'One or more panels do not fit on the selected page.',
       },
     },
   },
