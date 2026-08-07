@@ -1,4 +1,4 @@
-import { Field, Input } from '@chakra-ui/react'
+import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 
 import type { BaseComponentSchema } from '../../../schemas/components'
@@ -24,9 +24,6 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
   onResetColor,
 }: NameAndColorSectionProps<T>): ReactNode {
   const t = useTranslation()
-  const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
-  const isColorInvalid = isDefined(issues.color) && issues.color.severity === 'error'
-
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onChange({
@@ -47,27 +44,25 @@ export function NameAndColorSection<T extends BaseComponentSchema>({
     [editable, onChange],
   )
 
+  const hasNameError = isDefined(issues.name) && issues.name.severity === 'error'
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.common.labels.general}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.common.labels.name}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <Field.Root invalid={isNameInvalid}>
-          <Input onChange={handleNameChange} size="xs" value={editable.name} />
-        </Field.Root>
+      <SectionGroup.SectionRowEditor issue={issues.name}>
+        <Input aria-invalid={hasNameError} onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.color}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <Field.Root invalid={isColorInvalid} alignItems="stretch">
-          <ColorInput
-            isResetEnabled={isDefined(editable.color)}
-            issue={issues.color}
-            onChange={handleColorChange}
-            onReset={onResetColor}
-            value={editable.color ?? baseColor}
-          />
-        </Field.Root>
+      <SectionGroup.SectionRowEditor issue={issues.color}>
+        <ColorInput
+          isResetEnabled={isDefined(editable.color)}
+          issue={issues.color}
+          onChange={handleColorChange}
+          onReset={onResetColor}
+          value={editable.color ?? baseColor}
+        />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

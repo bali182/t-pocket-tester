@@ -74,7 +74,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.component.editor.pocketCluster.title}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.component.editor.pocketCluster.opening}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.orientation}>
         <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.component.editor.pocketCluster.fromTop} value="up">
@@ -97,7 +97,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.amount}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.pocketCount}>
         <NumberInput
           issue={issues.pocketCount}
           onChange={handlePocketCountChange}
@@ -108,7 +108,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.spacing}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.pocketStep}>
         <NumberInput
           issue={issues.pocketStep}
           onChange={handlePocketStepChange}
@@ -119,7 +119,7 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.component.editor.pocketCluster.card}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.cardId}>
         <CardPicker
           isResetEnabled={isDefined(editable.cardId)}
           issue={issues.cardId}

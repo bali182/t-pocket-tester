@@ -11,7 +11,7 @@ import { SectionGroup } from '../../common/SectionGroup'
 
 type HoleBasicSettingsSectionProps<T extends HasIdentitySchema & HasComponentReferenceSchema> = {
   editable: EditableSchema<T>
-  issues: ValidationIssuesSchema<HasIdentitySchema>
+  issues: ValidationIssuesSchema<T>
   onChange: (updated: EditableSchema<T>) => void
 }
 
@@ -21,7 +21,6 @@ export function HoleBasicSettingsSection<T extends HasIdentitySchema & HasCompon
   onChange,
 }: HoleBasicSettingsSectionProps<T>): ReactNode {
   const t = useTranslation()
-  const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
       onChange({ ...editable, name: event.target.value })
@@ -35,15 +34,17 @@ export function HoleBasicSettingsSection<T extends HasIdentitySchema & HasCompon
     [editable, onChange],
   )
 
+  const hasNameError = isDefined(issues.name)
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.common.labels.general}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.common.labels.name}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <Input aria-invalid={isNameInvalid} onChange={handleNameChange} size="xs" value={editable.name} />
+      <SectionGroup.SectionRowEditor issue={issues.name}>
+        <Input aria-invalid={hasNameError} onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.common.labels.component}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.componentId}>
         <ComponentSelect componentId={editable.componentId} onChange={handleComponentChange} />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>

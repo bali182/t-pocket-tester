@@ -85,13 +85,16 @@ export function ExportContentSection<T extends BaseExportSettingsSchema>({
     [editable, onChange],
   )
 
+  const hasStitchLineModeError = isDefined(issues.stitchLineMode) && issues.stitchLineMode.severity === 'error'
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.exportSettings.sections.content}</SectionGroup.SectionHeader>
 
       <SectionGroup.SectionRowTitle>{t.exportSettings.labels.stitchLineMode}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchLineMode}>
         <Select.Root
+          aria-invalid={hasStitchLineModeError}
           collection={stitchLineModeCollection}
           onValueChange={handleStitchLineModeChange}
           size="xs"
@@ -120,7 +123,7 @@ export function ExportContentSection<T extends BaseExportSettingsSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.exportSettings.labels.showNames}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.showNames}>
         <Switch.Root checked={editable.showNames} onCheckedChange={handleShowNamesChange} size="sm">
           <Switch.HiddenInput />
           <Switch.Control>
@@ -130,7 +133,7 @@ export function ExportContentSection<T extends BaseExportSettingsSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.exportSettings.labels.showDimensions}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.showDimensions}>
         <Switch.Root checked={editable.showDimensions} onCheckedChange={handleShowDimensionsChange} size="sm">
           <Switch.HiddenInput />
           <Switch.Control>
@@ -140,7 +143,7 @@ export function ExportContentSection<T extends BaseExportSettingsSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.exportSettings.labels.childMarkers}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.childMarkers}>
         <Switch.Root checked={editable.childMarkers} onCheckedChange={handleChildMarkersChange} size="sm">
           <Switch.HiddenInput />
           <Switch.Control>
@@ -150,7 +153,7 @@ export function ExportContentSection<T extends BaseExportSettingsSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.exportSettings.labels.cutHelperDistance}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.cutHelperDistance}>
         <NumberInput
           issue={issues.cutHelperDistance}
           onChange={handleCutHelperDistanceChange}

@@ -47,7 +47,7 @@ export function LayoutSection<T extends HasLayoutSchema>({
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.component.editor.layout.title}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.component.editor.layout.orientation}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.layoutOrientation}>
         <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.layoutOrientation}>
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.component.editor.layout.horizontal} value="horizontal">
@@ -62,7 +62,7 @@ export function LayoutSection<T extends HasLayoutSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.component.editor.layout.order}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.layoutOrder}>
         <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layoutOrder}>
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.component.editor.layout.defaultOrder} value="default">
@@ -79,7 +79,7 @@ export function LayoutSection<T extends HasLayoutSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.component.editor.layout.gap}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.layoutGap}>
         <NumberInput
           issue={issues.layoutGap}
           onChange={handleGapChange}

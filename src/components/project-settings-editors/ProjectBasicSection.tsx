@@ -1,4 +1,4 @@
-import { Field, Input } from '@chakra-ui/react'
+import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type FC } from 'react'
 
 import type { EditableSchema } from '../../schemas/editable'
@@ -16,7 +16,6 @@ type ProjectBasicSectionProps = {
 
 export const ProjectBasicSection: FC<ProjectBasicSectionProps> = ({ editable, issues, onChange }) => {
   const t = useTranslation()
-  const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
       onChange({ ...editable, name: event.target.value })
@@ -24,14 +23,14 @@ export const ProjectBasicSection: FC<ProjectBasicSectionProps> = ({ editable, is
     [editable, onChange],
   )
 
+  const hasNameError = isDefined(issues.name)
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.common.labels.general}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.common.labels.name}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <Field.Root invalid={isNameInvalid}>
-          <Input autoFocus onChange={handleNameChange} size="xs" value={editable.name} />
-        </Field.Root>
+      <SectionGroup.SectionRowEditor issue={issues.name}>
+        <Input aria-invalid={hasNameError} autoFocus onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

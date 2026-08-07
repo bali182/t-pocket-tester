@@ -24,6 +24,7 @@ type ExportPageSectionProps<T extends PdfExportSettingsSchema> = {
 
 export function ExportPageSection<T extends PdfExportSettingsSchema>({
   editable,
+  issues,
   onChange,
 }: ExportPageSectionProps<T>): ReactNode {
   const t = useTranslation()
@@ -62,13 +63,21 @@ export function ExportPageSection<T extends PdfExportSettingsSchema>({
     [editable, onChange],
   )
 
+  const hasPageError = isDefined(issues.page) && issues.page.severity === 'error'
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.pdfExport.dialog.sections.page}</SectionGroup.SectionHeader>
 
       <SectionGroup.SectionRowTitle>{t.pdfExport.dialog.labels.page}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <Select.Root collection={pageCollection} onValueChange={handlePageChange} size="xs" value={[editable.page]}>
+      <SectionGroup.SectionRowEditor issue={issues.page}>
+        <Select.Root
+          aria-invalid={hasPageError}
+          collection={pageCollection}
+          onValueChange={handlePageChange}
+          size="xs"
+          value={[editable.page]}
+        >
           <Select.HiddenSelect />
           <Select.Control>
             <Select.Trigger>
@@ -92,7 +101,7 @@ export function ExportPageSection<T extends PdfExportSettingsSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.pdfExport.dialog.labels.orientation}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.orientation}>
         <SegmentGroup.Root onValueChange={handleOrientationChange} size="sm" value={editable.orientation}>
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.pdfExport.dialog.orientations.portrait} value="portrait">
@@ -107,7 +116,7 @@ export function ExportPageSection<T extends PdfExportSettingsSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.pdfExport.dialog.labels.layout}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.layout}>
         <SegmentGroup.Root onValueChange={handleLayoutChange} size="sm" value={editable.layout}>
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.pdfExport.dialog.layouts.vertical} value="vertical">

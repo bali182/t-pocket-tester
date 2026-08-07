@@ -95,7 +95,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       <SectionGroup.SectionHeader>{t.stitchLine.editor.stitching.title}</SectionGroup.SectionHeader>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeColor}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchHoleColor}>
         <ColorInput
           isResetEnabled={isDefined(editable.stitchHoleColor)}
           issue={issues.stitchHoleColor}
@@ -106,7 +106,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineColor}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchLineColor}>
         <ColorInput
           isResetEnabled={isDefined(editable.stitchLineColor)}
           issue={issues.stitchLineColor}
@@ -117,7 +117,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.margin}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchMargin}>
         <NumberInput
           issue={issues.stitchMargin}
           onChange={handleStitchMarginChange}
@@ -130,7 +130,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeLength}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchHoleLength}>
         <NumberInput
           issue={issues.stitchHoleLength}
           onChange={handleStitchHoleLengthChange}
@@ -143,7 +143,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeDistance}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchHoleDistance}>
         <StitchHoleDistanceEditor
           issue={issues.stitchHoleDistance}
           onChange={handleStitchHoleDistanceChange}
@@ -154,7 +154,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeThickness}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchHoleThickness}>
         <NumberInput
           issue={issues.stitchHoleThickness}
           onChange={handleStitchHoleThicknessChange}
@@ -167,7 +167,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineThickness}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchLineThickness}>
         <NumberInput
           issue={issues.stitchLineThickness}
           onChange={handleStitchLineThicknessChange}

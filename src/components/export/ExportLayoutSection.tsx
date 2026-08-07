@@ -36,12 +36,18 @@ export function ExportLayoutSection<T extends BaseExportSettingsSchema>({
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.exportSettings.sections.layout}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.exportSettings.labels.gap}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.gap}>
         <NumberInput issue={issues.gap} onChange={handleGapChange} step={1} unit="mm" value={editable.gap} />
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.exportSettings.labels.padding}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <NumberInput issue={issues.padding} onChange={handlePaddingChange} step={1} unit="mm" value={editable.padding} />
+      <SectionGroup.SectionRowEditor issue={issues.padding}>
+        <NumberInput
+          issue={issues.padding}
+          onChange={handlePaddingChange}
+          step={1}
+          unit="mm"
+          value={editable.padding}
+        />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

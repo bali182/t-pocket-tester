@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { EditableSchema } from '../../../schemas/editable'
 import { ComponentBoundsStitchLineSchema } from '../../../schemas/stitching'
 import { ValidationIssuesSchema } from '../../../schemas/validation'
@@ -13,10 +14,12 @@ type StitchSidesAndCornersSectionProps = {
 
 export const StitchSidesAndCornersSection = ({ editable, issues, onChange }: StitchSidesAndCornersSectionProps) => {
   const t = useTranslation()
+  const stitchSidesAndCornersIssues = useMemo(() => Object.values(issues), [issues])
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.stitchLine.editor.seamLine.title}</SectionGroup.SectionHeader>
-      <SectionGroup.SectionFullWidthContent>
+      <SectionGroup.SectionFullWidthContent issue={stitchSidesAndCornersIssues}>
         <StitchLineSidesAndCorners editable={editable} issues={issues} onChange={onChange} />
       </SectionGroup.SectionFullWidthContent>
     </SectionGroup.Section>

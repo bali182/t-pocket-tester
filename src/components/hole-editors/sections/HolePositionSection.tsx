@@ -57,7 +57,7 @@ export function HolePositionSection<T extends HolePositionSchema>({
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.hole.editor.position.title}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.hole.editor.position.xAnchor}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.xAnchor}>
         <SegmentGroup.Root onValueChange={handleXAnchorChange} size="sm" value={editable.xAnchor}>
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.hole.editor.position.left} value="start">
@@ -75,7 +75,7 @@ export function HolePositionSection<T extends HolePositionSchema>({
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.hole.editor.position.xOffset}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.xOffset}>
         <NumberInput
           issue={issues.xOffset}
           onChange={handleXOffsetChange}
@@ -85,7 +85,7 @@ export function HolePositionSection<T extends HolePositionSchema>({
         />
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.hole.editor.position.yAnchor}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.yAnchor}>
         <SegmentGroup.Root onValueChange={handleYAnchorChange} size="sm" value={editable.yAnchor}>
           <SegmentGroup.Indicator />
           <SegmentGroup.Item aria-label={t.hole.editor.position.top} value="start">
@@ -103,7 +103,7 @@ export function HolePositionSection<T extends HolePositionSchema>({
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.hole.editor.position.yOffset}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.yOffset}>
         <NumberInput
           issue={issues.yOffset}
           onChange={handleYOffsetChange}

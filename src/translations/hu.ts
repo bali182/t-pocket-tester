@@ -269,6 +269,7 @@ export const HU = {
     },
   },
   validation: {
+    multipleIssues: (count: number) => `${count} hiba`,
     name: {
       empty: 'A név nem lehet üres.',
       duplicate: 'Ez a név már foglalt.',

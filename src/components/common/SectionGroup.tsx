@@ -1,5 +1,10 @@
 import { Box, Grid, Text, chakra } from '@chakra-ui/react'
-import type { FC, ReactNode } from 'react'
+import { ComponentProps, useMemo, type FC, type ReactNode } from 'react'
+
+import type { IssueSchema, SeveritySchema } from '../../schemas/validation'
+import { useTranslation } from '../../translations/translation'
+import { isDefined } from '../../utils/isDefined'
+import { isRecord } from '../../utils/isRecord'
 
 type SectionGroupRootProps = {
   children: ReactNode
@@ -19,10 +24,22 @@ type SectionGroupSectionRowTitleProps = {
 
 type SectionGroupSectionRowEditorProps = {
   children: ReactNode
+  issue?: IssueSchema | readonly (IssueSchema | undefined)[] | undefined
 }
 
 type SectionGroupSectionFullWidthContentProps = {
   children: ReactNode
+  issue?: IssueSchema | readonly (IssueSchema | undefined)[] | undefined
+}
+
+type SectionGroupIssueProps = {
+  issue: IssueSchema | readonly (IssueSchema | undefined)[] | undefined
+}
+
+const severityPriorities: Record<SeveritySchema, number> = {
+  error: 3,
+  info: 1,
+  warning: 2,
 }
 
 const SectionGroupRoot: FC<SectionGroupRootProps> = ({ children }) => {
@@ -59,18 +76,69 @@ const SectionGroupSectionRowTitle: FC<SectionGroupSectionRowTitleProps> = ({ chi
   )
 }
 
-const SectionGroupSectionRowEditor: FC<SectionGroupSectionRowEditorProps> = ({ children }) => {
+const SectionGroupIssue: FC<SectionGroupIssueProps> = ({ issue: issues }) => {
+  const t = useTranslation()
+  const issue = useMemo<IssueSchema | undefined>(() => {
+    if ((!isDefined(issues) || isRecord(issues)) && !Array.isArray(issues)) {
+      return issues
+    }
+    const definedIssues = issues.filter((candidateIssue): candidateIssue is IssueSchema => isDefined(candidateIssue))
+
+    if (definedIssues.length === 0) {
+      return undefined
+    }
+
+    if (definedIssues.length === 1) {
+      return definedIssues[0]
+    }
+
+    const highestSeverityIssue = definedIssues.reduce((currentIssue, candidateIssue) => {
+      return severityPriorities[candidateIssue.severity] > severityPriorities[currentIssue.severity]
+        ? candidateIssue
+        : currentIssue
+    })
+
+    return {
+      message: t.validation.multipleIssues(definedIssues.length),
+      severity: highestSeverityIssue.severity,
+    }
+  }, [issues, t])
+
+  const color = useMemo<ComponentProps<typeof Text>['color']>(() => {
+    if (!isDefined(issue)) {
+      return undefined
+    }
+    switch (issue.severity) {
+      case 'error':
+        return 'fg.error'
+      case 'warning':
+        return 'fg.warning'
+      case 'info':
+        return 'fg.info'
+    }
+  }, [issue])
+
+  return isDefined(issue) ? (
+    <Text color={color} textStyle="xs">
+      {issue.message}
+    </Text>
+  ) : null
+}
+
+const SectionGroupSectionRowEditor: FC<SectionGroupSectionRowEditorProps> = ({ children, issue }) => {
   return (
     <chakra.div minWidth="0" pr="4">
       {children}
+      <SectionGroupIssue issue={issue} />
     </chakra.div>
   )
 }
 
-const SectionGroupSectionFullWidthContent: FC<SectionGroupSectionFullWidthContentProps> = ({ children }) => {
+const SectionGroupSectionFullWidthContent: FC<SectionGroupSectionFullWidthContentProps> = ({ children, issue }) => {
   return (
     <chakra.div gridColumn="1 / -1" minWidth="0" px="4">
       {children}
+      <SectionGroupIssue issue={issue} />
     </chakra.div>
   )
 }

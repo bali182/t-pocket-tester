@@ -1,5 +1,5 @@
 import { Grid, SegmentGroup } from '@chakra-ui/react'
-import { useCallback, type ReactNode } from 'react'
+import { useCallback, useMemo, type ReactNode } from 'react'
 import {
   TbRadiusBottomLeft,
   TbRadiusBottomRight,
@@ -40,6 +40,10 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   onChange,
 }: CornerRadiusSectionProps<T>): ReactNode {
   const t = useTranslation()
+  const individualRadiusIssues = useMemo(
+    () => [issues.topLeftRadius, issues.topRightRadius, issues.bottomLeftRadius, issues.bottomRightRadius],
+    [issues.bottomLeftRadius, issues.bottomRightRadius, issues.topLeftRadius, issues.topRightRadius],
+  )
   const handleIndividualRadiiChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails) => {
       const value = details.value as RadiusTypeValue
@@ -72,7 +76,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.component.editor.cornerRadius.title}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.type}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.individualRadii}>
         <SegmentGroup.Root
           onValueChange={handleIndividualRadiiChange}
           size="sm"
@@ -93,7 +97,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
       {!editable.individualRadii && (
         <>
           <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.uniformMeasure}</SectionGroup.SectionRowTitle>
-          <SectionGroup.SectionRowEditor>
+          <SectionGroup.SectionRowEditor issue={issues.borderRadius}>
             <NumberInput
               issue={issues.borderRadius}
               onChange={handleBorderRadiusChange}
@@ -110,7 +114,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
           <SectionGroup.SectionRowTitle>
             {t.component.editor.cornerRadius.individualMeasure}
           </SectionGroup.SectionRowTitle>
-          <SectionGroup.SectionRowEditor>
+          <SectionGroup.SectionRowEditor issue={individualRadiusIssues}>
             <Grid columnGap="1" gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" rowGap="1">
               <NumberInput
                 issue={issues.topLeftRadius}

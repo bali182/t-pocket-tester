@@ -26,8 +26,6 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
   onChange,
 }: BasicSettingsSectionProps<T>): ReactNode => {
   const t = useTranslation()
-  const isNameInvalid = isDefined(issues.name) && issues.name.severity === 'error'
-
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
       onChange({ ...editable, name: event.target.value })
@@ -41,17 +39,19 @@ export const BasicSettingsSection = <T extends BaseStitchLineSchema>({
     [editable, onChange],
   )
 
+  const hasNameError = isDefined(issues.name)
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.common.labels.general}</SectionGroup.SectionHeader>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.name}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <Input aria-invalid={isNameInvalid} onChange={handleNameChange} size="xs" value={editable.name} />
+      <SectionGroup.SectionRowEditor issue={issues.name}>
+        <Input aria-invalid={hasNameError} onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.component}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.targetId}>
         <ComponentSelect
           componentId={editable.targetId}
           componentTypes={componentTypes}

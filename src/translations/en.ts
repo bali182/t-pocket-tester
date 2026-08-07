@@ -271,6 +271,7 @@ export const EN: typeof HU = {
     },
   },
   validation: {
+    multipleIssues: (count: number) => `${count} issues`,
     name: {
       empty: 'Name cannot be empty.',
       duplicate: 'This name is already in use.',

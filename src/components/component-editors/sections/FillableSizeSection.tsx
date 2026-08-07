@@ -66,7 +66,7 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.common.labels.size}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.common.labels.width}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.width}>
         <HStack gap="2">
           <Switch.Root checked={!editable.autoWidth} onCheckedChange={handleAutoWidthChange} size="md">
             <Switch.HiddenInput />
@@ -93,7 +93,7 @@ export function FillableSizeSection<T extends HasFillableSizeSchema>({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.height}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.height}>
         <HStack gap="2">
           <Switch.Root checked={!editable.autoHeight} onCheckedChange={handleAutoHeightChange} size="md">
             <Switch.HiddenInput />

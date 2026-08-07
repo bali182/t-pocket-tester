@@ -51,7 +51,7 @@ export const PocketClusterStitchLineSettingsSection = ({
       <SectionGroup.SectionHeader>{t.stitchLine.editor.pocketStitch.title}</SectionGroup.SectionHeader>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.enabled}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.enabled}>
         <Switch.Root checked={editable.enabled} onCheckedChange={handleEnabledChange} size="sm">
           <Switch.HiddenInput />
           <Switch.Control>
@@ -61,7 +61,7 @@ export const PocketClusterStitchLineSettingsSection = ({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.startOffset}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.startOffset}>
         <NumberInput
           issue={issues.startOffset}
           onChange={handleStartOffsetChange}
@@ -72,7 +72,7 @@ export const PocketClusterStitchLineSettingsSection = ({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.endOffset}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.endOffset}>
         <NumberInput
           issue={issues.endOffset}
           onChange={handleEndOffsetChange}
@@ -83,7 +83,7 @@ export const PocketClusterStitchLineSettingsSection = ({
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.direction}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowEditor issue={issues.stitchDirection}>
         <Switch.Root
           checked={editable.stitchDirection === 'start-to-end'}
           onCheckedChange={handleStitchDirectionChange}
