@@ -16,7 +16,8 @@ export const Editor: FC = () => {
       minHeight="0"
       minWidth="0"
       overflow="hidden"
-      p="3"
+      pt="3"
+      px="3"
     >
       <EditorMenu />
       <Box flex="1" minHeight="0" minWidth="0" overflow="hidden">
