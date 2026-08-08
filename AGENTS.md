@@ -23,7 +23,7 @@
   - Explain the logic what you are planning to modify in said file.
 - Try to reuse types, utils, etc when appropriate. Don't mindlessly suggest new types and logic for everything.
 - You are writing plans for another developer. Don't write vague requirements business analyst style, but exactly what you are planning to do in the code. The goal is, that you don't rely on the "Write something -> Try to compile -> Doesn't work -> Start again" loop excessively. You should always start implementation with a concise plan, while the user has a clear understanding of what you will do.
-- Checks after writing code: `npm run typecheck` then `npm run lint`. Don't try to run a dev server, don't write manual test steps, don't suggest testing libraries.
+- Checks after writing code: `npm run typecheck`, `npm run lint` and if that's in order `npm run pretty`. Don't try to run a dev server, don't write manual test steps, don't suggest testing libraries.
 - Before planning always ASK for architectural and even smaller decisions.
 
 ## Coding style
