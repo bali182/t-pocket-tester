@@ -82,9 +82,8 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId, nestingLeve
           stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
           strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
         />
-
-        <StitchLines componentId={pocketCluster.id} />
       </g>
+      <StitchLines componentId={pocketCluster.id} />
       <HoleHighlights componentId={pocketCluster.id} />
     </>
   )
