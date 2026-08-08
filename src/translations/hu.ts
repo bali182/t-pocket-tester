@@ -46,6 +46,7 @@ export const HU = {
   editor: {
     menus: {
       file: 'Fájl',
+      edit: 'Szerkesztés',
       view: 'Nézet',
     },
     scalingDialog: {

@@ -48,6 +48,7 @@ export const EN: typeof HU = {
   editor: {
     menus: {
       file: 'File',
+      edit: 'Edit',
       view: 'View',
     },
     scalingDialog: {

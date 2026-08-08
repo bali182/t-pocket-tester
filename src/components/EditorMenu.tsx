@@ -2,8 +2,8 @@ import { Button, Card, HStack, IconButton, Menu, Portal, Separator } from '@chak
 import { useCallback, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router'
-import { useProject } from '../hooks/useProject'
 import { appRoutes } from '../appRoutes'
+import { useProject } from '../hooks/useProject'
 import { useTranslation } from '../translations/translation'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
@@ -42,6 +42,7 @@ export const EditorMenu = () => {
           />
           <Separator orientation="vertical" height="5" ml="3" mr="3" />
           <HStack gap="1">
+            {/* File menu */}
             <Menu.Root>
               <Menu.Trigger asChild>
                 <Button size="sm" variant="ghost">
@@ -64,6 +65,7 @@ export const EditorMenu = () => {
                 </Menu.Positioner>
               </Portal>
             </Menu.Root>
+            {/* View menu */}
             <Menu.Root>
               <Menu.Trigger asChild>
                 <Button size="sm" variant="ghost">
