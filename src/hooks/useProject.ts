@@ -1,10 +1,11 @@
 import type { ProjectSchema } from '../schemas/project'
+import type { SetStateAction } from 'react'
 import { isDefined } from '../utils/isDefined'
 import { useOptionalProject } from './useOptionalProject'
 
 type UseProjectResult = {
   project: ProjectSchema
-  setProject: (project: ProjectSchema) => void
+  setProject: (project: SetStateAction<ProjectSchema>) => void
 }
 
 export const useProject = (): UseProjectResult => {

@@ -1,12 +1,18 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
+import { useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
+import { useProject } from '../hooks/useProject'
+import { useProjectOperations } from '../hooks/useProjectOperations'
+import { useSubProject } from '../hooks/useSubProject'
 import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
+import { pendingSubProjectDeletionAtom } from '../state/pendigDeletionAtoms'
 import { useTranslation } from '../translations/translation'
 import { getComponentIcon } from '../utils/getComponentIcon'
+import { isDefined } from '../utils/isDefined'
 import { noop } from '../utils/noop'
 
 type ComponentActionsProps = {
@@ -25,10 +31,37 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   onDelete = noop,
 }) => {
   const t = useTranslation()
+  const { project } = useProject()
+  const { subProject } = useSubProject()
+  const setPendingSubProjectDeletion = useSetAtom(pendingSubProjectDeletionAtom)
+  const { cloneSubProject, deleteSubProject } = useProjectOperations()
   const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useSubProjectOperations()
-  const canDelete = useMemo((): boolean => component.type !== 'root-panel', [component.type])
   const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
-  const canClone = useMemo((): boolean => component.type !== 'root-panel', [component.type])
+
+  const nextSubProjectAfterDelete = useMemo(() => {
+    const subProjectIndex = project.subProjects.findIndex((candidate) => candidate.id === subProject.id)
+    if (project.subProjects.length === 1 && project.subProjects[0] === subProject) {
+      return undefined
+    }
+    return subProjectIndex === 0 ? project.subProjects[1] : project.subProjects[subProjectIndex - 1]
+  }, [project.subProjects, subProject])
+
+  const deleteRoot = useCallback((): void => {
+    const navigationTarget = isDefined(nextSubProjectAfterDelete)
+      ? `/projects/${project.id}/${nextSubProjectAfterDelete.id}`
+      : `/projects/${project.id}`
+    setPendingSubProjectDeletion({ redirectPath: navigationTarget, subProjectId: subProject.id })
+    deleteSubProject()
+    onDelete(component.id)
+  }, [
+    component.id,
+    deleteSubProject,
+    nextSubProjectAfterDelete,
+    onDelete,
+    project.id,
+    setPendingSubProjectDeletion,
+    subProject.id,
+  ])
 
   const handleActionsClick = useCallback((event: MouseEvent<HTMLDivElement>): void => {
     event.stopPropagation()
@@ -46,20 +79,33 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   )
 
   const handleDelete = useCallback((): void => {
-    if (!canDelete) {
-      return
+    switch (component.type) {
+      case 'root-panel': {
+        deleteRoot()
+        break
+      }
+      case 'panel':
+      case 'pocket-cluster': {
+        deleteComponent(component.id)
+        onDelete(component.id)
+        break
+      }
     }
-    deleteComponent(component.id)
-    onDelete(component.id)
-  }, [canDelete, component.id, deleteComponent, onDelete])
+  }, [onDelete, component.id, component.type, deleteComponent, deleteRoot])
 
   const handleClone = useCallback((): void => {
-    if (!canClone) {
-      return
+    switch (component.type) {
+      case 'root-panel': {
+        cloneSubProject()
+        break
+      }
+      case 'panel':
+      case 'pocket-cluster': {
+        cloneComponent(component.id)
+        break
+      }
     }
-
-    cloneComponent(component.id)
-  }, [canClone, cloneComponent, component.id])
+  }, [cloneComponent, cloneSubProject, component.id, component.type])
 
   const handleAddStitchLine = useCallback(
     (type: StitchLineSchema['type']): void => {
@@ -91,12 +137,11 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
               </Menu.Item>
               <Menu.Separator />
               <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
-              <Menu.Item value="clone" onSelect={handleClone} disabled={!canClone}>
+              <Menu.Item value="clone" onSelect={handleClone}>
                 <PiCopy />
                 <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>
               </Menu.Item>
               <Menu.Item
-                disabled={!canDelete}
                 onSelect={handleDelete}
                 value="delete"
                 color="fg.error"
