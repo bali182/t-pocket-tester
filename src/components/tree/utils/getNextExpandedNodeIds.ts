@@ -1,6 +1,6 @@
 import { getComponentAncestorIds } from '../../../operations/subProject/utils/getComponentAncestorIds'
-import { SubProjectSchema } from '../../../schemas/subProject'
 import { EditorSelectionSchema } from '../../../schemas/selection'
+import { SubProjectSchema } from '../../../schemas/subProject'
 import { isDefined } from '../../../utils/isDefined'
 import { getComponentNodeId, getHoleNodeId } from './treeNodeIds'
 

@@ -1,11 +1,11 @@
 import type { FC } from 'react'
 
-import { ExportContentSection } from '../export/ExportContentSection'
-import { ExportLayoutSection } from '../export/ExportLayoutSection'
-import { SectionGroup } from '../common/SectionGroup'
 import type { EditableSchema } from '../../schemas/editable'
 import type { BaseExportSettingsSchema } from '../../schemas/settings'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { SectionGroup } from '../common/SectionGroup'
+import { ExportContentSection } from '../export/ExportContentSection'
+import { ExportLayoutSection } from '../export/ExportLayoutSection'
 
 type SvgExportEditorProps = {
   editable: EditableSchema<BaseExportSettingsSchema>

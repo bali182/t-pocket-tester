@@ -1,5 +1,5 @@
-import { SubProjectSchema } from '../../schemas/subProject'
 import { StitchLineSchema } from '../../schemas/stitching'
+import { SubProjectSchema } from '../../schemas/subProject'
 
 export type UpdateStitchLineParams = {
   stitchLine: StitchLineSchema

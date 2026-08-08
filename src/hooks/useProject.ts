@@ -1,5 +1,5 @@
-import type { ProjectSchema } from '../schemas/project'
 import type { SetStateAction } from 'react'
+import type { ProjectSchema } from '../schemas/project'
 import { isDefined } from '../utils/isDefined'
 import { useOptionalProject } from './useOptionalProject'
 

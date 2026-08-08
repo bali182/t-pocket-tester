@@ -3,9 +3,9 @@ import { useCallback, type FC } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
 import { PiPlus, PiWallet } from 'react-icons/pi'
+import { appRoutes } from '../appRoutes'
 import { useCreateSubProject } from '../hooks/useCreateSubProject'
 import { useProject } from '../hooks/useProject'
-import { appRoutes } from '../appRoutes'
 import { SubProjectRouteParams } from '../schemas/routeParams'
 
 export const EditorSubProjectTabs: FC = () => {

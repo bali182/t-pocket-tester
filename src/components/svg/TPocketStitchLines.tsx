@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 
-import { useSubProject } from '../../hooks/useSubProject'
 import { useProject } from '../../hooks/useProject'
+import { useSubProject } from '../../hooks/useSubProject'
 import type { PocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { getResolvedStitchLine } from '../../utils/getResolvedStitchLine'
 import { isDefined } from '../../utils/isDefined'

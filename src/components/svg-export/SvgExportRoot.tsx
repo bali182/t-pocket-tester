@@ -29,7 +29,12 @@ export const SvgExportRoot: FC<SvgExportRootProps> = ({ project, svgExport }) =>
       viewBox={viewBox}
     >
       {svgExport.elements.map((element) => (
-        <SvgExportElement element={element} key={`${element.subProject.id}:${element.id}`} project={project} settings={svgExport.settings} />
+        <SvgExportElement
+          element={element}
+          key={`${element.subProject.id}:${element.id}`}
+          project={project}
+          settings={svgExport.settings}
+        />
       ))}
     </svg>
   )
@@ -45,9 +50,7 @@ const SvgExportElement: FC<SvgExportElementProps> = ({ element, project, setting
   const drawAreaContextValue = useSvgDrawArea(element.subProject, project.stitchingSettings, settings)
 
   return (
-    <DrawAreaContext.Provider value={drawAreaContextValue}>
-      {renderSvgExportElement(element)}
-    </DrawAreaContext.Provider>
+    <DrawAreaContext.Provider value={drawAreaContextValue}>{renderSvgExportElement(element)}</DrawAreaContext.Provider>
   )
 }
 

@@ -1,9 +1,9 @@
-import { cloneComponentTree } from '../subProject/cloneComponent'
-import type { ProjectSchema } from '../../schemas/project'
 import type { HoleSchema } from '../../schemas/hole'
+import type { ProjectSchema } from '../../schemas/project'
 import type { StitchLineSchema } from '../../schemas/stitching'
 import type { SubProjectSchema } from '../../schemas/subProject'
 import { isDefined } from '../../utils/isDefined'
+import { cloneComponentTree } from '../subProject/cloneComponent'
 
 export type CloneSubProjectParams = {
   getUnusedId: () => string
@@ -37,9 +37,7 @@ export const cloneSubProject = (
     return project
   }
 
-  const clonedHoleIdBySourceHoleId = Object.fromEntries(
-    sourceSubProject.holes.map((hole) => [hole.id, getUnusedId()]),
-  )
+  const clonedHoleIdBySourceHoleId = Object.fromEntries(sourceSubProject.holes.map((hole) => [hole.id, getUnusedId()]))
   const clonedHoles: HoleSchema[] = []
 
   for (const hole of sourceSubProject.holes) {

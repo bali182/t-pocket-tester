@@ -1,7 +1,7 @@
 import typia from 'typia'
 
-import type { ProjectSchema } from '../schemas/project'
 import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
+import type { ProjectSchema } from '../schemas/project'
 import type { BaseExportSettingsSchema } from '../schemas/settings'
 
 type StorageKey = 'pdf-export-params' | 'projects' | 'scaling' | 'svg-export-params'

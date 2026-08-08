@@ -1,5 +1,5 @@
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import type { ComponentBoundsStitchLineSchema } from '../schemas/stitching'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 
 export const adjustStitchLines = (
   subProject: SubProjectSchema,

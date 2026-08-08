@@ -3,8 +3,8 @@ import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
 import { useNavigate } from 'react-router'
 
-import { useProjects } from '../hooks/useProjects'
 import { appRoutes } from '../appRoutes'
+import { useProjects } from '../hooks/useProjects'
 import { useTranslation } from '../translations/translation'
 
 type ProjectActionsMenuProps = {

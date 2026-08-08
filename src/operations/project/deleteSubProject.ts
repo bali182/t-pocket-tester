@@ -4,10 +4,7 @@ export type DeleteSubProjectParams = {
   subProjectId: string
 }
 
-export const deleteSubProject = (
-  project: ProjectSchema,
-  { subProjectId }: DeleteSubProjectParams,
-): ProjectSchema => {
+export const deleteSubProject = (project: ProjectSchema, { subProjectId }: DeleteSubProjectParams): ProjectSchema => {
   if (!project.subProjects.some((subProject) => subProject.id === subProjectId)) {
     return project
   }

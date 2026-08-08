@@ -9,12 +9,5 @@ export const renderPdfDocument = (
   layout: PdfExportSuccessfulLayoutSchema,
   pageSize: SizeSchema,
 ) => {
-  return (
-    <PdfDocument
-      layout={layout}
-      pageSize={pageSize}
-      settings={settings}
-      project={project}
-    />
-  )
+  return <PdfDocument layout={layout} pageSize={pageSize} settings={settings} project={project} />
 }

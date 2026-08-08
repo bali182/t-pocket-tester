@@ -1,10 +1,6 @@
 import type { EditableSchema } from '../schemas/editable'
-import type {
-  PageLayoutSchema,
-  PageOrientationSchema,
-  PdfExportSettingsSchema,
-} from '../schemas/pdfExport'
 import type { PageSchemaId } from '../schemas/page'
+import type { PageLayoutSchema, PageOrientationSchema, PdfExportSettingsSchema } from '../schemas/pdfExport'
 import type { BaseValidationContextSchema, ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
 import { validateBaseExportSettingsSchema } from './validateBaseExportSettingsSchema'
@@ -34,7 +30,12 @@ export const validatePdfExportSettingsSchema = (
 ): ValidationResultSchema<PdfExportSettingsSchema> => {
   const baseResult = validateBaseExportSettingsSchema(input, currentValue, context)
   const pageResult = validatePrimitiveUnion(input.page, currentValue.page, pageSchemaIds, context)
-  const orientationResult = validatePrimitiveUnion(input.orientation, currentValue.orientation, pageOrientations, context)
+  const orientationResult = validatePrimitiveUnion(
+    input.orientation,
+    currentValue.orientation,
+    pageOrientations,
+    context,
+  )
   const layoutResult = validatePrimitiveUnion(input.layout, currentValue.layout, pageLayouts, context)
 
   const issues: ValidationIssuesSchema<PdfExportSettingsSchema> = {

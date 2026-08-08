@@ -1,8 +1,8 @@
 import { getComponentDescendants } from '../operations/subProject/utils/getComponentDescendants'
 import { ComponentSchema } from '../schemas/components'
-import { SubProjectSchema } from '../schemas/subProject'
 import { EditorSelectionSchema } from '../schemas/selection'
 import { StitchLineSchema } from '../schemas/stitching'
+import { SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
 
 const EmptySet: ReadonlySet<string> = new Set<string>()

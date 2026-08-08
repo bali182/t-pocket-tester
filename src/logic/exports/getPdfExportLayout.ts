@@ -5,9 +5,9 @@ import type { RectSchema, SizeSchema } from '../../schemas/geometry'
 import {
   PdfExportLayoutSchema,
   PdfExportPageSchema,
-  PdfExportSettingsSchema,
   PdfExportPlacementRotation,
   PdfExportPlacementSchema,
+  PdfExportSettingsSchema,
 } from '../../schemas/pdfExport'
 import type { SvgExportElementSchema, SvgExportPanelSchema } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'

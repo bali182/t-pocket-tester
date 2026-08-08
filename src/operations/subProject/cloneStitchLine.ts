@@ -1,5 +1,5 @@
-import type { SubProjectSchema } from '../../schemas/subProject'
 import type { StitchLineSchema } from '../../schemas/stitching'
+import type { SubProjectSchema } from '../../schemas/subProject'
 
 export type CloneStitchLineParams = {
   stitchLineId: string

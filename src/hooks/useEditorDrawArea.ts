@@ -26,8 +26,8 @@ import { StitchLineSchema } from '../schemas/stitching'
 import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { produce } from '../utils/produce'
-import { useSubProject } from './useSubProject'
 import { useProject } from './useProject'
+import { useSubProject } from './useSubProject'
 
 import { formatHex8, parse } from 'culori'
 import { getSelectionObstructingComponentIds } from '../logic/getSelectionObstructingComponentIds'
@@ -99,13 +99,10 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     [hoveredTreeSelection, subProject, selection],
   )
 
-  const selectComponent = useCallback(
-    (componentId: string): void => {
-      setHoveredStitchLine(undefined)
-      setSelection({ componentId, type: 'component' })
-    },
-    [],
-  )
+  const selectComponent = useCallback((componentId: string): void => {
+    setHoveredStitchLine(undefined)
+    setSelection({ componentId, type: 'component' })
+  }, [])
 
   const selectStitchLine = useCallback((stitchLineId: string): void => {
     setSelection({ stitchLineId, type: 'stitch-line' })

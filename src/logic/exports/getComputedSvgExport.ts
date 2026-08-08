@@ -1,7 +1,7 @@
 import type { ComponentSchema, PocketClusterSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedPocketClusterSchema } from '../../schemas/computed'
 import type { CornerRadiusSchema } from '../../schemas/geometry'
-import type { ProjectSchema, ComputedProjectSchema } from '../../schemas/project'
+import type { ComputedProjectSchema, ProjectSchema } from '../../schemas/project'
 import type { BaseExportSettingsSchema } from '../../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../../schemas/stitching'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../../schemas/subProject'
@@ -32,9 +32,7 @@ export const getComputedSvgExport = (
   settings: BaseExportSettingsSchema,
 ): SvgExportSchema => {
   const elements = project.subProjects.flatMap((subProject) => {
-    const computedSubProject = computedProject.subProjects.find(
-      (candidate) => candidate.id === subProject.id,
-    )
+    const computedSubProject = computedProject.subProjects.find((candidate) => candidate.id === subProject.id)
 
     if (!isDefined(computedSubProject)) {
       throw new Error(`Computed subproject not found: ${subProject.id}`)

@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js'
 import { G, Text } from '@react-pdf/renderer'
+import BigNumber from 'bignumber.js'
 import type { FC } from 'react'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'

@@ -57,69 +57,59 @@ export const projectAtomFamily = atomFamily((projectId: string | undefined) => {
   )
 })
 
-export const subProjectAtomFamily = atomFamily(
-  (reference: SubProjectAtomReferenceSchema) => {
-    return atom(
-      (get): SubProjectSchema | undefined => {
-        const project = get(projectAtomFamily(reference.projectId))
-
-        if (!isDefined(project) || !isDefined(reference.subProjectId)) {
-          return undefined
-        }
-
-        return project.subProjects.find((subProject) => subProject.id === reference.subProjectId)
-      },
-      (get, set, update: SetStateAction<SubProjectSchema>): void => {
-        const project = get(projectAtomFamily(reference.projectId))
-        const currentSubProject = get(subProjectAtomFamily(reference))
-
-        if (!isDefined(project) || !isDefined(currentSubProject)) {
-          throw new Error('Subproject not found')
-        }
-
-        const updatedSubProject = typeof update === 'function' ? update(currentSubProject) : update
-        const computedSubProject = getComputedSubProject(updatedSubProject, project.stitchingSettings)
-        const patchedSubProject = getPatchedSubProject(
-          updatedSubProject,
-          computedSubProject,
-          project.editingSettings,
-        )
-
-        set(projectsAtom, (projects) =>
-          projects.map((candidate) => {
-            if (candidate.id !== project.id) {
-              return candidate
-            }
-
-            return {
-              ...candidate,
-              subProjects: candidate.subProjects.map((subProject) =>
-                subProject.id === patchedSubProject.id ? patchedSubProject : subProject,
-              ),
-            }
-          }),
-        )
-      },
-    )
-  },
-  isSameSubProjectAtomReference,
-)
-
-export const computedSubProjectAtomFamily = atomFamily(
-  (reference: SubProjectAtomReferenceSchema) => {
-    return atom((get): ComputedSubProjectSchema | undefined => {
+export const subProjectAtomFamily = atomFamily((reference: SubProjectAtomReferenceSchema) => {
+  return atom(
+    (get): SubProjectSchema | undefined => {
       const project = get(projectAtomFamily(reference.projectId))
-      const subProject = get(subProjectAtomFamily(reference))
 
-      if (!isDefined(project) || !isDefined(subProject)) {
+      if (!isDefined(project) || !isDefined(reference.subProjectId)) {
         return undefined
       }
 
-      return getComputedSubProject(subProject, project.stitchingSettings)
-    })
-  },
-  isSameSubProjectAtomReference,
-)
+      return project.subProjects.find((subProject) => subProject.id === reference.subProjectId)
+    },
+    (get, set, update: SetStateAction<SubProjectSchema>): void => {
+      const project = get(projectAtomFamily(reference.projectId))
+      const currentSubProject = get(subProjectAtomFamily(reference))
+
+      if (!isDefined(project) || !isDefined(currentSubProject)) {
+        throw new Error('Subproject not found')
+      }
+
+      const updatedSubProject = typeof update === 'function' ? update(currentSubProject) : update
+      const computedSubProject = getComputedSubProject(updatedSubProject, project.stitchingSettings)
+      const patchedSubProject = getPatchedSubProject(updatedSubProject, computedSubProject, project.editingSettings)
+
+      set(projectsAtom, (projects) =>
+        projects.map((candidate) => {
+          if (candidate.id !== project.id) {
+            return candidate
+          }
+
+          return {
+            ...candidate,
+            subProjects: candidate.subProjects.map((subProject) =>
+              subProject.id === patchedSubProject.id ? patchedSubProject : subProject,
+            ),
+          }
+        }),
+      )
+    },
+  )
+}, isSameSubProjectAtomReference)
+
+export const computedSubProjectAtomFamily = atomFamily((reference: SubProjectAtomReferenceSchema) => {
+  return atom((get): ComputedSubProjectSchema | undefined => {
+    const project = get(projectAtomFamily(reference.projectId))
+    const subProject = get(subProjectAtomFamily(reference))
+
+    if (!isDefined(project) || !isDefined(subProject)) {
+      return undefined
+    }
+
+    return getComputedSubProject(subProject, project.stitchingSettings)
+  })
+}, isSameSubProjectAtomReference)
 
 export const computedProjectAtomFamily = atomFamily((projectId: string | undefined) => {
   return atom((get): ComputedProjectSchema | undefined => {

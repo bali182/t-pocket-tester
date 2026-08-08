@@ -18,11 +18,7 @@ export const SubProjectRoute: FC = () => {
 
   if (!isDefined(subProject) || !isDefined(computedSubProject)) {
     if (isDefined(pendingSubProjectDeletion) && pendingSubProjectDeletion.subProjectId === subProjectId) {
-      return (
-        <PendingSubProjectDeletionRedirect
-          redirectPath={pendingSubProjectDeletion.redirectPath}
-        />
-      )
+      return <PendingSubProjectDeletionRedirect redirectPath={pendingSubProjectDeletion.redirectPath} />
     }
 
     return (
