@@ -1,9 +1,8 @@
 import type { RootPanelSchema } from '../schemas/components'
 import type { SubProjectSchema } from '../schemas/subProject'
-import type { TranslationSchema } from '../translations/translationSchema'
 import { id } from './id'
 
-export const createSubProject = (name: string, t: TranslationSchema): SubProjectSchema => {
+export const createSubProject = (rootName: string): SubProjectSchema => {
   const root: RootPanelSchema = {
     borderRadius: 0,
     topLeftRadius: 0,
@@ -16,7 +15,7 @@ export const createSubProject = (name: string, t: TranslationSchema): SubProject
     layoutGap: 0,
     type: 'root-panel',
     id: id(),
-    name: t.defaults.rootComponentName,
+    name: rootName,
     children: [],
     width: 170,
     height: 100,
@@ -24,7 +23,6 @@ export const createSubProject = (name: string, t: TranslationSchema): SubProject
 
   return {
     id: id(),
-    name,
     root: root.id,
     components: {
       [root.id]: root,

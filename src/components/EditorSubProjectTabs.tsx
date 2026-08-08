@@ -1,20 +1,24 @@
 import { HStack, IconButton, Tabs } from '@chakra-ui/react'
-import { type FC } from 'react'
+import { useCallback, type FC } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
-import { PiPlus } from 'react-icons/pi'
+import { PiPlus, PiWallet } from 'react-icons/pi'
+import { useCreateSubProject } from '../hooks/useCreateSubProject'
 import { useProject } from '../hooks/useProject'
 import { SubProjectRouteParams } from '../schemas/routeParams'
-import { CreateSubProjectDialog } from './CreateSubProjectDialog'
 
 export const EditorSubProjectTabs: FC = () => {
   const { project } = useProject()
+  const { createSubProject } = useCreateSubProject()
   const navigate = useNavigate()
   const { subProjectId } = useParams<SubProjectRouteParams>()
 
-  const handleSubProjectClick = (nextSubProjectId: string): void => {
-    navigate(`/projects/${project.id}/${nextSubProjectId}`)
-  }
+  const handleSubProjectClick = useCallback(
+    (nextSubProjectId: string): void => {
+      navigate(`/projects/${project.id}/${nextSubProjectId}`)
+    },
+    [navigate, project.id],
+  )
 
   return (
     <Tabs.Root size="md" value={subProjectId} variant="outline" width="100%">
@@ -26,17 +30,13 @@ export const EditorSubProjectTabs: FC = () => {
               onClick={() => handleSubProjectClick(subProject.id)}
               value={subProject.id}
             >
-              {subProject.name}
+              <PiWallet /> {subProject.components[subProject.root]?.name}
             </Tabs.Trigger>
           </HStack>
         ))}
-        <CreateSubProjectDialog
-          trigger={
-            <IconButton size="xs" variant="ghost" ml="2">
-              <PiPlus />
-            </IconButton>
-          }
-        />
+        <IconButton size="xs" variant="ghost" ml="2" onClick={createSubProject}>
+          <PiPlus />
+        </IconButton>
       </Tabs.List>
     </Tabs.Root>
   )

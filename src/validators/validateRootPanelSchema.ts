@@ -27,11 +27,15 @@ export const validateRootPanelSchema = (
   currentValue: RootPanelSchema,
   context: ComponentBasedValidationContextSchema,
 ): ValidationResultSchema<RootPanelSchema> => {
+  const otherRootPanels = context.project.subProjects
+    .filter((subProject) => subProject.id !== context.subProject.id)
+    .map((subProject) => subProject.components[subProject.root])
+    .filter((component): component is RootPanelSchema => isDefined(component) && component.type === 'root-panel')
   const nameResult = validateName(
     input.name,
     currentValue.name,
     input.id,
-    Object.values(context.subProject.components),
+    [...Object.values(context.subProject.components), ...otherRootPanels],
     context,
   )
   const colorResult = validateOptionalHexColor(input.color, currentValue.color, context)

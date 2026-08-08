@@ -195,11 +195,11 @@ const PdfExportFailureAlert: FC<PdfExportFailureAlertProps> = ({ failure, onDism
           </Alert.Title>
           {failure.type === 'unplaceable' && (
             <Alert.Description as="ul" mt="2" ps="4">
-              {failure.layout.unplaceables.map((panel) => (
-                <li key={`${panel.subProject.id}:${panel.component.id}`}>
-                  {panel.subProject.name} → {panel.component.name}
-                </li>
-              ))}
+              {failure.layout.unplaceables.map((panel) => {
+                const root = panel.subProject.components[panel.subProject.root]
+                const text = isDefined(root) ? `${root.name} → ${panel.component.name}` : panel.component.name
+                return <li key={`${panel.subProject.id}:${panel.component.id}`}>{text}</li>
+              })}
             </Alert.Description>
           )}
         </Alert.Content>

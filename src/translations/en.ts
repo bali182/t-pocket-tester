@@ -295,7 +295,7 @@ export const EN: typeof HU = {
   },
   defaults: {
     subProjectName: 'New project',
-    rootComponentName: 'Base',
+    rootComponentName: 'Module',
     stitchLineName: (number: number) => `Stitch line ${number}`,
   },
 }

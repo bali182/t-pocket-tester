@@ -8,8 +8,8 @@ import type {
   ComputedRootPanelSchema,
 } from '../schemas/computed'
 import type { RectSchema } from '../schemas/geometry'
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import type { ResolvedStitchLineSchema, StitchLineCommonConfigSchema } from '../schemas/stitching'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { getResolvedStitchLine } from '../utils/getResolvedStitchLine'
 import { isDefined } from '../utils/isDefined'
 import { applyHolePathsToComputedComponents } from './applyHolePathsToComputedComponents'
@@ -53,7 +53,6 @@ export const getComputedSubProject = (
 
   return {
     id: subProject.id,
-    name: subProject.name,
     root: root.componentId,
     components: computedComponents,
     holes,

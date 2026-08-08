@@ -1,17 +1,18 @@
-import { HasIdentitySchema } from './common'
 import { ComponentSchema } from './components'
 import { ComputedComponentSchema, ComputedHoleSchema, ComputedStitchLineSchema } from './computed'
 import { HoleSchema } from './hole'
 import { StitchLineSchema } from './stitching'
 
-export type SubProjectSchema = HasIdentitySchema & {
+export type SubProjectSchema = {
+  id: string
   root: string
   components: Record<string, ComponentSchema>
   holes: HoleSchema[]
   stitchLines: StitchLineSchema[]
 }
 
-export type ComputedSubProjectSchema = HasIdentitySchema & {
+export type ComputedSubProjectSchema = {
+  id: string
   root: string
   components: Record<string, ComputedComponentSchema>
   holes: ComputedHoleSchema[]

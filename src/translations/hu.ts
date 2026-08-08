@@ -293,7 +293,7 @@ export const HU = {
   },
   defaults: {
     subProjectName: 'Új projekt',
-    rootComponentName: 'Alap',
+    rootComponentName: 'Modul',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },
 }

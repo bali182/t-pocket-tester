@@ -3,11 +3,12 @@ import type { FC } from 'react'
 import { PiPlus } from 'react-icons/pi'
 import { Navigate } from 'react-router'
 
+import { useCreateSubProject } from '../../hooks/useCreateSubProject'
 import { useProject } from '../../hooks/useProject'
-import { CreateSubProjectDialog } from '../CreateSubProjectDialog'
 
 export const ProjectIndexRoute: FC = () => {
   const { project } = useProject()
+  const { createSubProject } = useCreateSubProject()
 
   if (project.subProjects.length > 0) {
     return <Navigate replace to={project.subProjects[0].id} />
@@ -18,7 +19,10 @@ export const ProjectIndexRoute: FC = () => {
       <EmptyState.Content>
         <EmptyState.Title>No subprojects yet</EmptyState.Title>
         <EmptyState.Description>Create a subproject to start editing.</EmptyState.Description>
-        <CreateSubProjectDialog trigger={<Button><PiPlus />Add project</Button>} />
+        <Button onClick={createSubProject}>
+          <PiPlus />
+          Add project
+        </Button>
       </EmptyState.Content>
     </EmptyState.Root>
   )
