@@ -1,13 +1,7 @@
 import { Popover } from '@chakra-ui/react'
 import { useMemo, type FC, type ReactElement, type RefObject } from 'react'
 
-import { LANGUAGE } from '../constants/language'
-import { useEditableModel } from '../hooks/useEditableModel'
-import { useProjects } from '../hooks/useProjects'
-import { useProject } from '../hooks/useProject'
-import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
-import { useTranslation } from '../translations/translation'
-import { validateProjectSchema } from '../validators/validateProjectSchema'
+import { useEditableProject } from '../hooks/useEditableProject'
 import { ProjectSettingsEditor } from './project-settings-editors/ProjectSettingsEditor'
 import { ProjectActionsMenu } from './ProjectActionsMenu'
 
@@ -16,17 +10,8 @@ type ProjectSettingsPopoverProps = {
   trigger: ReactElement
 }
 
-// TODO this editing should be done on the real Project, not SubProject
 export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchorRef, trigger }) => {
-  const t = useTranslation()
-
-  const { project, setProject } = useProject()
-  const { projects } = useProjects()
-
-  const context = useMemo<ProjectBasedValidationContextSchema>(
-    () => ({ language: LANGUAGE, projects, t }),
-    [projects, t],
-  )
+  const { editableProject, project, setProject, validationIssues } = useEditableProject()
 
   // Chakra not exporting the appropriate type. FFS.
   const positioning = useMemo(
@@ -37,23 +22,16 @@ export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchor
     [anchorRef],
   )
 
-  const { editableValue, setValue, validationIssues } = useEditableModel({
-    commit: setProject,
-    context,
-    validate: validateProjectSchema,
-    value: project,
-  })
-
   return (
     <Popover.Root positioning={positioning}>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Positioner>
         <Popover.Content width="450px">
           <ProjectSettingsEditor
-            editable={editableValue}
+            editable={editableProject}
             issues={validationIssues}
             menu={<ProjectActionsMenu projectId={project.id} size="xs" />}
-            onChange={setValue}
+            onChange={setProject}
           />
         </Popover.Content>
       </Popover.Positioner>

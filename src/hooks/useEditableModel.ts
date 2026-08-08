@@ -3,19 +3,21 @@ import { useCallback, useEffect, useState } from 'react'
 import type { EditableSchema, EditableSchemaContextSchema } from '../schemas/editable'
 import type { ValidationIssuesSchema, ValidationResultSchema } from '../schemas/validation'
 import { getEditableSchema } from '../utils/getEditableSchema'
+import { isReferentiallyEqual } from '../utils/isReferentiallyEqual'
 
 export type UseEditableModelResult<T> = {
   editableValue: EditableSchema<T>
-  setValue: (value: EditableSchema<T>) => void
   validationIssues: ValidationIssuesSchema<T>
   value: T
+  setValue: (value: EditableSchema<T>) => void
 }
 
 type UseEditableModelOptions<T, C> = {
-  commit: (value: T) => void
   context: C
-  validate: (input: EditableSchema<T>, currentValue: T, context: C) => ValidationResultSchema<T>
   value: T
+  validate: (input: EditableSchema<T>, currentValue: T, context: C) => ValidationResultSchema<T>
+  commit: (value: T) => void
+  isEqual?: (a: T | undefined, b: T | undefined) => boolean
 }
 
 export const useEditableModel = <T, C extends EditableSchemaContextSchema>({
@@ -23,6 +25,7 @@ export const useEditableModel = <T, C extends EditableSchemaContextSchema>({
   context,
   validate,
   value,
+  isEqual = isReferentiallyEqual,
 }: UseEditableModelOptions<T, C>): UseEditableModelResult<T> => {
   const [isDirty, setIsDirty] = useState(false)
   const [locallyCommittedValue, setLocallyCommittedValue] = useState<T | undefined>(undefined)
@@ -39,14 +42,14 @@ export const useEditableModel = <T, C extends EditableSchemaContextSchema>({
 
     setLastObservedValue(value)
 
-    if (value === locallyCommittedValue) {
+    if (isEqual(value, locallyCommittedValue)) {
       setLocallyCommittedValue(undefined)
       return
     }
 
     setEditableValue(getEditableSchema(value, context))
     setIsDirty(false)
-  }, [context, lastObservedValue, locallyCommittedValue, value])
+  }, [context, isEqual, lastObservedValue, locallyCommittedValue, value])
 
   useEffect(() => {
     if (!isDirty || editableValue === processedEditableValue) {
