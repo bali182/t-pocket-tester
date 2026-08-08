@@ -4,6 +4,7 @@ import { PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
 import { useNavigate } from 'react-router'
 
 import { useProjects } from '../hooks/useProjects'
+import { appRoutes } from '../appRoutes'
 import { useTranslation } from '../translations/translation'
 
 type ProjectActionsMenuProps = {
@@ -22,7 +23,7 @@ export const ProjectActionsMenu: FC<ProjectActionsMenuProps> = ({ size, projectI
 
   const handleDelete = useCallback(() => {
     deleteProject(projectId)
-    navigate('/projects')
+    navigate(appRoutes.projects)
   }, [deleteProject, navigate, projectId])
 
   return (

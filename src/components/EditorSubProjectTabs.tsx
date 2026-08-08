@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router'
 import { PiPlus, PiWallet } from 'react-icons/pi'
 import { useCreateSubProject } from '../hooks/useCreateSubProject'
 import { useProject } from '../hooks/useProject'
+import { appRoutes } from '../appRoutes'
 import { SubProjectRouteParams } from '../schemas/routeParams'
 
 export const EditorSubProjectTabs: FC = () => {
@@ -14,8 +15,8 @@ export const EditorSubProjectTabs: FC = () => {
   const { subProjectId } = useParams<SubProjectRouteParams>()
 
   const handleSubProjectClick = useCallback(
-    (nextSubProjectId: string): void => {
-      navigate(`/projects/${project.id}/${nextSubProjectId}`)
+    (subProjectId: string): void => {
+      navigate(appRoutes.subProject(project.id, subProjectId))
     },
     [navigate, project.id],
   )

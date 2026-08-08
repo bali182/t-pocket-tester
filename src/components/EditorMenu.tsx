@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { useProject } from '../hooks/useProject'
+import { appRoutes } from '../appRoutes'
 import { useTranslation } from '../translations/translation'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
@@ -26,7 +27,7 @@ export const EditorMenu = () => {
     <>
       <Card.Root ref={menuRef}>
         <Card.Body padding="2" flexDirection="row" alignItems="center">
-          <Link to={`/projects`}>
+          <Link to={appRoutes.projects}>
             <IconButton size="sm" variant="ghost">
               <PiCaretLeft />
             </IconButton>

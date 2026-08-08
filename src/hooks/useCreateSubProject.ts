@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
 import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
+import { appRoutes } from '../appRoutes'
 import { useTranslation } from '../translations/translation'
 import { createSubProject as createSubProjectSchema } from '../utils/createSubProject'
 import { isDefined } from '../utils/isDefined'
@@ -27,7 +28,7 @@ export const useCreateSubProject = (): UseCreateSubProjectResult => {
     const subProject = createSubProjectSchema(rootName)
 
     setProject({ ...project, subProjects: [...project.subProjects, subProject] })
-    navigate(`/projects/${project.id}/${subProject.id}`)
+    navigate(appRoutes.subProject(project.id, subProject.id))
   }, [navigate, project, setProject, t])
 
   return { createSubProject }

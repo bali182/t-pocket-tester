@@ -4,6 +4,7 @@ import { PiPlus } from 'react-icons/pi'
 import { Link } from 'react-router'
 
 import { useProjects } from '../../hooks/useProjects'
+import { appRoutes } from '../../appRoutes'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { CreateProjectDialog } from '../CreateProjectDialog'
@@ -32,16 +33,17 @@ export const ProjectsRoute: FC = () => {
         </Card.Root>
         {projects.map((project) => {
           const firstSubProject = project.subProjects[0]
-          const target = isDefined(firstSubProject) ? `/projects/${project.id}/${firstSubProject.id}` : `/projects/${project.id}`
-
+          const target = isDefined(firstSubProject)
+            ? appRoutes.subProject(project.id, firstSubProject.id)
+            : appRoutes.project(project.id)
           return (
-          <Link key={project.id} to={target}>
-            <Card.Root height="160px" transition="box-shadow 0.2s" _hover={{ shadow: 'md' }}>
-              <Card.Body>
-                <Card.Title>{project.name}</Card.Title>
-              </Card.Body>
-            </Card.Root>
-          </Link>
+            <Link key={project.id} to={target}>
+              <Card.Root height="160px" transition="box-shadow 0.2s" _hover={{ shadow: 'md' }}>
+                <Card.Body>
+                  <Card.Title>{project.name}</Card.Title>
+                </Card.Body>
+              </Card.Root>
+            </Link>
           )
         })}
       </Grid>

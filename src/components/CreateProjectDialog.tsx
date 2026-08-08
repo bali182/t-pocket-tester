@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
 import { useProjects } from '../hooks/useProjects'
+import { appRoutes } from '../appRoutes'
 import type { ProjectSchema } from '../schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
@@ -71,7 +72,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
       const createdProject = validationResult.value
       addProject(createdProject)
       onOpenChange(false)
-      navigate(`/projects/${createdProject.id}`)
+      navigate(appRoutes.project(createdProject.id))
     },
     [addProject, context, editableValue, navigate, onOpenChange, project],
   )

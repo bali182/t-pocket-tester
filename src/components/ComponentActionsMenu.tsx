@@ -7,6 +7,7 @@ import { useProjectOperations } from '../hooks/useProjectOperations'
 import { useSubProject } from '../hooks/useSubProject'
 import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
+import { appRoutes } from '../appRoutes'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { pendingSubProjectDeletionAtom } from '../state/pendigDeletionAtoms'
@@ -48,8 +49,8 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
 
   const deleteRoot = useCallback((): void => {
     const navigationTarget = isDefined(nextSubProjectAfterDelete)
-      ? `/projects/${project.id}/${nextSubProjectAfterDelete.id}`
-      : `/projects/${project.id}`
+      ? appRoutes.subProject(project.id, nextSubProjectAfterDelete.id)
+      : appRoutes.project(project.id)
     setPendingSubProjectDeletion({ redirectPath: navigationTarget, subProjectId: subProject.id })
     deleteSubProject()
     onDelete(component.id)

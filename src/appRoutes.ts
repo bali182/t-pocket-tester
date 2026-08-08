@@ -1,4 +1,4 @@
-export const Routes = {
+export const appRoutes = {
   root: '/',
   projects: '/projects',
   project: (projectId: string) => `/projects/${projectId}`,
