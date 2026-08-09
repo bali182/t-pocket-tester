@@ -48,6 +48,7 @@ export const HU = {
       file: 'Fájl',
       edit: 'Szerkesztés',
       view: 'Nézet',
+      magicStitchlineFix: 'Varrás varázslat',
     },
     scalingDialog: {
       title: 'Skálázás',

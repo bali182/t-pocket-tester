@@ -50,6 +50,7 @@ export const EN: typeof HU = {
       file: 'File',
       edit: 'Edit',
       view: 'View',
+      magicStitchlineFix: 'Magic stitchline fix',
     },
     scalingDialog: {
       title: 'Scaling',
