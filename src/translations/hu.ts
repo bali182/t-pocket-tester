@@ -50,6 +50,10 @@ export const HU = {
       view: 'Nézet',
       magicStitchlineFix: 'Varrás varázslat',
     },
+    magicStitchlineFixDialog: {
+      title: 'Varrások javítása',
+      description: 'A művelet a varrásszabályokhoz igazíthatja a méreteket és a varróvonalak eltolásait.',
+    },
     scalingDialog: {
       title: 'Skálázás',
       description:

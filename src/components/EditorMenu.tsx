@@ -5,8 +5,10 @@ import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
+import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
+import { AlertDialog } from './common/AlertDialog'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
@@ -16,9 +18,11 @@ export const EditorMenu = () => {
   const t = useTranslation()
   const { project } = useProject()
   const { subProject } = useOptionalSubProject()
+  const { performMagicStitchLineFix } = useSubProjectOperations()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
+  const [isMagicStitchLineFixDialogOpen, setMagicStitchLineFixDialogOpen] = useState<boolean>(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const isExportEnabled = project.subProjects.length > 0
 
@@ -29,8 +33,13 @@ export const EditorMenu = () => {
   const handlePdfExportClick = useCallback(() => setPdfExportDialogOpen(true), [])
 
   const handleMagicStitchlineFix = useCallback(() => {
-    // TODO
+    setMagicStitchLineFixDialogOpen(true)
   }, [])
+
+  const handleMagicStitchLineFixConfirm = useCallback((): void => {
+    performMagicStitchLineFix()
+    setMagicStitchLineFixDialogOpen(false)
+  }, [performMagicStitchLineFix])
 
   return (
     <>
@@ -125,6 +134,15 @@ export const EditorMenu = () => {
         <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
         {isExportEnabled && <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />}
         {isExportEnabled && <PdfExportDialog isOpen={isPdfExportDialogOpen} onOpenChange={setPdfExportDialogOpen} />}
+        <AlertDialog
+          isOpen={isMagicStitchLineFixDialogOpen}
+          message={t.editor.magicStitchlineFixDialog.description}
+          negativeLabel={t.common.actions.cancel}
+          onOpenChange={setMagicStitchLineFixDialogOpen}
+          onPositiveAction={handleMagicStitchLineFixConfirm}
+          positiveLabel={t.common.actions.apply}
+          title={t.editor.magicStitchlineFixDialog.title}
+        />
       </>
     </>
   )

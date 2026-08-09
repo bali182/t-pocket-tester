@@ -2,6 +2,10 @@ import type { Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback, useMemo } from 'react'
 
+import {
+  performMagicStitchLineFix as performMagicStitchLineFixPure,
+  type MagicStitchLineFixResult,
+} from '../logic/magic-stitch-line-fix/performMagicStitchLineFix'
 import { addComponent as addComponentPure } from '../operations/subProject/addComponent'
 import { addHole as addHolePure } from '../operations/subProject/addHole'
 import { addStitchLine as addStitchLinePure } from '../operations/subProject/addStitchLine'
@@ -28,7 +32,12 @@ import type { HoleSchema } from '../schemas/hole'
 import type { ProjectSchema } from '../schemas/project'
 import type { StitchLineSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
-import { projectAtomFamily, subProjectAtomFamily, type SubProjectAtomReferenceSchema } from '../state/projectAtoms'
+import {
+  computedSubProjectAtomFamily,
+  projectAtomFamily,
+  subProjectAtomFamily,
+  type SubProjectAtomReferenceSchema,
+} from '../state/projectAtoms'
 import { useTranslation } from '../translations/translation'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
 import { id } from '../utils/id'
@@ -270,6 +279,25 @@ export const useSubProjectOperations = () => {
     ),
   )
 
+  const performMagicStitchLineFix = useAtomCallback(
+    useCallback(
+      (get, set): MagicStitchLineFixResult => {
+        const [project, subProject] = ensureProject(get, reference)
+        const computedSubProject = get(computedSubProjectAtomFamily(reference))
+
+        if (!isDefined(computedSubProject)) {
+          throw new Error('Computed subproject not found')
+        }
+
+        const result = performMagicStitchLineFixPure({ computedSubProject, project, subProject })
+        console.log({ inputProject: project, outputSubProject: result.subProject, issues: result.issues })
+        set(subProjectAtomFamily(reference), result.subProject)
+        return result
+      },
+      [reference],
+    ),
+  )
+
   return {
     addComponent,
     addHole,
@@ -288,6 +316,7 @@ export const useSubProjectOperations = () => {
     updateComponent,
     updateHole,
     updateStitchLine,
+    performMagicStitchLineFix,
   }
 }
 

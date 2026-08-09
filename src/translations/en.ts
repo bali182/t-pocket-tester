@@ -52,6 +52,10 @@ export const EN: typeof HU = {
       view: 'View',
       magicStitchlineFix: 'Magic stitchline fix',
     },
+    magicStitchlineFixDialog: {
+      title: 'Fix stitching',
+      description: 'This may adjust dimensions and stitch-line offsets to follow the stitching rules.',
+    },
     scalingDialog: {
       title: 'Scaling',
       description:

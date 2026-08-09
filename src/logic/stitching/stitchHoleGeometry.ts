@@ -7,6 +7,7 @@ import type { StitchCornerPathFragment, StitchPathFragment } from './calculateSt
 const ZERO = new BigNumber(0)
 const TWO = new BigNumber(2)
 const PARAMETER_EPSILON = new BigNumber('0.000000000001')
+const STITCH_HOLE_ENDPOINT_EPSILON_MM = new BigNumber('0.0001')
 const ANGLE_EPSILON = 0.000000001
 const FULL_TURN = Math.PI * 2
 
@@ -78,9 +79,35 @@ export const findNextStitchHole = (
         cursor: { segmentIndex, point: nextIntersection.point },
       }
     }
+
+    if (
+      isSegmentEndAtStitchHoleDistance(previousHoleCenter, segment.end, stitchHoleDistance) &&
+      new BigNumber(1).isGreaterThan(minimumProgress.plus(PARAMETER_EPSILON))
+    ) {
+      return {
+        center: segment.end,
+        cursor: { segmentIndex, point: segment.end },
+      }
+    }
   }
 
   return undefined
+}
+
+const isSegmentEndAtStitchHoleDistance = (
+  previousHoleCenter: PointSchema,
+  segmentEnd: PointSchema,
+  stitchHoleDistance: BigNumber,
+): boolean =>
+  getPointDistance(previousHoleCenter, segmentEnd)
+    .minus(stitchHoleDistance)
+    .absoluteValue()
+    .isLessThanOrEqualTo(STITCH_HOLE_ENDPOINT_EPSILON_MM)
+
+const getPointDistance = (first: PointSchema, second: PointSchema): BigNumber => {
+  const deltaX = first.x.minus(second.x)
+  const deltaY = first.y.minus(second.y)
+  return deltaX.times(deltaX).plus(deltaY.times(deltaY)).sqrt()
 }
 
 export const getStitchHoleRotation = (previousCenter: PointSchema, currentCenter: PointSchema): number => {
