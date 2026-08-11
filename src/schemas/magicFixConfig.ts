@@ -21,6 +21,8 @@ export type MagicFixConfigSchema = {
   canMoveStitchLineStartOffset: boolean
   /** Allows moving the end offset of non-joined stitchline end points */
   canMoveStitchLineEndOffset: boolean
+  /** Allows changing the corner radius on components */
+  canChangeCornerRadius: boolean
 
   /** Allows converting auto (fill) width to fixed width in order to avoid resizing parent */
   canConvertToFixedWidth: boolean
