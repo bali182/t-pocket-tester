@@ -43,34 +43,50 @@ export type MagicFixBoundaryOwnerSchema =
   | MagicFixFrontPocketBoundaryOwnerSchema
   | MagicFixTPocketBoundaryOwnerSchema
 
+/** Describes a straight physical boundary fragment that a stitch route can approach or cross. */
 export type MagicFixLineBoundaryFragmentSchema = {
   type: 'line'
+  /** The component, front pocket, or T-pocket that owns the boundary. */
   owner: MagicFixBoundaryOwnerSchema
+  /** The first endpoint of the boundary line. */
   start: PointSchema
+  /** The second endpoint of the boundary line. */
   end: PointSchema
 }
 
+/** Describes a curved physical boundary fragment that a stitch route can approach or cross. */
 export type MagicFixArcBoundaryFragmentSchema = {
   type: 'arc'
+  /** The component, front pocket, or T-pocket that owns the boundary. */
   owner: MagicFixBoundaryOwnerSchema
+  /** The first endpoint of the boundary arc. */
   start: PointSchema
+  /** The second endpoint of the boundary arc. */
   end: PointSchema
+  /** Center point of the circle containing the boundary arc. */
   center: PointSchema
+  /** Radius of the circle containing the boundary arc. */
   radius: BigNumber
 }
 
+/** A physical boundary fragment represented either by a straight line or a circular arc. */
 export type MagicFixBoundaryFragmentSchema = MagicFixLineBoundaryFragmentSchema | MagicFixArcBoundaryFragmentSchema
 
+/** Describes the distance of a hole adjacent to a boundary crossing from that boundary. */
 export type MagicFixCrossingHoleMinimumDistanceSchema = {
   type: 'distance'
+  /** Index of the hole in the route. */
   holeIndex: number
+  /** The preferred minimum distance, actual distance, and clearance shortfall. */
   deviation: MagicFixMinimumDistanceDeviationSchema
 }
 
+/** Describes one side of a boundary crossing when no adjacent hole exists on that side. */
 export type MagicFixCrossingHoleMissingSchema = {
   type: 'missing'
 }
 
+/** Result for one side of a route crossing a physical boundary. */
 export type MagicFixCrossingHoleResultSchema =
   | MagicFixCrossingHoleMinimumDistanceSchema
   | MagicFixCrossingHoleMissingSchema
