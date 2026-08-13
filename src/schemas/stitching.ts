@@ -22,25 +22,7 @@ export type StitchLineCommonConfigSchema = {
   stitchLineColor: string
 }
 
-export type ComponentBoundsStitchLineOwnSchema = {
-  // Are we stitching the given side?
-  top: boolean
-  right: boolean
-  bottom: boolean
-  left: boolean
-
-  // Are we stitching the given corner (which may or may not have a radius)?
-  topLeftCorner: boolean
-  topRightCorner: boolean
-  bottomRightCorner: boolean
-  bottomLeftCorner: boolean
-
-  // Stitching direction for sides. Can only be changed if the sides are not connected by a corner.
-  topStitchDirection: HorizontalStitchDirectionSchema
-  rightStitchDirection: VerticalStitchDirectionSchema
-  bottomStitchDirection: HorizontalStitchDirectionSchema
-  leftStitchDirection: VerticalStitchDirectionSchema
-
+export type ComponentBoundsStitchLineOffsetsSchema = {
   // Offsets of the sides we stitch. What are these used for?
   // For example when stitching the side of a panel to another (forming a pocket)
   // we can start stitching in between the top of the back panel and the front one, forming a stronger stitch.
@@ -57,6 +39,34 @@ export type ComponentBoundsStitchLineOwnSchema = {
   leftEndOffset: number
 }
 
+export type ComponentBoundsStitchLineHorizontalDirectionsSchema = {
+  // Stitching direction for sides. Can only be changed if the sides are not connected by a corner.
+  topStitchDirection: HorizontalStitchDirectionSchema
+  bottomStitchDirection: HorizontalStitchDirectionSchema
+}
+
+export type ComponentBoundsStitchLineVerticalDirectionsSchema = {
+  // Stitching direction for sides. Can only be changed if the sides are not connected by a corner.
+  rightStitchDirection: VerticalStitchDirectionSchema
+  leftStitchDirection: VerticalStitchDirectionSchema
+}
+
+export type ComponentBoundsStitchLineOwnSchema = ComponentBoundsStitchLineOffsetsSchema &
+  ComponentBoundsStitchLineVerticalDirectionsSchema &
+  ComponentBoundsStitchLineHorizontalDirectionsSchema & {
+    // Are we stitching the given side?
+    top: boolean
+    right: boolean
+    bottom: boolean
+    left: boolean
+
+    // Are we stitching the given corner (which may or may not have a radius)?
+    topLeftCorner: boolean
+    topRightCorner: boolean
+    bottomRightCorner: boolean
+    bottomLeftCorner: boolean
+  }
+
 type ComponentBoundsStitchLineDiscriminatorSchema = {
   type: 'component-bounds-stitch-line'
 }
@@ -67,10 +77,13 @@ export type ComponentBoundsStitchLineSchema = HasIdentitySchema &
   ComponentBoundsStitchLineOwnSchema &
   ComponentBoundsStitchLineDiscriminatorSchema
 
-export type PocketClusterStitchLineOwnSchema = {
-  enabled: boolean
+export type PocketClusterStitchLineOffsetsSchema = {
   startOffset: number
   endOffset: number
+}
+
+export type PocketClusterStitchLineOwnSchema = PocketClusterStitchLineOffsetsSchema & {
+  enabled: boolean
   stitchDirection: StitchDirectionSchema
 }
 

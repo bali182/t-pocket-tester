@@ -3,13 +3,16 @@ export type HasIdentitySchema = {
   name: string
 }
 
-export type HasCornerRadiusSchema = {
-  individualRadii: boolean
+export type HasCornerRadiusValuesSchema = {
   borderRadius: number
   topLeftRadius: number
   topRightRadius: number
   bottomLeftRadius: number
   bottomRightRadius: number
+}
+
+export type HasCornerRadiusSchema = HasCornerRadiusValuesSchema & {
+  individualRadii: boolean
 }
 
 export type HasSizeSchema = {
