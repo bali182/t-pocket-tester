@@ -13,4 +13,4 @@ export type HoleSelectionSchema = {
   type: 'hole'
 }
 
-export type EditorSelectionSchema = ComponentSelectionSchema | StitchLineSelectionSchema | HoleSelectionSchema
+export type SelectionSchema = ComponentSelectionSchema | StitchLineSelectionSchema | HoleSelectionSchema

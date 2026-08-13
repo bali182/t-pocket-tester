@@ -5,7 +5,6 @@ import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
-import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
 import { AlertDialog } from './common/AlertDialog'
@@ -18,7 +17,6 @@ export const EditorMenu = () => {
   const t = useTranslation()
   const { project } = useProject()
   const { subProject } = useOptionalSubProject()
-  const { performMagicStitchLineFix } = useSubProjectOperations()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
@@ -36,10 +34,7 @@ export const EditorMenu = () => {
     setMagicStitchLineFixDialogOpen(true)
   }, [])
 
-  const handleMagicStitchLineFixConfirm = useCallback((): void => {
-    performMagicStitchLineFix()
-    setMagicStitchLineFixDialogOpen(false)
-  }, [performMagicStitchLineFix])
+  const handleMagicStitchLineFixConfirm = useCallback((): void => {}, [])
 
   return (
     <>

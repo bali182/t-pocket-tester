@@ -1,11 +1,11 @@
 import { getComponentAncestorIds } from '../../../operations/subProject/utils/getComponentAncestorIds'
-import { EditorSelectionSchema } from '../../../schemas/selection'
+import { SelectionSchema } from '../../../schemas/selection'
 import { SubProjectSchema } from '../../../schemas/subProject'
 import { isDefined } from '../../../utils/isDefined'
 import { getComponentNodeId, getHoleNodeId } from './treeNodeIds'
 
 export const getNextExpandedNodeIds = (
-  selection: EditorSelectionSchema,
+  selection: SelectionSchema,
   subProject: SubProjectSchema,
   expandedIds: string[],
 ): string[] => {

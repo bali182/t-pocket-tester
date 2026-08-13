@@ -2,7 +2,6 @@ import { TreeView as ArkTreeView } from '@ark-ui/react'
 import {
   IconButton,
   TreeView,
-  createTreeCollection,
   type TreeCollection,
   type TreeViewExpandedChangeDetails,
   type TreeViewSelectionChangeDetails,
@@ -18,13 +17,14 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
-import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState, type FC } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
 import typia from 'typia'
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { SubProjectSelectionContextValue } from '../../contexts/SubProjectSelectionContext'
 import { useSubProject } from '../../hooks/useSubProject'
-import { useSubProjectOperations } from '../../hooks/useSubProjectOperations'
+import { useSubProjectOperations, UseSubProjectOperationsOutput } from '../../hooks/useSubProjectOperations'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentTreeItem } from './ComponentTreeItem'
 import { HoleTreeItem } from './HoleTreeItem'
@@ -36,9 +36,19 @@ import { ProjectTreeNode } from './types/nodeTypes'
 import { getNextExpandedNodeIds } from './utils/getNextExpandedNodeIds'
 import { getProjectTreeNodeIcon } from './utils/getProjectTreeNodeIcon'
 import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
-import { createTreeRootNode } from './utils/treeNodeFactories'
 import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './utils/treeNodeIds'
+import { useComponentTreeCollection } from './utils/useComponentTreeCollection'
 import { useTreeDropAnimation } from './utils/useTreeDropAnimation'
+
+export type ComponentTreeProps = {
+  expandedNodeIds: string[]
+  collection: TreeCollection<ProjectTreeNode>
+  operations?: UseSubProjectOperationsOutput
+  selection: SubProjectSelectionContextValue
+  hasDragAndDrop: boolean
+  renderMenu?: (node: ProjectTreeNode /** , callbacks */) => ReactNode
+  setExpandedNodeIds: (nodeIds: string[]) => void
+}
 
 export const ComponentTree: FC = () => {
   const { subProject } = useSubProject()
@@ -49,15 +59,10 @@ export const ComponentTree: FC = () => {
   const { dropTargetRectRef, handleDropAnimation } = useTreeDropAnimation()
   const sensors = useSensors(useSensor(PointerSensor))
 
-  const collection = useMemo<TreeCollection<ProjectTreeNode>>(() => {
-    return createTreeCollection<ProjectTreeNode>({
-      nodeToChildren: (node) => node.children,
-      nodeToChildrenCount: (node) => (node.kind === 'stitch-line' ? undefined : node.children.length),
-      nodeToString: getProjectTreeNodeLabel,
-      nodeToValue: (node) => node.id,
-      rootNode: createTreeRootNode(subProject),
-    })
-  }, [subProject])
+  const collection = useComponentTreeCollection(subProject, {
+    showHoles: true,
+    showStitchLines: true,
+  })
 
   const selectedValue = useMemo((): string[] => {
     const { editorSelection } = selection

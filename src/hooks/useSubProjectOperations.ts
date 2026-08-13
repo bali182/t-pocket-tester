@@ -2,10 +2,6 @@ import type { Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback, useMemo } from 'react'
 
-import {
-  performMagicStitchLineFix as performMagicStitchLineFixPure,
-  type MagicStitchLineFixResult,
-} from '../logic/magic-stitch-line-fix/performMagicStitchLineFix'
 import { addComponent as addComponentPure } from '../operations/subProject/addComponent'
 import { addHole as addHolePure } from '../operations/subProject/addHole'
 import { addStitchLine as addStitchLinePure } from '../operations/subProject/addStitchLine'
@@ -32,12 +28,7 @@ import type { HoleSchema } from '../schemas/hole'
 import type { ProjectSchema } from '../schemas/project'
 import type { StitchLineSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
-import {
-  computedSubProjectAtomFamily,
-  projectAtomFamily,
-  subProjectAtomFamily,
-  type SubProjectAtomReferenceSchema,
-} from '../state/projectAtoms'
+import { projectAtomFamily, subProjectAtomFamily, type SubProjectAtomReferenceSchema } from '../state/projectAtoms'
 import { useTranslation } from '../translations/translation'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
 import { id } from '../utils/id'
@@ -45,7 +36,27 @@ import { isDefined } from '../utils/isDefined'
 import { useOptionalProject } from './useOptionalProject'
 import { useOptionalSubProject } from './useOptionalSubProject'
 
-export const useSubProjectOperations = () => {
+export type UseSubProjectOperationsOutput = {
+  addComponent: (parentId: string, type: ComponentSchema['type']) => ComponentSchema
+  addHole: (componentId: string) => HoleSchema
+  addStitchLineToComponent: (componentId: string, type: StitchLineSchema['type']) => StitchLineSchema
+  addStitchLineToHole: (holeId: string) => StitchLineSchema
+  cloneComponent: (componentId: string) => void
+  cloneHole: (holeId: string) => void
+  cloneStitchLine: (stitchLineId: string) => void
+  deleteComponent: (componentId: string) => void
+  deleteHole: (holeId: string) => void
+  deleteStitchLine: (stitchLineId: string) => void
+  moveComponent: (componentId: string, targetParentId: string, beforeComponentId: string | undefined) => void
+  moveHole: (holeId: string, targetComponentId: string) => void
+  moveStitchLineToComponent: (stitchLineId: string, componentId: string) => void
+  moveStitchLineToHole: (stitchLineId: string, holeId: string) => void
+  updateComponent: (component: ComponentSchema) => void
+  updateHole: (hole: HoleSchema) => void
+  updateStitchLine: (stitchLine: StitchLineSchema) => void
+}
+
+export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
   const { project } = useOptionalProject()
   const { subProject } = useOptionalSubProject()
   const t = useTranslation()
@@ -279,45 +290,46 @@ export const useSubProjectOperations = () => {
     ),
   )
 
-  const performMagicStitchLineFix = useAtomCallback(
-    useCallback(
-      (get, set): MagicStitchLineFixResult => {
-        const [project, subProject] = ensureProject(get, reference)
-        const computedSubProject = get(computedSubProjectAtomFamily(reference))
-
-        if (!isDefined(computedSubProject)) {
-          throw new Error('Computed subproject not found')
-        }
-
-        const result = performMagicStitchLineFixPure({ computedSubProject, project, subProject })
-        console.log({ inputProject: project, outputSubProject: result.subProject, issues: result.issues })
-        set(subProjectAtomFamily(reference), result.subProject)
-        return result
-      },
-      [reference],
-    ),
+  return useMemo(
+    () => ({
+      addComponent,
+      addHole,
+      addStitchLineToComponent,
+      addStitchLineToHole,
+      cloneComponent,
+      cloneHole,
+      cloneStitchLine,
+      deleteComponent,
+      deleteHole,
+      deleteStitchLine,
+      moveComponent,
+      moveHole,
+      moveStitchLineToComponent,
+      moveStitchLineToHole,
+      updateComponent,
+      updateHole,
+      updateStitchLine,
+    }),
+    [
+      addComponent,
+      addHole,
+      addStitchLineToComponent,
+      addStitchLineToHole,
+      cloneComponent,
+      cloneHole,
+      cloneStitchLine,
+      deleteComponent,
+      deleteHole,
+      deleteStitchLine,
+      moveComponent,
+      moveHole,
+      moveStitchLineToComponent,
+      moveStitchLineToHole,
+      updateComponent,
+      updateHole,
+      updateStitchLine,
+    ],
   )
-
-  return {
-    addComponent,
-    addHole,
-    addStitchLineToComponent,
-    addStitchLineToHole,
-    cloneComponent,
-    cloneHole,
-    cloneStitchLine,
-    deleteComponent,
-    deleteHole,
-    deleteStitchLine,
-    moveComponent,
-    moveHole,
-    moveStitchLineToComponent,
-    moveStitchLineToHole,
-    updateComponent,
-    updateHole,
-    updateStitchLine,
-    performMagicStitchLineFix,
-  }
 }
 
 const ensureProject = (get: Getter, reference: SubProjectAtomReferenceSchema): [ProjectSchema, SubProjectSchema] => {

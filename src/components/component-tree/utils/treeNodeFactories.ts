@@ -11,6 +11,8 @@ import { getComponentNodeId, getHoleNodeId, getStitchLineNodeId } from './treeNo
 export const createComponentTreeNode = (
   subProject: SubProjectSchema,
   component: ComponentSchema,
+  showStitchLines: boolean,
+  showHoles: boolean,
 ): ComponentTreeNode => {
   const parent = getComponentParent(component.id, subProject)
   const siblingIds = isDefined(parent) ? parent.children : []
@@ -21,16 +23,20 @@ export const createComponentTreeNode = (
     ? component.children
         .map((childId) => subProject.components[childId])
         .filter(isDefined)
-        .map((child) => createComponentTreeNode(subProject, child))
+        .map((child) => createComponentTreeNode(subProject, child, showStitchLines, showHoles))
     : []
 
-  const holeNodes = subProject.holes
-    .filter((hole) => hole.componentId === component.id)
-    .map((hole) => createHoleTreeNode(subProject, hole))
+  const holeNodes = showHoles
+    ? subProject.holes
+        .filter((hole) => hole.componentId === component.id)
+        .map((hole) => createHoleTreeNode(subProject, hole))
+    : []
 
-  const stitchLineNodes = subProject.stitchLines
-    .filter((stitchLine) => stitchLine.targetType === 'component' && stitchLine.targetId === component.id)
-    .map((stitchLine) => createStitchLineTreeNode(subProject, stitchLine))
+  const stitchLineNodes = showStitchLines
+    ? subProject.stitchLines
+        .filter((stitchLine) => stitchLine.targetType === 'component' && stitchLine.targetId === component.id)
+        .map((stitchLine) => createStitchLineTreeNode(subProject, stitchLine))
+    : []
 
   return {
     children: [...childComponentNodes, ...holeNodes, ...stitchLineNodes],
@@ -72,7 +78,11 @@ export const createStitchLineTreeNode = (
   }
 }
 
-export const createTreeRootNode = (subProject: SubProjectSchema): ComponentTreeNode => {
+export const createTreeRootNode = (
+  subProject: SubProjectSchema,
+  showStitchLines: boolean,
+  showHoles: boolean,
+): ComponentTreeNode => {
   const rootComponent = subProject.components[subProject.root]
 
   if (!isDefined(rootComponent)) {
@@ -80,7 +90,7 @@ export const createTreeRootNode = (subProject: SubProjectSchema): ComponentTreeN
   }
 
   return {
-    children: [createComponentTreeNode(subProject, rootComponent)],
+    children: [createComponentTreeNode(subProject, rootComponent, showStitchLines, showHoles)],
     component: rootComponent,
     id: 'component-tree-root',
     kind: 'component',

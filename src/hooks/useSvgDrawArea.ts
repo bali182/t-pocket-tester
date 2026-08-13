@@ -8,32 +8,15 @@ import {
   DrawAreaExportTextStyles,
   DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
-  DrawAreaSelection,
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
+import { defaultSubProjectSelection } from '../contexts/SubProjectSelectionContext'
 import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
 import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
 import { useTranslation } from '../translations/translation'
-import { noop } from '../utils/noop'
 import { produce } from '../utils/produce'
-
-const drawAreaSelection: DrawAreaSelection = {
-  clearSelection: noop,
-  isComponentSelected: produce(false),
-  selectComponent: noop,
-  selectStitchLine: noop,
-  selectHole: noop,
-  setHoveredStitchLine: noop,
-  setHoveredTreeSelection: noop,
-  selectedComponent: undefined,
-  selectedStitchLine: undefined,
-  selectedHole: undefined,
-  hoveredStitchLineId: undefined,
-  hoveredTreeSelection: undefined,
-  editorSelection: undefined,
-}
 
 export const useSvgDrawArea = (
   subProject: SubProjectSchema,
@@ -142,7 +125,7 @@ export const useSvgDrawArea = (
     () => ({
       isInteractive: false,
       isShowingCards: false,
-      selection: drawAreaSelection,
+      selection: defaultSubProjectSelection,
       holeStyles,
       componentStyles,
       cardStyles,
