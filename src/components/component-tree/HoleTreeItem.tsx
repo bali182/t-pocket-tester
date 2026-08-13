@@ -1,12 +1,11 @@
 import { IconButton, TreeView } from '@chakra-ui/react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
-import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
+import { useCallback, useMemo, type FC, type MouseEvent, type ReactNode } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useSubProjectSelectionContext } from '../../contexts/SubProjectSelectionContext'
 import { isDefined } from '../../utils/isDefined'
 import { DropInsideIndicator } from './ComponentTreeDropIndicators'
-import { HoleActionsMenu } from './HoleActionsMenu'
 import { TreeItemVisual } from './TreeItemVisual'
 import type { TreeDragData } from './types/dragDataTypes'
 import type { HoleStitchLineDropData } from './types/dropDataTypes'
@@ -16,13 +15,20 @@ import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 
 type HoleTreeItemProps = {
   activeDragData: TreeDragData | undefined
+  hasDragAndDrop: boolean
   indexPath: number[]
   node: HoleTreeNode
-  onDelete: (holeId: string) => void
+  renderMenu?: (node: HoleTreeNode) => ReactNode
 }
 
-export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath, node, onDelete }) => {
-  const { selection } = useDrawAreaContext()
+export const HoleTreeItem: FC<HoleTreeItemProps> = ({
+  activeDragData,
+  hasDragAndDrop,
+  indexPath,
+  node,
+  renderMenu,
+}) => {
+  const selection = useSubProjectSelectionContext()
   const { hole } = node
   const isActiveHole = activeDragData?.kind === 'hole' && activeDragData.holeId === hole.id
   const canAcceptStitchLine =
@@ -49,6 +55,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath,
       kind: 'hole',
       node,
     },
+    disabled: !hasDragAndDrop,
     id: node.id,
   })
 
@@ -62,7 +69,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath,
 
   const { isOver, setNodeRef: setDropNodeRef } = useDroppable({
     data: dropData,
-    disabled: !canAcceptStitchLine,
+    disabled: !hasDragAndDrop || !canAcceptStitchLine,
     id: `${node.id}:stitch-line`,
   })
 
@@ -76,7 +83,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath,
 
   const Icon = getProjectTreeNodeIcon(node)
   const label = getProjectTreeNodeLabel(node)
-  const dragHandle = (
+  const dragHandle = hasDragAndDrop ? (
     <IconButton
       {...attributes}
       {...listeners}
@@ -89,7 +96,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath,
     >
       <PiDotsSixVertical />
     </IconButton>
-  )
+  ) : null
   const dropFeedback = isOver ? <DropInsideIndicator /> : null
 
   return (
@@ -107,7 +114,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath,
       py="0"
       h="9"
     >
-      {dropFeedback}
+      {hasDragAndDrop && dropFeedback}
       <TreeItemVisual
         icon={Icon}
         isBranch={true}
@@ -115,7 +122,7 @@ export const HoleTreeItem: FC<HoleTreeItemProps> = ({ activeDragData, indexPath,
         isPositioned={true}
         label={label}
         leading={dragHandle}
-        trailing={<HoleActionsMenu hole={hole} size="2xs" onDelete={onDelete} />}
+        trailing={renderMenu?.(node)}
       />
     </TreeView.BranchControl>
   )

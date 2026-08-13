@@ -1,10 +1,9 @@
 import { IconButton, TreeView } from '@chakra-ui/react'
 import { useDraggable } from '@dnd-kit/core'
-import { useCallback, type FC, type MouseEvent } from 'react'
+import { useCallback, type FC, type MouseEvent, type ReactNode } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { StitchLineActionsMenu } from '../StitchLineActionsMenu'
+import { useSubProjectSelectionContext } from '../../contexts/SubProjectSelectionContext'
 import { TreeItemVisual } from './TreeItemVisual'
 import type { TreeDragData } from './types/dragDataTypes'
 import type { StitchLineTreeNode } from './types/nodeTypes'
@@ -13,13 +12,20 @@ import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 
 type StitchLineTreeItemProps = {
   activeDragData: TreeDragData | undefined
+  hasDragAndDrop: boolean
   indexPath: number[]
   node: StitchLineTreeNode
-  onDelete: (stitchLineId: string) => void
+  renderMenu?: (node: StitchLineTreeNode) => ReactNode
 }
 
-export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({ activeDragData, indexPath, node, onDelete }) => {
-  const { selection } = useDrawAreaContext()
+export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({
+  activeDragData,
+  hasDragAndDrop,
+  indexPath,
+  node,
+  renderMenu,
+}) => {
+  const selection = useSubProjectSelectionContext()
   const { stitchLine } = node
   const isActiveStitchLine = activeDragData?.kind === 'stitch-line' && activeDragData.stitchLineId === stitchLine.id
   const isDisabledForActiveDrag = activeDragData !== undefined && !isActiveStitchLine
@@ -42,6 +48,7 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({ activeDragData
       stitchLineId: stitchLine.id,
       stitchLineType: stitchLine.type,
     },
+    disabled: !hasDragAndDrop,
     id: node.id,
   })
 
@@ -62,20 +69,22 @@ export const StitchLineTreeItem: FC<StitchLineTreeItemProps> = ({ activeDragData
         isPositioned={false}
         label={getProjectTreeNodeLabel(node)}
         leading={
-          <IconButton
-            {...attributes}
-            {...listeners}
-            cursor={isDragging ? 'grabbing' : 'grab'}
-            onClick={handleDragHandleClick}
-            ref={setActivatorNodeRef}
-            size="2xs"
-            variant="ghost"
-            _hover={{ bg: 'transparent' }}
-          >
-            <PiDotsSixVertical />
-          </IconButton>
+          hasDragAndDrop ? (
+            <IconButton
+              {...attributes}
+              {...listeners}
+              cursor={isDragging ? 'grabbing' : 'grab'}
+              onClick={handleDragHandleClick}
+              ref={setActivatorNodeRef}
+              size="2xs"
+              variant="ghost"
+              _hover={{ bg: 'transparent' }}
+            >
+              <PiDotsSixVertical />
+            </IconButton>
+          ) : null
         }
-        trailing={<StitchLineActionsMenu size="2xs" stitchLine={stitchLine} onDelete={onDelete} />}
+        trailing={renderMenu?.(node)}
       />
     </TreeView.Item>
   )

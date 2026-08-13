@@ -1,12 +1,11 @@
 import { Box, IconButton, TreeView, type TreeViewNodeState } from '@chakra-ui/react'
 import { useDraggable, useDroppable } from '@dnd-kit/core'
-import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
+import { useCallback, useMemo, type FC, type MouseEvent, type ReactNode } from 'react'
 import { PiDotsSixVertical } from 'react-icons/pi'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useSubProjectSelectionContext } from '../../contexts/SubProjectSelectionContext'
 import { hasComponentChildren } from '../../operations/subProject/utils/hasComponentChildren'
 import { isDefined } from '../../utils/isDefined'
-import { ComponentActionsMenu } from '../ComponentActionsMenu'
 import { DropInsideIndicator, ReorderDropIndicator } from './ComponentTreeDropIndicators'
 import { TreeItemVisual } from './TreeItemVisual'
 import { TreeDragData } from './types/dragDataTypes'
@@ -21,24 +20,26 @@ import { getProjectTreeNodeLabel } from './utils/getProjectTreeNodeLabel'
 
 type ComponentTreeItemProps = {
   activeDragData: TreeDragData | undefined
+  hasDragAndDrop: boolean
   indexPath: number[]
   node: ComponentTreeNode
   nodeState: TreeViewNodeState
-  onAddChild: (parentId: string) => void
+  renderMenu?: (node: ComponentTreeNode) => ReactNode
 }
 
 export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   activeDragData,
+  hasDragAndDrop,
   indexPath,
   node,
   nodeState,
-  onAddChild,
+  renderMenu,
 }) => {
-  const { selection } = useDrawAreaContext()
+  const selection = useSubProjectSelectionContext()
   const { component } = node
   const isActiveComponent = activeDragData?.kind === 'component' && activeDragData.componentId === component.id
-  const isDraggable = component.type !== 'root-panel'
-  const canReorder = !isDefined(activeDragData) || activeDragData.kind === 'component'
+  const isDraggable = hasDragAndDrop && component.type !== 'root-panel'
+  const canReorder = hasDragAndDrop && (!isDefined(activeDragData) || activeDragData.kind === 'component')
   const isExpandable = node.children.length > 0
 
   const handleDragHandleClick = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
@@ -54,7 +55,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   }, [selection])
 
   const canAcceptAttachment = useMemo<boolean>(() => {
-    if (!isDefined(activeDragData)) {
+    if (!hasDragAndDrop || !isDefined(activeDragData)) {
       return false
     }
     switch (activeDragData.kind) {
@@ -65,7 +66,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
       case 'stitch-line':
         return activeDragData.stitchLineType === 'component-bounds-stitch-line' || component.type === 'pocket-cluster'
     }
-  }, [activeDragData, component.type])
+  }, [activeDragData, component.type, hasDragAndDrop])
 
   const isDisabledForActiveDrag = useMemo<boolean>(() => {
     if (!isDefined(activeDragData) || isActiveComponent) {
@@ -139,25 +140,25 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
 
   const { isOver: isAttachmentDropOver, setNodeRef: setAttachmentDropNodeRef } = useDroppable({
     data: attachmentDropData,
-    disabled: !canAcceptAttachment,
+    disabled: !hasDragAndDrop || !canAcceptAttachment,
     id: `${node.id}:attachment`,
   })
 
   const { isOver: isBeforeDropAreaOver, setNodeRef: setBeforeDropAreaNodeRef } = useDroppable({
     data: beforeDropData,
-    disabled: !canReorder || !dropPositions.includes('before'),
+    disabled: !hasDragAndDrop || !canReorder || !dropPositions.includes('before'),
     id: `${node.id}:before`,
   })
 
   const { isOver: isAfterDropAreaOver, setNodeRef: setAfterDropAreaNodeRef } = useDroppable({
     data: afterDropData,
-    disabled: !canReorder || !dropPositions.includes('after'),
+    disabled: !hasDragAndDrop || !canReorder || !dropPositions.includes('after'),
     id: `${node.id}:after`,
   })
 
   const { isOver: isInsideDropAreaOver, setNodeRef: setInsideDropAreaNodeRef } = useDroppable({
     data: insideDropData,
-    disabled: !canReorder || !dropPositions.includes('inside'),
+    disabled: !hasDragAndDrop || !canReorder || !dropPositions.includes('inside'),
     id: `${node.id}:inside`,
   })
 
@@ -170,7 +171,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
   )
 
   const Icon = getProjectTreeNodeIcon(node)
-  const dragHandle = (
+  const dragHandle = hasDragAndDrop ? (
     <IconButton
       {...attributes}
       {...listeners}
@@ -184,7 +185,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
     >
       <PiDotsSixVertical />
     </IconButton>
-  )
+  ) : null
   const dropAreaRefs = {
     after: setAfterDropAreaNodeRef,
     before: setBeforeDropAreaNodeRef,
@@ -222,9 +223,9 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
       py="0"
       h="9"
     >
-      {dropAreas}
-      {insideDropAreaFeedback}
-      {insertionIndicators}
+      {hasDragAndDrop && dropAreas}
+      {hasDragAndDrop && insideDropAreaFeedback}
+      {hasDragAndDrop && insertionIndicators}
       <TreeItemVisual
         icon={Icon}
         isBranch={true}
@@ -232,7 +233,7 @@ export const ComponentTreeItem: FC<ComponentTreeItemProps> = ({
         isPositioned={true}
         label={getProjectTreeNodeLabel(node)}
         leading={dragHandle}
-        trailing={<ComponentActionsMenu component={component} onAddChild={onAddChild} size="2xs" />}
+        trailing={renderMenu?.(node)}
       />
     </TreeView.BranchControl>
   )

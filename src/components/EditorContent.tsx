@@ -5,7 +5,7 @@ import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useTranslation } from '../translations/translation'
 import { DrawArea } from './DrawArea'
 import { FloatingEditors } from './FloatingEditors'
-import { ComponentTree } from './component-tree/ComponentTree'
+import { EditorComponentTree } from './component-tree/EditorComponentTree'
 
 const panels: SplitterPanelData[] = [{ id: 'draw-area' }, { id: 'tree' }]
 const defaultPanelSizes: string[] = ['auto', '350px']
@@ -41,7 +41,7 @@ export const EditorContent: FC = () => {
               <Heading size="sm">{t.editor.panels.leather}</Heading>
             </Card.Header>
             <Card.Body flex="1" minHeight="0" overflow="auto" padding="4">
-              <ComponentTree />
+              <EditorComponentTree />
             </Card.Body>
           </Card.Root>
         </Splitter.Panel>
