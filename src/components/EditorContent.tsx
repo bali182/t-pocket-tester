@@ -5,7 +5,7 @@ import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useTranslation } from '../translations/translation'
 import { DrawArea } from './DrawArea'
 import { FloatingEditors } from './FloatingEditors'
-import { ComponentTree } from './tree/ComponentTree'
+import { ComponentTree } from './component-tree/ComponentTree'
 
 const panels: SplitterPanelData[] = [{ id: 'draw-area' }, { id: 'tree' }]
 const defaultPanelSizes: string[] = ['auto', '350px']

@@ -6,7 +6,7 @@ import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { SectionGroup } from '../common/SectionGroup'
-import { HoleActionsMenu } from '../tree/HoleActionsMenu'
+import { HoleActionsMenu } from '../component-tree/HoleActionsMenu'
 import { HoleEditor } from './HoleEditor'
 
 type HoleFloatingEditorProps = {
