@@ -129,6 +129,9 @@ export const HU = {
         review: 'Kiértékelés',
       },
       settings: {
+        noSelectionTitle: 'Válassz egy elemet!',
+        noSelectionDescription:
+          'Részletes komponens szintű beállítások megjelenítéséhez válassz egy elemet a bal oldai fából!',
         tabs: {
           basic: 'Alapbeállítások',
           advanced: 'Részletes beállítások',

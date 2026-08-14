@@ -131,6 +131,8 @@ export const EN: typeof HU = {
         review: 'Review',
       },
       settings: {
+        noSelectionTitle: 'Select an item!',
+        noSelectionDescription: 'For detailed component-level setting pick an item from the tree on the left!',
         tabs: {
           basic: 'Basic settings',
           advanced: 'Advanced settings',

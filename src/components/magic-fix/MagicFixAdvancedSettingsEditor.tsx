@@ -1,12 +1,15 @@
-import { Splitter, SplitterPanelData } from '@chakra-ui/react'
+import { EmptyState, Splitter, SplitterPanelData } from '@chakra-ui/react'
 import { FC, useCallback, useState } from 'react'
+import { PiSelectionForeground } from 'react-icons/pi'
 import { useSubProjectSelection } from '../../hooks/useSubProjectSelection'
 import {
   MagicFixComponentConfigSchema,
   MagicFixConfigSchema,
   MagicFixStitchLineConfigSchema,
 } from '../../schemas/magicFixConfig'
+import { SelectionSchema } from '../../schemas/selection'
 import { SubProjectSchema } from '../../schemas/subProject'
+import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { ComponentTree } from '../component-tree/ComponentTree'
 import { useComponentTreeCollection } from '../component-tree/utils/useComponentTreeCollection'
@@ -30,6 +33,7 @@ export const MagicFixAdvancedSettingsEditor: FC<MagicFixAdvancedSettingsEditorPr
   onChange,
   subProject,
 }) => {
+  const t = useTranslation()
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>(() => [subProject.root])
   const selection = useSubProjectSelection(subProject)
   const collection = useComponentTreeCollection(subProject, { showHoles: false, showStitchLines: true })
@@ -82,13 +86,25 @@ export const MagicFixAdvancedSettingsEditor: FC<MagicFixAdvancedSettingsEditorPr
         <Splitter.ResizeTriggerIndicator />
       </Splitter.ResizeTrigger>
 
-      <Splitter.Panel id="editor" minHeight="0" minWidth="0">
-        <MagicFixAdvancedSettingsDetail
-          config={config}
-          onComponentConfigChange={handleComponentConfigChange}
-          onStitchLineConfigChange={handleStitchLineConfigChange}
-          selection={selection}
-        />
+      <Splitter.Panel display="flex" id="editor" minHeight="0" minWidth="0">
+        {isDefined(selection.editorSelection) ? (
+          <MagicFixAdvancedSettingsDetail
+            config={config}
+            onComponentConfigChange={handleComponentConfigChange}
+            onStitchLineConfigChange={handleStitchLineConfigChange}
+            selection={selection.editorSelection}
+          />
+        ) : (
+          <EmptyState.Root height="100%" alignContent="center">
+            <EmptyState.Content>
+              <EmptyState.Indicator>
+                <PiSelectionForeground />
+              </EmptyState.Indicator>
+              <EmptyState.Title>{t.magicFix.dialog.settings.noSelectionTitle}</EmptyState.Title>
+              <EmptyState.Description>{t.magicFix.dialog.settings.noSelectionDescription}</EmptyState.Description>
+            </EmptyState.Content>
+          </EmptyState.Root>
+        )}
       </Splitter.Panel>
     </Splitter.Root>
   )
@@ -96,7 +112,7 @@ export const MagicFixAdvancedSettingsEditor: FC<MagicFixAdvancedSettingsEditorPr
 
 type MagicFixAdvancedSettingsDetailProps = {
   config: MagicFixConfigSchema
-  selection: ReturnType<typeof useSubProjectSelection>
+  selection: SelectionSchema
   onComponentConfigChange: (config: MagicFixComponentConfigSchema) => void
   onStitchLineConfigChange: (config: MagicFixStitchLineConfigSchema) => void
 }
@@ -107,15 +123,9 @@ const MagicFixAdvancedSettingsDetail: FC<MagicFixAdvancedSettingsDetailProps> = 
   onStitchLineConfigChange,
   selection,
 }) => {
-  const { editorSelection } = selection
-
-  if (!isDefined(editorSelection)) {
-    return null
-  }
-
-  switch (editorSelection.type) {
+  switch (selection.type) {
     case 'component': {
-      const componentConfig = config.componentConfigs[editorSelection.componentId]
+      const componentConfig = config.componentConfigs[selection.componentId]
 
       if (!isDefined(componentConfig)) {
         return null
@@ -131,7 +141,7 @@ const MagicFixAdvancedSettingsDetail: FC<MagicFixAdvancedSettingsDetailProps> = 
       }
     }
     case 'stitch-line': {
-      const stitchLineConfig = config.stitchLineConfigs[editorSelection.stitchLineId]
+      const stitchLineConfig = config.stitchLineConfigs[selection.stitchLineId]
 
       if (!isDefined(stitchLineConfig)) {
         return null
