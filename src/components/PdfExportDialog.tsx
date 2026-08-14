@@ -131,7 +131,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} scrollBehavior="inside" size="lg">
+    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} scrollBehavior="inside" size="lg" placement="center">
       <Dialog.Backdrop />
       <Dialog.Positioner>
         <Dialog.Content>

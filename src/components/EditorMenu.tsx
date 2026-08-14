@@ -7,11 +7,11 @@ import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
-import { AlertDialog } from './common/AlertDialog'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
 import { SvgExportDialog } from './SvgExportDialog'
+import { MagicFixDialog } from './magic-fix/MagicFixDialog'
 
 export const EditorMenu = () => {
   const t = useTranslation()
@@ -20,7 +20,7 @@ export const EditorMenu = () => {
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
-  const [isMagicStitchLineFixDialogOpen, setMagicStitchLineFixDialogOpen] = useState<boolean>(false)
+  const [isMagicFixDialogOpen, setMagicFixDialogOpen] = useState<boolean>(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const isExportEnabled = project.subProjects.length > 0
 
@@ -30,11 +30,9 @@ export const EditorMenu = () => {
 
   const handlePdfExportClick = useCallback(() => setPdfExportDialogOpen(true), [])
 
-  const handleMagicStitchlineFix = useCallback(() => {
-    setMagicStitchLineFixDialogOpen(true)
-  }, [])
+  const handleMagicStitchlineFix = useCallback(() => {}, [])
 
-  const handleMagicStitchLineFixConfirm = useCallback((): void => {}, [])
+  const handleMagicFixClick = useCallback(() => setMagicFixDialogOpen(true), [])
 
   return (
     <>
@@ -95,7 +93,7 @@ export const EditorMenu = () => {
                       onSelect={handleMagicStitchlineFix}
                     >
                       <PiMagicWand />
-                      <Menu.ItemText>{t.editor.menus.magicStitchlineFix}</Menu.ItemText>
+                      <Menu.ItemText>{t.magicFix.menu}</Menu.ItemText>
                     </Menu.Item>
                   </Menu.Content>
                 </Menu.Positioner>
@@ -120,6 +118,7 @@ export const EditorMenu = () => {
                 </Menu.Positioner>
               </Portal>
             </Menu.Root>
+            <Button onClick={handleMagicFixClick}>Dialog </Button>
           </HStack>
         </Card.Body>
       </Card.Root>
@@ -129,15 +128,7 @@ export const EditorMenu = () => {
         <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
         {isExportEnabled && <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />}
         {isExportEnabled && <PdfExportDialog isOpen={isPdfExportDialogOpen} onOpenChange={setPdfExportDialogOpen} />}
-        <AlertDialog
-          isOpen={isMagicStitchLineFixDialogOpen}
-          message={t.editor.magicStitchlineFixDialog.description}
-          negativeLabel={t.common.actions.cancel}
-          onOpenChange={setMagicStitchLineFixDialogOpen}
-          onPositiveAction={handleMagicStitchLineFixConfirm}
-          positiveLabel={t.common.actions.apply}
-          title={t.editor.magicStitchlineFixDialog.title}
-        />
+        <MagicFixDialog isOpen={isMagicFixDialogOpen} onOpenChange={setMagicFixDialogOpen} />
       </>
     </>
   )

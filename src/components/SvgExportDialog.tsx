@@ -94,7 +94,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg">
+    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg" placement="center">
       <Dialog.Backdrop />
       <Dialog.Positioner>
         <Dialog.Content>

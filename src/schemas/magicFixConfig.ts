@@ -1,3 +1,5 @@
+import { HasComponentReferenceSchema, HasStitchLineReferenceSchema } from './common'
+
 export type MagicFixEffortSchema = 'low' | 'medium' | 'high'
 
 export type MagicFixNumericRangeSchema = {
@@ -5,9 +7,12 @@ export type MagicFixNumericRangeSchema = {
   maxIncrease: number
 }
 
-export type MagicFixConfigSchema = {
+export type MagicFixBaseConfigSchema = {
   effort: MagicFixEffortSchema
   accuracy: number
+}
+
+export type MagicFixConfigSchema = MagicFixBaseConfigSchema & {
   componentConfigs: Record<string, MagicFixComponentConfigSchema>
   stitchLineConfigs: Record<string, MagicFixStitchLineConfigSchema>
 }
@@ -43,14 +48,16 @@ export type MagicFixHasCornerRadiusConfigSchema = {
   bottomLeftRadiusRange: MagicFixNumericRangeSchema
 }
 
-export type MagicFixRootPanelConfigSchema = MagicFixHasDimensionsConfigSchema &
+export type MagicFixRootPanelConfigSchema = HasComponentReferenceSchema &
+  MagicFixHasDimensionsConfigSchema &
   MagicFixHasGapConfigSchema &
   MagicFixHasCornerRadiusConfigSchema &
   MagicFixHasPreferredMinimumDistanceFromEdgeConfigSchema & {
     type: 'magic-fix-root-panel-config'
   }
 
-export type MagicFixPanelConfigSchema = MagicFixHasDimensionsConfigSchema &
+export type MagicFixPanelConfigSchema = HasComponentReferenceSchema &
+  MagicFixHasDimensionsConfigSchema &
   MagicFixHasGapConfigSchema &
   MagicFixHasCornerRadiusConfigSchema &
   MagicFixHasAutoDimensionsConfigSchema &
@@ -58,7 +65,8 @@ export type MagicFixPanelConfigSchema = MagicFixHasDimensionsConfigSchema &
     type: 'magic-fix-panel-config'
   }
 
-export type MagicFixPocketClusterConfigSchema = MagicFixHasDimensionsConfigSchema &
+export type MagicFixPocketClusterConfigSchema = HasComponentReferenceSchema &
+  MagicFixHasDimensionsConfigSchema &
   MagicFixHasCornerRadiusConfigSchema &
   MagicFixHasAutoDimensionsConfigSchema &
   MagicFixHasPreferredMinimumDistanceFromEdgeConfigSchema & {
@@ -71,7 +79,7 @@ export type MagicFixComponentConfigSchema =
   | MagicFixPanelConfigSchema
   | MagicFixPocketClusterConfigSchema
 
-export type MagicFixComponentBoundsStitchLineConfigSchema = {
+export type MagicFixComponentBoundsStitchLineConfigSchema = HasStitchLineReferenceSchema & {
   type: 'magic-fix-component-bounds-stitch-line-config'
 
   topStartOffsetRange: MagicFixNumericRangeSchema
@@ -89,7 +97,7 @@ export type MagicFixComponentBoundsStitchLineConfigSchema = {
   canFlipLeftStitchDirection: boolean
 }
 
-export type MagicFixPocketClusterStitchLineConfigSchema = {
+export type MagicFixPocketClusterStitchLineConfigSchema = HasStitchLineReferenceSchema & {
   type: 'magic-fix-pocket-cluster-stitch-line-config'
   startOffsetRange: MagicFixNumericRangeSchema
   endOffsetRange: MagicFixNumericRangeSchema

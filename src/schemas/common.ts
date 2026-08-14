@@ -1,7 +1,12 @@
-export type HasIdentitySchema = {
+export type HasId = {
   id: string
+}
+
+export type HasName = {
   name: string
 }
+
+export type HasIdentitySchema = HasId & HasName
 
 export type HasCornerRadiusValuesSchema = {
   borderRadius: number
@@ -22,6 +27,10 @@ export type HasSizeSchema = {
 
 export type HasComponentReferenceSchema = {
   componentId: string
+}
+
+export type HasStitchLineReferenceSchema = {
+  stitchLineId: string
 }
 
 export type HasComponentTargetSchema = {

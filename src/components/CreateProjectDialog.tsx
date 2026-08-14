@@ -78,7 +78,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
   )
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg">
+    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg" placement="center">
       <Dialog.Backdrop />
       <Dialog.Positioner>
         <Dialog.Content>

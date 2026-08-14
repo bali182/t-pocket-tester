@@ -3,6 +3,7 @@ export const HU = {
     actions: {
       add: 'Hozzáadás',
       cancel: 'Mégse',
+      next: 'Tovább',
       apply: 'Alkalmaz',
       exportSvg: 'SVG Exportálás',
       exportPdf: 'PDF Exportálás',
@@ -48,11 +49,6 @@ export const HU = {
       file: 'Fájl',
       edit: 'Szerkesztés',
       view: 'Nézet',
-      magicStitchlineFix: 'Varrás varázslat',
-    },
-    magicStitchlineFixDialog: {
-      title: 'Varrások javítása',
-      description: 'A művelet a varrásszabályokhoz igazíthatja a méreteket és a varróvonalak eltolásait.',
     },
     scalingDialog: {
       title: 'Skálázás',
@@ -120,6 +116,23 @@ export const HU = {
       errors: {
         exportFailed: 'A PDF exportálása nem sikerült.',
         unplaceablePanels: 'Egy vagy több panel nem fér el a kiválasztott oldalra.',
+      },
+    },
+  },
+  magicFix: {
+    menu: 'Javítás varázsló',
+    dialog: {
+      title: 'Javítás varázsló',
+      steps: {
+        settings: 'Beállítások',
+        fixing: 'Javítás',
+        review: 'Kiértékelés',
+      },
+      settings: {
+        tabs: {
+          basic: 'Alapbeállítások',
+          advanced: 'Részletes beállítások',
+        },
       },
     },
   },

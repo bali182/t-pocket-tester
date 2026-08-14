@@ -5,6 +5,7 @@ export const EN: typeof HU = {
     actions: {
       add: 'Add',
       cancel: 'Cancel',
+      next: 'Next',
       remove: 'Delete',
       scaling: 'Scaling',
       apply: 'Apply',
@@ -50,11 +51,6 @@ export const EN: typeof HU = {
       file: 'File',
       edit: 'Edit',
       view: 'View',
-      magicStitchlineFix: 'Magic stitchline fix',
-    },
-    magicStitchlineFixDialog: {
-      title: 'Fix stitching',
-      description: 'This may adjust dimensions and stitch-line offsets to follow the stitching rules.',
     },
     scalingDialog: {
       title: 'Scaling',
@@ -122,6 +118,23 @@ export const EN: typeof HU = {
       errors: {
         exportFailed: 'The PDF export failed.',
         unplaceablePanels: 'One or more panels do not fit on the selected page.',
+      },
+    },
+  },
+  magicFix: {
+    menu: 'Magic fix',
+    dialog: {
+      title: 'Magic fix',
+      steps: {
+        settings: 'Settings',
+        fixing: 'Fixing',
+        review: 'Review',
+      },
+      settings: {
+        tabs: {
+          basic: 'Basic settings',
+          advanced: 'Advanced settings',
+        },
       },
     },
   },
