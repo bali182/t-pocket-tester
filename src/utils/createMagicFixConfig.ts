@@ -1,6 +1,7 @@
 import {
   MagicFixComponentConfigSchema,
   MagicFixConfigSchema,
+  MagicFixEffortSchema,
   MagicFixHasAutoDimensionsConfigSchema,
   MagicFixHasCornerRadiusConfigSchema,
   MagicFixHasDimensionsConfigSchema,
@@ -13,11 +14,12 @@ import { ProjectSchema } from '../schemas/project'
 import { SubProjectSchema } from '../schemas/subProject'
 
 const DEFAULT_ACCURACY = 0.01
+const DEFAULT_EFFORT: MagicFixEffortSchema = 'medium'
 
 export const createMagicFixConfig = (project: ProjectSchema, subProject: SubProjectSchema): MagicFixConfigSchema => {
   return {
     accuracy: DEFAULT_ACCURACY,
-    effort: 'medium',
+    effort: DEFAULT_EFFORT,
     componentConfigs: createComponentConfigs(project, subProject),
     stitchLineConfigs: createStitchLineConfigs(project, subProject),
   }
@@ -61,29 +63,29 @@ const createComponentConfigs = (
     switch (component.type) {
       case 'root-panel':
         return {
-          ...defaultBorderRadiusProps,
-          ...defaultDimensionProps,
-          ...layoutGapRange,
           ...distanceToEdge,
+          ...layoutGapRange,
+          ...defaultDimensionProps,
+          ...defaultBorderRadiusProps,
           type: 'magic-fix-root-panel-config',
           componentId: component.id,
         }
       case 'panel':
         return {
-          ...defaultBorderRadiusProps,
-          ...defaultDimensionProps,
-          ...layoutGapRange,
           ...distanceToEdge,
+          ...layoutGapRange,
+          ...defaultDimensionProps,
           ...defaultConvertAuto,
+          ...defaultBorderRadiusProps,
           type: 'magic-fix-panel-config',
           componentId: component.id,
         }
       case 'pocket-cluster':
         return {
-          ...defaultBorderRadiusProps,
-          ...defaultDimensionProps,
           ...distanceToEdge,
+          ...defaultDimensionProps,
           ...defaultConvertAuto,
+          ...defaultBorderRadiusProps,
           pocketStepRange: halfStitchLineRange,
           type: 'magic-fix-pocket-cluster-config',
           componentId: component.id,
