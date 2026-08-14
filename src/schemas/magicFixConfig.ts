@@ -107,3 +107,9 @@ export type MagicFixPocketClusterStitchLineConfigSchema = HasStitchLineReference
 export type MagicFixStitchLineConfigSchema =
   | MagicFixComponentBoundsStitchLineConfigSchema
   | MagicFixPocketClusterStitchLineConfigSchema
+
+/** Used on the UI editor to edit the basics, and some commonly shared fields */
+export type MagicFixBasicUIConfigSchema = {
+  preferredMinimumDistanceFromEdge: number | undefined
+  modifyRange: Partial<MagicFixNumericRangeSchema>
+}

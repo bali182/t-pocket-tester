@@ -4,6 +4,7 @@ import { MagicFixConfigSchema } from '../../schemas/magicFixConfig'
 import { SubProjectSchema } from '../../schemas/subProject'
 import { useTranslation } from '../../translations/translation'
 import { MagicFixAdvancedSettingsEditor } from './MagicFixAdvancedSettingsEditor'
+import { MagicFixBasicSettingsEditor } from './MagicFixBasicSettingsEditor'
 
 export type MagicFixSettingsEditorPageProps = {
   config: MagicFixConfigSchema
@@ -20,7 +21,9 @@ export const MagicFixSettingsEditorPage: FC<MagicFixSettingsEditorPageProps> = (
         <Tabs.Trigger value="advanced">{t.magicFix.dialog.settings.tabs.advanced}</Tabs.Trigger>
       </Tabs.List>
       <Tabs.ContentGroup flex="1" minHeight="0">
-        <Tabs.Content height="full" value="basic" pt={0}></Tabs.Content>
+        <Tabs.Content height="full" value="basic" pt={0}>
+          <MagicFixBasicSettingsEditor config={config} onChange={onChange} />
+        </Tabs.Content>
         <Tabs.Content height="full" value="advanced" pt={0}>
           <MagicFixAdvancedSettingsEditor subProject={subProject} onChange={onChange} config={config} />
         </Tabs.Content>

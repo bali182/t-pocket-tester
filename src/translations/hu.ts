@@ -136,6 +136,23 @@ export const HU = {
           basic: 'Alapbeállítások',
           advanced: 'Részletes beállítások',
         },
+        basic: {
+          sections: {
+            accuracyAndEffort: 'Pontosság és ráfordítás',
+            sharedLimits: 'Közös korlátok',
+          },
+          labels: {
+            accuracy: 'Pontosság',
+            effort: 'Ráfordítás',
+            preferredMinimumDistanceFromEdge: 'Öltés távolság széltől',
+            modifyRange: 'Módosítási tartomány',
+          },
+          efforts: {
+            low: 'Alacsony',
+            medium: 'Közepes',
+            high: 'Magas',
+          },
+        },
         advanced: {
           sections: {
             distance: 'Távolság a széltől',

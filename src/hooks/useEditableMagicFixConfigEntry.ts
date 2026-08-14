@@ -9,6 +9,7 @@ import { useEditableModel } from './useEditableModel'
 type UseEditableMagicFixConfigEntryOptions<T> = {
   config: T
   onChange: (config: T) => void
+  isEqual?: (first: T | undefined, second: T | undefined) => boolean
   validate: (
     input: EditableSchema<T>,
     currentValue: T,
@@ -24,13 +25,20 @@ export type UseEditableMagicFixConfigEntryResult<T> = {
 
 export const useEditableMagicFixConfigEntry = <T>({
   config,
+  isEqual,
   onChange,
   validate,
 }: UseEditableMagicFixConfigEntryOptions<T>): UseEditableMagicFixConfigEntryResult<T> => {
   const t = useTranslation()
   const context = useMemo<BaseValidationContextSchema>(() => ({ language: LANGUAGE, t }), [t])
   const commit = useCallback((updatedConfig: T): void => onChange(updatedConfig), [onChange])
-  const { editableValue, setValue, validationIssues } = useEditableModel({ commit, context, validate, value: config })
+  const { editableValue, setValue, validationIssues } = useEditableModel({
+    commit,
+    context,
+    isEqual,
+    validate,
+    value: config,
+  })
 
   return { editableConfig: editableValue, setConfig: setValue, validationIssues }
 }

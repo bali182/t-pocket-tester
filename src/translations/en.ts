@@ -137,6 +137,23 @@ export const EN: typeof HU = {
           basic: 'Basic settings',
           advanced: 'Advanced settings',
         },
+        basic: {
+          sections: {
+            accuracyAndEffort: 'Accuracy and effort',
+            sharedLimits: 'Shared limits',
+          },
+          labels: {
+            accuracy: 'Accuracy',
+            effort: 'Effort',
+            preferredMinimumDistanceFromEdge: 'Stitch distance from edge',
+            modifyRange: 'Modification range',
+          },
+          efforts: {
+            low: 'Low',
+            medium: 'Medium',
+            high: 'High',
+          },
+        },
         advanced: {
           sections: {
             distance: 'Distance from edge',
