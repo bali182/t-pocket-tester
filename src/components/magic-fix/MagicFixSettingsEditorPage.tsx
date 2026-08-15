@@ -15,7 +15,7 @@ export type MagicFixSettingsEditorPageProps = {
 export const MagicFixSettingsEditorPage: FC<MagicFixSettingsEditorPageProps> = ({ config, onChange, subProject }) => {
   const t = useTranslation()
   return (
-    <Tabs.Root defaultValue="advanced" display="flex" flexDirection="column" height="full" minHeight="0">
+    <Tabs.Root defaultValue="basic" display="flex" flexDirection="column" height="full" minHeight="0">
       <Tabs.List alignItems="center" flexShrink="0">
         <Tabs.Trigger value="basic">{t.magicFix.dialog.settings.tabs.basic}</Tabs.Trigger>
         <Tabs.Trigger value="advanced">{t.magicFix.dialog.settings.tabs.advanced}</Tabs.Trigger>

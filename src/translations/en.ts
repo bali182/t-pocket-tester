@@ -130,6 +130,9 @@ export const EN: typeof HU = {
         fixing: 'Fixing',
         review: 'Review',
       },
+      progress: {
+        message: 'Working on the fix…',
+      },
       settings: {
         noSelectionTitle: 'Select an item!',
         noSelectionDescription: 'For detailed component-level setting pick an item from the tree on the left!',

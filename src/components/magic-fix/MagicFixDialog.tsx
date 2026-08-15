@@ -6,6 +6,7 @@ import { useSubProject } from '../../hooks/useSubProject'
 import { MagicFixConfigSchema } from '../../schemas/magicFixConfig'
 import { useTranslation } from '../../translations/translation'
 import { createMagicFixConfig } from '../../utils/createMagicFixConfig'
+import { MagicFixProgressPage } from './MagicFixProgressPage'
 import { MagicFixSettingsEditorPage } from './MagicFixSettingsEditorPage'
 import { MagicFixStep, MagicFixSteps } from './MagicFixSteps'
 
@@ -30,6 +31,15 @@ export const MagicFixDialog: FC<MagicFixDialogProps> = ({ isOpen, onOpenChange }
     [onOpenChange],
   )
 
+  const handleNext = useCallback(() => {
+    switch (activeStep) {
+      case 'settings': {
+        setActiveStep('fixing')
+        break
+      }
+    }
+  }, [activeStep])
+
   return (
     <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} scrollBehavior="inside" size="xl" placement="center">
       <Dialog.Backdrop />
@@ -48,7 +58,9 @@ export const MagicFixDialog: FC<MagicFixDialogProps> = ({ isOpen, onOpenChange }
             {activeStep === 'settings' && (
               <MagicFixSettingsEditorPage subProject={subProject} config={config} onChange={setConfig} />
             )}
-            {activeStep === 'fixing' && <>TODO Fixing</>}
+            {activeStep === 'fixing' && (
+              <MagicFixProgressPage project={project} subProject={subProject} config={config} />
+            )}
             {activeStep === 'review' && <>TODO Review</>}
           </Dialog.Body>
           <Separator orientation="horizontal" />
@@ -56,7 +68,7 @@ export const MagicFixDialog: FC<MagicFixDialogProps> = ({ isOpen, onOpenChange }
             <Dialog.ActionTrigger asChild>
               <Button variant="outline">{t.common.actions.cancel}</Button>
             </Dialog.ActionTrigger>
-            <Button>{t.common.actions.next}</Button>
+            <Button onClick={handleNext}>{t.common.actions.next}</Button>
           </Dialog.Footer>
         </Dialog.Content>
       </Dialog.Positioner>

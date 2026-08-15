@@ -128,6 +128,9 @@ export const HU = {
         fixing: 'Javítás',
         review: 'Kiértékelés',
       },
+      progress: {
+        message: 'Dolgozunk a javításon…',
+      },
       settings: {
         noSelectionTitle: 'Válassz egy elemet!',
         noSelectionDescription:
