@@ -1,10 +1,10 @@
 import { Splitter, SplitterPanelData } from '@chakra-ui/react'
 import { FC, useState } from 'react'
-import { useSubProjectSelection } from '../../hooks/useSubProjectSelection'
-import { MagicFixConfigSchema } from '../../schemas/magicFixConfig'
-import { SubProjectSchema } from '../../schemas/subProject'
-import { ComponentTree } from '../component-tree/ComponentTree'
-import { useComponentTreeCollection } from '../component-tree/utils/useComponentTreeCollection'
+import { useSubProjectSelection } from '../../../hooks/useSubProjectSelection'
+import { MagicFixConfigSchema } from '../../../schemas/magicFixConfig'
+import { SubProjectSchema } from '../../../schemas/subProject'
+import { ComponentTree } from '../../component-tree/ComponentTree'
+import { useComponentTreeCollection } from '../../component-tree/utils/useComponentTreeCollection'
 
 const panels: SplitterPanelData[] = [{ id: 'tree' }, { id: 'editor' }]
 const defaultPanelSizes: string[] = ['300px', 'auto']

@@ -1,23 +1,23 @@
 import { EmptyState, Splitter, SplitterPanelData } from '@chakra-ui/react'
 import { FC, useCallback, useState } from 'react'
 import { PiSelectionForeground } from 'react-icons/pi'
-import { useSubProjectSelection } from '../../hooks/useSubProjectSelection'
+import { useSubProjectSelection } from '../../../hooks/useSubProjectSelection'
 import {
   MagicFixComponentConfigSchema,
   MagicFixConfigSchema,
   MagicFixStitchLineConfigSchema,
-} from '../../schemas/magicFixConfig'
-import { SelectionSchema } from '../../schemas/selection'
-import { SubProjectSchema } from '../../schemas/subProject'
-import { useTranslation } from '../../translations/translation'
-import { isDefined } from '../../utils/isDefined'
-import { ComponentTree } from '../component-tree/ComponentTree'
-import { useComponentTreeCollection } from '../component-tree/utils/useComponentTreeCollection'
-import { MagicFixComponentBoundsStitchLineConfigEditor } from './editors/MagicFixComponentBoundsStitchLineConfigEditor'
-import { MagicFixPanelConfigEditor } from './editors/MagicFixPanelConfigEditor'
-import { MagicFixPocketClusterConfigEditor } from './editors/MagicFixPocketClusterConfigEditor'
-import { MagicFixPocketClusterStitchLineConfigEditor } from './editors/MagicFixPocketClusterStitchLineConfigEditor'
-import { MagicFixRootPanelConfigEditor } from './editors/MagicFixRootPanelConfigEditor'
+} from '../../../schemas/magicFixConfig'
+import { SelectionSchema } from '../../../schemas/selection'
+import { SubProjectSchema } from '../../../schemas/subProject'
+import { useTranslation } from '../../../translations/translation'
+import { isDefined } from '../../../utils/isDefined'
+import { ComponentTree } from '../../component-tree/ComponentTree'
+import { useComponentTreeCollection } from '../../component-tree/utils/useComponentTreeCollection'
+import { MagicFixComponentBoundsStitchLineConfigEditor } from './MagicFixComponentBoundsStitchLineConfigEditor'
+import { MagicFixPanelConfigEditor } from './MagicFixPanelConfigEditor'
+import { MagicFixPocketClusterConfigEditor } from './MagicFixPocketClusterConfigEditor'
+import { MagicFixPocketClusterStitchLineConfigEditor } from './MagicFixPocketClusterStitchLineConfigEditor'
+import { MagicFixRootPanelConfigEditor } from './MagicFixRootPanelConfigEditor'
 
 const panels: SplitterPanelData[] = [{ id: 'tree' }, { id: 'editor' }]
 const defaultPanelSizes: string[] = ['250px', 'auto']

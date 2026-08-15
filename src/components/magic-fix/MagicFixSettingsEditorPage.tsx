@@ -3,8 +3,8 @@ import { FC } from 'react'
 import { MagicFixConfigSchema } from '../../schemas/magicFixConfig'
 import { SubProjectSchema } from '../../schemas/subProject'
 import { useTranslation } from '../../translations/translation'
-import { MagicFixAdvancedSettingsEditor } from './MagicFixAdvancedSettingsEditor'
-import { MagicFixBasicSettingsEditor } from './MagicFixBasicSettingsEditor'
+import { MagicFixAdvancedSettingsEditor } from './editors/MagicFixAdvancedSettingsEditor'
+import { MagicFixBasicSettingsEditor } from './editors/MagicFixBasicSettingsEditor'
 
 export type MagicFixSettingsEditorPageProps = {
   config: MagicFixConfigSchema

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, type FC } from 'react'
 
-import { useEditableMagicFixConfigEntry } from '../../hooks/useEditableMagicFixConfigEntry'
+import { useEditableMagicFixConfigEntry } from '../../../hooks/useEditableMagicFixConfigEntry'
 import type {
   MagicFixBaseConfigSchema,
   MagicFixBasicUIConfigSchema,
@@ -10,15 +10,15 @@ import type {
   MagicFixNumericRangeSchema,
   MagicFixPocketClusterStitchLineConfigSchema,
   MagicFixStitchLineConfigSchema,
-} from '../../schemas/magicFixConfig'
-import { isDefined } from '../../utils/isDefined'
+} from '../../../schemas/magicFixConfig'
+import { isDefined } from '../../../utils/isDefined'
 import {
   validateMagicFixBaseConfig,
   validateMagicFixBasicUIConfig,
-} from '../../validators/validateMagicFixBasicUIConfig'
-import { SectionGroup } from '../common/SectionGroup'
-import { MagicFixBasicAccuracyAndEffortSection } from './sections/MagicFixBasicAccuracyAndEffortSection'
-import { MagicFixBasicSharedLimitsSection } from './sections/MagicFixBasicSharedLimitsSection'
+} from '../../../validators/validateMagicFixBasicUIConfig'
+import { SectionGroup } from '../../common/SectionGroup'
+import { MagicFixBasicAccuracyAndEffortSection } from '../sections/MagicFixBasicAccuracyAndEffortSection'
+import { MagicFixBasicSharedLimitsSection } from '../sections/MagicFixBasicSharedLimitsSection'
 
 export type MagicFixBasicSettingsEditorProps = {
   config: MagicFixConfigSchema
