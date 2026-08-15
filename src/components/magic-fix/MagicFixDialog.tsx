@@ -9,6 +9,7 @@ import { createMagicFixConfig } from '../../utils/createMagicFixConfig'
 import { MagicFixProgressPage } from './MagicFixProgressPage'
 import { MagicFixSettingsEditorPage } from './MagicFixSettingsEditorPage'
 import { MagicFixStep, MagicFixSteps } from './MagicFixSteps'
+import { MagicFixReviewPage } from './MagixFixReviewPage'
 
 type MagicFixDialogProps = {
   isOpen: boolean
@@ -61,7 +62,7 @@ export const MagicFixDialog: FC<MagicFixDialogProps> = ({ isOpen, onOpenChange }
             {activeStep === 'fixing' && (
               <MagicFixProgressPage project={project} subProject={subProject} config={config} />
             )}
-            {activeStep === 'review' && <>TODO Review</>}
+            {activeStep === 'review' && <MagicFixReviewPage result={undefined! /* TODO */} />}
           </Dialog.Body>
           <Separator orientation="horizontal" />
           <Dialog.Footer>
