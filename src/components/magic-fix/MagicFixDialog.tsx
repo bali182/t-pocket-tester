@@ -1,11 +1,14 @@
 import { Button, Dialog, IconButton, Separator } from '@chakra-ui/react'
 import { FC, useCallback, useState } from 'react'
 import { PiX } from 'react-icons/pi'
+import { useMagicFixWorker } from '../../hooks/useMagicFixWorker'
 import { useProject } from '../../hooks/useProject'
+import { useProjectOperations } from '../../hooks/useProjectOperations'
 import { useSubProject } from '../../hooks/useSubProject'
 import { MagicFixConfigSchema } from '../../schemas/magicFixConfig'
 import { useTranslation } from '../../translations/translation'
 import { createMagicFixConfig } from '../../utils/createMagicFixConfig'
+import { isDefined } from '../../utils/isDefined'
 import { MagicFixProgressPage } from './MagicFixProgressPage'
 import { MagicFixSettingsEditorPage } from './MagicFixSettingsEditorPage'
 import { MagicFixStep, MagicFixSteps } from './MagicFixSteps'
@@ -21,25 +24,67 @@ export const MagicFixDialog: FC<MagicFixDialogProps> = ({ isOpen, onOpenChange }
 
   const { project } = useProject()
   const { subProject } = useSubProject()
+  const { cloneSubProject, setSubProject } = useProjectOperations()
+  const { cancel, progress, result, start } = useMagicFixWorker()
 
   const [activeStep, setActiveStep] = useState<MagicFixStep>('settings')
   const [config, setConfig] = useState<MagicFixConfigSchema>(() => createMagicFixConfig(project, subProject))
+  const isFixingComplete = isDefined(result)
 
   const handleOpenChange = useCallback(
     (details: Dialog.OpenChangeDetails): void => {
+      if (!details.open) {
+        cancel()
+      }
       onOpenChange(details.open)
     },
-    [onOpenChange],
+    [cancel, onOpenChange],
   )
 
   const handleNext = useCallback(() => {
     switch (activeStep) {
       case 'settings': {
+        start(project, subProject.id, config)
         setActiveStep('fixing')
         break
       }
     }
-  }, [activeStep])
+  }, [activeStep, config, project, start, subProject.id])
+
+  const handleBack = useCallback((): void => {
+    switch (activeStep) {
+      case 'fixing':
+      case 'review': {
+        cancel()
+        setActiveStep('settings')
+        break
+      }
+    }
+  }, [activeStep, cancel])
+
+  const handleCompletionAnimationEnd = useCallback((): void => {
+    if (isDefined(result)) {
+      setActiveStep('review')
+    }
+  }, [result])
+
+  const handleAddNewModule = useCallback((): void => {
+    if (!isDefined(result) || result.type !== 'success') {
+      return
+    }
+
+    cloneSubProject(result.data)
+    onOpenChange(false)
+  }, [cloneSubProject, onOpenChange, result])
+
+  const handleOverwriteModule = useCallback((): void => {
+    if (!isDefined(result) || result.type !== 'success') {
+      return
+    }
+
+    setSubProject(result.data)
+    onOpenChange(false)
+  }, [onOpenChange, result, setSubProject])
 
   return (
     <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} scrollBehavior="inside" size="xl" placement="center">
@@ -53,23 +98,39 @@ export const MagicFixDialog: FC<MagicFixDialogProps> = ({ isOpen, onOpenChange }
                 <PiX />
               </IconButton>
             </Dialog.CloseTrigger>
-            <MagicFixSteps step={activeStep} onStepChange={setActiveStep} />
+            <MagicFixSteps step={activeStep} />
           </Dialog.Header>
           <Dialog.Body p={0}>
             {activeStep === 'settings' && (
               <MagicFixSettingsEditorPage subProject={subProject} config={config} onChange={setConfig} />
             )}
             {activeStep === 'fixing' && (
-              <MagicFixProgressPage project={project} subProject={subProject} config={config} />
+              <MagicFixProgressPage
+                isComplete={isFixingComplete}
+                onCompletionAnimationEnd={handleCompletionAnimationEnd}
+                progress={progress}
+              />
             )}
-            {activeStep === 'review' && <MagicFixReviewPage result={undefined! /* TODO */} />}
+            {activeStep === 'review' && isDefined(result) && <MagicFixReviewPage result={result} />}
           </Dialog.Body>
           <Separator orientation="horizontal" />
           <Dialog.Footer>
-            <Dialog.ActionTrigger asChild>
-              <Button variant="outline">{t.common.actions.cancel}</Button>
-            </Dialog.ActionTrigger>
-            <Button onClick={handleNext}>{t.common.actions.next}</Button>
+            <Button disabled={activeStep === 'settings'} onClick={handleBack} variant="outline">
+              {t.magicFix.dialog.actions.back}
+            </Button>
+            {activeStep !== 'review' && (
+              <Button disabled={activeStep === 'fixing'} onClick={handleNext}>
+                {t.common.actions.next}
+              </Button>
+            )}
+            {activeStep === 'review' && result?.type === 'success' && (
+              <>
+                <Button onClick={handleAddNewModule}>{t.magicFix.dialog.actions.addNewModule}</Button>
+                <Button colorPalette="red" onClick={handleOverwriteModule}>
+                  {t.magicFix.dialog.actions.overwriteModule}
+                </Button>
+              </>
+            )}
           </Dialog.Footer>
         </Dialog.Content>
       </Dialog.Positioner>

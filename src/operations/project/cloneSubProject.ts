@@ -15,10 +15,6 @@ export const cloneSubProject = (
   project: ProjectSchema,
   { getUnusedId, rootName, subProject: sourceSubProject }: CloneSubProjectParams,
 ): ProjectSchema => {
-  if (!isDefined(sourceSubProject)) {
-    return project
-  }
-
   const sourceRootPanel = sourceSubProject.components[sourceSubProject.root]
 
   if (!isDefined(sourceRootPanel) || sourceRootPanel.type !== 'root-panel') {

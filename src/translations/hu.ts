@@ -130,6 +130,17 @@ export const HU = {
       },
       progress: {
         message: 'Dolgozunk a javításon…',
+        completed: 'Elkészült',
+      },
+      actions: {
+        back: 'Vissza',
+        addNewModule: 'Új modul létrehozása',
+        overwriteModule: 'Modul felülírása',
+      },
+      review: {
+        success: 'A javítás sikeresen elkészült.',
+        error: 'A javítás sikertelen volt.',
+        noResult: 'A javítás nem tudott eredményt létrehozni.',
       },
       settings: {
         noSelectionTitle: 'Válassz egy elemet!',

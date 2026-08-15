@@ -1,5 +1,5 @@
 import { Steps } from '@chakra-ui/react'
-import { FC, useCallback } from 'react'
+import { FC } from 'react'
 import { PiCheck, PiGear, PiHourglass } from 'react-icons/pi'
 import { useTranslation } from '../../translations/translation'
 
@@ -7,7 +7,6 @@ export type MagicFixStep = 'settings' | 'fixing' | 'review'
 
 export type MagicFixStepsProps = {
   step: MagicFixStep
-  onStepChange: (step: MagicFixStep) => void
 }
 
 const StepToIndex: Record<MagicFixStep, number> = {
@@ -16,16 +15,12 @@ const StepToIndex: Record<MagicFixStep, number> = {
   review: 2,
 }
 
-const IndexToStep: MagicFixStep[] = ['settings', 'fixing', 'review']
-
-export const MagicFixSteps: FC<MagicFixStepsProps> = ({ onStepChange, step }) => {
+export const MagicFixSteps: FC<MagicFixStepsProps> = ({ step }) => {
   const t = useTranslation()
   const activeStep = StepToIndex[step]
 
-  const handleStepChange = useCallback((e: Steps.ChangeDetails) => onStepChange(IndexToStep[e.step]), [onStepChange])
-
   return (
-    <Steps.Root size="xs" count={3} step={activeStep} onStepChange={handleStepChange}>
+    <Steps.Root size="xs" count={3} step={activeStep}>
       <Steps.List>
         <Steps.Item index={StepToIndex.settings}>
           <Steps.Indicator>

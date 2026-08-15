@@ -1,38 +1,47 @@
-import { Flex, Progress, Text } from '@chakra-ui/react'
-import { proxy, wrap } from 'comlink'
-import { FC, useEffect, useState } from 'react'
-import { MagicFixConfigSchema } from '../../schemas/magicFixConfig'
-import { MagicFixApi, MagicFixProgressSchema } from '../../schemas/magicFixOperation'
-import { ProjectSchema } from '../../schemas/project'
-import { SubProjectSchema } from '../../schemas/subProject'
+import { Box, Flex, Progress, Text } from '@chakra-ui/react'
+import { FC, useCallback } from 'react'
 import { useTranslation } from '../../translations/translation'
-import MagicFixWorker from '../../workers/magicFix.worker?worker'
 
-type MagicFixProgressPageProps = {
-  project: ProjectSchema
-  subProject: SubProjectSchema
-  config: MagicFixConfigSchema
+export type MagicFixProgressPageProps = {
+  progress: number
+  isComplete: boolean
+  onCompletionAnimationEnd: () => void
 }
 
-export const MagicFixProgressPage: FC<MagicFixProgressPageProps> = ({ project, subProject, config }) => {
+export const MagicFixProgressPage: FC<MagicFixProgressPageProps> = ({
+  isComplete,
+  onCompletionAnimationEnd,
+  progress,
+}) => {
   const t = useTranslation()
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    const worker = new MagicFixWorker()
-    const runMagicFix = wrap<MagicFixApi>(worker)
-    const handleProgress = proxy((progress: MagicFixProgressSchema): void => {
-      setProgress((progress.progress / progress.max) * 100)
-    })
-
-    runMagicFix(project, subProject.id, config, handleProgress)
-
-    return () => worker.terminate()
-  }, [config, project, subProject.id])
+  const handleCompletionAnimationEnd = useCallback((): void => {
+    onCompletionAnimationEnd()
+  }, [onCompletionAnimationEnd])
 
   return (
     <Flex flexDirection="column" height="full" p="6">
-      <Text>{t.magicFix.dialog.progress.message}</Text>
+      <Box position="relative">
+        <Text
+          animationDuration="100ms"
+          animationFillMode="forwards"
+          animationName={isComplete ? 'fade-out' : undefined}
+          animationTimingFunction="ease-out"
+        >
+          {t.magicFix.dialog.progress.message}
+        </Text>
+        {isComplete && (
+          <Text
+            animationDuration="1000ms"
+            animationName="fade-in"
+            animationTimingFunction="ease-out"
+            inset="0"
+            onAnimationEnd={handleCompletionAnimationEnd}
+            position="absolute"
+          >
+            {t.magicFix.dialog.progress.completed}
+          </Text>
+        )}
+      </Box>
       <Flex alignItems="center" gap="3" marginTop="auto">
         <Progress.Root flex="1" value={progress}>
           <Progress.Track>

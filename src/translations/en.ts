@@ -132,6 +132,17 @@ export const EN: typeof HU = {
       },
       progress: {
         message: 'Working on the fix…',
+        completed: 'Complete',
+      },
+      actions: {
+        back: 'Back',
+        addNewModule: 'Add new module',
+        overwriteModule: 'Overwrite module',
+      },
+      review: {
+        success: 'The magic fix completed successfully.',
+        error: 'The magic fix failed.',
+        noResult: 'The magic fix could not produce a result.',
       },
       settings: {
         noSelectionTitle: 'Select an item!',
