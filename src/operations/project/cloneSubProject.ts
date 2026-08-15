@@ -8,15 +8,13 @@ import { cloneComponentTree } from '../subProject/cloneComponent'
 export type CloneSubProjectParams = {
   getUnusedId: () => string
   rootName: string
-  subProjectId: string
+  subProject: SubProjectSchema
 }
 
 export const cloneSubProject = (
   project: ProjectSchema,
-  { getUnusedId, rootName, subProjectId }: CloneSubProjectParams,
+  { getUnusedId, rootName, subProject: sourceSubProject }: CloneSubProjectParams,
 ): ProjectSchema => {
-  const sourceSubProject = project.subProjects.find((candidate) => candidate.id === subProjectId)
-
   if (!isDefined(sourceSubProject)) {
     return project
   }
