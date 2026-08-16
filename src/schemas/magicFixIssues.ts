@@ -152,7 +152,7 @@ export type MagicFixEdgeCrossingMinimumStitchHoleDistanceIssueSchema = {
   afterCrossing: MagicFixCrossingHoleResultSchema
 }
 
-export type MagicFixValidationIssueSchema =
+export type MagicFixIssueSchema =
   | MagicFixSharpCornerStitchHoleDistanceIssueSchema
   | MagicFixClosedRouteStitchHoleDistanceIssueSchema
   | MagicFixRouteEndpointMissingStitchHoleIssueSchema

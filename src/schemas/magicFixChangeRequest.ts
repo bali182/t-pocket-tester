@@ -1,4 +1,9 @@
-import type { HasCornerRadiusValuesSchema, HasSizeSchema } from './common'
+import type {
+  HasComponentReferenceSchema,
+  HasCornerRadiusValuesSchema,
+  HasSizeSchema,
+  HasStitchLineReferenceSchema,
+} from './common'
 import type {
   ComponentBoundsStitchLineHorizontalDirectionsSchema,
   ComponentBoundsStitchLineOffsetsSchema,
@@ -9,63 +14,54 @@ import type {
   VerticalStitchDirectionSchema,
 } from './stitching'
 
-export type MagicFixSetComponentDimensionChangeRequest = {
+export type MagicFixSetComponentDimensionChangeRequest = HasComponentReferenceSchema & {
   type: 'set-component-dimension'
-  componentId: string
   dimensionField: keyof HasSizeSchema
   value: number
 }
 
-export type MagicFixSetLayoutGapChangeRequest = {
+export type MagicFixSetLayoutGapChangeRequest = HasComponentReferenceSchema & {
   type: 'set-layout-gap'
-  componentId: string
   value: number
 }
 
-export type MagicFixSetComponentCornerRadiusChangeRequest = {
+export type MagicFixSetComponentCornerRadiusChangeRequest = HasComponentReferenceSchema & {
   type: 'set-component-corner-radius'
-  componentId: string
   radiusField: keyof HasCornerRadiusValuesSchema
   value: number
 }
 
-export type MagicFixSetPocketStepChangeRequest = {
+export type MagicFixSetPocketStepChangeRequest = HasComponentReferenceSchema & {
   type: 'set-pocket-step'
-  componentId: string
   value: number
 }
 
-export type MagicFixSetComponentBoundsStitchLineOffsetChangeRequest = {
+export type MagicFixSetComponentBoundsStitchLineOffsetChangeRequest = HasStitchLineReferenceSchema & {
   type: 'set-component-bounds-stitch-line-offset'
-  stitchLineId: string
   offsetField: keyof ComponentBoundsStitchLineOffsetsSchema
   value: number
 }
 
-export type MagicFixSetComponentBoundsStitchLineHorizontalDirectionChangeRequest = {
+export type MagicFixSetComponentBoundsStitchLineHorizontalDirectionChangeRequest = HasStitchLineReferenceSchema & {
   type: 'set-component-bounds-stitch-line-horizontal-direction'
-  stitchLineId: string
   directionField: keyof ComponentBoundsStitchLineHorizontalDirectionsSchema
   value: HorizontalStitchDirectionSchema
 }
 
-export type MagicFixSetComponentBoundsStitchLineVerticalDirectionChangeRequest = {
+export type MagicFixSetComponentBoundsStitchLineVerticalDirectionChangeRequest = HasStitchLineReferenceSchema & {
   type: 'set-component-bounds-stitch-line-vertical-direction'
-  stitchLineId: string
   directionField: keyof ComponentBoundsStitchLineVerticalDirectionsSchema
   value: VerticalStitchDirectionSchema
 }
 
-export type MagicFixSetPocketClusterStitchLineOffsetChangeRequest = {
+export type MagicFixSetPocketClusterStitchLineOffsetChangeRequest = HasStitchLineReferenceSchema & {
   type: 'set-pocket-cluster-stitch-line-offset'
-  stitchLineId: string
   offsetField: keyof PocketClusterStitchLineOffsetsSchema
   value: number
 }
 
-export type MagicFixSetPocketClusterStitchLineDirectionChangeRequest = {
+export type MagicFixSetPocketClusterStitchLineDirectionChangeRequest = HasStitchLineReferenceSchema & {
   type: 'set-pocket-cluster-stitch-line-direction'
-  stitchLineId: string
   value: StitchDirectionSchema
 }
 

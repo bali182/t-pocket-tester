@@ -1,5 +1,5 @@
 import { MagicFixConfigSchema } from './magicFixConfig'
-import { MagicFixValidationIssueSchema } from './magicFixIssues'
+import { MagicFixIssueSchema } from './magicFixIssues'
 import { ProjectSchema } from './project'
 import { SubProjectSchema } from './subProject'
 import { IssueSchema } from './validation'
@@ -21,7 +21,7 @@ export type MagicFixErrorSchema = {
 
 export type MagicFixNoResultSchema = {
   type: 'no-result'
-  issues: MagicFixValidationIssueSchema[]
+  issues: MagicFixIssueSchema[]
 }
 
 export type MagicFixResultSchema = MagicFixSuccessSchema | MagicFixErrorSchema | MagicFixNoResultSchema

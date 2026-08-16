@@ -12,7 +12,7 @@ A korábbi, egyszeri statikus constraint-feloldó megközelítés helyett ez egy
 
 - [MagicFixConfigSchema](src/schemas/magicFixConfig.ts): mit és milyen tartományban módosíthat a magic fix.
 - [MagicFixChangeRequest](src/schemas/magicFixChangeRequest.ts): az input modellen végrehajtható elemi módosítások.
-- [MagicFixValidationIssueSchema](src/schemas/magicFixIssues.ts): a computed modellben talált konkrét geometriai problémák.
+- [MagicFixIssueSchema](src/schemas/magicFixIssues.ts): a computed modellben talált konkrét geometriai problémák.
 - [SubProjectSchema](src/schemas/subProject.ts): a javítandó modell.
 - [ComputedSubProjectSchema](src/schemas/subProject.ts): a valódi layout-, route- és stitchhole-számítás eredménye.
 - [getComputedSubProject](src/logic/getComputedProject.ts): a production computed-modell számítás.
@@ -207,7 +207,7 @@ A config numerikus korlátait minden esetben az `originalSubProject` megfelelő 
 1. `currentSubProject = originalSubProject`.
 2. A worker kiszámítja a valódi `ComputedSubProjectSchema`-t a meglévő production logikával.
 3. A validátor lefut a computed modellen és a configon.
-4. A validátor visszaadja az aktuális `MagicFixValidationIssueSchema[]` listát.
+4. A validátor visszaadja az aktuális `MagicFixIssueSchema[]` listát.
 
 Ha a lista üres, az eredeti modell már megfelelő, a worker azonnal sikerrel visszatér.
 
@@ -273,15 +273,15 @@ Az első verzióban nincs cycle detection, state hash vagy általános „iterá
 
 ## Szerepkörök
 
-| Rész | Felelősség |
-|---|---|
-| Config | Meghatározza a módosítható mezőket, az eredeti értékhez viszonyított tartományokat, a pontosságot és a fizikai él-minimumokat |
-| Computed-model számítás | Előállítja a tényleges layoutot, route-okat és stitchhole-okat |
-| Validátor | A computed modellen az öt geometriai szabály alapján issue-listát készít |
-| Heurisztika | Az aktuális issue-listából legális következő requestcsomagot képez, vagy jelzi, hogy nem tud lépni |
-| Request-applier | Az atomi requestcsomagot a current inputra alkalmazza, beleértve a requestekhez tartozó konverziós szemantikát |
-| Worker orchestrátor | Inicializál, ismétel, számoltat, validál, figyeli az iteration limitet, progresszt és végállapotot ad |
-| UI / hook | Elindítja a workert, megjeleníti a futást, majd átveszi az eredményt; nem végez geometriaszámítást |
+| Rész                    | Felelősség                                                                                                                    |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Config                  | Meghatározza a módosítható mezőket, az eredeti értékhez viszonyított tartományokat, a pontosságot és a fizikai él-minimumokat |
+| Computed-model számítás | Előállítja a tényleges layoutot, route-okat és stitchhole-okat                                                                |
+| Validátor               | A computed modellen az öt geometriai szabály alapján issue-listát készít                                                      |
+| Heurisztika             | Az aktuális issue-listából legális következő requestcsomagot képez, vagy jelzi, hogy nem tud lépni                            |
+| Request-applier         | Az atomi requestcsomagot a current inputra alkalmazza, beleértve a requestekhez tartozó konverziós szemantikát                |
+| Worker orchestrátor     | Inicializál, ismétel, számoltat, validál, figyeli az iteration limitet, progresszt és végállapotot ad                         |
+| UI / hook               | Elindítja a workert, megjeleníti a futást, majd átveszi az eredményt; nem végez geometriaszámítást                            |
 
 ## Szándékosan még hiányzó rész
 
