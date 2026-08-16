@@ -85,6 +85,20 @@ export const getPointOnPathSegment = (segment: PathSegment, progress: BigNumber)
   }
 }
 
+export const getPathSegmentTangent = (segment: PathSegment, point: PointSchema): PointSchema => {
+  if (segment.type === 'line') {
+    return {
+      x: segment.end.x.minus(segment.start.x),
+      y: segment.end.y.minus(segment.start.y),
+    }
+  }
+
+  const radiusX = point.x.minus(segment.center.x)
+  const radiusY = point.y.minus(segment.center.y)
+
+  return segment.sweepAngle > 0 ? { x: radiusY.negated(), y: radiusX } : { x: radiusY, y: radiusX.negated() }
+}
+
 export const splitPathSegment = (segment: PathSegment, progresses: BigNumber[]): PathSegment[] => {
   const sortedProgresses = getSortedDistinctProgresses(progresses)
   const boundaries = [ZERO, ...sortedProgresses, new BigNumber(1)]

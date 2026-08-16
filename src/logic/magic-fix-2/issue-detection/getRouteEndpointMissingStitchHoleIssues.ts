@@ -22,7 +22,7 @@ export const getRouteEndpointMissingStitchHoleIssues = (
         continue
       }
 
-      const lastHoleDistanceToEndpoint = getPointDistance(lastHole.center, endpoints.end)
+      const lastHoleDistanceToEndpoint = getPointDistance(lastHole.center, endpoints.end.position)
 
       if (!lastHoleDistanceToEndpoint.isGreaterThan(accuracy)) {
         continue
@@ -31,7 +31,7 @@ export const getRouteEndpointMissingStitchHoleIssues = (
       issues.push({
         type: 'route-endpoint-missing-stitch-hole',
         route: { stitchLineId: computedStitchLine.stitchLineId, routeIndex },
-        endpointPosition: endpoints.end,
+        endpointPosition: endpoints.end.position,
         lastHoleDistanceToEndpoint,
       })
     }

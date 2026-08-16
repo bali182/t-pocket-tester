@@ -3,10 +3,16 @@ import type { PointSchema } from '../../../../schemas/geometry'
 import { arePointsEqual } from '../../../../utils/arePointsEqual'
 import { isDefined } from '../../../../utils/isDefined'
 import { getPathSegments } from '../../../pathSegments'
+import { getPathSegmentTangent } from '../../../pathSegmentUtils'
+
+export type OrientedRouteEndpoint = {
+  position: PointSchema
+  outwardDirection: PointSchema
+}
 
 export type OrientedRouteEndpoints = {
-  start: PointSchema
-  end: PointSchema
+  start: OrientedRouteEndpoint
+  end: OrientedRouteEndpoint
 }
 
 export const getOrientedRouteEndpoints = (route: ComputedStitchRouteSchema): OrientedRouteEndpoints | undefined => {
@@ -19,13 +25,27 @@ export const getOrientedRouteEndpoints = (route: ComputedStitchRouteSchema): Ori
     return undefined
   }
 
+  const pathStart: OrientedRouteEndpoint = {
+    position: firstSegment.start,
+    outwardDirection: negateDirection(getPathSegmentTangent(firstSegment, firstSegment.start)),
+  }
+  const pathEnd: OrientedRouteEndpoint = {
+    position: lastSegment.end,
+    outwardDirection: getPathSegmentTangent(lastSegment, lastSegment.end),
+  }
+
   if (arePointsEqual(firstHole.center, firstSegment.start)) {
-    return { start: firstSegment.start, end: lastSegment.end }
+    return { start: pathStart, end: pathEnd }
   }
 
   if (arePointsEqual(firstHole.center, lastSegment.end)) {
-    return { start: lastSegment.end, end: firstSegment.start }
+    return { start: pathEnd, end: pathStart }
   }
 
   return undefined
 }
+
+const negateDirection = (direction: PointSchema): PointSchema => ({
+  x: direction.x.negated(),
+  y: direction.y.negated(),
+})
