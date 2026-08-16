@@ -40,7 +40,7 @@ export const applyMagicFixRequests = (s: SubProjectSchema, requests: MagicFixCha
           component.borderRadius = request.value
         } else {
           component[request.radiusField] = request.value
-          component.individualRadii = false
+          component.individualRadii = true
         }
         break
       }
