@@ -7,6 +7,7 @@ type BaseComputedSchema = {
   componentId: string
   boundingRect: RectSchema
   path: PathSchema
+  uncutPath: PathSchema
 }
 
 export type ComputedRootPanelSchema = BaseComputedSchema & {
@@ -25,6 +26,7 @@ export type ComputedTopPocketSchema = {
   ownerComponentId: string
   boundingRect: RectSchema
   path: PathSchema
+  uncutPath: PathSchema
   card?: ComputedCardSchema
 }
 
@@ -34,6 +36,7 @@ export type ComputedTPocketSchema = {
   ownerComponentId: string
   boundingRect: RectSchema
   path: PathSchema
+  uncutPath: PathSchema
   card?: ComputedCardSchema
 }
 

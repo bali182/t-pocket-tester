@@ -53,6 +53,7 @@ export const calculatePocketClusterGeometry = (
     resolvedStitchLines,
     false,
   )
+  const frontPocketPath = calculateRectPath(topPocketRect, calculateTopPocketRadius(normalizedPocketCluster))
 
   return {
     frontPocket: {
@@ -60,18 +61,25 @@ export const calculatePocketClusterGeometry = (
       id: `${pocketCluster.id}-top-pocket`,
       ownerComponentId: pocketCluster.id,
       boundingRect: topPocketRect,
-      path: calculateRectPath(topPocketRect, calculateTopPocketRadius(normalizedPocketCluster)),
+      path: frontPocketPath,
+      uncutPath: frontPocketPath,
       card: calculatePocketCard(normalizedPocketCluster, topPocketCardBoundingRect),
     },
     tPockets: initial(pocketRects).map((pocketRect, index) => {
       const cardBoundingRect = getPocketCardBoundingRect(normalizedPocketCluster, pocketRect, resolvedStitchLines, true)
+      const path = calculateTPocketPath(
+        pocketRect,
+        normalizedPocketCluster,
+        index === 0 ? cornerRadius : zeroCornerRadius,
+      )
 
       return {
         type: 'computed-t-pocket',
         ownerComponentId: pocketCluster.id,
         id: `${pocketCluster.id}-t-pocket-${index}`,
         boundingRect: pocketRect,
-        path: calculateTPocketPath(pocketRect, normalizedPocketCluster, index === 0 ? cornerRadius : zeroCornerRadius),
+        path,
+        uncutPath: path,
         card: calculatePocketCard(normalizedPocketCluster, cardBoundingRect),
       }
     }),

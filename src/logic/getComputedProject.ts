@@ -84,11 +84,13 @@ const computeRootPanel = (
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedRootPanelSchema => {
+  const path = calculateRectPath(boundingRect, getNormalizedCornerRadius(rootPanel))
   const computed: ComputedRootPanelSchema = {
     type: 'computed-root-panel',
     componentId: rootPanel.id,
     boundingRect,
-    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(rootPanel)),
+    path,
+    uncutPath: path,
     children: computeLayoutChildren(rootPanel, boundingRect, subProject, resolvedStitchLines, computedComponents),
   }
 
@@ -104,11 +106,13 @@ const computePanel = (
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedPanelSchema => {
+  const path = calculateRectPath(boundingRect, getNormalizedCornerRadius(panel))
   const computed: ComputedPanelSchema = {
     type: 'computed-panel',
     componentId: panel.id,
     boundingRect,
-    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(panel)),
+    path,
+    uncutPath: path,
     children: computeLayoutChildren(panel, boundingRect, subProject, resolvedStitchLines, computedComponents),
   }
 
@@ -124,11 +128,13 @@ const computePocketCluster = (
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedPocketClusterSchema => {
   const geometry = calculatePocketClusterGeometry(pocketCluster, boundingRect, resolvedStitchLines)
+  const path = calculateRectPath(boundingRect, getNormalizedCornerRadius(pocketCluster))
   const computed: ComputedPocketClusterSchema = {
     type: 'computed-pocket-cluster',
     componentId: pocketCluster.id,
     boundingRect,
-    path: calculateRectPath(boundingRect, getNormalizedCornerRadius(pocketCluster)),
+    path,
+    uncutPath: path,
     frontPocket: geometry.frontPocket,
     tPockets: geometry.tPockets,
   }
