@@ -27,7 +27,7 @@ export const getPhysicalBoundaryElements = (computed: ComputedSubProjectSchema):
       case 'computed-root-panel':
       case 'computed-panel':
         return [
-          createPhysicalBoundaryElement(component.componentId, component.path, {
+          createPhysicalBoundaryElement(component.componentId, component.uncutPath, {
             componentId: component.componentId,
             element: 'component',
           }),
@@ -43,9 +43,13 @@ const getPocketClusterBoundaryElements = (component: ComputedPocketClusterSchema
     componentId: component.componentId,
     element: 'front-pocket',
   }
-  const frontPocket = createPhysicalBoundaryElement(component.componentId, component.frontPocket.path, frontPocketOwner)
+  const frontPocket = createPhysicalBoundaryElement(
+    component.componentId,
+    component.frontPocket.uncutPath,
+    frontPocketOwner,
+  )
   const tPockets = component.tPockets.map((pocket, tPocketIndex) =>
-    createPhysicalBoundaryElement(component.componentId, pocket.path, {
+    createPhysicalBoundaryElement(component.componentId, pocket.uncutPath, {
       componentId: component.componentId,
       element: 't-pocket',
       tPocketIndex,

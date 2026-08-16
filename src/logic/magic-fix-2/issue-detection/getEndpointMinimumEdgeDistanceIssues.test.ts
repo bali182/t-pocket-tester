@@ -194,7 +194,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
     expect(getEndpointMinimumEdgeDistanceIssues({ project, subProject, config, computed })).toEqual([])
   })
 
-  it('uses the front-pocket boundary for a route around a hole in the front pocket', () => {
+  it('ignores a stitchline that targets a hole', () => {
     const cluster = d.pocketCluster({ id: 'cluster', width: 100, height: 100, autoWidth: false, autoHeight: false })
     const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: [cluster.id] })
     const hole = d.hole({ id: 'hole', componentId: cluster.id, width: 10, height: 10 })
@@ -227,15 +227,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
     config.componentConfigs[cluster.id].preferredMinimumDistanceFromEdge = 100
     const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
-    const issues = getEndpointMinimumEdgeDistanceIssues({ project, subProject, config, computed })
-
-    expect(issues).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          boundary: expect.objectContaining({ owner: { componentId: cluster.id, element: 'front-pocket' } }),
-        }),
-      ]),
-    )
+    expect(getEndpointMinimumEdgeDistanceIssues({ project, subProject, config, computed })).toEqual([])
   })
 
   it('uses an individual T-pocket boundary for a pocket-cluster stitchline', () => {

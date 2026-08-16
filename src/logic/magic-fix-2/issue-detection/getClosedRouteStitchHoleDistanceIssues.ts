@@ -13,6 +13,11 @@ export const getClosedRouteStitchHoleDistanceIssues = (
   const issues: MagicFixClosedRouteStitchHoleDistanceIssueSchema[] = []
 
   for (const computedStitchLine of input.computed.stitchLines) {
+    // TODO: Support hole stitchlines once Magic Fix can configure and fix them.
+    if (computedStitchLine.targetType === 'hole') {
+      continue
+    }
+
     const stitchLine = input.subProject.stitchLines.find(({ id }) => id === computedStitchLine.stitchLineId)
 
     if (!isDefined(stitchLine)) {

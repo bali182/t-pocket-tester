@@ -14,6 +14,11 @@ export const getRouteEndpointMissingStitchHoleIssues = (
   const accuracy = new BigNumber(input.config.accuracy)
 
   for (const computedStitchLine of input.computed.stitchLines) {
+    // TODO: Support hole stitchlines once Magic Fix can configure and fix them.
+    if (computedStitchLine.targetType === 'hole') {
+      continue
+    }
+
     for (const [routeIndex, route] of computedStitchLine.routes.entries()) {
       const lastHole = route.holes[route.holes.length - 1]
       const endpoints = getOrientedRouteEndpoints(route)

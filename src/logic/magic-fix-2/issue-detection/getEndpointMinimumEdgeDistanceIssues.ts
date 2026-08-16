@@ -22,6 +22,10 @@ export const getEndpointMinimumEdgeDistanceIssues = (
   const issues: MagicFixEndpointMinimumEdgeDistanceIssueSchema[] = []
 
   for (const computedStitchLine of input.computed.stitchLines) {
+    if (computedStitchLine.targetType === 'hole') {
+      continue
+    }
+
     for (const [routeIndex, route] of computedStitchLine.routes.entries()) {
       if (isClosedRoute(route)) {
         continue
