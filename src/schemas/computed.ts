@@ -1,65 +1,73 @@
-import { HasTargetSchema } from './common'
+import { HasComponentReferenceSchema, HasId, HasTargetSchema } from './common'
 import { PathSchema, RectSchema } from './geometry'
 import { StitchHoleSchema } from './stitching'
 import { CardSchema } from './valuables'
 
-type BaseComputedSchema = {
-  componentId: string
-  boundingRect: RectSchema
+type HasPathSchema = {
   path: PathSchema
+}
+
+type HasBoundingRectSchema = {
+  boundingRect: RectSchema
+}
+
+type HasUncutPathSchema = {
   uncutPath: PathSchema
 }
 
-export type ComputedRootPanelSchema = BaseComputedSchema & {
-  type: 'computed-root-panel'
+type HasComputedChildrenSchema = {
   children: ComputedComponentSchema[]
 }
 
-export type ComputedPanelSchema = BaseComputedSchema & {
-  type: 'computed-panel'
-  children: ComputedComponentSchema[]
-}
-
-export type ComputedTopPocketSchema = {
-  type: 'computed-top-pocket'
-  id: string
-  ownerComponentId: string
-  boundingRect: RectSchema
-  path: PathSchema
-  uncutPath: PathSchema
+type HasComputedCardSchema = {
   card?: ComputedCardSchema
 }
 
-export type ComputedTPocketSchema = {
-  type: 'computed-t-pocket'
-  id: string
-  ownerComponentId: string
-  boundingRect: RectSchema
-  path: PathSchema
-  uncutPath: PathSchema
-  card?: ComputedCardSchema
-}
+type BaseComputedSchema = HasComponentReferenceSchema & HasPathSchema & HasBoundingRectSchema
 
-export type ComputedCardSchema = {
-  type: 'computed-card'
-  card: CardSchema
-  boundingRect: RectSchema
-  path: PathSchema
-}
+export type ComputedRootPanelSchema = BaseComputedSchema &
+  HasUncutPathSchema &
+  HasComputedChildrenSchema & {
+    type: 'computed-root-panel'
+  }
 
-export type ComputedPocketClusterSchema = BaseComputedSchema & {
-  type: 'computed-pocket-cluster'
-  frontPocket: ComputedTopPocketSchema
-  tPockets: ComputedTPocketSchema[]
-}
+export type ComputedPanelSchema = BaseComputedSchema &
+  HasUncutPathSchema &
+  HasComputedChildrenSchema & {
+    type: 'computed-panel'
+  }
+
+export type ComputedTopPocketSchema = BaseComputedSchema &
+  HasUncutPathSchema &
+  HasId &
+  HasComputedCardSchema & {
+    type: 'computed-top-pocket'
+  }
+
+export type ComputedTPocketSchema = BaseComputedSchema &
+  HasUncutPathSchema &
+  HasId &
+  HasComputedCardSchema & {
+    type: 'computed-t-pocket'
+  }
+
+export type ComputedCardSchema = HasPathSchema &
+  HasBoundingRectSchema & {
+    type: 'computed-card'
+    card: CardSchema
+  }
+
+export type ComputedPocketClusterSchema = BaseComputedSchema &
+  HasUncutPathSchema & {
+    type: 'computed-pocket-cluster'
+    frontPocket: ComputedTopPocketSchema
+    tPockets: ComputedTPocketSchema[]
+  }
 
 export type ComputedComponentSchema = ComputedRootPanelSchema | ComputedPanelSchema | ComputedPocketClusterSchema
 
-export type ComputedHoleSchema = {
+export type ComputedHoleSchema = BaseComputedSchema & {
   holeId: string
-  componentId: string
-  boundingRect: RectSchema
-  path: PathSchema
   highlightPath: PathSchema
 }
 
