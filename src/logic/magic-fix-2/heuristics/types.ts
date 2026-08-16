@@ -6,6 +6,7 @@ import { ComputedSubProjectSchema, SubProjectSchema } from '../../../schemas/sub
 export type MagicFixResolutionHeuristicsInput = {
   project: ProjectSchema
   subProject: SubProjectSchema
+  originalSubProject: SubProjectSchema
   computed: ComputedSubProjectSchema
   config: MagicFixConfigSchema
   issues: MagicFixIssueSchema[]
