@@ -8,8 +8,12 @@ export const cloneDeep = <T>(value: T): T => {
   }
 
   switch (typeof value) {
+    case 'number': {
+      if (Number.isNaN(value)) {
+        throw new Error(`Unexpected type: ${value}`)
+      }
+    }
     case 'string':
-    case 'number':
     case 'boolean':
       return value
     case 'object': {
