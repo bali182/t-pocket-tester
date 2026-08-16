@@ -1,42 +1,126 @@
 import { expose } from 'comlink'
+
 import { getComputedSubProject } from '../logic/getComputedProject'
-import { MagicFixEffortSchema } from '../schemas/magicFixConfig'
-import { MagicFixApi } from '../schemas/magicFixOperation'
+import { applyMagicFixRequests } from '../logic/magic-fix-2/applyMagicFixChangeRequests'
+import { getMagicFixIssues } from '../logic/magic-fix-2/issue-detection/getMagicFixIssues'
+import type { MagicFixConfigSchema } from '../schemas/magicFixConfig'
+import type {
+  MagicFixHeuristics,
+  MagicFixHeuristicsInitialStateInput,
+  MagicFixHeuristicsInput,
+  MagicFixHeuristicsResult,
+} from '../schemas/magicFixHeuristics'
+import type { MagicFixApi, MagicFixProgressSchema, MagicFixResultSchema } from '../schemas/magicFixOperation'
+import type { ProjectSchema } from '../schemas/project'
 import { isDefined } from '../utils/isDefined'
 
-export type MagicFixProgress = {
-  progress: number
-  max: number
+const dummyHeuristics: MagicFixHeuristics<undefined> = {
+  getInitialState: (_input: MagicFixHeuristicsInitialStateInput): undefined => {
+    return undefined
+  },
+  getIterations: ({ config }: MagicFixHeuristicsInitialStateInput): number => {
+    switch (config.effort) {
+      case 'low':
+        return 100
+      case 'medium':
+        return 1000
+      case 'high':
+        return 10000
+    }
+  },
+  getNextState: (input: MagicFixHeuristicsInput): MagicFixHeuristicsResult<undefined> => {
+    const root = input.subProject.components[input.subProject.root]
+
+    if (!isDefined(root) || root.type !== 'root-panel') {
+      throw new Error(`Missing root panel with "${input.subProject.root}".`)
+    }
+
+    return {
+      requests: [
+        {
+          type: 'set-layout-gap',
+          componentId: root.id,
+          value: root.layoutGap,
+        },
+      ],
+      state: undefined,
+    }
+  },
 }
 
-const maxIterations: Record<MagicFixEffortSchema, number> = {
-  low: 100,
-  medium: 1000,
-  high: 10000,
-}
+const runMagicFixWithHeuristics = <S>(
+  project: ProjectSchema,
+  subProjectId: string,
+  config: MagicFixConfigSchema,
+  reportProgress: (progress: MagicFixProgressSchema) => void,
+  heuristics: MagicFixHeuristics<S>,
+): MagicFixResultSchema => {
+  const originalSubProject = project.subProjects.find((subProject) => subProject.id === subProjectId)
 
-const runMagicFix: MagicFixApi = (project, subProjectId, config, reportProgress) => {
-  const iterations = maxIterations[config.effort]
-  const subProject = project.subProjects.find((subProject) => subProject.id === subProjectId)
-
-  if (!isDefined(subProject)) {
+  if (!isDefined(originalSubProject)) {
     return { type: 'error', issues: [{ severity: 'error', message: `Missing data ${subProjectId}.` }] }
   }
 
   try {
+    let subProject = originalSubProject
+    let computed = getComputedSubProject(subProject, project.stitchingSettings)
+    let issues = getMagicFixIssues({ project, subProject, computed, config })
+
+    if (issues.length === 0) {
+      return { type: 'success', data: subProject }
+    }
+
+    const initialStateInput: MagicFixHeuristicsInitialStateInput = {
+      project,
+      subProject,
+      computed,
+      config,
+    }
+    const iterations = heuristics.getIterations(initialStateInput)
+    let state = heuristics.getInitialState(initialStateInput)
+
     for (let iteration = 0; iteration < iterations; iteration += 1) {
-      getComputedSubProject(subProject, project.stitchingSettings)
+      const result = heuristics.getNextState(
+        {
+          project,
+          originalSubProject,
+          subProject,
+          computed,
+          config,
+          issues,
+        },
+        state,
+      )
+      state = result.state
+
+      if (result.requests.length === 0) {
+        return { type: 'no-result', issues }
+      }
+
+      subProject = applyMagicFixRequests(subProject, result.requests)
+      computed = getComputedSubProject(subProject, project.stitchingSettings)
+      issues = getMagicFixIssues({ project, subProject, computed, config })
+
+      console.log(issues)
 
       reportProgress({
         progress: iteration + 1,
         max: iterations,
       })
+
+      if (issues.length === 0) {
+        return { type: 'success', data: subProject }
+      }
     }
-    // Mock result
-    return { type: 'success', data: subProject }
+
+    return { type: 'no-result', issues }
   } catch (e) {
     return { type: 'error', issues: [{ severity: 'error', message: `Unexpected error: ${e}.` }] }
   }
+}
+
+const runMagicFix: MagicFixApi = (project, subProjectId, config, reportProgress) => {
+  return runMagicFixWithHeuristics(project, subProjectId, config, reportProgress, dummyHeuristics)
 }
 
 expose(runMagicFix)

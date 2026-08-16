@@ -27,5 +27,6 @@ export type MagicFixHeuristicsResult<S> = {
 
 export type MagicFixHeuristics<S> = {
   getInitialState: (input: MagicFixHeuristicsInitialStateInput) => S
+  getIterations: (input: MagicFixHeuristicsInitialStateInput) => number
   getNextState: (input: MagicFixHeuristicsInput, state: S) => MagicFixHeuristicsResult<S>
 }
