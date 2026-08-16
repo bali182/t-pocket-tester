@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 
 import type { PointSchema } from '../../schemas/geometry'
 import { isDefined } from '../../utils/isDefined'
+import { getPointDistance } from '../geometryUtils'
 import type { StitchCornerPathFragment, StitchPathFragment } from './calculateStitchLinePaths'
 
 const ZERO = new BigNumber(0)
@@ -103,12 +104,6 @@ const isSegmentEndAtStitchHoleDistance = (
     .minus(stitchHoleDistance)
     .absoluteValue()
     .isLessThanOrEqualTo(STITCH_HOLE_ENDPOINT_EPSILON_MM)
-
-const getPointDistance = (first: PointSchema, second: PointSchema): BigNumber => {
-  const deltaX = first.x.minus(second.x)
-  const deltaY = first.y.minus(second.y)
-  return deltaX.times(deltaX).plus(deltaY.times(deltaY)).sqrt()
-}
 
 export const getStitchHoleRotation = (previousCenter: PointSchema, currentCenter: PointSchema): number => {
   return getRotationFromVector(currentCenter.x.minus(previousCenter.x), currentCenter.y.minus(previousCenter.y))

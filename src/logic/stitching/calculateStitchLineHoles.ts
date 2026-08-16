@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js'
 import { PointSchema } from '../../schemas/geometry'
 import type { ResolvedComponentBoundsStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
 import { isDefined } from '../../utils/isDefined'
+import { getPointDistance } from '../geometryUtils'
 import type { CalculatedStitchLinePath, StitchPathFragment, StitchSidePathFragment } from './calculateStitchLinePaths'
 import {
   createStitchHoleSegments,
@@ -200,12 +201,6 @@ const isHoleTooCloseToEndpoint = (
 ): boolean => {
   const minimumDistance = stitchHoleDistance.times(MINIMUM_STITCH_HOLE_ENDPOINT_DISTANCE_FACTOR)
   return getPointDistance(holeCenter, endpoint).isLessThanOrEqualTo(minimumDistance)
-}
-
-const getPointDistance = (first: PointSchema, second: PointSchema): BigNumber => {
-  const deltaX = first.x.minus(second.x)
-  const deltaY = first.y.minus(second.y)
-  return deltaX.times(deltaX).plus(deltaY.times(deltaY)).sqrt()
 }
 
 const isSharpCorner = (fragment: StitchPathFragment): boolean => {
