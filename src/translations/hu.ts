@@ -377,7 +377,7 @@ export const HU = {
     },
   },
   defaults: {
-    subProjectName: 'Új projekt',
+    projectName: 'Új projekt',
     rootComponentName: 'Modul',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },
