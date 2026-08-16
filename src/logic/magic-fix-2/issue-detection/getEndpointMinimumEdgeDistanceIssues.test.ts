@@ -238,6 +238,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       autoWidth: false,
       autoHeight: false,
       pocketCount: 2,
+      pocketStep: 60,
     })
     const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: [cluster.id] })
     const stitchLine = d.pocketClusterStitchLine({
