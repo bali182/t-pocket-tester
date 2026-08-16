@@ -1,7 +1,7 @@
 # Basic instructions
 
 - The package manager is npm.
-- There is currently no testing framework in the project. Don't ask if there is or you should add one.
+- Testing framework is vitest. Explicitly ask, if tests are necessary when writing code. Don't assume they are, and start writing tests. Don't try to sneak them into plans either. Check with the user, if tests are wanted for a given task.
 - Never perform any mutating git operations (commit, push, etc)
 
 ## Editing code.
@@ -21,6 +21,7 @@
   - Modified (created, deleted or updated) file name.
   - Under each file note modified (created, deleted or updated) types, function signatures, component types and constants.
   - Explain the logic what you are planning to modify in said file.
+- This is true for tests as well. Explain what you are planning to test as one programmer to another.
 - Try to reuse types, utils, etc when appropriate. Don't mindlessly suggest new types and logic for everything.
 - You are writing plans for another developer. Don't write vague requirements business analyst style, but exactly what you are planning to do in the code. The goal is, that you don't rely on the "Write something -> Try to compile -> Doesn't work -> Start again" loop excessively. You should always start implementation with a concise plan, while the user has a clear understanding of what you will do.
 - Checks after writing code: `npm run typecheck`, `npm run lint` and if that's in order `npm run pretty`. Don't try to run a dev server, don't write manual test steps, don't suggest testing libraries.
