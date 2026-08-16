@@ -1,7 +1,7 @@
 import { createComponent } from './operations/subProject/utils/createComponent'
 import { createHole } from './operations/subProject/utils/createHole'
 import { createStitchLine } from './operations/subProject/utils/createStitchLine'
-import { HasComponentReferenceSchema, HasId, HasTargetSchema } from './schemas/common'
+import { HasComponentReferenceSchema, HasComponentTargetSchema, HasId, HasTargetSchema } from './schemas/common'
 import { PanelSchema, PocketClusterSchema, RootPanelSchema } from './schemas/components'
 import { HoleSchema } from './schemas/hole'
 import { ProjectSchema } from './schemas/project'
@@ -35,7 +35,7 @@ type CreatePocketClusterConfig = Partial<PocketClusterSchema> & HasId
 type CreateHoleConfig = Partial<HoleSchema> & HasId & HasComponentReferenceSchema
 
 type CreateComponentBoundsStitchLineConfig = Partial<ComponentBoundsStitchLineSchema> & HasId & HasTargetSchema
-type CreatePocketClusterStitchLineConfig = Partial<PocketClusterStitchLineSchema> & HasId & HasTargetSchema
+type CreatePocketClusterStitchLineConfig = Partial<PocketClusterStitchLineSchema> & HasId & HasComponentTargetSchema
 
 export const d = {
   project: ({ id, subProjects, stitchingSettings }: CreateTestProjectConfig): ProjectSchema => {
@@ -106,7 +106,7 @@ export const d = {
     ...rest
   }: CreatePocketClusterStitchLineConfig): PocketClusterStitchLineSchema => {
     const stitchLine = createStitchLine(
-      'component-bounds-stitch-line',
+      'pocket-cluster-stitch-line',
       { targetId, targetType },
       id,
       id,
