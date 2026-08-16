@@ -1,12 +1,14 @@
 import BigNumber from 'bignumber.js'
 
 import type { ComputedStitchRouteSchema } from '../../../schemas/computed'
-import type { MagicFixSharpCornerStitchHoleDistanceIssueSchema } from '../../../schemas/magicFixIssues'
+import type {
+  MagicFixIssueDetectorInput,
+  MagicFixSharpCornerStitchHoleDistanceIssueSchema,
+} from '../../../schemas/magicFixIssues'
 import { arePointsEqual } from '../../../utils/arePointsEqual'
 import { getResolvedStitchLine } from '../../../utils/getResolvedStitchLine'
 import { isDefined } from '../../../utils/isDefined'
 import { getPointDistance } from '../../geometryUtils'
-import type { MagicFixIssueDetectorInput } from './types'
 import { getSharpRouteCorners, isClosedRoute } from './utils/getSharpRouteCorners'
 
 export const getSharpCornerStitchHoleDistanceIssues = (

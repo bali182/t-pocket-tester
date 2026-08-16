@@ -1,7 +1,10 @@
 import type BigNumber from 'bignumber.js'
 
 import type { PointSchema } from './geometry'
+import { MagicFixConfigSchema } from './magicFixConfig'
+import { ProjectSchema } from './project'
 import type { StitchCornerSchema } from './stitching'
+import { ComputedSubProjectSchema, SubProjectSchema } from './subProject'
 
 export type MagicFixRouteReferenceSchema = {
   stitchLineId: string
@@ -148,3 +151,11 @@ export type MagicFixIssueSchema =
   | MagicFixRouteEndpointMissingStitchHoleIssueSchema
   | MagicFixEndpointMinimumEdgeDistanceIssueSchema
   | MagicFixEdgeCrossingMinimumStitchHoleDistanceIssueSchema
+
+/** Input for computing the issues */
+export type MagicFixIssueDetectorInput = {
+  project: ProjectSchema
+  subProject: SubProjectSchema
+  computed: ComputedSubProjectSchema
+  config: MagicFixConfigSchema
+}

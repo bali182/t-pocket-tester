@@ -1,10 +1,12 @@
 import BigNumber from 'bignumber.js'
 
-import type { MagicFixEndpointMinimumEdgeDistanceIssueSchema } from '../../../schemas/magicFixIssues'
+import type {
+  MagicFixEndpointMinimumEdgeDistanceIssueSchema,
+  MagicFixIssueDetectorInput,
+} from '../../../schemas/magicFixIssues'
 import { isDefined } from '../../../utils/isDefined'
 import { getPointDistance } from '../../geometryUtils'
 import { getRayPathSegmentIntersections } from '../../pathSegmentIntersections'
-import type { MagicFixIssueDetectorInput } from './types'
 import { getOrientedRouteEndpoints, type OrientedRouteEndpoint } from './utils/getOrientedRouteEndpoints'
 import {
   getPhysicalBoundaryElements,

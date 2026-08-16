@@ -1,7 +1,7 @@
 import { MagicFixChangeRequest } from '../../../schemas/magicFixChangeRequest'
-import { MagicFixResolutionHeuristicsInput } from './types'
+import { MagicFixHeuristicsInput } from '../../../schemas/magicFixHeuristics'
 
-export const getMagicFixIssues = (input: MagicFixResolutionHeuristicsInput): MagicFixChangeRequest[] => {
+export const getMagicFixIssues = (input: MagicFixHeuristicsInput): MagicFixChangeRequest[] => {
   // TODO
   return []
 }

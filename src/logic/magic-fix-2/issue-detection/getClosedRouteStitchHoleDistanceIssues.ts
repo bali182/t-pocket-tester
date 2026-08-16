@@ -1,10 +1,12 @@
 import BigNumber from 'bignumber.js'
 
-import type { MagicFixClosedRouteStitchHoleDistanceIssueSchema } from '../../../schemas/magicFixIssues'
+import type {
+  MagicFixClosedRouteStitchHoleDistanceIssueSchema,
+  MagicFixIssueDetectorInput,
+} from '../../../schemas/magicFixIssues'
 import { getResolvedStitchLine } from '../../../utils/getResolvedStitchLine'
 import { isDefined } from '../../../utils/isDefined'
 import { getPointDistance } from '../../geometryUtils'
-import type { MagicFixIssueDetectorInput } from './types'
 import { getSharpRouteCorners, isClosedRoute } from './utils/getSharpRouteCorners'
 
 export const getClosedRouteStitchHoleDistanceIssues = (

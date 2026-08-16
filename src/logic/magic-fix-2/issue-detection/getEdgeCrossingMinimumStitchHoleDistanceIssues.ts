@@ -5,6 +5,7 @@ import type { PointSchema } from '../../../schemas/geometry'
 import type {
   MagicFixCrossingHoleResultSchema,
   MagicFixEdgeCrossingMinimumStitchHoleDistanceIssueSchema,
+  MagicFixIssueDetectorInput,
 } from '../../../schemas/magicFixIssues'
 import { arePointsEqual } from '../../../utils/arePointsEqual'
 import { isDefined } from '../../../utils/isDefined'
@@ -13,7 +14,6 @@ import { getPathSegmentIntersections } from '../../pathSegmentIntersections'
 import { getPathSegments } from '../../pathSegments'
 import type { PathSegment, PathSegmentIntersection } from '../../pathSegmentTypes'
 import { getAngle, getArcProgress, isPointOnPathSegment } from '../../pathSegmentUtils'
-import type { MagicFixIssueDetectorInput } from './types'
 import {
   getPhysicalBoundaryElements,
   type PhysicalBoundaryElement,
