@@ -1,12 +1,7 @@
 import { MagicFixIssueSchema } from '../../../schemas/magicFixIssues'
-import { ProjectSchema } from '../../../schemas/project'
-import { ComputedSubProjectSchema, SubProjectSchema } from '../../../schemas/subProject'
+import { getSharpCornerStitchHoleDistanceIssues } from './getSharpCornerStitchHoleDistanceIssues'
+import { MagicFixIssueDetectorInput } from './types'
 
-export const getMagicFixIssues = (
-  project: ProjectSchema,
-  subProject: SubProjectSchema,
-  computed: ComputedSubProjectSchema,
-): MagicFixIssueSchema[] => {
-  // TODO
-  return []
+export const getMagicFixIssues = (input: MagicFixIssueDetectorInput): MagicFixIssueSchema[] => {
+  return [...getSharpCornerStitchHoleDistanceIssues(input)]
 }
