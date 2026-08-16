@@ -73,23 +73,13 @@ export type MagicFixArcBoundaryFragmentSchema = {
 export type MagicFixBoundaryFragmentSchema = MagicFixLineBoundaryFragmentSchema | MagicFixArcBoundaryFragmentSchema
 
 /** Describes the distance of a hole adjacent to a boundary crossing from that boundary. */
-export type MagicFixCrossingHoleMinimumDistanceSchema = {
+export type MagicFixCrossingHoleResultSchema = {
   type: 'distance'
   /** Index of the hole in the route. */
   holeIndex: number
-  /** The preferred minimum distance, actual distance, and clearance shortfall. */
+  /** The preferred minimum distance, actual distance, and non-negative clearance shortfall. */
   deviation: MagicFixMinimumDistanceDeviationSchema
 }
-
-/** Describes one side of a boundary crossing when no adjacent hole exists on that side. */
-export type MagicFixCrossingHoleMissingSchema = {
-  type: 'missing'
-}
-
-/** Result for one side of a route crossing a physical boundary. */
-export type MagicFixCrossingHoleResultSchema =
-  | MagicFixCrossingHoleMinimumDistanceSchema
-  | MagicFixCrossingHoleMissingSchema
 
 /** Created when the two holes on either side of a connected sharp corner are not stitchHoleDistance apart. */
 export type MagicFixSharpCornerStitchHoleDistanceIssueSchema = {
@@ -139,16 +129,16 @@ export type MagicFixEndpointMinimumEdgeDistanceIssueSchema = {
   deviation: MagicFixMinimumDistanceDeviationSchema
 }
 
-/** Created when a route crosses a physical boundary and either adjacent hole is missing or too close to that boundary. */
+/** Created when a route crosses a physical boundary and an adjacent hole is too close to it. */
 export type MagicFixEdgeCrossingMinimumStitchHoleDistanceIssueSchema = {
   type: 'edge-crossing-minimum-stitch-hole-distance'
   /** The route that crosses the boundary. */
   route: MagicFixRouteReferenceSchema
   /** The physical component or pocket boundary crossed by the route. */
   boundary: MagicFixBoundaryFragmentSchema
-  /** The hole immediately before the crossing, or its missing state. */
+  /** The hole immediately before the crossing. */
   beforeCrossing: MagicFixCrossingHoleResultSchema
-  /** The hole immediately after the crossing, or its missing state. */
+  /** The hole immediately after the crossing. */
   afterCrossing: MagicFixCrossingHoleResultSchema
 }
 
