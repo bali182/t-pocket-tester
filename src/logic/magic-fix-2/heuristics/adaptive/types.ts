@@ -61,11 +61,17 @@ export type AdaptiveMagicFixFieldPath =
   | ComponentBoundsStitchLineFieldPath
   | PocketClusterStitchLineFieldPath
 
+export type AdaptiveMagicFixNumericBand = {
+  readonly minValue: BigNumber
+  readonly maxValue: BigNumber
+}
+
 export type AdaptiveMagicFixNumericField = {
   type: 'numeric'
   path: AdaptiveMagicFixFieldPath
-  minValue: number
-  maxValue: number
+  minValue: BigNumber
+  maxValue: BigNumber
+  bands: readonly AdaptiveMagicFixNumericBand[]
 }
 
 export type AdaptiveMagicFixBooleanField = {
@@ -103,7 +109,7 @@ export type AdaptiveMagicFixField =
   | AdaptiveMagicFixPocketClusterDirectionField
 
 export type AdaptiveMagicFixFieldValue =
-  | number
+  | BigNumber
   | boolean
   | HorizontalStitchDirectionSchema
   | VerticalStitchDirectionSchema
