@@ -1,13 +1,14 @@
-import { MagicFixHeuristicsGetInitialStateInput } from '../../../../schemas/magicFixHeuristics'
-import { AdaptiveMagicFixHeuristicsPlan, AdaptiveMagicFixHeuristicsState } from './types'
+import type { MagicFixHeuristicsGetInitialStateInput } from '../../../../schemas/magicFixHeuristics'
+import type { AdaptiveMagicFixHeuristicsPlan, AdaptiveMagicFixHeuristicsState } from './types'
+import { getFieldValue } from './utils/getFieldValue'
+import { getMagicFixIssuesScore } from './utils/getMagicFixIssuesScore'
 
 export const getAdaptiveHeuristicsInitialState = (
-  _nput: MagicFixHeuristicsGetInitialStateInput<AdaptiveMagicFixHeuristicsPlan>,
+  input: MagicFixHeuristicsGetInitialStateInput<AdaptiveMagicFixHeuristicsPlan>,
 ): AdaptiveMagicFixHeuristicsState => {
-  // TODO
   return {
-    bestScore: undefined!,
-    bestValues: undefined!,
-    lastValues: undefined!,
+    bestScore: getMagicFixIssuesScore(input.issues),
+    bestValues: input.plan.fields.map((field) => getFieldValue(input.subProject, field)),
+    lastValues: undefined,
   }
 }
