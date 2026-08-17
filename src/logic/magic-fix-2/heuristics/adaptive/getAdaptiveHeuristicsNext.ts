@@ -1,8 +1,8 @@
-import { MagicFixHeuristicsInput, MagicFixHeuristicsResult } from '../../../../schemas/magicFixHeuristics'
-import { AdaptiveMagicFixHeuristicsPlan, AdaptiveMagicFixHeuristicsState } from './types'
+import type { MagicFixHeuristicsInput, MagicFixHeuristicsResult } from '../../../../schemas/magicFixHeuristics'
+import type { AdaptiveMagicFixHeuristicsState } from './types'
 
 export const getAdaptiveHeuristicsNext = (
-  _input: MagicFixHeuristicsInput<AdaptiveMagicFixHeuristicsPlan, AdaptiveMagicFixHeuristicsState>,
+  _input: MagicFixHeuristicsInput<undefined, AdaptiveMagicFixHeuristicsState>,
 ): MagicFixHeuristicsResult<AdaptiveMagicFixHeuristicsState> => {
   // TODO
   return {

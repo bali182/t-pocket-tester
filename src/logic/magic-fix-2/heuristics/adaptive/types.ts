@@ -115,13 +115,17 @@ export type AdaptiveMagicFixFieldValue =
   | VerticalStitchDirectionSchema
   | StitchDirectionSchema
 
-export type AdaptiveMagicFixDiscoveryConfiguration = {
+export type AdaptiveMagicFixConfiguration = {
   readonly values: readonly AdaptiveMagicFixFieldValue[]
 }
 
-export type AdaptiveMagicFixHeuristicsPlan = {
+export type AdaptiveMagicFixHeuristicsRound = {
   readonly fields: readonly AdaptiveMagicFixField[]
-  readonly discoveryConfigurations: readonly AdaptiveMagicFixDiscoveryConfiguration[]
+  readonly configurations: readonly AdaptiveMagicFixConfiguration[]
+  readonly nextConfigurationIndex: number
+  readonly bestValues: readonly AdaptiveMagicFixFieldValue[]
+  readonly bestScore: AdaptiveMagicFixHeuristicsScore
+  readonly sequenceIndex: number
 }
 
 export type AdaptiveMagicFixHeuristicsScore = {
@@ -130,7 +134,8 @@ export type AdaptiveMagicFixHeuristicsScore = {
 }
 
 export type AdaptiveMagicFixHeuristicsState = {
-  bestValues: AdaptiveMagicFixFieldValue[]
-  bestScore: AdaptiveMagicFixHeuristicsScore
-  lastValues: AdaptiveMagicFixFieldValue[] | undefined
+  readonly bestValues: readonly AdaptiveMagicFixFieldValue[]
+  readonly bestScore: AdaptiveMagicFixHeuristicsScore
+  readonly lastValues: readonly AdaptiveMagicFixFieldValue[] | undefined
+  readonly currentRound: AdaptiveMagicFixHeuristicsRound
 }

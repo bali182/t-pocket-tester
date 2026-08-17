@@ -1,48 +1,15 @@
-import type { MagicFixHeuristicsPlanInput } from '../../../../schemas/magicFixHeuristics'
-import { isDefined } from '../../../../utils/isDefined'
-import { ADAPTIVE_MAGIC_FIX_DISCOVERY_ITERATION_COUNTS, ADAPTIVE_MAGIC_FIX_NUMERIC_BAND_COUNTS } from './constants'
-import { getAdjustableFields } from './getAdjustableFields'
-import type {
-  AdaptiveMagicFixDiscoveryConfiguration,
-  AdaptiveMagicFixField,
-  AdaptiveMagicFixFieldValue,
-  AdaptiveMagicFixHeuristicsPlan,
-} from './types'
-import { getStableDiscoveryCandidateIndexes } from './utils/getStableDiscoveryCandidateIndexes'
+import { isDefined } from '../../../../../utils/isDefined'
+import type { AdaptiveMagicFixConfiguration, AdaptiveMagicFixField, AdaptiveMagicFixFieldValue } from '../types'
+import { getStableRoundCandidateIndexes } from './getStableRoundCandidateIndexes'
 
-export const getAdaptiveHeuristicsPlan = (input: MagicFixHeuristicsPlanInput): AdaptiveMagicFixHeuristicsPlan => {
-  const numericBandCount = ADAPTIVE_MAGIC_FIX_NUMERIC_BAND_COUNTS[input.config.effort]
-  const configuredDiscoveryIterationCount = ADAPTIVE_MAGIC_FIX_DISCOVERY_ITERATION_COUNTS[input.config.effort]
-  const discoveryIterationCount = Math.min(configuredDiscoveryIterationCount, input.iterations)
-  const fields = getAdjustableFields(input, numericBandCount)
-  const configurationCount = getDiscoveryConfigurationCount(fields, discoveryIterationCount)
-
-  return {
-    fields,
-    discoveryConfigurations: getDiscoveryConfigurations(fields, configurationCount),
-  }
-}
-
-const getDiscoveryConfigurationCount = (
+export const getAdaptiveMagicFixRoundConfigurations = (
   fields: readonly AdaptiveMagicFixField[],
-  discoveryIterationCount: number,
-): number => {
-  if (fields.length === 0) {
-    return 0
-  }
-
-  const combinationCount = fields.reduce((total, field) => total * BigInt(getCandidateCount(field)), 1n)
-  const requestedCount = BigInt(discoveryIterationCount)
-
-  return combinationCount < requestedCount ? Number(combinationCount) : discoveryIterationCount
-}
-
-const getDiscoveryConfigurations = (
-  fields: readonly AdaptiveMagicFixField[],
-  configurationCount: number,
-): AdaptiveMagicFixDiscoveryConfiguration[] => {
+  iterationCount: number,
+  sequenceIndex: number,
+): AdaptiveMagicFixConfiguration[] => {
+  const configurationCount = getConfigurationCount(fields, iterationCount)
   const candidateIndexesByField = fields.map((field) =>
-    getStableDiscoveryCandidateIndexes(field.path, getCandidateCount(field), configurationCount),
+    getStableRoundCandidateIndexes(field.path, getCandidateCount(field), configurationCount, sequenceIndex),
   )
   const usedCombinations = new Set<string>()
 
@@ -51,9 +18,20 @@ const getDiscoveryConfigurations = (
     const uniqueCandidateIndexes = getUniqueCandidateIndexes(fields, candidateIndexes, usedCombinations)
 
     return {
-      values: fields.map((field, fieldIndex) => getDiscoveryValue(field, uniqueCandidateIndexes[fieldIndex])),
+      values: fields.map((field, fieldIndex) => getConfigurationValue(field, uniqueCandidateIndexes[fieldIndex])),
     }
   })
+}
+
+const getConfigurationCount = (fields: readonly AdaptiveMagicFixField[], iterationCount: number): number => {
+  if (fields.length === 0) {
+    return 0
+  }
+
+  const combinationCount = fields.reduce((total, field) => total * BigInt(getCandidateCount(field)), 1n)
+  const requestedCount = BigInt(iterationCount)
+
+  return combinationCount < requestedCount ? Number(combinationCount) : iterationCount
 }
 
 const getUniqueCandidateIndexes = (
@@ -61,7 +39,7 @@ const getUniqueCandidateIndexes = (
   candidateIndexes: number[],
   usedCombinations: Set<string>,
 ): number[] => {
-  const candidateIndexKey = candidateIndexes.join(':')
+  const candidateIndexKey = getCandidateIndexKey(candidateIndexes)
   if (!usedCombinations.has(candidateIndexKey)) {
     usedCombinations.add(candidateIndexKey)
     return candidateIndexes
@@ -100,7 +78,7 @@ const getCandidateCount = (field: AdaptiveMagicFixField): number => {
   return 2
 }
 
-const getDiscoveryValue = (field: AdaptiveMagicFixField, candidateIndex: number): AdaptiveMagicFixFieldValue => {
+const getConfigurationValue = (field: AdaptiveMagicFixField, candidateIndex: number): AdaptiveMagicFixFieldValue => {
   switch (field.type) {
     case 'numeric': {
       const band = field.bands[candidateIndex]

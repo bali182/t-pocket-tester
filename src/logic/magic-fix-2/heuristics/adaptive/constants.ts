@@ -12,7 +12,7 @@ export const ADAPTIVE_MAGIC_FIX_NUMERIC_BAND_COUNTS: Record<MagicFixEffortSchema
   high: 100,
 }
 
-export const ADAPTIVE_MAGIC_FIX_DISCOVERY_ITERATION_COUNTS: Record<MagicFixEffortSchema, number> = {
+export const ADAPTIVE_MAGIC_FIX_ROUND_ITERATION_COUNTS: Record<MagicFixEffortSchema, number> = {
   low: 5,
   medium: 20,
   high: 100,
