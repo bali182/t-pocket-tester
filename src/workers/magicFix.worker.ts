@@ -5,20 +5,19 @@ import { applyMagicFixRequests } from '../logic/magic-fix-2/applyMagicFixChangeR
 import { getMagicFixIssues } from '../logic/magic-fix-2/issue-detection/getMagicFixIssues'
 import type { MagicFixConfigSchema } from '../schemas/magicFixConfig'
 import type {
+  MagicFixBaseInput,
   MagicFixHeuristics,
-  MagicFixHeuristicsInitialStateInput,
+  MagicFixHeuristicsGetInitialStateInput,
   MagicFixHeuristicsInput,
+  MagicFixHeuristicsPlanInput,
   MagicFixHeuristicsResult,
 } from '../schemas/magicFixHeuristics'
 import type { MagicFixApi, MagicFixProgressSchema, MagicFixResultSchema } from '../schemas/magicFixOperation'
 import type { ProjectSchema } from '../schemas/project'
 import { isDefined } from '../utils/isDefined'
 
-const dummyHeuristics: MagicFixHeuristics<undefined> = {
-  getInitialState: (_input: MagicFixHeuristicsInitialStateInput): undefined => {
-    return undefined
-  },
-  getIterations: ({ config }: MagicFixHeuristicsInitialStateInput): number => {
+const dummyHeuristics: MagicFixHeuristics<undefined, undefined> = {
+  getIterations: ({ config }: MagicFixBaseInput): number => {
     switch (config.effort) {
       case 'low':
         return 100
@@ -28,7 +27,13 @@ const dummyHeuristics: MagicFixHeuristics<undefined> = {
         return 10000
     }
   },
-  getNextState: (input: MagicFixHeuristicsInput): MagicFixHeuristicsResult<undefined> => {
+  getPlan: (_input: MagicFixHeuristicsPlanInput): undefined => {
+    return undefined
+  },
+  getInitialState: (_input: MagicFixHeuristicsGetInitialStateInput<undefined>): undefined => {
+    return undefined
+  },
+  getNextState: (input: MagicFixHeuristicsInput<undefined, undefined>): MagicFixHeuristicsResult<undefined> => {
     const root = input.subProject.components[input.subProject.root]
 
     if (!isDefined(root) || root.type !== 'root-panel') {
@@ -48,12 +53,12 @@ const dummyHeuristics: MagicFixHeuristics<undefined> = {
   },
 }
 
-const runMagicFixWithHeuristics = <S>(
+const runMagicFixWithHeuristics = <P, S>(
   project: ProjectSchema,
   subProjectId: string,
   config: MagicFixConfigSchema,
   reportProgress: (progress: MagicFixProgressSchema) => void,
-  heuristics: MagicFixHeuristics<S>,
+  heuristics: MagicFixHeuristics<P, S>,
 ): MagicFixResultSchema => {
   const originalSubProject = project.subProjects.find((subProject) => subProject.id === subProjectId)
 
@@ -70,27 +75,33 @@ const runMagicFixWithHeuristics = <S>(
       return { type: 'success', data: subProject }
     }
 
-    const initialStateInput: MagicFixHeuristicsInitialStateInput = {
+    const iterations = heuristics.getIterations({ project, subProject, computed, config })
+    const plan = heuristics.getPlan({ project, subProject, computed, config, iterations })
+    const initialStateInput: MagicFixHeuristicsGetInitialStateInput<P> = {
       project,
       subProject,
       computed,
       config,
+      iterations,
+      plan,
+      issues,
     }
-    const iterations = heuristics.getIterations(initialStateInput)
+
     let state = heuristics.getInitialState(initialStateInput)
 
     for (let iteration = 0; iteration < iterations; iteration += 1) {
-      const result = heuristics.getNextState(
-        {
-          project,
-          originalSubProject,
-          subProject,
-          computed,
-          config,
-          issues,
-        },
+      const result = heuristics.getNextState({
+        project,
+        originalSubProject,
+        subProject,
+        computed,
+        config,
+        issues,
+        iterations,
+        iteration,
+        plan,
         state,
-      )
+      })
       state = result.state
 
       if (result.requests.length === 0) {
@@ -100,8 +111,6 @@ const runMagicFixWithHeuristics = <S>(
       subProject = applyMagicFixRequests(subProject, result.requests)
       computed = getComputedSubProject(subProject, project.stitchingSettings)
       issues = getMagicFixIssues({ project, subProject, computed, config })
-
-      console.log(issues)
 
       reportProgress({
         progress: iteration + 1,
