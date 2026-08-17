@@ -16,6 +16,7 @@ import type {
   PocketClusterStitchLineFieldPath,
   RootPanelFieldPath,
 } from './types'
+import { getAdaptiveMagicFixNumericBands } from './utils/getAdaptiveMagicFixNumericBands'
 import { getMagicFixComponentConfig, getMagicFixStitchLineConfig } from './utils/getMagicFixConfigEntry'
 
 export const getAdjustableFields = (input: MagicFixBaseInput, bandCount: number): AdaptiveMagicFixField[] => {
@@ -245,17 +246,13 @@ const createNumericField = (
 ): AdaptiveMagicFixNumericField => {
   const minValue = new BigNumber(currentValue).minus(range.maxDecrease)
   const maxValue = new BigNumber(currentValue).plus(range.maxIncrease)
-  const bandWidth = maxValue.minus(minValue).dividedBy(bandCount)
 
   return {
     type: 'numeric',
     path,
     minValue,
     maxValue,
-    bands: Array.from({ length: bandCount }, (_, index) => ({
-      minValue: minValue.plus(bandWidth.times(index)),
-      maxValue: index === bandCount - 1 ? maxValue : minValue.plus(bandWidth.times(index + 1)),
-    })),
+    bands: getAdaptiveMagicFixNumericBands(minValue, maxValue, bandCount),
   }
 }
 
