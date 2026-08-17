@@ -1,13 +1,19 @@
 import type BigNumber from 'bignumber.js'
-import { HasIdentitySchema } from '../../../../schemas/common'
+import type { HasIdentitySchema } from '../../../../schemas/common'
 import {
-  HasChildrenSchema,
-  HasColorSchema,
-  PanelSchema,
-  PocketClusterSchema,
-  RootPanelSchema,
+  type HasChildrenSchema,
+  type HasColorSchema,
+  type PanelSchema,
+  type PocketClusterSchema,
+  type RootPanelSchema,
 } from '../../../../schemas/components'
-import { ComponentBoundsStitchLineOwnSchema, PocketClusterStitchLineOwnSchema } from '../../../../schemas/stitching'
+import type {
+  ComponentBoundsStitchLineOwnSchema,
+  HorizontalStitchDirectionSchema,
+  PocketClusterStitchLineOwnSchema,
+  StitchDirectionSchema,
+  VerticalStitchDirectionSchema,
+} from '../../../../schemas/stitching'
 
 // Fields
 type RootPanelField = Exclude<
@@ -48,9 +54,40 @@ export type AdaptiveMagicFixBooleanField = {
   initialValue: boolean
 }
 
-export type AdaptiveMagicFixField = AdaptiveMagicFixNumericField | AdaptiveMagicFixBooleanField
+export type AdaptiveMagicFixHorizontalDirectionField = {
+  type: 'horizontal-direction'
+  path: AdaptiveMagicFixFieldPath
+  initialValue: HorizontalStitchDirectionSchema
+  alternativeValue: HorizontalStitchDirectionSchema
+}
 
-export type AdaptiveMagicFixFieldValue = number | boolean
+export type AdaptiveMagicFixVerticalDirectionField = {
+  type: 'vertical-direction'
+  path: AdaptiveMagicFixFieldPath
+  initialValue: VerticalStitchDirectionSchema
+  alternativeValue: VerticalStitchDirectionSchema
+}
+
+export type AdaptiveMagicFixPocketClusterDirectionField = {
+  type: 'pocket-cluster-direction'
+  path: AdaptiveMagicFixFieldPath
+  initialValue: StitchDirectionSchema
+  alternativeValue: StitchDirectionSchema
+}
+
+export type AdaptiveMagicFixField =
+  | AdaptiveMagicFixNumericField
+  | AdaptiveMagicFixBooleanField
+  | AdaptiveMagicFixHorizontalDirectionField
+  | AdaptiveMagicFixVerticalDirectionField
+  | AdaptiveMagicFixPocketClusterDirectionField
+
+export type AdaptiveMagicFixFieldValue =
+  | number
+  | boolean
+  | HorizontalStitchDirectionSchema
+  | VerticalStitchDirectionSchema
+  | StitchDirectionSchema
 
 export type AdaptiveMagicFixDiscoveryConfiguration = {
   readonly values: readonly AdaptiveMagicFixFieldValue[]
