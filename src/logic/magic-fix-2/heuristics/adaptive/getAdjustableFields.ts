@@ -1,339 +1,259 @@
-import type { ComponentSchema } from '../../../../schemas/components'
+import type { HasCornerRadiusSchema } from '../../../../schemas/common'
 import type {
-  MagicFixComponentConfigSchema,
   MagicFixHasCornerRadiusConfigSchema,
   MagicFixNumericRangeSchema,
-  MagicFixStitchLineConfigSchema,
 } from '../../../../schemas/magicFixConfig'
 import type { MagicFixBaseInput } from '../../../../schemas/magicFixHeuristics'
-import type {
-  HorizontalStitchDirectionSchema,
-  StitchLineSchema,
-  VerticalStitchDirectionSchema,
-} from '../../../../schemas/stitching'
+import type { HorizontalStitchDirectionSchema, VerticalStitchDirectionSchema } from '../../../../schemas/stitching'
 import { isDefined } from '../../../../utils/isDefined'
-import type { AdaptiveMagicFixField, AdaptiveMagicFixFieldPath } from './types'
+import { getAdjustablePaths } from './getAdjustablePaths'
+import type {
+  AdaptiveMagicFixField,
+  AdaptiveMagicFixFieldPath,
+  AdaptiveMagicFixHorizontalDirectionField,
+  AdaptiveMagicFixNumericField,
+  AdaptiveMagicFixVerticalDirectionField,
+  ComponentBoundsStitchLineFieldPath,
+  PanelFieldPath,
+  PocketClusterFieldPath,
+  PocketClusterStitchLineFieldPath,
+  RootPanelFieldPath,
+} from './types'
+import { getMagicFixComponentConfig, getMagicFixStitchLineConfig } from './utils/getMagicFixConfigEntry'
 
 export const getAdjustableFields = (input: MagicFixBaseInput): AdaptiveMagicFixField[] => {
-  const fields: AdaptiveMagicFixField[] = []
-
-  for (const component of Object.values(input.subProject.components)) {
-    const config = getComponentConfig(input, component.id)
-    addComponentFields(fields, component, config)
-  }
-
-  for (const stitchLine of input.subProject.stitchLines) {
-    const config = getStitchLineConfig(input, stitchLine.id)
-    addStitchLineFields(fields, stitchLine, config)
-  }
-
-  return fields
+  return getAdjustablePaths(input).map((path) => getAdjustableField(input, path))
 }
 
-const addComponentFields = (
-  fields: AdaptiveMagicFixField[],
-  component: ComponentSchema,
-  config: MagicFixComponentConfigSchema,
-): void => {
-  switch (component.type) {
-    case 'root-panel': {
-      if (config.type !== 'magic-fix-root-panel-config') {
-        throw new Error(`Invalid Magic Fix config for root panel: "${component.id}"!`)
-      }
-      addNumericField(fields, ['components', component.id, 'width'], component.width, config.fixedWidthRange)
-      addNumericField(fields, ['components', component.id, 'height'], component.height, config.fixedHeightRange)
-      addNumericField(fields, ['components', component.id, 'layoutGap'], component.layoutGap, config.layoutGapRange)
-      addCornerRadiusFields(fields, component, config)
-      break
-    }
-    case 'panel': {
-      if (config.type !== 'magic-fix-panel-config') {
-        throw new Error(`Invalid Magic Fix config for panel: "${component.id}"!`)
-      }
-      addFillableDimensionFields(
-        fields,
-        component.id,
-        'width',
-        component.width,
-        component.autoWidth,
-        config.canConvertToFixedWidth,
-        config.fixedWidthRange,
-      )
-      addFillableDimensionFields(
-        fields,
-        component.id,
-        'height',
-        component.height,
-        component.autoHeight,
-        config.canConvertToFixedHeight,
-        config.fixedHeightRange,
-      )
-      addNumericField(fields, ['components', component.id, 'layoutGap'], component.layoutGap, config.layoutGapRange)
-      addCornerRadiusFields(fields, component, config)
-      break
-    }
-    case 'pocket-cluster': {
-      if (config.type !== 'magic-fix-pocket-cluster-config') {
-        throw new Error(`Invalid Magic Fix config for pocket cluster: "${component.id}"!`)
-      }
-      addFillableDimensionFields(
-        fields,
-        component.id,
-        'width',
-        component.width,
-        component.autoWidth,
-        config.canConvertToFixedWidth,
-        config.fixedWidthRange,
-      )
-      addFillableDimensionFields(
-        fields,
-        component.id,
-        'height',
-        component.height,
-        component.autoHeight,
-        config.canConvertToFixedHeight,
-        config.fixedHeightRange,
-      )
-      addNumericField(fields, ['components', component.id, 'pocketStep'], component.pocketStep, config.pocketStepRange)
-      addCornerRadiusFields(fields, component, config)
-      break
-    }
+const getAdjustableField = (input: MagicFixBaseInput, path: AdaptiveMagicFixFieldPath): AdaptiveMagicFixField => {
+  switch (path[0]) {
+    case 'root-panel':
+      return getRootPanelField(input, path)
+    case 'panel':
+      return getPanelField(input, path)
+    case 'pocket-cluster':
+      return getPocketClusterField(input, path)
+    case 'component-bounds-stitch-line':
+      return getComponentBoundsStitchLineField(input, path)
+    case 'pocket-cluster-stitch-line':
+      return getPocketClusterStitchLineField(input, path)
   }
 }
 
-const addFillableDimensionFields = (
-  fields: AdaptiveMagicFixField[],
-  componentId: string,
-  dimensionField: 'width' | 'height',
-  value: number,
-  isAuto: boolean,
-  canConvertToFixed: boolean,
-  range: MagicFixNumericRangeSchema,
-): void => {
-  if (isAuto) {
-    if (!canConvertToFixed) {
-      return
-    }
-
-    fields.push({
-      type: 'boolean',
-      path: ['components', componentId, dimensionField === 'width' ? 'autoWidth' : 'autoHeight'],
-      initialValue: true,
-    })
+const getRootPanelField = (input: MagicFixBaseInput, path: RootPanelFieldPath): AdaptiveMagicFixField => {
+  const component = input.subProject.components[path[1]]
+  if (!isDefined(component)) {
+    throw new Error(`Missing component: "${path[1]}"!`)
+  }
+  if (component.type !== 'root-panel') {
+    throw new Error(`Invalid component type: "${path[1]}"!`)
+  }
+  const config = getMagicFixComponentConfig(input.config, component.id)
+  if (config.type !== 'magic-fix-root-panel-config') {
+    throw new Error(`Invalid Magic Fix config for root panel: "${component.id}"!`)
   }
 
-  addNumericField(fields, ['components', componentId, dimensionField], value, range)
+  switch (path[2]) {
+    case 'width':
+      return createNumericField(path, component.width, config.fixedWidthRange)
+    case 'height':
+      return createNumericField(path, component.height, config.fixedHeightRange)
+    case 'layoutGap':
+      return createNumericField(path, component.layoutGap, config.layoutGapRange)
+    case 'borderRadius':
+      return createNumericField(path, component.borderRadius, config.borderRadiusRange)
+    case 'individualRadii':
+      return { type: 'boolean', path, initialValue: component.individualRadii }
+    default:
+      return getCornerRadiusField(path, component, config)
+  }
 }
 
-const addCornerRadiusFields = (
-  fields: AdaptiveMagicFixField[],
-  component: ComponentSchema,
+const getPanelField = (input: MagicFixBaseInput, path: PanelFieldPath): AdaptiveMagicFixField => {
+  const component = input.subProject.components[path[1]]
+  if (!isDefined(component)) {
+    throw new Error(`Missing component: "${path[1]}"!`)
+  }
+  if (component.type !== 'panel') {
+    throw new Error(`Invalid component type: "${path[1]}"!`)
+  }
+  const config = getMagicFixComponentConfig(input.config, component.id)
+  if (config.type !== 'magic-fix-panel-config') {
+    throw new Error(`Invalid Magic Fix config for panel: "${component.id}"!`)
+  }
+
+  switch (path[2]) {
+    case 'width':
+      return createNumericField(path, component.width, config.fixedWidthRange)
+    case 'height':
+      return createNumericField(path, component.height, config.fixedHeightRange)
+    case 'autoWidth':
+      return { type: 'boolean', path, initialValue: component.autoWidth }
+    case 'autoHeight':
+      return { type: 'boolean', path, initialValue: component.autoHeight }
+    case 'layoutGap':
+      return createNumericField(path, component.layoutGap, config.layoutGapRange)
+    case 'borderRadius':
+      return createNumericField(path, component.borderRadius, config.borderRadiusRange)
+    case 'individualRadii':
+      return { type: 'boolean', path, initialValue: component.individualRadii }
+    default:
+      return getCornerRadiusField(path, component, config)
+  }
+}
+
+const getPocketClusterField = (input: MagicFixBaseInput, path: PocketClusterFieldPath): AdaptiveMagicFixField => {
+  const component = input.subProject.components[path[1]]
+  if (!isDefined(component)) {
+    throw new Error(`Missing component: "${path[1]}"!`)
+  }
+  if (component.type !== 'pocket-cluster') {
+    throw new Error(`Invalid component type: "${path[1]}"!`)
+  }
+  const config = getMagicFixComponentConfig(input.config, component.id)
+  if (config.type !== 'magic-fix-pocket-cluster-config') {
+    throw new Error(`Invalid Magic Fix config for pocket cluster: "${component.id}"!`)
+  }
+
+  switch (path[2]) {
+    case 'width':
+      return createNumericField(path, component.width, config.fixedWidthRange)
+    case 'height':
+      return createNumericField(path, component.height, config.fixedHeightRange)
+    case 'autoWidth':
+      return { type: 'boolean', path, initialValue: component.autoWidth }
+    case 'autoHeight':
+      return { type: 'boolean', path, initialValue: component.autoHeight }
+    case 'pocketStep':
+      return createNumericField(path, component.pocketStep, config.pocketStepRange)
+    case 'borderRadius':
+      return createNumericField(path, component.borderRadius, config.borderRadiusRange)
+    case 'individualRadii':
+      return { type: 'boolean', path, initialValue: component.individualRadii }
+    default:
+      return getCornerRadiusField(path, component, config)
+  }
+}
+
+const getCornerRadiusField = (
+  path: AdaptiveMagicFixFieldPath,
+  component: HasCornerRadiusSchema,
   config: MagicFixHasCornerRadiusConfigSchema,
-): void => {
-  if (component.individualRadii) {
-    addIndividualCornerRadiusFields(fields, component, config)
-    return
-  }
-
-  addNumericField(
-    fields,
-    ['components', component.id, 'borderRadius'],
-    component.borderRadius,
-    config.borderRadiusRange,
-  )
-  if (!config.canConvertToIndividualRadii) {
-    return
-  }
-
-  fields.push({
-    type: 'boolean',
-    path: ['components', component.id, 'individualRadii'],
-    initialValue: false,
-  })
-  addIndividualCornerRadiusFields(fields, component, config)
-}
-
-const addIndividualCornerRadiusFields = (
-  fields: AdaptiveMagicFixField[],
-  component: ComponentSchema,
-  config: MagicFixHasCornerRadiusConfigSchema,
-): void => {
-  addNumericField(
-    fields,
-    ['components', component.id, 'topLeftRadius'],
-    component.topLeftRadius,
-    config.topLeftRadiusRange,
-  )
-  addNumericField(
-    fields,
-    ['components', component.id, 'topRightRadius'],
-    component.topRightRadius,
-    config.topRightRadiusRange,
-  )
-  addNumericField(
-    fields,
-    ['components', component.id, 'bottomRightRadius'],
-    component.bottomRightRadius,
-    config.bottomRightRadiusRange,
-  )
-  addNumericField(
-    fields,
-    ['components', component.id, 'bottomLeftRadius'],
-    component.bottomLeftRadius,
-    config.bottomLeftRadiusRange,
-  )
-}
-
-const addStitchLineFields = (
-  fields: AdaptiveMagicFixField[],
-  stitchLine: StitchLineSchema,
-  config: MagicFixStitchLineConfigSchema,
-): void => {
-  switch (stitchLine.type) {
-    case 'component-bounds-stitch-line': {
-      if (config.type !== 'magic-fix-component-bounds-stitch-line-config') {
-        throw new Error(`Invalid Magic Fix config for component bounds stitch line: "${stitchLine.id}"!`)
-      }
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'topStartOffset'],
-        stitchLine.topStartOffset,
-        config.topStartOffsetRange,
-      )
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'topEndOffset'],
-        stitchLine.topEndOffset,
-        config.topEndOffsetRange,
-      )
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'rightStartOffset'],
-        stitchLine.rightStartOffset,
-        config.rightStartOffsetRange,
-      )
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'rightEndOffset'],
-        stitchLine.rightEndOffset,
-        config.rightEndOffsetRange,
-      )
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'bottomStartOffset'],
-        stitchLine.bottomStartOffset,
-        config.bottomStartOffsetRange,
-      )
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'bottomEndOffset'],
-        stitchLine.bottomEndOffset,
-        config.bottomEndOffsetRange,
-      )
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'leftStartOffset'],
-        stitchLine.leftStartOffset,
-        config.leftStartOffsetRange,
-      )
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'leftEndOffset'],
-        stitchLine.leftEndOffset,
-        config.leftEndOffsetRange,
-      )
-      if (config.canFlipTopStitchDirection) {
-        addHorizontalDirectionField(fields, stitchLine.id, 'topStitchDirection', stitchLine.topStitchDirection)
-      }
-      if (config.canFlipBottomStitchDirection) {
-        addHorizontalDirectionField(fields, stitchLine.id, 'bottomStitchDirection', stitchLine.bottomStitchDirection)
-      }
-      if (config.canFlipRightStitchDirection) {
-        addVerticalDirectionField(fields, stitchLine.id, 'rightStitchDirection', stitchLine.rightStitchDirection)
-      }
-      if (config.canFlipLeftStitchDirection) {
-        addVerticalDirectionField(fields, stitchLine.id, 'leftStitchDirection', stitchLine.leftStitchDirection)
-      }
-      break
-    }
-    case 'pocket-cluster-stitch-line': {
-      if (config.type !== 'magic-fix-pocket-cluster-stitch-line-config') {
-        throw new Error(`Invalid Magic Fix config for pocket cluster stitch line: "${stitchLine.id}"!`)
-      }
-      addNumericField(
-        fields,
-        ['stitchLines', stitchLine.id, 'startOffset'],
-        stitchLine.startOffset,
-        config.startOffsetRange,
-      )
-      addNumericField(fields, ['stitchLines', stitchLine.id, 'endOffset'], stitchLine.endOffset, config.endOffsetRange)
-      if (config.canFlipStitchDirection) {
-        fields.push({
-          type: 'pocket-cluster-direction',
-          path: ['stitchLines', stitchLine.id, 'stitchDirection'],
-          initialValue: stitchLine.stitchDirection,
-          alternativeValue: stitchLine.stitchDirection === 'start-to-end' ? 'end-to-start' : 'start-to-end',
-        })
-      }
-      break
-    }
+): AdaptiveMagicFixNumericField => {
+  switch (path[2]) {
+    case 'topLeftRadius':
+      return createNumericField(path, component.topLeftRadius, config.topLeftRadiusRange)
+    case 'topRightRadius':
+      return createNumericField(path, component.topRightRadius, config.topRightRadiusRange)
+    case 'bottomRightRadius':
+      return createNumericField(path, component.bottomRightRadius, config.bottomRightRadiusRange)
+    case 'bottomLeftRadius':
+      return createNumericField(path, component.bottomLeftRadius, config.bottomLeftRadiusRange)
+    default:
+      throw new Error(`Invalid corner radius field: "${path[2]}"!`)
   }
 }
 
-const addNumericField = (
-  fields: AdaptiveMagicFixField[],
+const getComponentBoundsStitchLineField = (
+  input: MagicFixBaseInput,
+  path: ComponentBoundsStitchLineFieldPath,
+): AdaptiveMagicFixField => {
+  const stitchLine = input.subProject.stitchLines.find((candidate) => candidate.id === path[1])
+  if (!isDefined(stitchLine)) {
+    throw new Error(`Missing stitch line: "${path[1]}"!`)
+  }
+  if (stitchLine.type !== 'component-bounds-stitch-line') {
+    throw new Error(`Invalid stitch line type: "${path[1]}"!`)
+  }
+  const config = getMagicFixStitchLineConfig(input.config, stitchLine.id)
+  if (config.type !== 'magic-fix-component-bounds-stitch-line-config') {
+    throw new Error(`Invalid Magic Fix config for component bounds stitch line: "${stitchLine.id}"!`)
+  }
+
+  switch (path[2]) {
+    case 'topStartOffset':
+      return createNumericField(path, stitchLine.topStartOffset, config.topStartOffsetRange)
+    case 'topEndOffset':
+      return createNumericField(path, stitchLine.topEndOffset, config.topEndOffsetRange)
+    case 'rightStartOffset':
+      return createNumericField(path, stitchLine.rightStartOffset, config.rightStartOffsetRange)
+    case 'rightEndOffset':
+      return createNumericField(path, stitchLine.rightEndOffset, config.rightEndOffsetRange)
+    case 'bottomStartOffset':
+      return createNumericField(path, stitchLine.bottomStartOffset, config.bottomStartOffsetRange)
+    case 'bottomEndOffset':
+      return createNumericField(path, stitchLine.bottomEndOffset, config.bottomEndOffsetRange)
+    case 'leftStartOffset':
+      return createNumericField(path, stitchLine.leftStartOffset, config.leftStartOffsetRange)
+    case 'leftEndOffset':
+      return createNumericField(path, stitchLine.leftEndOffset, config.leftEndOffsetRange)
+    case 'topStitchDirection':
+    case 'bottomStitchDirection':
+      return createHorizontalDirectionField(path, stitchLine[path[2]])
+    case 'rightStitchDirection':
+    case 'leftStitchDirection':
+      return createVerticalDirectionField(path, stitchLine[path[2]])
+  }
+}
+
+const getPocketClusterStitchLineField = (
+  input: MagicFixBaseInput,
+  path: PocketClusterStitchLineFieldPath,
+): AdaptiveMagicFixField => {
+  const stitchLine = input.subProject.stitchLines.find((candidate) => candidate.id === path[1])
+  if (!isDefined(stitchLine)) {
+    throw new Error(`Missing stitch line: "${path[1]}"!`)
+  }
+  if (stitchLine.type !== 'pocket-cluster-stitch-line') {
+    throw new Error(`Invalid stitch line type: "${path[1]}"!`)
+  }
+  const config = getMagicFixStitchLineConfig(input.config, stitchLine.id)
+  if (config.type !== 'magic-fix-pocket-cluster-stitch-line-config') {
+    throw new Error(`Invalid Magic Fix config for pocket cluster stitch line: "${stitchLine.id}"!`)
+  }
+
+  switch (path[2]) {
+    case 'startOffset':
+      return createNumericField(path, stitchLine.startOffset, config.startOffsetRange)
+    case 'endOffset':
+      return createNumericField(path, stitchLine.endOffset, config.endOffsetRange)
+    case 'stitchDirection':
+      return {
+        type: 'pocket-cluster-direction',
+        path,
+        initialValue: stitchLine.stitchDirection,
+        alternativeValue: stitchLine.stitchDirection === 'start-to-end' ? 'end-to-start' : 'start-to-end',
+      }
+  }
+}
+
+const createNumericField = (
   path: AdaptiveMagicFixFieldPath,
   currentValue: number,
   range: MagicFixNumericRangeSchema,
-): void => {
-  const minValue = currentValue - range.maxDecrease
-  const maxValue = currentValue + range.maxIncrease
-  if (minValue === maxValue) {
-    return
-  }
-  fields.push({ type: 'numeric', path, minValue, maxValue })
-}
+): AdaptiveMagicFixNumericField => ({
+  type: 'numeric',
+  path,
+  minValue: currentValue - range.maxDecrease,
+  maxValue: currentValue + range.maxIncrease,
+})
 
-const addHorizontalDirectionField = (
-  fields: AdaptiveMagicFixField[],
-  stitchLineId: string,
-  field: 'topStitchDirection' | 'bottomStitchDirection',
+const createHorizontalDirectionField = (
+  path: AdaptiveMagicFixFieldPath,
   initialValue: HorizontalStitchDirectionSchema,
-): void => {
-  fields.push({
-    type: 'horizontal-direction',
-    path: ['stitchLines', stitchLineId, field],
-    initialValue,
-    alternativeValue: initialValue === 'left-to-right' ? 'right-to-left' : 'left-to-right',
-  })
-}
+): AdaptiveMagicFixHorizontalDirectionField => ({
+  type: 'horizontal-direction',
+  path,
+  initialValue,
+  alternativeValue: initialValue === 'left-to-right' ? 'right-to-left' : 'left-to-right',
+})
 
-const addVerticalDirectionField = (
-  fields: AdaptiveMagicFixField[],
-  stitchLineId: string,
-  field: 'rightStitchDirection' | 'leftStitchDirection',
+const createVerticalDirectionField = (
+  path: AdaptiveMagicFixFieldPath,
   initialValue: VerticalStitchDirectionSchema,
-): void => {
-  fields.push({
-    type: 'vertical-direction',
-    path: ['stitchLines', stitchLineId, field],
-    initialValue,
-    alternativeValue: initialValue === 'top-to-bottom' ? 'bottom-to-top' : 'top-to-bottom',
-  })
-}
-
-const getComponentConfig = (input: MagicFixBaseInput, componentId: string): MagicFixComponentConfigSchema => {
-  const config = input.config.componentConfigs[componentId]
-  if (!isDefined(config)) {
-    throw new Error(`Missing Magic Fix component config: "${componentId}"!`)
-  }
-  return config
-}
-
-const getStitchLineConfig = (input: MagicFixBaseInput, stitchLineId: string): MagicFixStitchLineConfigSchema => {
-  const config = input.config.stitchLineConfigs[stitchLineId]
-  if (!isDefined(config)) {
-    throw new Error(`Missing Magic Fix stitch line config: "${stitchLineId}"!`)
-  }
-  return config
-}
+): AdaptiveMagicFixVerticalDirectionField => ({
+  type: 'vertical-direction',
+  path,
+  initialValue,
+  alternativeValue: initialValue === 'top-to-bottom' ? 'bottom-to-top' : 'top-to-bottom',
+})

@@ -3,10 +3,10 @@ import { describe, expect, it } from 'vitest'
 import { d, m } from '../../../../testData'
 import { createMagicFixConfig } from '../../../../utils/createMagicFixConfig'
 import { getComputedSubProject } from '../../../getComputedProject'
-import { getAdjustableFields } from './getAdjustableFields'
+import { getAdjustablePaths } from './getAdjustablePaths'
 
-describe('getAdjustableFields', () => {
-  it('should calculate numeric ranges from the source value and exclude disabled ranges', () => {
+describe('getAdjustablePaths', () => {
+  it('should include active numeric ranges and exclude disabled ranges', () => {
     const root = d.rootPanel({ id: 'root', width: 100, height: 80 })
     const subProject = d.subProject({ id: 'sub-project', root })
     const project = d.project({ id: 'project', subProjects: [subProject] })
@@ -18,9 +18,9 @@ describe('getAdjustableFields', () => {
       .toMagicFix()
     const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
-    const fields = getAdjustableFields({ project, subProject, computed, config })
+    const paths = getAdjustablePaths({ project, subProject, computed, config })
 
-    expect(fields).toEqual([{ type: 'numeric', path: ['components', root.id, 'width'], minValue: 98, maxValue: 103 }])
+    expect(paths).toEqual([['root-panel', root.id, 'width']])
   })
 
   it('should collect adjustable component dimensions, layout gaps, and pocket steps', () => {
@@ -51,15 +51,15 @@ describe('getAdjustableFields', () => {
       .toMagicFix()
     const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
-    const fields = getAdjustableFields({ project, subProject, computed, config })
+    const paths = getAdjustablePaths({ project, subProject, computed, config })
 
-    expect(fields).toEqual([
-      { type: 'boolean', path: ['components', panel.id, 'autoWidth'], initialValue: true },
-      { type: 'numeric', path: ['components', panel.id, 'width'], minValue: 58, maxValue: 63 },
-      { type: 'numeric', path: ['components', panel.id, 'height'], minValue: 39, maxValue: 41 },
-      { type: 'numeric', path: ['components', panel.id, 'layoutGap'], minValue: 3, maxValue: 9 },
-      { type: 'numeric', path: ['components', cluster.id, 'width'], minValue: 45, maxValue: 50 },
-      { type: 'numeric', path: ['components', cluster.id, 'pocketStep'], minValue: 9, maxValue: 16 },
+    expect(paths).toEqual([
+      ['panel', panel.id, 'autoWidth'],
+      ['panel', panel.id, 'width'],
+      ['panel', panel.id, 'height'],
+      ['panel', panel.id, 'layoutGap'],
+      ['pocket-cluster', cluster.id, 'width'],
+      ['pocket-cluster', cluster.id, 'pocketStep'],
     ])
   })
 
@@ -96,16 +96,16 @@ describe('getAdjustableFields', () => {
       .toMagicFix()
     const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
-    const fields = getAdjustableFields({ project, subProject, computed, config })
+    const paths = getAdjustablePaths({ project, subProject, computed, config })
 
-    expect(fields).toEqual([
-      { type: 'numeric', path: ['components', root.id, 'borderRadius'], minValue: 4, maxValue: 7 },
-      { type: 'boolean', path: ['components', root.id, 'individualRadii'], initialValue: false },
-      { type: 'numeric', path: ['components', root.id, 'topLeftRadius'], minValue: 0, maxValue: 1 },
-      { type: 'numeric', path: ['components', root.id, 'topRightRadius'], minValue: 2, maxValue: 3 },
-      { type: 'numeric', path: ['components', root.id, 'bottomRightRadius'], minValue: 1, maxValue: 6 },
-      { type: 'numeric', path: ['components', root.id, 'bottomLeftRadius'], minValue: 0, maxValue: 9 },
-      { type: 'numeric', path: ['components', cluster.id, 'topLeftRadius'], minValue: 5, maxValue: 7 },
+    expect(paths).toEqual([
+      ['root-panel', root.id, 'borderRadius'],
+      ['root-panel', root.id, 'individualRadii'],
+      ['root-panel', root.id, 'topLeftRadius'],
+      ['root-panel', root.id, 'topRightRadius'],
+      ['root-panel', root.id, 'bottomRightRadius'],
+      ['root-panel', root.id, 'bottomLeftRadius'],
+      ['pocket-cluster', cluster.id, 'topLeftRadius'],
     ])
   })
 
@@ -147,34 +147,14 @@ describe('getAdjustableFields', () => {
       .toMagicFix()
     const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
-    const fields = getAdjustableFields({ project, subProject, computed, config })
+    const paths = getAdjustablePaths({ project, subProject, computed, config })
 
-    expect(fields).toEqual([
-      {
-        type: 'numeric',
-        path: ['stitchLines', componentBoundsLine.id, 'topStartOffset'],
-        minValue: 7,
-        maxValue: 12,
-      },
-      {
-        type: 'horizontal-direction',
-        path: ['stitchLines', componentBoundsLine.id, 'topStitchDirection'],
-        initialValue: 'left-to-right',
-        alternativeValue: 'right-to-left',
-      },
-      {
-        type: 'vertical-direction',
-        path: ['stitchLines', componentBoundsLine.id, 'leftStitchDirection'],
-        initialValue: 'bottom-to-top',
-        alternativeValue: 'top-to-bottom',
-      },
-      { type: 'numeric', path: ['stitchLines', clusterLine.id, 'startOffset'], minValue: 7, maxValue: 12 },
-      {
-        type: 'pocket-cluster-direction',
-        path: ['stitchLines', clusterLine.id, 'stitchDirection'],
-        initialValue: 'end-to-start',
-        alternativeValue: 'start-to-end',
-      },
+    expect(paths).toEqual([
+      ['component-bounds-stitch-line', componentBoundsLine.id, 'topStartOffset'],
+      ['component-bounds-stitch-line', componentBoundsLine.id, 'topStitchDirection'],
+      ['component-bounds-stitch-line', componentBoundsLine.id, 'leftStitchDirection'],
+      ['pocket-cluster-stitch-line', clusterLine.id, 'startOffset'],
+      ['pocket-cluster-stitch-line', clusterLine.id, 'stitchDirection'],
     ])
   })
 })
