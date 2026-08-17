@@ -6,8 +6,6 @@ import { createMagicFixConfig } from '../../../../utils/createMagicFixConfig'
 import { getComputedSubProject } from '../../../getComputedProject'
 import { getAdjustableFields } from './getAdjustableFields'
 
-const n = (value: number): BigNumber => new BigNumber(value)
-
 describe('getAdjustableFields', () => {
   it('should calculate numeric ranges and split them into equal bands', () => {
     const root = d.rootPanel({ id: 'root', width: 100, height: 80 })
@@ -25,12 +23,12 @@ describe('getAdjustableFields', () => {
       {
         type: 'numeric',
         path: ['root-panel', root.id, 'width'],
-        minValue: n(98),
-        maxValue: n(104),
+        minValue: new BigNumber(98),
+        maxValue: new BigNumber(104),
         bands: [
-          { minValue: n(98), maxValue: n(100) },
-          { minValue: n(100), maxValue: n(102) },
-          { minValue: n(102), maxValue: n(104) },
+          { minValue: new BigNumber(98), maxValue: new BigNumber(100) },
+          { minValue: new BigNumber(100), maxValue: new BigNumber(102) },
+          { minValue: new BigNumber(102), maxValue: new BigNumber(104) },
         ],
       },
     ])
@@ -71,37 +69,37 @@ describe('getAdjustableFields', () => {
       {
         type: 'numeric',
         path: ['panel', panel.id, 'width'],
-        minValue: n(58),
-        maxValue: n(63),
-        bands: [{ minValue: n(58), maxValue: n(63) }],
+        minValue: new BigNumber(58),
+        maxValue: new BigNumber(63),
+        bands: [{ minValue: new BigNumber(58), maxValue: new BigNumber(63) }],
       },
       {
         type: 'numeric',
         path: ['panel', panel.id, 'height'],
-        minValue: n(39),
-        maxValue: n(41),
-        bands: [{ minValue: n(39), maxValue: n(41) }],
+        minValue: new BigNumber(39),
+        maxValue: new BigNumber(41),
+        bands: [{ minValue: new BigNumber(39), maxValue: new BigNumber(41) }],
       },
       {
         type: 'numeric',
         path: ['panel', panel.id, 'layoutGap'],
-        minValue: n(3),
-        maxValue: n(9),
-        bands: [{ minValue: n(3), maxValue: n(9) }],
+        minValue: new BigNumber(3),
+        maxValue: new BigNumber(9),
+        bands: [{ minValue: new BigNumber(3), maxValue: new BigNumber(9) }],
       },
       {
         type: 'numeric',
         path: ['pocket-cluster', cluster.id, 'width'],
-        minValue: n(45),
-        maxValue: n(50),
-        bands: [{ minValue: n(45), maxValue: n(50) }],
+        minValue: new BigNumber(45),
+        maxValue: new BigNumber(50),
+        bands: [{ minValue: new BigNumber(45), maxValue: new BigNumber(50) }],
       },
       {
         type: 'numeric',
         path: ['pocket-cluster', cluster.id, 'pocketStep'],
-        minValue: n(9),
-        maxValue: n(16),
-        bands: [{ minValue: n(9), maxValue: n(16) }],
+        minValue: new BigNumber(9),
+        maxValue: new BigNumber(16),
+        bands: [{ minValue: new BigNumber(9), maxValue: new BigNumber(16) }],
       },
     ])
   })
@@ -145,45 +143,45 @@ describe('getAdjustableFields', () => {
       {
         type: 'numeric',
         path: ['root-panel', root.id, 'borderRadius'],
-        minValue: n(4),
-        maxValue: n(7),
-        bands: [{ minValue: n(4), maxValue: n(7) }],
+        minValue: new BigNumber(4),
+        maxValue: new BigNumber(7),
+        bands: [{ minValue: new BigNumber(4), maxValue: new BigNumber(7) }],
       },
       { type: 'boolean', path: ['root-panel', root.id, 'individualRadii'], initialValue: false },
       {
         type: 'numeric',
         path: ['root-panel', root.id, 'topLeftRadius'],
-        minValue: n(0),
-        maxValue: n(1),
-        bands: [{ minValue: n(0), maxValue: n(1) }],
+        minValue: new BigNumber(0),
+        maxValue: new BigNumber(1),
+        bands: [{ minValue: new BigNumber(0), maxValue: new BigNumber(1) }],
       },
       {
         type: 'numeric',
         path: ['root-panel', root.id, 'topRightRadius'],
-        minValue: n(2),
-        maxValue: n(3),
-        bands: [{ minValue: n(2), maxValue: n(3) }],
+        minValue: new BigNumber(2),
+        maxValue: new BigNumber(3),
+        bands: [{ minValue: new BigNumber(2), maxValue: new BigNumber(3) }],
       },
       {
         type: 'numeric',
         path: ['root-panel', root.id, 'bottomRightRadius'],
-        minValue: n(1),
-        maxValue: n(6),
-        bands: [{ minValue: n(1), maxValue: n(6) }],
+        minValue: new BigNumber(1),
+        maxValue: new BigNumber(6),
+        bands: [{ minValue: new BigNumber(1), maxValue: new BigNumber(6) }],
       },
       {
         type: 'numeric',
         path: ['root-panel', root.id, 'bottomLeftRadius'],
-        minValue: n(0),
-        maxValue: n(9),
-        bands: [{ minValue: n(0), maxValue: n(9) }],
+        minValue: new BigNumber(0),
+        maxValue: new BigNumber(9),
+        bands: [{ minValue: new BigNumber(0), maxValue: new BigNumber(9) }],
       },
       {
         type: 'numeric',
         path: ['pocket-cluster', cluster.id, 'topLeftRadius'],
-        minValue: n(5),
-        maxValue: n(7),
-        bands: [{ minValue: n(5), maxValue: n(7) }],
+        minValue: new BigNumber(5),
+        maxValue: new BigNumber(7),
+        bands: [{ minValue: new BigNumber(5), maxValue: new BigNumber(7) }],
       },
     ])
   })
@@ -232,9 +230,9 @@ describe('getAdjustableFields', () => {
       {
         type: 'numeric',
         path: ['component-bounds-stitch-line', componentBoundsLine.id, 'topStartOffset'],
-        minValue: n(7),
-        maxValue: n(12),
-        bands: [{ minValue: n(7), maxValue: n(12) }],
+        minValue: new BigNumber(7),
+        maxValue: new BigNumber(12),
+        bands: [{ minValue: new BigNumber(7), maxValue: new BigNumber(12) }],
       },
       {
         type: 'horizontal-direction',
@@ -251,9 +249,9 @@ describe('getAdjustableFields', () => {
       {
         type: 'numeric',
         path: ['pocket-cluster-stitch-line', clusterLine.id, 'startOffset'],
-        minValue: n(7),
-        maxValue: n(12),
-        bands: [{ minValue: n(7), maxValue: n(12) }],
+        minValue: new BigNumber(7),
+        maxValue: new BigNumber(12),
+        bands: [{ minValue: new BigNumber(7), maxValue: new BigNumber(12) }],
       },
       {
         type: 'pocket-cluster-direction',
