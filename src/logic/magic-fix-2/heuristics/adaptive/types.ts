@@ -1,45 +1,65 @@
 import type BigNumber from 'bignumber.js'
-import type { HasIdentitySchema } from '../../../../schemas/common'
+import { HasCornerRadiusSchema, HasSizeSchema } from '../../../../schemas/common'
 import {
-  type HasChildrenSchema,
-  type HasColorSchema,
+  HasFillableSizeSchema,
+  HasLayoutSchema,
   type PanelSchema,
   type PocketClusterSchema,
   type RootPanelSchema,
 } from '../../../../schemas/components'
 import type {
-  ComponentBoundsStitchLineOwnSchema,
+  ComponentBoundsStitchLineHorizontalDirectionsSchema,
+  ComponentBoundsStitchLineOffsetsSchema,
+  ComponentBoundsStitchLineSchema,
+  ComponentBoundsStitchLineVerticalDirectionsSchema,
   HorizontalStitchDirectionSchema,
+  PocketClusterStitchLineOffsetsSchema,
   PocketClusterStitchLineOwnSchema,
+  PocketClusterStitchLineSchema,
   StitchDirectionSchema,
   VerticalStitchDirectionSchema,
 } from '../../../../schemas/stitching'
 
 // Fields
-type RootPanelField = Exclude<
-  keyof RootPanelSchema,
-  'type' | keyof HasIdentitySchema | keyof HasColorSchema | keyof HasChildrenSchema
->
-type PanelField = Exclude<
-  keyof PanelSchema,
-  'type' | keyof HasIdentitySchema | keyof HasColorSchema | keyof HasChildrenSchema
->
-type PocketClusterField = Exclude<
-  keyof PocketClusterSchema,
-  'type' | keyof HasIdentitySchema | keyof HasColorSchema | keyof HasChildrenSchema | 'pocketCount' | 'cardId'
->
+type RootPanelField = keyof HasSizeSchema | keyof HasCornerRadiusSchema | keyof Pick<HasLayoutSchema, 'layoutGap'>
 
-type ComponentBoundsStitchLineField = keyof ComponentBoundsStitchLineOwnSchema
-type PocketClusterStitchLineField = keyof PocketClusterStitchLineOwnSchema
+type PanelField = keyof HasFillableSizeSchema | keyof HasCornerRadiusSchema | keyof Pick<HasLayoutSchema, 'layoutGap'>
 
-type StitchLineField = ComponentBoundsStitchLineField | PocketClusterStitchLineField
-type ComponentField = RootPanelField | PanelField | PocketClusterField
+type PocketClusterField =
+  | keyof HasFillableSizeSchema
+  | keyof HasCornerRadiusSchema
+  | keyof Pick<PocketClusterSchema, 'pocketStep'>
 
-export type AdaptiveMagicFixComponentFieldPath = readonly ['components', string, ComponentField]
+type ComponentBoundsStitchLineField =
+  | keyof ComponentBoundsStitchLineOffsetsSchema
+  | keyof ComponentBoundsStitchLineHorizontalDirectionsSchema
+  | keyof ComponentBoundsStitchLineVerticalDirectionsSchema
 
-export type AdaptiveMagicFixStitchLineFieldPath = readonly ['stitchLines', string, StitchLineField]
+type PocketClusterStitchLineField =
+  | keyof PocketClusterStitchLineOffsetsSchema
+  | keyof Pick<PocketClusterStitchLineOwnSchema, 'stitchDirection'>
 
-export type AdaptiveMagicFixFieldPath = AdaptiveMagicFixComponentFieldPath | AdaptiveMagicFixStitchLineFieldPath
+// Path representation of components/stitchlines
+export type RootPanelFieldPath = readonly [RootPanelSchema['type'], string, RootPanelField]
+export type PanelFieldPath = readonly [PanelSchema['type'], string, PanelField]
+export type PocketClusterFieldPath = readonly [PocketClusterSchema['type'], string, PocketClusterField]
+export type ComponentBoundsStitchLineFieldPath = readonly [
+  ComponentBoundsStitchLineSchema['type'],
+  string,
+  ComponentBoundsStitchLineField,
+]
+export type PocketClusterStitchLineFieldPath = readonly [
+  PocketClusterStitchLineSchema['type'],
+  string,
+  PocketClusterStitchLineField,
+]
+
+export type AdaptiveMagicFixFieldPath =
+  | RootPanelFieldPath
+  | PanelFieldPath
+  | PocketClusterFieldPath
+  | ComponentBoundsStitchLineFieldPath
+  | PocketClusterStitchLineFieldPath
 
 export type AdaptiveMagicFixNumericField = {
   type: 'numeric'
