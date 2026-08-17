@@ -5,3 +5,15 @@ export const ADAPTIVE_MAGIC_FIX_EFFORT_MULTIPLIERS: Record<MagicFixEffortSchema,
   medium: 1_000,
   high: 10_000,
 }
+
+export const ADAPTIVE_MAGIC_FIX_NUMERIC_BAND_COUNTS: Record<MagicFixEffortSchema, number> = {
+  low: 5,
+  medium: 20,
+  high: 100,
+}
+
+export const ADAPTIVE_MAGIC_FIX_DISCOVERY_ITERATION_COUNTS: Record<MagicFixEffortSchema, number> = {
+  low: 5,
+  medium: 20,
+  high: 100,
+}
