@@ -20,6 +20,12 @@ export type MagicFixSetComponentDimensionChangeRequest = HasComponentReferenceSc
   value: number
 }
 
+export type MagicFixSetComponentAutoDimensionChangeRequest = HasComponentReferenceSchema & {
+  type: 'set-component-auto-dimension'
+  autoDimensionField: 'autoWidth' | 'autoHeight'
+  value: boolean
+}
+
 export type MagicFixSetLayoutGapChangeRequest = HasComponentReferenceSchema & {
   type: 'set-layout-gap'
   value: number
@@ -29,6 +35,11 @@ export type MagicFixSetComponentCornerRadiusChangeRequest = HasComponentReferenc
   type: 'set-component-corner-radius'
   radiusField: keyof HasCornerRadiusValuesSchema
   value: number
+}
+
+export type MagicFixSetComponentIndividualRadiiChangeRequest = HasComponentReferenceSchema & {
+  type: 'set-component-individual-radii'
+  value: boolean
 }
 
 export type MagicFixSetPocketStepChangeRequest = HasComponentReferenceSchema & {
@@ -67,8 +78,10 @@ export type MagicFixSetPocketClusterStitchLineDirectionChangeRequest = HasStitch
 
 export type MagicFixChangeRequest =
   | MagicFixSetComponentDimensionChangeRequest
+  | MagicFixSetComponentAutoDimensionChangeRequest
   | MagicFixSetLayoutGapChangeRequest
   | MagicFixSetComponentCornerRadiusChangeRequest
+  | MagicFixSetComponentIndividualRadiiChangeRequest
   | MagicFixSetPocketStepChangeRequest
   | MagicFixSetComponentBoundsStitchLineOffsetChangeRequest
   | MagicFixSetComponentBoundsStitchLineHorizontalDirectionChangeRequest

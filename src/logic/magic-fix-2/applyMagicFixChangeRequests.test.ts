@@ -31,7 +31,7 @@ const holeId = 'hole'
 const unknownId = 'unknown'
 
 describe('applyMagicFixRequests', () => {
-  it('should set component dimensions and disable automatic dimensions where applicable', () => {
+  it('should set component dimensions without changing automatic dimensions', () => {
     const result = applyRequests([
       { type: 'set-component-dimension', componentId: componentIds.root, dimensionField: 'width', value: 101 },
       { type: 'set-component-dimension', componentId: componentIds.panel, dimensionField: 'height', value: 41 },
@@ -39,8 +39,31 @@ describe('applyMagicFixRequests', () => {
     ])
 
     expect(getRootPanel(result).width).toBe(101)
-    expect(getPanel(result)).toMatchObject({ height: 41, autoHeight: false, autoWidth: true })
-    expect(getPocketCluster(result)).toMatchObject({ width: 51, autoWidth: false, autoHeight: true })
+    expect(getPanel(result)).toMatchObject({ height: 41, autoHeight: true, autoWidth: true })
+    expect(getPocketCluster(result)).toMatchObject({ width: 51, autoWidth: true, autoHeight: true })
+  })
+
+  it('should set automatic dimensions in both directions independently from their dimensions', () => {
+    const fixedResult = applyRequests([
+      { type: 'set-component-dimension', componentId: componentIds.panel, dimensionField: 'width', value: 61 },
+      {
+        type: 'set-component-auto-dimension',
+        componentId: componentIds.panel,
+        autoDimensionField: 'autoWidth',
+        value: false,
+      },
+    ])
+    const autoResult = applyMagicFixRequests(fixedResult, [
+      {
+        type: 'set-component-auto-dimension',
+        componentId: componentIds.panel,
+        autoDimensionField: 'autoWidth',
+        value: true,
+      },
+    ])
+
+    expect(getPanel(fixedResult)).toMatchObject({ width: 61, autoWidth: false })
+    expect(getPanel(autoResult)).toMatchObject({ width: 61, autoWidth: true })
   })
 
   it('should set layout gaps on root panels and panels', () => {
@@ -53,7 +76,7 @@ describe('applyMagicFixRequests', () => {
     expect(getPanel(result).layoutGap).toBe(7)
   })
 
-  it('should set common and individual component corner radii', () => {
+  it('should set common and individual component corner radii without changing their mode', () => {
     const result = applyRequests([
       { type: 'set-component-corner-radius', componentId: componentIds.root, radiusField: 'borderRadius', value: 10 },
       { type: 'set-component-corner-radius', componentId: componentIds.panel, radiusField: 'topLeftRadius', value: 20 },
@@ -66,17 +89,21 @@ describe('applyMagicFixRequests', () => {
     ])
 
     expect(getRootPanel(result)).toMatchObject({ borderRadius: 10, individualRadii: false })
-    expect(getPanel(result)).toMatchObject({ topLeftRadius: 20, individualRadii: true })
-    expect(getPocketCluster(result)).toMatchObject({ bottomRightRadius: 30, individualRadii: true })
+    expect(getPanel(result)).toMatchObject({ topLeftRadius: 20, individualRadii: false })
+    expect(getPocketCluster(result)).toMatchObject({ bottomRightRadius: 30, individualRadii: false })
   })
 
-  it('should not convert individual radii back to common radii mode', () => {
-    const result = applyRequests([
+  it('should set individual radii mode in both directions independently from radius values', () => {
+    const individualResult = applyRequests([
       { type: 'set-component-corner-radius', componentId: componentIds.panel, radiusField: 'topLeftRadius', value: 20 },
-      { type: 'set-component-corner-radius', componentId: componentIds.panel, radiusField: 'borderRadius', value: 10 },
+      { type: 'set-component-individual-radii', componentId: componentIds.panel, value: true },
+    ])
+    const commonResult = applyMagicFixRequests(individualResult, [
+      { type: 'set-component-individual-radii', componentId: componentIds.panel, value: false },
     ])
 
-    expect(getPanel(result)).toMatchObject({ borderRadius: 10, topLeftRadius: 20, individualRadii: true })
+    expect(getPanel(individualResult)).toMatchObject({ topLeftRadius: 20, individualRadii: true })
+    expect(getPanel(commonResult)).toMatchObject({ topLeftRadius: 20, individualRadii: false })
   })
 
   it('should set the pocket step', () => {
@@ -189,8 +216,10 @@ describe('applyMagicFixRequests', () => {
 
   const missingComponentRequests: readonly MagicFixChangeRequest[] = [
     { type: 'set-component-dimension', componentId: unknownId, dimensionField: 'width', value: 1 },
+    { type: 'set-component-auto-dimension', componentId: unknownId, autoDimensionField: 'autoWidth', value: true },
     { type: 'set-layout-gap', componentId: unknownId, value: 1 },
     { type: 'set-component-corner-radius', componentId: unknownId, radiusField: 'borderRadius', value: 1 },
+    { type: 'set-component-individual-radii', componentId: unknownId, value: true },
     { type: 'set-pocket-step', componentId: unknownId, value: 1 },
   ]
 
@@ -230,6 +259,12 @@ describe('applyMagicFixRequests', () => {
   })
 
   const incompatibleTargetRequests: readonly MagicFixChangeRequest[] = [
+    {
+      type: 'set-component-auto-dimension',
+      componentId: componentIds.root,
+      autoDimensionField: 'autoWidth',
+      value: true,
+    },
     { type: 'set-layout-gap', componentId: componentIds.pocketCluster, value: 1 },
     { type: 'set-pocket-step', componentId: componentIds.panel, value: 1 },
     {

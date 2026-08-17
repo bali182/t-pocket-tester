@@ -16,14 +16,14 @@ export const applyMagicFixRequests = (s: SubProjectSchema, requests: MagicFixCha
       case 'set-component-dimension': {
         const component = getComponent(componentMap, request.componentId)
         component[request.dimensionField] = request.value
-        if (component.type === 'panel' || component.type === 'pocket-cluster') {
-          if (request.dimensionField === 'height') {
-            component.autoHeight = false
-          }
-          if (request.dimensionField === 'width') {
-            component.autoWidth = false
-          }
+        break
+      }
+      case 'set-component-auto-dimension': {
+        const component = getComponent(componentMap, request.componentId)
+        if (component.type !== 'panel' && component.type !== 'pocket-cluster') {
+          throw new Error(`Can't set automatic dimension on root panel: "${request.componentId}"!`)
         }
+        component[request.autoDimensionField] = request.value
         break
       }
       case 'set-layout-gap': {
@@ -40,8 +40,12 @@ export const applyMagicFixRequests = (s: SubProjectSchema, requests: MagicFixCha
           component.borderRadius = request.value
         } else {
           component[request.radiusField] = request.value
-          component.individualRadii = true
         }
+        break
+      }
+      case 'set-component-individual-radii': {
+        const component = getComponent(componentMap, request.componentId)
+        component.individualRadii = request.value
         break
       }
       case 'set-pocket-step': {
