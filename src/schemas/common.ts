@@ -1,3 +1,7 @@
+export type HasType<T extends string> = {
+  type: T
+}
+
 export type HasId = {
   id: string
 }
