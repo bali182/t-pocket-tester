@@ -12,9 +12,12 @@ export type MagicFixStitchHoleDistanceMultiplierRangeSchema = {
 export type MagicFixSettingsSchema = {
   /** How much the result can differ from the targeted value in mm. */
   accuracy: number
-  /** How much we are allowed to transform a dimension (width, height, gap, pocketStep) */
+  /**
+   * How much we are allowed to transform a dimension (width, height, gap, pocketStep).
+   * Given in stitch hole distance multiplier format. 1 means 1 x stitch hole distance
+   */
   dimensionModifyRange: MagicFixStitchHoleDistanceMultiplierRangeSchema
-  /** How much we are allowed to modify an offset */
+  /** How much we are allowed to modify an offset given in stitch hole distance multiplier format */
   stitchLineOffsetModifyRange: MagicFixStitchHoleDistanceMultiplierRangeSchema
   /** Minimum distance from edge in mm of the last stitchHole of a stitchline. */
   minimumEdgeDistance: number
