@@ -89,7 +89,6 @@ export const StitchLineOffsetInput: FC<StitchLineOffsetInputProps> = ({ disabled
         issue={issue}
         size="2xs"
         startAddon={<Icon />}
-        step={1}
         value={value}
         onChange={onChange}
       />

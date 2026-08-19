@@ -1,9 +1,10 @@
 import { Button, Card, HStack, IconButton, Menu, Portal, Separator } from '@chakra-ui/react'
-import { useCallback, useRef, useState } from 'react'
+import { FC, useCallback, useMemo, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useProject } from '../hooks/useProject'
+import { useProjectOperations } from '../hooks/useProjectOperations'
 import { useTranslation } from '../translations/translation'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
@@ -11,19 +12,8 @@ import { ScalingDialog } from './ScalingDialog'
 import { SvgExportDialog } from './SvgExportDialog'
 
 export const EditorMenu = () => {
-  const t = useTranslation()
   const { project } = useProject()
-  const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
-  const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
-  const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const isExportEnabled = project.subProjects.length > 0
-
-  const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
-
-  const handleSvgExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
-
-  const handlePdfExportClick = useCallback(() => setPdfExportDialogOpen(true), [])
 
   return (
     <>
@@ -44,72 +34,174 @@ export const EditorMenu = () => {
           />
           <Separator orientation="vertical" height="5" ml="3" mr="3" />
           <HStack gap="1">
-            {/* File menu */}
-            <Menu.Root>
-              <Menu.Trigger asChild>
-                <Button size="sm" variant="ghost">
-                  <PiCaretDown />
-                  {t.editor.menus.file}
-                </Button>
-              </Menu.Trigger>
-              <Portal>
-                <Menu.Positioner>
-                  <Menu.Content>
-                    <Menu.Item disabled={!isExportEnabled} value="export-svg" onSelect={handleSvgExportClick}>
-                      <PiExport />
-                      <Menu.ItemText>{t.common.actions.exportSvg}</Menu.ItemText>
-                    </Menu.Item>
-                    <Menu.Item disabled={!isExportEnabled} value="export-pdf" onSelect={handlePdfExportClick}>
-                      <PiExport />
-                      <Menu.ItemText>{t.common.actions.exportPdf}</Menu.ItemText>
-                    </Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Portal>
-            </Menu.Root>
-            {/* Edit menu */}
-            <Menu.Root>
-              <Menu.Trigger asChild>
-                <Button size="sm" variant="ghost">
-                  <PiCaretDown />
-                  {t.editor.menus.edit}
-                </Button>
-              </Menu.Trigger>
-              <Portal>
-                <Menu.Positioner>
-                  <Menu.Content>{/* TODO */}</Menu.Content>
-                </Menu.Positioner>
-              </Portal>
-            </Menu.Root>
-            {/* View menu */}
-            <Menu.Root>
-              <Menu.Trigger asChild>
-                <Button size="sm" variant="ghost">
-                  <PiCaretDown />
-                  {t.editor.menus.view}
-                </Button>
-              </Menu.Trigger>
-              <Portal>
-                <Menu.Positioner>
-                  <Menu.Content>
-                    <Menu.Item value="scaling" onSelect={handleScalingButtonClick}>
-                      <PiRuler />
-                      <Menu.ItemText>{t.common.actions.scaling}</Menu.ItemText>
-                    </Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Portal>
-            </Menu.Root>
+            <FileMenu />
+            <EditMenu />
+            <ViewMenu />
           </HStack>
         </Card.Body>
       </Card.Root>
+    </>
+  )
+}
 
-      {/* Modals */}
-      <>
-        <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
-        {isExportEnabled && <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />}
-        {isExportEnabled && <PdfExportDialog isOpen={isPdfExportDialogOpen} onOpenChange={setPdfExportDialogOpen} />}
-      </>
+const FileMenu: FC = () => {
+  const t = useTranslation()
+  const { project } = useProject()
+  const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
+  const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
+  const isExportEnabled = project.subProjects.length > 0
+
+  const handleSvgExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
+  const handlePdfExportClick = useCallback(() => setPdfExportDialogOpen(true), [])
+
+  return (
+    <>
+      <Menu.Root>
+        <Menu.Trigger asChild>
+          <Button size="sm" variant="ghost">
+            <PiCaretDown />
+            {t.editor.menus.file.name}
+          </Button>
+        </Menu.Trigger>
+        <Portal>
+          <Menu.Positioner>
+            <Menu.Content>
+              <Menu.ItemGroup>
+                <Menu.ItemGroupLabel>{t.editor.menus.file.export.name}</Menu.ItemGroupLabel>
+                <Menu.Item disabled={!isExportEnabled} value="export-svg" onSelect={handleSvgExportClick}>
+                  <PiExport />
+                  <Menu.ItemText>{t.editor.menus.file.export.svg}</Menu.ItemText>
+                </Menu.Item>
+                <Menu.Item disabled={!isExportEnabled} value="export-pdf" onSelect={handlePdfExportClick}>
+                  <PiExport />
+                  <Menu.ItemText>{t.editor.menus.file.export.pdf}</Menu.ItemText>
+                </Menu.Item>
+              </Menu.ItemGroup>
+            </Menu.Content>
+          </Menu.Positioner>
+        </Portal>
+      </Menu.Root>
+
+      {/* Own modals */}
+      {isExportEnabled && <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />}
+      {isExportEnabled && <PdfExportDialog isOpen={isPdfExportDialogOpen} onOpenChange={setPdfExportDialogOpen} />}
+    </>
+  )
+}
+
+type NumberEditStepItem = {
+  key: string
+  isSelected: boolean
+  title: string
+  subTitle: string
+  action: () => void
+}
+
+const EditMenu: FC = () => {
+  const t = useTranslation()
+  const { project } = useProject()
+  const { updateEditingSettings } = useProjectOperations()
+
+  const stepMenuItems = useMemo(
+    (): NumberEditStepItem[] => [
+      {
+        key: '0.01',
+        isSelected: project.editingSettings.numberEditorStep === 0.01,
+        title: t.editor.menus.edit.step.tiny,
+        subTitle: t.editor.menus.edit.step.size(0.01),
+        action: () => updateEditingSettings({ numberEditorStep: 0.01 }),
+      },
+      {
+        key: '0.1',
+        isSelected: project.editingSettings.numberEditorStep === 0.1,
+        title: t.editor.menus.edit.step.small,
+        subTitle: t.editor.menus.edit.step.size(0.1),
+        action: () => updateEditingSettings({ numberEditorStep: 0.1 }),
+      },
+      {
+        key: '1',
+        isSelected: project.editingSettings.numberEditorStep === 1,
+        title: t.editor.menus.edit.step.default,
+        subTitle: t.editor.menus.edit.step.size(1),
+        action: () => updateEditingSettings({ numberEditorStep: 1 }),
+      },
+      {
+        key: 'stitch-hole-distance',
+        isSelected: project.editingSettings.numberEditorStep === 'stitch-hole-distance',
+        title: t.editor.menus.edit.step.stitch,
+        subTitle: t.editor.menus.edit.step.size(project.stitchingSettings.stitchHoleDistance),
+        action: () => updateEditingSettings({ numberEditorStep: 'stitch-hole-distance' }),
+      },
+    ],
+    [
+      project.editingSettings.numberEditorStep,
+      project.stitchingSettings.stitchHoleDistance,
+      t.editor.menus.edit.step,
+      updateEditingSettings,
+    ],
+  )
+
+  return (
+    <>
+      <Menu.Root>
+        <Menu.Trigger asChild>
+          <Button size="sm" variant="ghost">
+            <PiCaretDown />
+            {t.editor.menus.edit.name}
+          </Button>
+        </Menu.Trigger>
+        <Portal>
+          <Menu.Positioner>
+            <Menu.Content>
+              <Menu.ItemGroup>
+                <Menu.ItemGroupLabel>{t.editor.menus.edit.step.name}</Menu.ItemGroupLabel>
+                {stepMenuItems.map(({ key, subTitle, title, isSelected, action }) => (
+                  <Menu.Item
+                    value={key}
+                    key={key}
+                    onSelect={action}
+                    background={isSelected ? 'bg.emphasized' : undefined}
+                  >
+                    <Menu.ItemText fontWeight={isSelected ? 'semibold' : undefined}>{title}</Menu.ItemText>
+                    <Menu.ItemCommand fontWeight={isSelected ? 'bold' : undefined}>{subTitle}</Menu.ItemCommand>
+                  </Menu.Item>
+                ))}
+              </Menu.ItemGroup>
+            </Menu.Content>
+          </Menu.Positioner>
+        </Portal>
+      </Menu.Root>
+    </>
+  )
+}
+
+const ViewMenu: FC = () => {
+  const t = useTranslation()
+  const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
+
+  const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
+
+  return (
+    <>
+      <Menu.Root>
+        <Menu.Trigger asChild>
+          <Button size="sm" variant="ghost">
+            <PiCaretDown />
+            {t.editor.menus.view.name}
+          </Button>
+        </Menu.Trigger>
+        <Portal>
+          <Menu.Positioner>
+            <Menu.Content>
+              <Menu.Item value="scaling" onSelect={handleScalingButtonClick}>
+                <PiRuler />
+                <Menu.ItemText>{t.editor.menus.view.scaling}</Menu.ItemText>
+              </Menu.Item>
+            </Menu.Content>
+          </Menu.Positioner>
+        </Portal>
+      </Menu.Root>
+      <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
     </>
   )
 }

@@ -15,6 +15,7 @@ export const createProject = (name: string): ProjectSchema => {
       addComputedSizesToAutoSized: true,
       adjustCornerRadiiToParent: true,
       addBaseColorByDefault: false,
+      numberEditorStep: 1,
     },
     stitchingSettings: { ...defaultStitchingSettings },
   }
