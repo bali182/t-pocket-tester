@@ -1,12 +1,10 @@
 import { Button, Card, HStack, IconButton, Menu, Portal, Separator } from '@chakra-ui/react'
 import { useCallback, useRef, useState } from 'react'
-import { PiCaretDown, PiCaretLeft, PiExport, PiMagicWand, PiRuler } from 'react-icons/pi'
+import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
-import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
 import { useTranslation } from '../translations/translation'
-import { isDefined } from '../utils/isDefined'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
@@ -15,7 +13,6 @@ import { SvgExportDialog } from './SvgExportDialog'
 export const EditorMenu = () => {
   const t = useTranslation()
   const { project } = useProject()
-  const { subProject } = useOptionalSubProject()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
@@ -27,8 +24,6 @@ export const EditorMenu = () => {
   const handleSvgExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
 
   const handlePdfExportClick = useCallback(() => setPdfExportDialogOpen(true), [])
-
-  const handleMagicStitchlineFix = useCallback(() => {}, [])
 
   return (
     <>
@@ -82,16 +77,7 @@ export const EditorMenu = () => {
               </Menu.Trigger>
               <Portal>
                 <Menu.Positioner>
-                  <Menu.Content>
-                    <Menu.Item
-                      disabled={!isDefined(subProject)}
-                      value="magic-stitchline-fix"
-                      onSelect={handleMagicStitchlineFix}
-                    >
-                      <PiMagicWand />
-                      <Menu.ItemText>{t.magicFix.menu}</Menu.ItemText>
-                    </Menu.Item>
-                  </Menu.Content>
+                  <Menu.Content>{/* TODO */}</Menu.Content>
                 </Menu.Positioner>
               </Portal>
             </Menu.Root>

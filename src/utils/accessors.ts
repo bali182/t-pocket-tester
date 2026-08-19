@@ -1,9 +1,9 @@
-import { HasType } from '../schemas/common'
 import { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import { HoleSchema } from '../schemas/hole'
 import { ComponentBoundsStitchLineSchema, PocketClusterStitchLineSchema, StitchLineSchema } from '../schemas/stitching'
 import { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from './isDefined'
+import { narrowers } from './narrowers'
 
 export const accessors = {
   subProject: (subProject: SubProjectSchema) => {
@@ -32,23 +32,23 @@ export const accessors = {
     }
 
     const rootPanel = (): RootPanelSchema => {
-      return assertTypeField(component(subProject.root), 'root-panel')
+      return narrowers.assert.rootPanel(component(subProject.root))
     }
 
     const panel = (id: string): PanelSchema => {
-      return assertTypeField(component(id), 'panel')
+      return narrowers.assert.panel(component(id))
     }
 
     const pocketCluster = (id: string): PocketClusterSchema => {
-      return assertTypeField(component(id), 'pocket-cluster')
+      return narrowers.assert.pocketCluster(component(id))
     }
 
     const componentBoundsStitchLine = (id: string): ComponentBoundsStitchLineSchema => {
-      return assertTypeField(stitchLine(id), 'component-bounds-stitch-line')
+      return narrowers.assert.componentBoundsStitchLine(stitchLine(id))
     }
 
     const pocketClusterStitchLine = (id: string): PocketClusterStitchLineSchema => {
-      return assertTypeField(stitchLine(id), 'pocket-cluster-stitch-line')
+      return narrowers.assert.pocketClusterStitchLine(stitchLine(id))
     }
 
     return {
@@ -89,15 +89,15 @@ export const accessors = {
     }
 
     const rootPanel = () => {
-      return assertTypeField(component(computedSubProject.root), 'computed-root-panel')
+      return narrowers.assert.computedRootPanel(component(computedSubProject.root))
     }
 
     const panel = (id: string) => {
-      return assertTypeField(component(id), 'computed-panel')
+      return narrowers.assert.computedPanel(component(id))
     }
 
     const pocketCluster = (id: string) => {
-      return assertTypeField(component(id), 'computed-pocket-cluster')
+      return narrowers.assert.computedPocketCluster(component(id))
     }
 
     return {
@@ -113,14 +113,4 @@ export const accessors = {
 
 const createMissingErrorMessage = (componentType: string, ownerType: string, ownerId: string, ownerName?: string) => {
   return `Missing ${componentType} from ${ownerType} ${ownerId}${isDefined(ownerName ? ` (${ownerName})` : '')}.`
-}
-
-export const assertTypeField = <Data, CurrentType extends string, ExpectedType extends CurrentType>(
-  input: Data & HasType<CurrentType>,
-  expectedType: ExpectedType,
-): Data & HasType<ExpectedType> => {
-  if (input.type !== expectedType) {
-    throw new Error(`Excpected type='${expectedType}', but was '${input.type}'.`)
-  }
-  return input as Data & HasType<ExpectedType>
 }

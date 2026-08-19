@@ -1,3 +1,5 @@
+import type BigNumber from 'bignumber.js'
+
 import { HasComponentReferenceSchema, HasId, HasTargetSchema } from './common'
 import { PathSchema, RectSchema } from './geometry'
 import { StitchHoleSchema } from './stitching'
@@ -15,8 +17,12 @@ type HasUncutPathSchema = {
   uncutPath: PathSchema
 }
 
-type HasComputedChildrenSchema = {
+export type HasComputedChildrenSchema = {
   children: ComputedComponentSchema[]
+}
+
+export type HasComputedLayoutGapSchema = {
+  computedLayoutGap: BigNumber
 }
 
 type HasComputedCardSchema = {
@@ -27,12 +33,14 @@ type BaseComputedSchema = HasComponentReferenceSchema & HasPathSchema & HasBound
 
 export type ComputedRootPanelSchema = BaseComputedSchema &
   HasUncutPathSchema &
+  HasComputedLayoutGapSchema &
   HasComputedChildrenSchema & {
     type: 'computed-root-panel'
   }
 
 export type ComputedPanelSchema = BaseComputedSchema &
   HasUncutPathSchema &
+  HasComputedLayoutGapSchema &
   HasComputedChildrenSchema & {
     type: 'computed-panel'
   }

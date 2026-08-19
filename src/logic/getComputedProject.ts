@@ -85,13 +85,21 @@ const computeRootPanel = (
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedRootPanelSchema => {
   const path = calculateRectPath(boundingRect, getNormalizedCornerRadius(rootPanel))
+  const { children, computedLayoutGap } = computeLayoutChildren(
+    rootPanel,
+    boundingRect,
+    subProject,
+    resolvedStitchLines,
+    computedComponents,
+  )
   const computed: ComputedRootPanelSchema = {
     type: 'computed-root-panel',
     componentId: rootPanel.id,
     boundingRect,
     path,
     uncutPath: path,
-    children: computeLayoutChildren(rootPanel, boundingRect, subProject, resolvedStitchLines, computedComponents),
+    children,
+    computedLayoutGap,
   }
 
   computedComponents[rootPanel.id] = computed
@@ -107,13 +115,21 @@ const computePanel = (
   computedComponents: Record<string, ComputedComponentSchema>,
 ): ComputedPanelSchema => {
   const path = calculateRectPath(boundingRect, getNormalizedCornerRadius(panel))
+  const { children, computedLayoutGap } = computeLayoutChildren(
+    panel,
+    boundingRect,
+    subProject,
+    resolvedStitchLines,
+    computedComponents,
+  )
   const computed: ComputedPanelSchema = {
     type: 'computed-panel',
     componentId: panel.id,
     boundingRect,
     path,
     uncutPath: path,
-    children: computeLayoutChildren(panel, boundingRect, subProject, resolvedStitchLines, computedComponents),
+    children,
+    computedLayoutGap,
   }
 
   computedComponents[panel.id] = computed
@@ -144,14 +160,24 @@ const computePocketCluster = (
   return computed
 }
 
+type ComputedLayoutChildren = {
+  children: ComputedComponentSchema[]
+  computedLayoutGap: BigNumber
+}
+
 const computeLayoutChildren = (
   component: RootPanelSchema | PanelSchema,
   boundingRect: RectSchema,
   subProject: SubProjectSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
-): ComputedComponentSchema[] => {
-  return calculateLayoutBoundingBoxes(component, subProject, boundingRect).map(([child, childBoundingRect]) =>
-    computeComponent(child, childBoundingRect, subProject, resolvedStitchLines, computedComponents),
-  )
+): ComputedLayoutChildren => {
+  const [boundingBoxes, computedLayoutGap] = calculateLayoutBoundingBoxes(component, subProject, boundingRect)
+
+  return {
+    children: boundingBoxes.map(([child, childBoundingRect]) =>
+      computeComponent(child, childBoundingRect, subProject, resolvedStitchLines, computedComponents),
+    ),
+    computedLayoutGap,
+  }
 }

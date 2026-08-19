@@ -15,9 +15,10 @@ export type HasLayoutSchema = {
   layoutOrientation: LayoutOrientationSchema
   layoutOrder: LayoutOrderSchema
   layoutGap: number
+  autoLayoutGap: boolean
 }
 
-export type HasFillableSizeSchema = HasSizeSchema & {
+export type HasAutoDimensionsSchema = HasSizeSchema & {
   autoWidth: boolean
   autoHeight: boolean
 }
@@ -39,7 +40,7 @@ export type PanelSchema = BaseComponentSchema &
   HasLayoutSchema &
   HasChildrenSchema &
   HasCornerRadiusSchema &
-  HasFillableSizeSchema & {
+  HasAutoDimensionsSchema & {
     type: 'panel'
   }
 
@@ -51,7 +52,7 @@ export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
  */
 export type PocketClusterSchema = BaseComponentSchema &
   HasCornerRadiusSchema &
-  HasFillableSizeSchema & {
+  HasAutoDimensionsSchema & {
     type: 'pocket-cluster'
     /** How many pockets do we have in this cluster (min 1) */
     pocketCount: number

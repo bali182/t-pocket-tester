@@ -15,11 +15,12 @@ export const calculateLayoutBoundingBoxes = (
   component: LayoutComponent,
   subProject: SubProjectSchema,
   rect: RectSchema,
-): [LayoutChildComponent, RectSchema][] => {
+): [[LayoutChildComponent, RectSchema][], BigNumber] => {
   const children = getComponentChildren(component, subProject)
   const layoutChildren = assertLayoutChildren(children)
+  const computedLayoutGap = calculateMainAxisGap(layoutChildren, rect, component)
 
-  return calculateChildBoundingBoxes(layoutChildren, rect, component)
+  return [calculateChildBoundingBoxes(layoutChildren, rect, component, computedLayoutGap), computedLayoutGap] as const
 }
 
 const assertLayoutChildren = (children: ComponentSchema[]): LayoutChildComponent[] => {
@@ -36,16 +37,17 @@ const calculateChildBoundingBoxes = (
   children: LayoutChildComponent[],
   parentBoundingBox: RectSchema,
   parent: LayoutComponent,
+  gap: BigNumber,
 ): [LayoutChildComponent, RectSchema][] => {
   switch (parent.layoutOrientation) {
     case 'horizontal':
       return parent.layoutOrder === 'default'
-        ? calculateHorizontalDefaultBoundingBoxes(children, parentBoundingBox, parent)
-        : calculateHorizontalReverseBoundingBoxes(children, parentBoundingBox, parent)
+        ? calculateHorizontalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
+        : calculateHorizontalReverseBoundingBoxes(children, parentBoundingBox, parent, gap)
     case 'vertical':
       return parent.layoutOrder === 'default'
-        ? calculateVerticalDefaultBoundingBoxes(children, parentBoundingBox, parent)
-        : calculateVerticalReverseBoundingBoxes(children, parentBoundingBox, parent)
+        ? calculateVerticalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
+        : calculateVerticalReverseBoundingBoxes(children, parentBoundingBox, parent, gap)
   }
 }
 
@@ -53,9 +55,9 @@ const calculateHorizontalDefaultBoundingBoxes = (
   children: LayoutChildComponent[],
   parentBoundingBox: RectSchema,
   parent: LayoutComponent,
+  gap: BigNumber,
 ): [LayoutChildComponent, RectSchema][] => {
   const widths = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  const gap = new BigNumber(parent.layoutGap)
   let nextLeft = parentBoundingBox.x
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
@@ -78,9 +80,9 @@ const calculateHorizontalReverseBoundingBoxes = (
   children: LayoutChildComponent[],
   parentBoundingBox: RectSchema,
   parent: LayoutComponent,
+  gap: BigNumber,
 ): [LayoutChildComponent, RectSchema][] => {
   const widths = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  const gap = new BigNumber(parent.layoutGap)
   let nextRight = parentBoundingBox.x.plus(parentBoundingBox.width)
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
@@ -104,9 +106,9 @@ const calculateVerticalDefaultBoundingBoxes = (
   children: LayoutChildComponent[],
   parentBoundingBox: RectSchema,
   parent: LayoutComponent,
+  gap: BigNumber,
 ): [LayoutChildComponent, RectSchema][] => {
   const heights = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  const gap = new BigNumber(parent.layoutGap)
   let nextTop = parentBoundingBox.y
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
@@ -129,9 +131,9 @@ const calculateVerticalReverseBoundingBoxes = (
   children: LayoutChildComponent[],
   parentBoundingBox: RectSchema,
   parent: LayoutComponent,
+  gap: BigNumber,
 ): [LayoutChildComponent, RectSchema][] => {
   const heights = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  const gap = new BigNumber(parent.layoutGap)
   let nextBottom = parentBoundingBox.y.plus(parentBoundingBox.height)
 
   return children.map((child): [LayoutChildComponent, RectSchema] => {
@@ -157,9 +159,9 @@ const calculateMainAxisSizes = (
   parent: LayoutComponent,
 ): Record<string, BigNumber> => {
   const parentSpace = parent.layoutOrientation === 'horizontal' ? parentBoundingBox.width : parentBoundingBox.height
-  const gapSpace = BigNumber.maximum(new BigNumber(children.length).minus(1), ZERO).times(
-    new BigNumber(parent.layoutGap),
-  )
+  const gapSpace = parent.autoLayoutGap
+    ? ZERO
+    : BigNumber.maximum(new BigNumber(children.length).minus(1), ZERO).times(new BigNumber(parent.layoutGap))
   const availableComponentSpace = BigNumber.maximum(parentSpace.minus(gapSpace), ZERO)
   const sizesById: Record<string, BigNumber> = {}
 
@@ -173,9 +175,12 @@ const calculateMainAxisSizes = (
 
   const fixedComponentSpace = Object.values(sizesById).reduce((sum, componentSize) => sum.plus(componentSize), ZERO)
   const autoComponentCount = new BigNumber(children.filter((child) => isMainAxisAuto(child, parent)).length)
-  const autoComponentSize = autoComponentCount.isZero()
+  const autoSizeCount = parent.autoLayoutGap
+    ? autoComponentCount.plus(BigNumber.maximum(new BigNumber(children.length).minus(1), ZERO))
+    : autoComponentCount
+  const autoComponentSize = autoSizeCount.isZero()
     ? ZERO
-    : BigNumber.maximum(availableComponentSpace.minus(fixedComponentSpace), ZERO).dividedBy(autoComponentCount)
+    : BigNumber.maximum(availableComponentSpace.minus(fixedComponentSpace), ZERO).dividedBy(autoSizeCount)
 
   for (const child of children) {
     if (!isMainAxisAuto(child, parent)) {
@@ -186,6 +191,32 @@ const calculateMainAxisSizes = (
   }
 
   return sizesById
+}
+
+const calculateMainAxisGap = (
+  children: LayoutChildComponent[],
+  parentBoundingBox: RectSchema,
+  parent: LayoutComponent,
+): BigNumber => {
+  if (!parent.autoLayoutGap) {
+    return new BigNumber(parent.layoutGap)
+  }
+
+  const parentSpace = parent.layoutOrientation === 'horizontal' ? parentBoundingBox.width : parentBoundingBox.height
+  const fixedComponentSpace = children.reduce((sum, child) => {
+    if (isMainAxisAuto(child, parent)) {
+      return sum
+    }
+
+    return sum.plus(clamp(getMainAxisSize(child, parent), ZERO, parentSpace))
+  }, ZERO)
+  const autoSizeCount = new BigNumber(children.filter((child) => isMainAxisAuto(child, parent)).length).plus(
+    BigNumber.maximum(new BigNumber(children.length).minus(1), ZERO),
+  )
+
+  return autoSizeCount.isZero()
+    ? ZERO
+    : BigNumber.maximum(parentSpace.minus(fixedComponentSpace), ZERO).dividedBy(autoSizeCount)
 }
 
 const calculateCrossAxisSize = (
