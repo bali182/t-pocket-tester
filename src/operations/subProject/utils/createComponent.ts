@@ -1,6 +1,6 @@
 import { HasCornerRadiusSchema } from '../../../schemas/common'
 import {
-  HasFillableSizeSchema,
+  HasAutoDimensionsSchema,
   HasLayoutSchema,
   PanelSchema,
   PocketClusterSchema,
@@ -53,9 +53,10 @@ const defaultHasLayout: HasLayoutSchema = {
   layoutOrientation: 'horizontal',
   layoutOrder: 'default',
   layoutGap: 0,
+  autoLayoutGap: false,
 }
 
-const defaultHasFillableSize: HasFillableSizeSchema = {
+const defaultHasFillableSize: HasAutoDimensionsSchema = {
   width: 10,
   height: 10,
   autoHeight: true,

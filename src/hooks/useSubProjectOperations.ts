@@ -36,7 +36,27 @@ import { isDefined } from '../utils/isDefined'
 import { useOptionalProject } from './useOptionalProject'
 import { useOptionalSubProject } from './useOptionalSubProject'
 
-export const useSubProjectOperations = () => {
+export type UseSubProjectOperationsOutput = {
+  addComponent: (parentId: string, type: ComponentSchema['type']) => ComponentSchema
+  addHole: (componentId: string) => HoleSchema
+  addStitchLineToComponent: (componentId: string, type: StitchLineSchema['type']) => StitchLineSchema
+  addStitchLineToHole: (holeId: string) => StitchLineSchema
+  cloneComponent: (componentId: string) => void
+  cloneHole: (holeId: string) => void
+  cloneStitchLine: (stitchLineId: string) => void
+  deleteComponent: (componentId: string) => void
+  deleteHole: (holeId: string) => void
+  deleteStitchLine: (stitchLineId: string) => void
+  moveComponent: (componentId: string, targetParentId: string, beforeComponentId: string | undefined) => void
+  moveHole: (holeId: string, targetComponentId: string) => void
+  moveStitchLineToComponent: (stitchLineId: string, componentId: string) => void
+  moveStitchLineToHole: (stitchLineId: string, holeId: string) => void
+  updateComponent: (component: ComponentSchema) => void
+  updateHole: (hole: HoleSchema) => void
+  updateStitchLine: (stitchLine: StitchLineSchema) => void
+}
+
+export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
   const { project } = useOptionalProject()
   const { subProject } = useOptionalSubProject()
   const t = useTranslation()
@@ -270,25 +290,46 @@ export const useSubProjectOperations = () => {
     ),
   )
 
-  return {
-    addComponent,
-    addHole,
-    addStitchLineToComponent,
-    addStitchLineToHole,
-    cloneComponent,
-    cloneHole,
-    cloneStitchLine,
-    deleteComponent,
-    deleteHole,
-    deleteStitchLine,
-    moveComponent,
-    moveHole,
-    moveStitchLineToComponent,
-    moveStitchLineToHole,
-    updateComponent,
-    updateHole,
-    updateStitchLine,
-  }
+  return useMemo(
+    () => ({
+      addComponent,
+      addHole,
+      addStitchLineToComponent,
+      addStitchLineToHole,
+      cloneComponent,
+      cloneHole,
+      cloneStitchLine,
+      deleteComponent,
+      deleteHole,
+      deleteStitchLine,
+      moveComponent,
+      moveHole,
+      moveStitchLineToComponent,
+      moveStitchLineToHole,
+      updateComponent,
+      updateHole,
+      updateStitchLine,
+    }),
+    [
+      addComponent,
+      addHole,
+      addStitchLineToComponent,
+      addStitchLineToHole,
+      cloneComponent,
+      cloneHole,
+      cloneStitchLine,
+      deleteComponent,
+      deleteHole,
+      deleteStitchLine,
+      moveComponent,
+      moveHole,
+      moveStitchLineToComponent,
+      moveStitchLineToHole,
+      updateComponent,
+      updateHole,
+      updateStitchLine,
+    ],
+  )
 }
 
 const ensureProject = (get: Getter, reference: SubProjectAtomReferenceSchema): [ProjectSchema, SubProjectSchema] => {

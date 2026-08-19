@@ -61,10 +61,9 @@ const getTargetComponentId = (target: ComputedSvgExportStitchLineTarget): string
   switch (target.type) {
     case 'computed-root-panel':
     case 'computed-panel':
-      return target.componentId
     case 'computed-top-pocket':
     case 'computed-t-pocket':
-      return target.ownerComponentId
+      return target.componentId
   }
 }
 
@@ -129,7 +128,7 @@ const getExportRoutes = (
     return computedStitchLine.routes
   }
 
-  const ownerComponent = computedProject.components[target.ownerComponentId]
+  const ownerComponent = computedProject.components[target.componentId]
 
   if (!isDefined(ownerComponent) || ownerComponent.type !== 'computed-pocket-cluster') {
     return []

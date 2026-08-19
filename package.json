@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
-    "pretty": "npx prettier --write src"
+    "pretty": "npx prettier --write src",
+    "test": "vitest run"
   },
   "dependencies": {
     "@chakra-ui/react": "3.36.0",
@@ -18,9 +19,10 @@
     "@internationalized/number": "3.6.7",
     "@react-pdf/renderer": "4.5.1",
     "bignumber.js": "11.1.5",
+    "comlink": "4.4.2",
     "culori": "4.0.2",
     "jotai": "2.20.1",
-    "jotai-family": "^1.1.0",
+    "jotai-family": "1.1.0",
     "nanoid": "5.1.16",
     "pako": "1.0.11",
     "react": "19.2.8",
@@ -39,11 +41,14 @@
     "@typia/unplugin": "12.1.1",
     "@vitejs/plugin-react": "4.5.2",
     "eslint": "10.6.0",
+    "eslint-import-resolver-vite": "^2.2.0",
+    "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-react-hooks": "7.1.1",
     "prettier": "3.8.4",
     "prettier-plugin-organize-imports": "4.3.0",
     "typescript": "5.8.3",
     "typescript-eslint": "8.62.1",
-    "vite": "6.4.3"
+    "vite": "6.4.3",
+    "vitest": "4.1.10"
   }
 }

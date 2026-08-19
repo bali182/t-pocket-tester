@@ -1,4 +1,6 @@
+import { createNodeResolver, importX } from 'eslint-plugin-import-x'
 import reactHooks from 'eslint-plugin-react-hooks'
+import { createRequire } from 'node:module'
 import tseslint from 'typescript-eslint'
 
 const [tsBase, tsEslintRecommended, tsRecommended] = tseslint.configs.recommended
@@ -46,4 +48,31 @@ export default [
       'react-hooks/static-components': 'off',
     },
   },
+  {
+    name: 'import-x/no-unresolved',
+    files: typeScriptFiles,
+    plugins: {
+      'import-x': importX,
+    },
+    settings: {
+      'import-x/resolver-next': [createWorkerAwareImportResolver(), createNodeResolver()],
+    },
+    rules: {
+      'import-x/no-unresolved': 'error',
+    },
+  },
 ]
+
+function createWorkerAwareImportResolver() {
+  const require = createRequire(import.meta.url)
+  const { createViteImportResolver } = require('eslint-import-resolver-vite')
+  const viteImportResolver = createViteImportResolver({ viteConfig: {} })
+
+  return {
+    ...viteImportResolver,
+    resolve(source, file, options) {
+      const resolvedSource = source.endsWith('?worker') ? source.slice(0, -'?worker'.length) : source
+      return viteImportResolver.resolve(resolvedSource, file, options)
+    },
+  }
+}

@@ -3,6 +3,7 @@ export const HU = {
     actions: {
       add: 'Hozzáadás',
       cancel: 'Mégse',
+      next: 'Tovább',
       apply: 'Alkalmaz',
       exportSvg: 'SVG Exportálás',
       exportPdf: 'PDF Exportálás',
@@ -115,6 +116,89 @@ export const HU = {
       errors: {
         exportFailed: 'A PDF exportálása nem sikerült.',
         unplaceablePanels: 'Egy vagy több panel nem fér el a kiválasztott oldalra.',
+      },
+    },
+  },
+  magicFix: {
+    menu: 'Javítás varázsló',
+    dialog: {
+      title: 'Javítás varázsló',
+      steps: {
+        settings: 'Beállítások',
+        fixing: 'Javítás',
+        review: 'Kiértékelés',
+      },
+      progress: {
+        message: 'Dolgozunk a javításon…',
+        completed: 'Elkészült',
+      },
+      actions: {
+        back: 'Vissza',
+        addNewModule: 'Új modul létrehozása',
+        overwriteModule: 'Modul felülírása',
+      },
+      review: {
+        success: 'A javítás sikeresen elkészült.',
+        error: 'A javítás sikertelen volt.',
+        noResult: 'A javítás nem tudott eredményt létrehozni.',
+      },
+      settings: {
+        noSelectionTitle: 'Válassz egy elemet!',
+        noSelectionDescription:
+          'Részletes komponens szintű beállítások megjelenítéséhez válassz egy elemet a bal oldai fából!',
+        tabs: {
+          basic: 'Alapbeállítások',
+          advanced: 'Részletes beállítások',
+        },
+        basic: {
+          sections: {
+            accuracyAndEffort: 'Pontosság és ráfordítás',
+            sharedLimits: 'Közös korlátok',
+          },
+          labels: {
+            accuracy: 'Pontosság',
+            effort: 'Ráfordítás',
+            preferredMinimumDistanceFromEdge: 'Öltés távolság széltől',
+            modifyRange: 'Módosítási tartomány',
+          },
+          efforts: {
+            low: 'Alacsony',
+            medium: 'Közepes',
+            high: 'Magas',
+          },
+        },
+        advanced: {
+          sections: {
+            distance: 'Távolság a széltől',
+            layoutGap: 'Elrendezési térköz',
+            dimensions: 'Méretek',
+            autoDimensions: 'Automatikus méretek',
+            cornerRadius: 'Sarokkerekítés',
+            pocketStep: 'Zseblépték',
+            offset: 'Eltolás',
+            flip: 'Tükrözés',
+          },
+          labels: {
+            preferredMinimumDistanceFromEdge: 'Előnyben részesített minimum',
+            layoutGap: 'Térköz',
+            canConvertToFixedHeight: 'Fix magasság engedélyezése',
+            canConvertToFixedWidth: 'Fix szélesség engedélyezése',
+            canConvertToIndividualRadii: 'Egyedi sarkok engedélyezése',
+            borderRadius: 'Minden sarok',
+            pocketStep: 'Lépték',
+            topStart: 'Felső eleje',
+            topEnd: 'Felső vége',
+            rightStart: 'Jobb eleje',
+            rightEnd: 'Jobb vége',
+            bottomStart: 'Alsó eleje',
+            bottomEnd: 'Alsó vége',
+            leftStart: 'Bal eleje',
+            leftEnd: 'Bal vége',
+            start: 'Eleje',
+            end: 'Vége',
+            canFlipStitchDirection: 'Tükrözés engedélyezése',
+          },
+        },
       },
     },
   },
@@ -293,7 +377,7 @@ export const HU = {
     },
   },
   defaults: {
-    subProjectName: 'Új projekt',
+    projectName: 'Új projekt',
     rootComponentName: 'Modul',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },

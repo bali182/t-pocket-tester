@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
   CARD_COLOR,
   SELECTED_HOLE_FILL_COLOR,
@@ -17,12 +17,8 @@ import {
   DrawAreaExportTextStyles,
   DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
-  DrawAreaSelection,
   DrawAreaStitchLineStyles,
 } from '../contexts/DrawAreaContext'
-import { ComponentSchema } from '../schemas/components'
-import { EditorSelectionSchema } from '../schemas/selection'
-import { StitchLineSchema } from '../schemas/stitching'
 import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { produce } from '../utils/produce'
@@ -31,7 +27,7 @@ import { useSubProject } from './useSubProject'
 
 import { formatHex8, parse } from 'culori'
 import { getSelectionObstructingComponentIds } from '../logic/getSelectionObstructingComponentIds'
-import { HoleSchema } from '../schemas/hole'
+import { useSubProjectSelection } from './useSubProjectSelection'
 
 const addAlpha = (color: string): string => {
   const parsed = parse(color)
@@ -64,63 +60,21 @@ const markerStyles: DrawAreaMarkerStyles = {
 }
 
 export const useEditorDrawArea = (): DrawAreaContextValue => {
-  const [selection, setSelection] = useState<EditorSelectionSchema | undefined>()
-  const [hoveredStitchLineId, setHoveredStitchLine] = useState<string | undefined>()
-  const [hoveredTreeSelection, setHoveredTreeSelection] = useState<EditorSelectionSchema | undefined>()
   const { project } = useProject()
   const { subProject } = useSubProject()
-
-  const selectedComponent = useMemo<ComponentSchema | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'component') {
-      return undefined
-    }
-
-    return subProject.components[selection.componentId]
-  }, [subProject.components, selection])
-
-  const selectedHole = useMemo<HoleSchema | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'hole') {
-      return undefined
-    }
-
-    return subProject.holes.find((hole) => hole.id === selection.holeId)
-  }, [subProject.holes, selection])
-
-  const selectedStitchLine = useMemo<StitchLineSchema | undefined>(() => {
-    if (!isDefined(selection) || selection.type !== 'stitch-line') {
-      return undefined
-    }
-
-    return subProject.stitchLines.find((stitchLine) => stitchLine.id === selection.stitchLineId)
-  }, [subProject.stitchLines, selection])
+  const drawAreaSelection = useSubProjectSelection(subProject)
+  const {
+    editorSelection: selection,
+    hoveredStitchLineId,
+    hoveredTreeSelection,
+    selectedHole,
+    selectedStitchLine,
+    isComponentSelected,
+  } = drawAreaSelection
 
   const selectionObstructingComponentIds = useMemo<ReadonlySet<string>>(
     () => getSelectionObstructingComponentIds(hoveredTreeSelection ?? selection, subProject),
     [hoveredTreeSelection, subProject, selection],
-  )
-
-  const selectComponent = useCallback((componentId: string): void => {
-    setHoveredStitchLine(undefined)
-    setSelection({ componentId, type: 'component' })
-  }, [])
-
-  const selectStitchLine = useCallback((stitchLineId: string): void => {
-    setSelection({ stitchLineId, type: 'stitch-line' })
-  }, [])
-
-  const selectHole = useCallback((holeId: string): void => {
-    setHoveredStitchLine(undefined)
-    setSelection({ holeId, type: 'hole' })
-  }, [])
-
-  const clearSelection = useCallback((): void => {
-    setHoveredStitchLine(undefined)
-    setSelection(undefined)
-  }, [])
-
-  const isComponentSelected = useCallback(
-    (componentId: string): boolean => isDefined(selectedComponent) && componentId === selectedComponent.id,
-    [selectedComponent],
   )
 
   const isComponentTreeHovered = useCallback(
@@ -138,37 +92,6 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     (stitchLineId: string): boolean =>
       hoveredTreeSelection?.type === 'stitch-line' && hoveredTreeSelection.stitchLineId === stitchLineId,
     [hoveredTreeSelection],
-  )
-
-  const drawAreaSelection = useMemo<DrawAreaSelection>(
-    () => ({
-      clearSelection,
-      isComponentSelected,
-      selectComponent,
-      selectStitchLine,
-      selectHole,
-      selectedHole,
-      selectedComponent,
-      selectedStitchLine,
-      hoveredStitchLineId,
-      hoveredTreeSelection,
-      editorSelection: selection,
-      setHoveredStitchLine,
-      setHoveredTreeSelection,
-    }),
-    [
-      clearSelection,
-      isComponentSelected,
-      selectComponent,
-      selectStitchLine,
-      selectHole,
-      selectedHole,
-      selectedComponent,
-      selectedStitchLine,
-      hoveredStitchLineId,
-      hoveredTreeSelection,
-      selection,
-    ],
   )
 
   const componentStyles = useMemo<DrawAreaComponentStyles>(

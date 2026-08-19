@@ -17,11 +17,13 @@ export const EditorMenu = () => {
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const isExportEnabled = project.subProjects.length > 0
+
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
 
   const handleSvgExportClick = useCallback(() => setSvgExportDialogOpen(true), [])
+
   const handlePdfExportClick = useCallback(() => setPdfExportDialogOpen(true), [])
-  const isExportEnabled = project.subProjects.length > 0
 
   return (
     <>
@@ -62,6 +64,20 @@ export const EditorMenu = () => {
                       <Menu.ItemText>{t.common.actions.exportPdf}</Menu.ItemText>
                     </Menu.Item>
                   </Menu.Content>
+                </Menu.Positioner>
+              </Portal>
+            </Menu.Root>
+            {/* Edit menu */}
+            <Menu.Root>
+              <Menu.Trigger asChild>
+                <Button size="sm" variant="ghost">
+                  <PiCaretDown />
+                  {t.editor.menus.edit}
+                </Button>
+              </Menu.Trigger>
+              <Portal>
+                <Menu.Positioner>
+                  <Menu.Content>{/* TODO */}</Menu.Content>
                 </Menu.Positioner>
               </Portal>
             </Menu.Root>

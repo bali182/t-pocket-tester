@@ -1,12 +1,22 @@
 import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
-import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiColumns, PiRows } from 'react-icons/pi'
+import {
+  PiArrowDown,
+  PiArrowLeft,
+  PiArrowRight,
+  PiArrowUp,
+  PiArrowsHorizontal,
+  PiArrowsVertical,
+  PiColumns,
+  PiRows,
+  PiRuler,
+} from 'react-icons/pi'
 
 import type { HasLayoutSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
-import { NumberInput } from '../../common/NumberInput'
+import { AutoDimensionEditor } from '../../common/AutoDimensionEditor'
 import { SectionGroup } from '../../common/SectionGroup'
 
 type LayoutSectionProps<T extends HasLayoutSchema> = {
@@ -39,6 +49,13 @@ export function LayoutSection<T extends HasLayoutSchema>({
   const handleGapChange = useCallback(
     (layoutGap: string) => {
       onChange({ ...editable, layoutGap })
+    },
+    [editable, onChange],
+  )
+
+  const handleAutoLayoutGapChange = useCallback(
+    (autoLayoutGap: boolean) => {
+      onChange({ ...editable, autoLayoutGap })
     },
     [editable, onChange],
   )
@@ -80,9 +97,15 @@ export function LayoutSection<T extends HasLayoutSchema>({
 
       <SectionGroup.SectionRowTitle>{t.component.editor.layout.gap}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.layoutGap}>
-        <NumberInput
+        <AutoDimensionEditor
+          ariaLabel={t.component.editor.layout.gap}
+          auto={editable.autoLayoutGap}
+          autoIcon={editable.layoutOrientation === 'horizontal' ? PiArrowsHorizontal : PiArrowsVertical}
+          placeholder={t.common.placeholders.fill}
           issue={issues.layoutGap}
-          onChange={handleGapChange}
+          manualIcon={PiRuler}
+          onAutoChange={handleAutoLayoutGapChange}
+          onValueChange={handleGapChange}
           step={1}
           unit="mm"
           value={editable.layoutGap}

@@ -1,4 +1,5 @@
 import { STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR, STROKE_THICKNESS } from './constants/drawing'
+import { MagicFixSettingsSchema } from './schemas/magic-fix-3/magicFixSettings3'
 import { PdfExportSettingsSchema } from './schemas/pdfExport'
 import { BaseExportSettingsSchema } from './schemas/settings'
 import { StitchLineCommonConfigSchema } from './schemas/stitching'
@@ -6,7 +7,7 @@ import { StitchLineCommonConfigSchema } from './schemas/stitching'
 export const defaultStitchingSettings: StitchLineCommonConfigSchema = {
   stitchMargin: 4,
   stitchHoleLength: 1.7,
-  stitchHoleDistance: 3.35,
+  stitchHoleDistance: 3.38,
   stitchHoleThickness: 0.3,
   stitchHoleColor: STITCH_HOLE_COLOR,
   stitchLineColor: STITCH_LINE_STORKE_COLOR,
@@ -28,4 +29,12 @@ export const defaultPdfExportParams: PdfExportSettingsSchema = {
   page: 'A4',
   orientation: 'portrait',
   layout: 'compact',
+}
+
+export const defaultMagicFix3Settings: MagicFixSettingsSchema = {
+  accuracy: 0.01,
+  minimumEdgeDistance: 2,
+  minimumEdgeCrossingMultiplier: 0.5,
+  dimensionModifyRange: { maxDecreaseMultiplier: 0.5, maxIncreaseMultiplier: 0.5 },
+  stitchLineOffsetModifyRange: { maxDecreaseMultiplier: 0.5, maxIncreaseMultiplier: 0.5 },
 }

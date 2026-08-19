@@ -79,6 +79,7 @@ export const validatePanelSchema = (
     topRightRadius: topRightRadiusResult.issues,
     type: undefined,
     width: widthResult.issues,
+    autoLayoutGap: undefined,
   }
 
   const committedValue: PanelSchema = {
@@ -99,6 +100,7 @@ export const validatePanelSchema = (
     topRightRadius: topRightRadiusResult.committedValue,
     type: currentValue.type,
     width: widthResult.committedValue,
+    autoLayoutGap: input.autoLayoutGap,
   }
 
   if (isDefined(colorResult.committedValue)) {
@@ -140,6 +142,7 @@ export const validatePanelSchema = (
     topRightRadius: topRightRadiusResult.value,
     type: currentValue.type,
     width: widthResult.value,
+    autoLayoutGap: input.autoLayoutGap,
   }
 
   if (isDefined(colorResult.value)) {

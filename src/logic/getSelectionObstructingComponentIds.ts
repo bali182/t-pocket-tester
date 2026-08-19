@@ -1,6 +1,6 @@
 import { getComponentDescendants } from '../operations/subProject/utils/getComponentDescendants'
 import { ComponentSchema } from '../schemas/components'
-import { EditorSelectionSchema } from '../schemas/selection'
+import { SelectionSchema } from '../schemas/selection'
 import { StitchLineSchema } from '../schemas/stitching'
 import { SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
@@ -8,7 +8,7 @@ import { isDefined } from '../utils/isDefined'
 const EmptySet: ReadonlySet<string> = new Set<string>()
 
 export const getSelectionObstructingComponentIds = (
-  selection: EditorSelectionSchema | undefined,
+  selection: SelectionSchema | undefined,
   subProject: SubProjectSchema,
 ): ReadonlySet<string> => {
   if (!isDefined(selection)) {

@@ -5,6 +5,7 @@ export const EN: typeof HU = {
     actions: {
       add: 'Add',
       cancel: 'Cancel',
+      next: 'Next',
       remove: 'Delete',
       scaling: 'Scaling',
       apply: 'Apply',
@@ -117,6 +118,88 @@ export const EN: typeof HU = {
       errors: {
         exportFailed: 'The PDF export failed.',
         unplaceablePanels: 'One or more panels do not fit on the selected page.',
+      },
+    },
+  },
+  magicFix: {
+    menu: 'Magic fix',
+    dialog: {
+      title: 'Magic fix',
+      steps: {
+        settings: 'Settings',
+        fixing: 'Fixing',
+        review: 'Review',
+      },
+      progress: {
+        message: 'Working on the fix…',
+        completed: 'Complete',
+      },
+      actions: {
+        back: 'Back',
+        addNewModule: 'Add new module',
+        overwriteModule: 'Overwrite module',
+      },
+      review: {
+        success: 'The magic fix completed successfully.',
+        error: 'The magic fix failed.',
+        noResult: 'The magic fix could not produce a result.',
+      },
+      settings: {
+        noSelectionTitle: 'Select an item!',
+        noSelectionDescription: 'For detailed component-level setting pick an item from the tree on the left!',
+        tabs: {
+          basic: 'Basic settings',
+          advanced: 'Advanced settings',
+        },
+        basic: {
+          sections: {
+            accuracyAndEffort: 'Accuracy and effort',
+            sharedLimits: 'Shared limits',
+          },
+          labels: {
+            accuracy: 'Accuracy',
+            effort: 'Effort',
+            preferredMinimumDistanceFromEdge: 'Stitch distance from edge',
+            modifyRange: 'Modification range',
+          },
+          efforts: {
+            low: 'Low',
+            medium: 'Medium',
+            high: 'High',
+          },
+        },
+        advanced: {
+          sections: {
+            distance: 'Distance from edge',
+            layoutGap: 'Layout gap',
+            dimensions: 'Dimensions',
+            autoDimensions: 'Auto dimensions',
+            cornerRadius: 'Corner radius',
+            pocketStep: 'Pocket step',
+            offset: 'Offset',
+            flip: 'Flip',
+          },
+          labels: {
+            preferredMinimumDistanceFromEdge: 'Preferred minimum',
+            layoutGap: 'Gap',
+            canConvertToFixedHeight: 'Allow fixed height',
+            canConvertToFixedWidth: 'Allow fixed width',
+            canConvertToIndividualRadii: 'Allow individual radii',
+            borderRadius: 'All corners',
+            pocketStep: 'Step',
+            topStart: 'Top start',
+            topEnd: 'Top end',
+            rightStart: 'Right start',
+            rightEnd: 'Right end',
+            bottomStart: 'Bottom start',
+            bottomEnd: 'Bottom end',
+            leftStart: 'Left start',
+            leftEnd: 'Left end',
+            start: 'Start',
+            end: 'End',
+            canFlipStitchDirection: 'Allow flip',
+          },
+        },
       },
     },
   },
@@ -295,7 +378,7 @@ export const EN: typeof HU = {
     },
   },
   defaults: {
-    subProjectName: 'New project',
+    projectName: 'New project',
     rootComponentName: 'Module',
     stitchLineName: (number: number) => `Stitch line ${number}`,
   },
