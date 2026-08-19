@@ -101,7 +101,6 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
             <NumberInput
               issue={issues.borderRadius}
               onChange={handleBorderRadiusChange}
-              step={1}
               unit="mm"
               value={editable.borderRadius}
             />
@@ -120,7 +119,6 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
                 issue={issues.topLeftRadius}
                 onChange={handleIndividualRadiusChange('topLeftRadius')}
                 startAddon={<TbRadiusTopLeft />}
-                step={1}
                 unit="mm"
                 value={editable.topLeftRadius}
               />
@@ -128,7 +126,6 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
                 issue={issues.topRightRadius}
                 onChange={handleIndividualRadiusChange('topRightRadius')}
                 startAddon={<TbRadiusTopRight />}
-                step={1}
                 unit="mm"
                 value={editable.topRightRadius}
               />
@@ -136,7 +133,6 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
                 issue={issues.bottomLeftRadius}
                 onChange={handleIndividualRadiusChange('bottomLeftRadius')}
                 startAddon={<TbRadiusBottomLeft />}
-                step={1}
                 unit="mm"
                 value={editable.bottomLeftRadius}
               />
@@ -144,7 +140,6 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
                 issue={issues.bottomRightRadius}
                 onChange={handleIndividualRadiusChange('bottomRightRadius')}
                 startAddon={<TbRadiusBottomRight />}
-                step={1}
                 unit="mm"
                 value={editable.bottomRightRadius}
               />

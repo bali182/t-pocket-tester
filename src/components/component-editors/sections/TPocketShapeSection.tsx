@@ -43,7 +43,6 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, is
         <NumberInput
           issue={issues.tPocketTabWidth}
           onChange={handleTPocketTabWidthChange}
-          step={1}
           unit="mm"
           value={editable.tPocketTabWidth}
         />
@@ -54,7 +53,6 @@ export const TPocketShapeSection: FC<TPocketShapeSectionProps> = ({ editable, is
         <NumberInput
           issue={issues.tPocketTaper}
           onChange={handleTPocketTaperChange}
-          step={1}
           unit="mm"
           value={editable.tPocketTaper}
         />

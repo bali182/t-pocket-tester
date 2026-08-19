@@ -60,7 +60,7 @@ export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) 
             <VStack align="stretch" gap="12">
               <Slider.Root min={0.5} max={2} step={0.001} value={[draftScaling]} onValueChange={handleScaleChange}>
                 <Text fontWeight="medium">
-                  {t.common.actions.scaling}: {scalingPercent}%
+                  {t.editor.scalingDialog.title}: {scalingPercent}%
                 </Text>
                 <Slider.Control>
                   <Slider.Track>

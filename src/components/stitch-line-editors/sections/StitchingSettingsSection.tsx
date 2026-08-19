@@ -123,7 +123,6 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchMarginChange}
           onReset={isDefined(onReset) ? handleStitchMarginReset : undefined}
           isResetEnabled={isDefined(editable.stitchMargin)}
-          step={1}
           unit="mm"
           value={resolvedEditable.stitchMargin}
         />
@@ -136,7 +135,6 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchHoleLengthChange}
           onReset={isDefined(onReset) ? handleStitchHoleLengthReset : undefined}
           isResetEnabled={isDefined(editable.stitchHoleLength)}
-          step={1}
           unit="mm"
           value={resolvedEditable.stitchHoleLength}
         />
@@ -160,7 +158,6 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchHoleThicknessChange}
           onReset={isDefined(onReset) ? handleStitchHoleThicknessReset : undefined}
           isResetEnabled={isDefined(editable.stitchHoleThickness)}
-          step={1}
           unit="mm"
           value={resolvedEditable.stitchHoleThickness}
         />
@@ -173,7 +170,6 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchLineThicknessChange}
           onReset={isDefined(onReset) ? handleStitchLineThicknessReset : undefined}
           isResetEnabled={isDefined(editable.stitchLineThickness)}
-          step={1}
           unit="mm"
           value={resolvedEditable.stitchLineThickness}
         />

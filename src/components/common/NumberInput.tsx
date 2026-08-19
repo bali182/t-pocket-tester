@@ -2,6 +2,7 @@ import { Box, HStack, IconButton, Input, InputGroup, Separator, type InputProps 
 import { type FC, type ReactNode } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
+import { useNumberEditorStepContext } from '../../contexts/NumberEditorStepContext'
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
 
@@ -27,13 +28,14 @@ export const NumberInput: FC<NumberInputProps> = ({
   onReset,
   size = 'xs',
   startAddon,
-  step,
+  step: overwriteStep,
   unit,
   value,
   placeholder,
   isResetEnabled,
 }) => {
   const isInvalid = isDefined(issue) && issue.severity === 'error'
+  const { step } = useNumberEditorStepContext()
 
   const input = (
     <Input
@@ -41,7 +43,7 @@ export const NumberInput: FC<NumberInputProps> = ({
       disabled={disabled}
       inputMode="decimal"
       onChange={(event) => onChange(event.currentTarget.value)}
-      step={step}
+      step={overwriteStep ?? step}
       type="number"
       value={value}
       placeholder={placeholder}

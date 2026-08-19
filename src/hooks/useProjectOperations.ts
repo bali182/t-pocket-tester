@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { cloneSubProject as cloneSubProjectPure } from '../operations/project/cloneSubProject'
 import { deleteSubProject as deleteSubProjectPure } from '../operations/project/deleteSubProject'
 import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
+import { ProjectEditingSettingSchema } from '../schemas/settings'
 import type { SubProjectSchema } from '../schemas/subProject'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
@@ -12,6 +13,16 @@ import { useSubProject } from './useSubProject'
 export const useProjectOperations = () => {
   const { setProject } = useProject()
   const { subProject } = useSubProject()
+
+  const updateEditingSettings = useCallback(
+    (update: Partial<ProjectEditingSettingSchema>): void => {
+      setProject((currentProject) => ({
+        ...currentProject,
+        editingSettings: { ...currentProject.editingSettings, ...update },
+      }))
+    },
+    [setProject],
+  )
 
   const cloneSubProject = useCallback(
     (sourceSubProject?: SubProjectSchema): void => {
@@ -68,5 +79,5 @@ export const useProjectOperations = () => {
     [setProject, subProject.id],
   )
 
-  return { cloneSubProject, deleteSubProject, setSubProject }
+  return { cloneSubProject, deleteSubProject, setSubProject, updateEditingSettings }
 }

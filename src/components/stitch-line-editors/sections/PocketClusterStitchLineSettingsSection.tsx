@@ -65,7 +65,6 @@ export const PocketClusterStitchLineSettingsSection = ({
         <NumberInput
           issue={issues.startOffset}
           onChange={handleStartOffsetChange}
-          step={1}
           unit="mm"
           value={editable.startOffset}
         />
@@ -73,13 +72,7 @@ export const PocketClusterStitchLineSettingsSection = ({
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.endOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.endOffset}>
-        <NumberInput
-          issue={issues.endOffset}
-          onChange={handleEndOffsetChange}
-          step={1}
-          unit="mm"
-          value={editable.endOffset}
-        />
+        <NumberInput issue={issues.endOffset} onChange={handleEndOffsetChange} unit="mm" value={editable.endOffset} />
       </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.common.labels.direction}</SectionGroup.SectionRowTitle>

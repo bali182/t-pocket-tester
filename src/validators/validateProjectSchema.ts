@@ -31,6 +31,7 @@ export const validateProjectSchema = (
       addComputedSizesToAutoSized: undefined,
       adjustCornerRadiiToParent: undefined,
       addBaseColorByDefault: undefined,
+      numberEditorStep: undefined,
     },
     id: undefined,
     name: nameResult.issues,

@@ -7,10 +7,7 @@ export const EN: typeof HU = {
       cancel: 'Cancel',
       next: 'Next',
       remove: 'Delete',
-      scaling: 'Scaling',
       apply: 'Apply',
-      exportSvg: 'Export SVG',
-      exportPdf: 'Export PDF',
       clone: 'Clone',
       flipHorizontal: 'Flip horizontal',
       flipVertical: 'Flip vertical',
@@ -48,9 +45,29 @@ export const EN: typeof HU = {
   },
   editor: {
     menus: {
-      file: 'File',
-      edit: 'Edit',
-      view: 'View',
+      file: {
+        name: 'File',
+        export: {
+          name: 'Export project',
+          svg: 'Export SVG',
+          pdf: 'Export PDF',
+        },
+      },
+      edit: {
+        name: 'Edit',
+        step: {
+          name: 'Step',
+          tiny: 'Tiny',
+          small: 'Small',
+          default: 'Default',
+          stitch: 'Stitch-size',
+          size: (size: number) => `${size} mm`,
+        },
+      },
+      view: {
+        name: 'View',
+        scaling: 'Scaling',
+      },
     },
     scalingDialog: {
       title: 'Scaling',

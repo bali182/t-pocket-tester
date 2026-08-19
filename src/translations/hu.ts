@@ -5,10 +5,7 @@ export const HU = {
       cancel: 'Mégse',
       next: 'Tovább',
       apply: 'Alkalmaz',
-      exportSvg: 'SVG Exportálás',
-      exportPdf: 'PDF Exportálás',
       remove: 'Törlés',
-      scaling: 'Skálázás',
       clone: 'Duplikálás',
       flipHorizontal: 'Vízszintes tükrözés',
       flipVertical: 'Függőleges tükrözés',
@@ -46,9 +43,29 @@ export const HU = {
   },
   editor: {
     menus: {
-      file: 'Fájl',
-      edit: 'Szerkesztés',
-      view: 'Nézet',
+      file: {
+        name: 'Fájl',
+        export: {
+          name: 'Projekt exportálása',
+          svg: 'SVG Exportálás',
+          pdf: 'PDF Exportálás',
+        },
+      },
+      edit: {
+        name: 'Szerkesztés',
+        step: {
+          name: 'Lépésköz',
+          tiny: 'Apró',
+          small: 'Kicsi',
+          default: 'Alapértelmezett',
+          stitch: `Öltés`,
+          size: (size: number) => `${size}mm`,
+        },
+      },
+      view: {
+        name: 'Nézet',
+        scaling: 'Skálázás',
+      },
     },
     scalingDialog: {
       title: 'Skálázás',

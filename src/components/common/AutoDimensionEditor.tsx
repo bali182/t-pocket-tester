@@ -24,7 +24,6 @@ export const AutoDimensionEditor: FC<AutoDimensionEditorProps> = ({
   auto,
   placeholder,
   issue,
-  step,
   unit,
   value,
   autoIcon: AutoIcon,
@@ -57,7 +56,6 @@ export const AutoDimensionEditor: FC<AutoDimensionEditorProps> = ({
           issue={issue}
           onChange={onValueChange}
           placeholder={auto ? placeholder : ''}
-          step={step}
           unit={unit}
           value={auto ? '' : value}
         />

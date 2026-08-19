@@ -157,7 +157,6 @@ export function ExportContentSection<T extends BaseExportSettingsSchema>({
         <NumberInput
           issue={issues.cutHelperDistance}
           onChange={handleCutHelperDistanceChange}
-          step={1}
           unit="mm"
           value={editable.cutHelperDistance}
         />

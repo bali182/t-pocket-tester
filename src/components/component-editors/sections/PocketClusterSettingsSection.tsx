@@ -112,7 +112,6 @@ export const PocketClusterSettingsSection: FC<PocketClusterSettingsSectionProps>
         <NumberInput
           issue={issues.pocketStep}
           onChange={handlePocketStepChange}
-          step={1}
           unit="mm"
           value={editable.pocketStep}
         />
