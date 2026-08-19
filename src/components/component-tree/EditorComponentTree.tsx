@@ -70,14 +70,21 @@ export const EditorComponentTree: FC = () => {
     (node: ProjectTreeNode): ReactNode => {
       switch (node.kind) {
         case 'component':
-          return <ComponentActionsMenu component={node.component} onAddChild={handleAddChild} size="2xs" />
+          return (
+            <ComponentActionsMenu
+              component={node.component}
+              onAddChild={handleAddChild}
+              size="2xs"
+              subProject={subProject}
+            />
+          )
         case 'hole':
           return <HoleActionsMenu hole={node.hole} onDelete={handleHoleDelete} size="2xs" />
         case 'stitch-line':
           return <StitchLineActionsMenu onDelete={handleStitchLineDelete} size="2xs" stitchLine={node.stitchLine} />
       }
     },
-    [handleAddChild, handleHoleDelete, handleStitchLineDelete],
+    [handleAddChild, handleHoleDelete, handleStitchLineDelete, subProject],
   )
 
   return (

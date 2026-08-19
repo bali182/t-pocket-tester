@@ -7,6 +7,8 @@ import { appRoutes } from '../appRoutes'
 import { useCreateSubProject } from '../hooks/useCreateSubProject'
 import { useProject } from '../hooks/useProject'
 import { SubProjectRouteParams } from '../schemas/routeParams'
+import { accessors } from '../utils/accessors'
+import { ComponentActionsMenu } from './ComponentActionsMenu'
 
 export const EditorSubProjectTabs: FC = () => {
   const { project } = useProject()
@@ -24,17 +26,23 @@ export const EditorSubProjectTabs: FC = () => {
   return (
     <Tabs.Root size="md" value={subProjectId} variant="outline" width="100%">
       <Tabs.List _before={{ borderBottomColor: 'bg.panel' }} alignItems="center">
-        {project.subProjects.map((subProject) => (
-          <HStack gap="0" key={subProject.id}>
-            <Tabs.Trigger
-              _selected={{ bg: 'bg.panel', borderColor: 'bg.panel', boxShadow: 'md' }}
-              onClick={() => handleSubProjectClick(subProject.id)}
-              value={subProject.id}
-            >
-              <PiWallet /> {subProject.components[subProject.root]?.name}
-            </Tabs.Trigger>
-          </HStack>
-        ))}
+        {project.subProjects.map((subProject) => {
+          const rootPanel = accessors.subProject(subProject).rootPanel()
+          return (
+            <HStack gap="0" key={subProject.id}>
+              <Tabs.Trigger
+                as="div"
+                _selected={{ bg: 'bg.panel', borderColor: 'bg.panel', boxShadow: 'md' }}
+                onClick={() => handleSubProjectClick(subProject.id)}
+                pr="2"
+                value={subProject.id}
+              >
+                <PiWallet /> {rootPanel.name}
+                <ComponentActionsMenu size="2xs" component={rootPanel} subProjectOnly={true} subProject={subProject} />
+              </Tabs.Trigger>
+            </HStack>
+          )
+        })}
         <IconButton size="xs" variant="ghost" ml="2" onClick={createSubProject}>
           <PiPlus />
         </IconButton>

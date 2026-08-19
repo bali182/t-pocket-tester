@@ -3,13 +3,14 @@ import { useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
 import { appRoutes } from '../appRoutes'
+import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
-import { useSubProject } from '../hooks/useSubProject'
 import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
+import { SubProjectSchema } from '../schemas/subProject'
 import { pendingSubProjectDeletionAtom } from '../state/pendigDeletionAtoms'
 import { useTranslation } from '../translations/translation'
 import { getComponentIcon } from '../utils/getComponentIcon'
@@ -18,6 +19,8 @@ import { noop } from '../utils/noop'
 
 type ComponentActionsProps = {
   component: ComponentSchema
+  subProject: SubProjectSchema
+  subProjectOnly?: boolean
   size: IconButtonProps['size']
   onAddChild?: (parentId: string, type: ComponentSchema['type']) => void
   onAddStitchLine?: (componentId: string, type: StitchLineSchema['type']) => void
@@ -27,38 +30,51 @@ type ComponentActionsProps = {
 export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   component,
   size,
+  subProject,
+  subProjectOnly,
   onAddChild = noop,
   onAddStitchLine = noop,
   onDelete = noop,
 }) => {
   const t = useTranslation()
   const { project } = useProject()
-  const { subProject } = useSubProject()
+  const { subProject: selectedSubProject } = useOptionalSubProject()
   const setPendingSubProjectDeletion = useSetAtom(pendingSubProjectDeletionAtom)
   const { cloneSubProject, deleteSubProject } = useProjectOperations()
   const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useSubProjectOperations()
   const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
 
-  const nextSubProjectAfterDelete = useMemo(() => {
-    const subProjectIndex = project.subProjects.findIndex((candidate) => candidate.id === subProject.id)
-    if (project.subProjects.length === 1 && project.subProjects[0] === subProject) {
+  const nextSelectedSubProjectAfterDelete = useMemo((): SubProjectSchema | undefined => {
+    // No subproject selected, we won't select any. This shouldn't happen as /projects/id autoselects a subproject if there are any.
+    if (!isDefined(selectedSubProject?.id)) {
+      return undefined
+    }
+    // We are not deleting the same subproject as the selected one, preserve the selected one.
+    if (selectedSubProject.id !== subProject.id) {
+      return selectedSubProject
+    }
+    const subProjectIndex = project.subProjects.findIndex((candidate) => candidate.id === selectedSubProject?.id)
+    if (project.subProjects.length === 1 && project.subProjects[0] === selectedSubProject) {
       return undefined
     }
     return subProjectIndex === 0 ? project.subProjects[1] : project.subProjects[subProjectIndex - 1]
-  }, [project.subProjects, subProject])
+  }, [selectedSubProject, subProject.id, project.subProjects])
 
   const deleteRoot = useCallback((): void => {
-    const navigationTarget = isDefined(nextSubProjectAfterDelete)
-      ? appRoutes.subProject(project.id, nextSubProjectAfterDelete.id)
-      : appRoutes.project(project.id)
-    setPendingSubProjectDeletion({ redirectPath: navigationTarget, subProjectId: subProject.id })
-    deleteSubProject()
+    if (isDefined(selectedSubProject) && selectedSubProject?.id !== nextSelectedSubProjectAfterDelete?.id) {
+      const navigationTarget = isDefined(nextSelectedSubProjectAfterDelete)
+        ? appRoutes.subProject(project.id, nextSelectedSubProjectAfterDelete.id)
+        : appRoutes.project(project.id)
+      setPendingSubProjectDeletion({ redirectPath: navigationTarget, subProjectId: subProject.id })
+    }
+    deleteSubProject(subProject.id)
     onDelete(component.id)
   }, [
-    component.id,
+    selectedSubProject,
+    nextSelectedSubProjectAfterDelete,
     deleteSubProject,
-    nextSubProjectAfterDelete,
     onDelete,
+    component.id,
     project.id,
     setPendingSubProjectDeletion,
     subProject.id,
@@ -97,7 +113,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   const handleClone = useCallback((): void => {
     switch (component.type) {
       case 'root-panel': {
-        cloneSubProject()
+        cloneSubProject(subProject)
         break
       }
       case 'panel':
@@ -106,7 +122,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
         break
       }
     }
-  }, [cloneComponent, cloneSubProject, component.id, component.type])
+  }, [cloneComponent, cloneSubProject, component.id, component.type, subProject])
 
   const handleAddStitchLine = useCallback(
     (type: StitchLineSchema['type']): void => {
@@ -131,13 +147,17 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
-              <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
-              <Menu.Item value="hole" onSelect={handleAddHole}>
-                <PiRectangleDashed />
-                <Menu.ItemText>{t.common.actions.addByName(t.hole.title)}</Menu.ItemText>
-              </Menu.Item>
-              <Menu.Separator />
-              <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
+              {!subProjectOnly && (
+                <>
+                  <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
+                  <Menu.Item value="hole" onSelect={handleAddHole}>
+                    <PiRectangleDashed />
+                    <Menu.ItemText>{t.common.actions.addByName(t.hole.title)}</Menu.ItemText>
+                  </Menu.Item>
+                  <Menu.Separator />
+                  <AddComponentStitchLineMenu component={component} onAddStitchLine={handleAddStitchLine} />
+                </>
+              )}
               <Menu.Item value="clone" onSelect={handleClone}>
                 <PiCopy />
                 <Menu.ItemText>{t.common.actions.clone}</Menu.ItemText>

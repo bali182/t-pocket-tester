@@ -8,11 +8,9 @@ import type { SubProjectSchema } from '../schemas/subProject'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
 import { useProject } from './useProject'
-import { useSubProject } from './useSubProject'
 
 export const useProjectOperations = () => {
   const { setProject } = useProject()
-  const { subProject } = useSubProject()
 
   const updateEditingSettings = useCallback(
     (update: Partial<ProjectEditingSettingSchema>): void => {
@@ -25,17 +23,13 @@ export const useProjectOperations = () => {
   )
 
   const cloneSubProject = useCallback(
-    (sourceSubProject?: SubProjectSchema): void => {
+    (sourceSubProject: SubProjectSchema): void => {
       setProject((currentProject) => {
-        const subProjectToClone = isDefined(sourceSubProject)
-          ? sourceSubProject
-          : currentProject.subProjects.find((candidate) => candidate.id === subProject.id)
-
-        if (!isDefined(subProjectToClone)) {
+        if (!isDefined(sourceSubProject)) {
           return currentProject
         }
 
-        const rootPanel = subProjectToClone.components[subProjectToClone.root]
+        const rootPanel = sourceSubProject.components[sourceSubProject.root]
 
         if (!isDefined(rootPanel) || rootPanel.type !== 'root-panel') {
           return currentProject
@@ -47,7 +41,7 @@ export const useProjectOperations = () => {
           .map((component) => component.name)
         const usedComponentNames = new Set([
           ...usedRootNames,
-          ...Object.values(subProjectToClone.components)
+          ...Object.values(sourceSubProject.components)
             .filter((component) => component.id !== rootPanel.id)
             .map((component) => component.name),
         ])
@@ -56,28 +50,19 @@ export const useProjectOperations = () => {
         return cloneSubProjectPure(currentProject, {
           getUnusedId: id,
           rootName,
-          subProject: subProjectToClone,
+          subProject: sourceSubProject,
         })
       })
     },
-    [setProject, subProject.id],
+    [setProject],
   )
 
-  const deleteSubProject = useCallback((): void => {
-    setProject((currentProject) => deleteSubProjectPure(currentProject, { subProjectId: subProject.id }))
-  }, [setProject, subProject.id])
-
-  const setSubProject = useCallback(
-    (updatedSubProject: SubProjectSchema): void => {
-      setProject((currentProject) => ({
-        ...currentProject,
-        subProjects: currentProject.subProjects.map((candidate) =>
-          candidate.id === subProject.id ? updatedSubProject : candidate,
-        ),
-      }))
+  const deleteSubProject = useCallback(
+    (id: string): void => {
+      setProject((currentProject) => deleteSubProjectPure(currentProject, { subProjectId: id }))
     },
-    [setProject, subProject.id],
+    [setProject],
   )
 
-  return { cloneSubProject, deleteSubProject, setSubProject, updateEditingSettings }
+  return { cloneSubProject, deleteSubProject, updateEditingSettings }
 }
