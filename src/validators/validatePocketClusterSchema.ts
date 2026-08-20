@@ -39,7 +39,6 @@ export const validatePocketClusterSchema = (
     context,
   )
   const colorResult = validateOptionalHexColor(input.color, currentValue.color, context)
-  const borderRadiusResult = validateNumber(input.borderRadius, currentValue.borderRadius, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
   const bottomLeftRadiusResult = validateNumber(input.bottomLeftRadius, currentValue.bottomLeftRadius, context, {
@@ -76,7 +75,6 @@ export const validatePocketClusterSchema = (
   const issues: ValidationIssuesSchema<PocketClusterSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
-    borderRadius: borderRadiusResult.issues,
     bottomLeftRadius: bottomLeftRadiusResult.issues,
     bottomRightRadius: bottomRightRadiusResult.issues,
     cardId: cardIdResult.issues,
@@ -99,7 +97,6 @@ export const validatePocketClusterSchema = (
   const committedValue: PocketClusterSchema = {
     autoHeight: input.autoHeight,
     autoWidth: input.autoWidth,
-    borderRadius: borderRadiusResult.committedValue,
     bottomLeftRadius: bottomLeftRadiusResult.committedValue,
     bottomRightRadius: bottomRightRadiusResult.committedValue,
     cardId: cardIdResult.committedValue,
@@ -125,7 +122,6 @@ export const validatePocketClusterSchema = (
   if (
     !nameResult.isValid ||
     !colorResult.isValid ||
-    !borderRadiusResult.isValid ||
     !topLeftRadiusResult.isValid ||
     !topRightRadiusResult.isValid ||
     !bottomLeftRadiusResult.isValid ||
@@ -145,7 +141,6 @@ export const validatePocketClusterSchema = (
   const value: PocketClusterSchema = {
     autoHeight: input.autoHeight,
     autoWidth: input.autoWidth,
-    borderRadius: borderRadiusResult.value,
     bottomLeftRadius: bottomLeftRadiusResult.value,
     bottomRightRadius: bottomRightRadiusResult.value,
     cardId: cardIdResult.value,

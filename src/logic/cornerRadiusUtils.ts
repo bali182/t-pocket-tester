@@ -5,14 +5,13 @@ import type { HasCornerRadiusSchema } from '../schemas/common'
 import type { CornerRadiusSchema, RectSchema } from '../schemas/geometry'
 
 export const getNormalizedCornerRadius = (component: HasCornerRadiusSchema): CornerRadiusSchema => {
-  const { individualRadii, borderRadius, bottomLeftRadius, bottomRightRadius, topLeftRadius, topRightRadius } =
-    component
+  const { bottomLeftRadius, bottomRightRadius, topLeftRadius, topRightRadius } = component
 
   return {
-    topLeft: new BigNumber(individualRadii ? topLeftRadius : borderRadius),
-    topRight: new BigNumber(individualRadii ? topRightRadius : borderRadius),
-    bottomRight: new BigNumber(individualRadii ? bottomRightRadius : borderRadius),
-    bottomLeft: new BigNumber(individualRadii ? bottomLeftRadius : borderRadius),
+    topLeft: new BigNumber(topLeftRadius),
+    topRight: new BigNumber(topRightRadius),
+    bottomRight: new BigNumber(bottomRightRadius),
+    bottomLeft: new BigNumber(bottomLeftRadius),
   }
 }
 

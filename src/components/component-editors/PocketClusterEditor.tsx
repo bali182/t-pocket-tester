@@ -36,7 +36,12 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
         onResetColor={onResetColor}
       />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
-      <CornerRadiusSection<PocketClusterSchema> editable={editable} issues={issues} onChange={onChange} />
+      <CornerRadiusSection<PocketClusterSchema>
+        value={component}
+        editable={editable}
+        issues={issues}
+        onChange={onChange}
+      />
       <PocketClusterSettingsSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <TPocketShapeSection component={component} editable={editable} issues={issues} onChange={onChange} />
     </>

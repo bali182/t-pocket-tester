@@ -41,7 +41,6 @@ export const createComponent = <T extends keyof ComponentByType>({
 }
 
 const defaultHasCornerRadius: HasCornerRadiusSchema = {
-  borderRadius: 0,
   topLeftRadius: 0,
   bottomLeftRadius: 0,
   bottomRightRadius: 0,

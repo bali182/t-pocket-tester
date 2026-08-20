@@ -34,7 +34,7 @@ export const RootPanelEditor: FC<RootPanelEditorProps> = ({
         onResetColor={onResetColor}
       />
       <WidthAndHeightSizeSection<RootPanelSchema> editable={editable} issues={issues} onChange={onChange} />
-      <CornerRadiusSection<RootPanelSchema> editable={editable} issues={issues} onChange={onChange} />
+      <CornerRadiusSection<RootPanelSchema> value={component} editable={editable} issues={issues} onChange={onChange} />
       <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />
     </>
   )

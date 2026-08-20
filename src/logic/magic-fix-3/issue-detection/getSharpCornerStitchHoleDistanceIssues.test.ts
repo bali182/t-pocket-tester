@@ -118,7 +118,15 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
   })
 
   it('does not treat a rounded corner as sharp', () => {
-    const root = d.rootPanel({ id: 'root', width: 11, height: 10, borderRadius: 2 })
+    const root = d.rootPanel({
+      id: 'root',
+      width: 11,
+      height: 10,
+      bottomLeftRadius: 2,
+      bottomRightRadius: 2,
+      topLeftRadius: 2,
+      topRightRadius: 2,
+    })
     const stitchLine = d.componentBoundsStitchLine({
       id: 'stitch-line',
       targetType: 'component',

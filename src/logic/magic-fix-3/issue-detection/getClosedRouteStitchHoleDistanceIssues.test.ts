@@ -7,7 +7,15 @@ import { getClosedRouteStitchHoleDistanceIssues } from './getClosedRouteStitchHo
 
 describe('getClosedRouteStitchHoleDistanceIssues', () => {
   it('does not report a rounded closed route with an expected closing hole distance', () => {
-    const root = d.rootPanel({ id: 'root', width: 14.9046, height: 15, borderRadius: 5 })
+    const root = d.rootPanel({
+      id: 'root',
+      width: 14.9046,
+      height: 15,
+      bottomLeftRadius: 5,
+      bottomRightRadius: 5,
+      topLeftRadius: 5,
+      topRightRadius: 5,
+    })
     const stitchLine = d.componentBoundsStitchLine({
       id: 'line',
       targetType: 'component',
@@ -35,7 +43,15 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
   })
 
   it('does not report a rounded closing deviation within the configured accuracy', () => {
-    const root = d.rootPanel({ id: 'root', width: 15, height: 15, borderRadius: 5 })
+    const root = d.rootPanel({
+      id: 'root',
+      width: 15,
+      height: 15,
+      bottomLeftRadius: 5,
+      bottomRightRadius: 5,
+      topLeftRadius: 5,
+      topRightRadius: 5,
+    })
     const stitchLine = d.componentBoundsStitchLine({
       id: 'line',
       targetType: 'component',
@@ -63,7 +79,15 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
   })
 
   it('reports a rounded closing deviation above the configured accuracy', () => {
-    const root = d.rootPanel({ id: 'root', width: 15, height: 15, borderRadius: 5 })
+    const root = d.rootPanel({
+      id: 'root',
+      width: 15,
+      height: 15,
+      bottomLeftRadius: 5,
+      bottomRightRadius: 5,
+      topLeftRadius: 5,
+      topRightRadius: 5,
+    })
     const stitchLine = d.componentBoundsStitchLine({
       id: 'line',
       targetType: 'component',
@@ -92,7 +116,15 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
   })
 
   it('ignores an open computed route', () => {
-    const root = d.rootPanel({ id: 'root', width: 15, height: 15, borderRadius: 5 })
+    const root = d.rootPanel({
+      id: 'root',
+      width: 15,
+      height: 15,
+      bottomLeftRadius: 5,
+      bottomRightRadius: 5,
+      topLeftRadius: 5,
+      topRightRadius: 5,
+    })
     const stitchLine = d.componentBoundsStitchLine({
       id: 'line',
       targetType: 'component',
@@ -155,7 +187,15 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
   })
 
   it('ignores a closed-route issue on a stitchline other than the selected one', () => {
-    const root = d.rootPanel({ id: 'root', width: 15, height: 15, borderRadius: 5 })
+    const root = d.rootPanel({
+      id: 'root',
+      width: 15,
+      height: 15,
+      bottomLeftRadius: 5,
+      bottomRightRadius: 5,
+      topLeftRadius: 5,
+      topRightRadius: 5,
+    })
     const selectedStitchLine = d.componentBoundsStitchLine({
       id: 'selected',
       targetType: 'component',

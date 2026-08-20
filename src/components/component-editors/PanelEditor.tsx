@@ -34,7 +34,7 @@ export const PanelEditor: FC<PanelEditorProps> = ({
         onResetColor={onResetColor}
       />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
-      <CornerRadiusSection<PanelSchema> editable={editable} issues={issues} onChange={onChange} />
+      <CornerRadiusSection<PanelSchema> value={component} editable={editable} issues={issues} onChange={onChange} />
       <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />
     </>
   )

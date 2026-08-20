@@ -80,31 +80,16 @@ export const adjustCornerRadiiToParent = (
           ? parentBottomRightRadius.toNumber()
           : child.bottomRightRadius
 
-      const borderRadiusTargets = [
-        new BigNumber(child.borderRadius),
-        ...(touchesTopLeft ? [parentTopLeftRadius] : []),
-        ...(touchesTopRight ? [parentTopRightRadius] : []),
-        ...(touchesBottomLeft ? [parentBottomLeftRadius] : []),
-        ...(touchesBottomRight ? [parentBottomRightRadius] : []),
-      ]
-
-      const maximumBorderRadius = BigNumber.maximum(...borderRadiusTargets)
-      const borderRadius = maximumBorderRadius.isEqualTo(child.borderRadius)
-        ? child.borderRadius
-        : maximumBorderRadius.toNumber()
-
       const borderRadiiMatch =
         topLeftRadius === child.topLeftRadius &&
         topRightRadius === child.topRightRadius &&
         bottomLeftRadius === child.bottomLeftRadius &&
-        bottomRightRadius === child.bottomRightRadius &&
-        borderRadius === child.borderRadius
+        bottomRightRadius === child.bottomRightRadius
 
       const updatedChild: ComponentSchema = borderRadiiMatch
         ? child
         : {
             ...child,
-            borderRadius,
             topLeftRadius,
             topRightRadius,
             bottomLeftRadius,

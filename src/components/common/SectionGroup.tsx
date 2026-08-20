@@ -16,6 +16,7 @@ type SectionGroupSectionProps = {
 
 type SectionGroupSectionHeaderProps = {
   children: ReactNode
+  rightAddon?: ReactNode
 }
 
 type SectionGroupSectionRowTitleProps = {
@@ -58,12 +59,24 @@ const SectionGroupSection: FC<SectionGroupSectionProps> = ({ children }) => {
   )
 }
 
-const SectionGroupSectionHeader: FC<SectionGroupSectionHeaderProps> = ({ children }) => {
+const SectionGroupSectionHeader: FC<SectionGroupSectionHeaderProps> = ({ children, rightAddon }) => {
   return (
-    <Box bg="bg.muted" gridColumn="1 / -1" m="0" pl="4" py="1">
+    <Box
+      bg="bg.muted"
+      gridColumn="1 / -1"
+      m="0"
+      px="4"
+      py="1"
+      height="8"
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+    >
       <Text color="fg.muted" fontWeight="bold" textStyle="sm">
         {children}
       </Text>
+      {rightAddon}
     </Box>
   )
 }

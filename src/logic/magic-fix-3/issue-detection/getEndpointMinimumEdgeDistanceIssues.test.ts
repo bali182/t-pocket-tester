@@ -94,7 +94,15 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
   })
 
   it('does not judge the lateral stitch margin', () => {
-    const root = d.rootPanel({ id: 'root', width: 100, height: 100, borderRadius: 5 })
+    const root = d.rootPanel({
+      id: 'root',
+      width: 100,
+      height: 100,
+      bottomLeftRadius: 5,
+      bottomRightRadius: 5,
+      topLeftRadius: 5,
+      topRightRadius: 5,
+    })
     const stitchLine = d.componentBoundsStitchLine({
       id: 'root-line',
       targetType: 'component',
