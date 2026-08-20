@@ -1,5 +1,6 @@
 import type BigNumber from 'bignumber.js'
 
+import { HasTypeSchema } from './common'
 import type { ComponentSchema, PocketClusterSchema } from './components'
 import type { ComputedTPocketSchema, ComputedTopPocketSchema } from './computed'
 import type { PathSchema, RectSchema } from './geometry'
@@ -13,8 +14,7 @@ export type SvgExportStitchLineSchema = {
   holes: StitchHoleSchema[]
 }
 
-export type SvgExportPanelSchema = {
-  type: 'svg-export-panel'
+export type SvgExportPanelSchema = HasTypeSchema<'svg-export-panel'> & {
   id: string
   subProject: SubProjectSchema
   component: ComponentSchema
@@ -26,8 +26,7 @@ export type SvgExportPanelSchema = {
   stitchLines: SvgExportStitchLineSchema[]
 }
 
-export type SvgExportFrontPocketSchema = {
-  type: 'svg-export-front-pocket'
+export type SvgExportFrontPocketSchema = HasTypeSchema<'svg-export-front-pocket'> & {
   id: string
   subProject: SubProjectSchema
   ownerComponent: PocketClusterSchema
@@ -37,8 +36,7 @@ export type SvgExportFrontPocketSchema = {
   stitchLines: SvgExportStitchLineSchema[]
 }
 
-export type SvgExportTPocketSchema = {
-  type: 'svg-export-t-pocket'
+export type SvgExportTPocketSchema = HasTypeSchema<'svg-export-t-pocket'> & {
   id: string
   subProject: SubProjectSchema
   ownerComponent: PocketClusterSchema

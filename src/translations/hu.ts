@@ -73,7 +73,7 @@ export const HU = {
         'Tegyél egy vonalzót a képernyőhöz, és a csúszkával állítsd be, hogy a képen látható vonalzó 10cm hosszúságú legyen. Így a grafikák méretarányosan fognak megjelenni.',
     },
     panels: {
-      leather: 'Bőr',
+      components: 'Elemek',
       stitching: 'Varrás',
     },
   },

@@ -25,6 +25,7 @@ export const validateHoleSchema = (
   const bottomLeftRadiusResult = validateNumber(input.bottomLeftRadius, currentValue.bottomLeftRadius, context)
   const bottomRightRadiusResult = validateNumber(input.bottomRightRadius, currentValue.bottomRightRadius, context)
   const issues: ValidationIssuesSchema<HoleSchema> = {
+    type: undefined,
     borderRadius: borderRadiusResult.issues,
     bottomLeftRadius: bottomLeftRadiusResult.issues,
     bottomRightRadius: bottomRightRadiusResult.issues,
@@ -42,6 +43,7 @@ export const validateHoleSchema = (
     yOffset: positionResult.issues.yOffset,
   }
   const committedValue: HoleSchema = {
+    type: input.type,
     borderRadius: borderRadiusResult.committedValue,
     bottomLeftRadius: bottomLeftRadiusResult.committedValue,
     bottomRightRadius: bottomRightRadiusResult.committedValue,
@@ -71,6 +73,7 @@ export const validateHoleSchema = (
   }
 
   return createValidValidationResult(issues, {
+    type: input.type,
     borderRadius: borderRadiusResult.value,
     bottomLeftRadius: bottomLeftRadiusResult.value,
     bottomRightRadius: bottomRightRadiusResult.value,

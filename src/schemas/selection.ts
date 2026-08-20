@@ -1,16 +1,7 @@
-export type ComponentSelectionSchema = {
-  componentId: string
-  type: 'component'
-}
+import { HasTypeSchema } from './common'
 
-export type StitchLineSelectionSchema = {
-  stitchLineId: string
-  type: 'stitch-line'
-}
-
-export type HoleSelectionSchema = {
-  holeId: string
-  type: 'hole'
-}
+export type ComponentSelectionSchema = HasTypeSchema<'component'> & { componentId: string }
+export type StitchLineSelectionSchema = HasTypeSchema<'stitch-line'> & { stitchLineId: string }
+export type HoleSelectionSchema = HasTypeSchema<'hole'> & { holeId: string }
 
 export type SelectionSchema = ComponentSelectionSchema | StitchLineSelectionSchema | HoleSelectionSchema

@@ -35,6 +35,7 @@ const defaultCornerRadius: HasCornerRadiusSchema = {
 const DEFAULT_HOLE: HoleSchema = {
   ...defaultPosition,
   ...defaultCornerRadius,
+  type: 'hole',
   componentId: '',
   height: 20,
   id: '',

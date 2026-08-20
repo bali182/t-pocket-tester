@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import { HasTypeSchema } from './common'
 import { RectSchema } from './geometry'
 import { PageSchemaId } from './page'
 import { BaseExportSettingsSchema } from './settings'
@@ -31,13 +32,11 @@ export type PdfExportPageSchema = {
   elements: PdfExportElement[]
 }
 
-export type PdfExportSuccessfulLayoutSchema = {
-  type: 'successful-pdf-export'
+export type PdfExportSuccessfulLayoutSchema = HasTypeSchema<'successful-pdf-export'> & {
   pages: PdfExportPageSchema[]
 }
 
-export type PdfExportUnsuccessfulLayoutSchema = {
-  type: 'unsuccessful-pdf-export'
+export type PdfExportUnsuccessfulLayoutSchema = HasTypeSchema<'unsuccessful-pdf-export'> & {
   unplaceables: SvgExportPanelSchema[]
 }
 

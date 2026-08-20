@@ -1,6 +1,6 @@
 import type BigNumber from 'bignumber.js'
 
-import { HasComponentReferenceSchema, HasId, HasTargetSchema } from './common'
+import { HasComponentReferenceSchema, HasId, HasTargetSchema, HasTypeSchema } from './common'
 import { PathSchema, RectSchema } from './geometry'
 import { StitchHoleSchema } from './stitching'
 import { CardSchema } from './valuables'
@@ -31,43 +31,39 @@ type HasComputedCardSchema = {
 
 type BaseComputedSchema = HasComponentReferenceSchema & HasPathSchema & HasBoundingRectSchema
 
-export type ComputedRootPanelSchema = BaseComputedSchema &
+export type ComputedRootPanelSchema = HasTypeSchema<'computed-root-panel'> &
+  BaseComputedSchema &
   HasUncutPathSchema &
   HasComputedLayoutGapSchema &
-  HasComputedChildrenSchema & {
-    type: 'computed-root-panel'
-  }
+  HasComputedChildrenSchema
 
-export type ComputedPanelSchema = BaseComputedSchema &
+export type ComputedPanelSchema = HasTypeSchema<'computed-panel'> &
+  BaseComputedSchema &
   HasUncutPathSchema &
   HasComputedLayoutGapSchema &
-  HasComputedChildrenSchema & {
-    type: 'computed-panel'
-  }
+  HasComputedChildrenSchema
 
-export type ComputedTopPocketSchema = BaseComputedSchema &
+export type ComputedTopPocketSchema = HasTypeSchema<'computed-top-pocket'> &
+  BaseComputedSchema &
   HasUncutPathSchema &
   HasId &
-  HasComputedCardSchema & {
-    type: 'computed-top-pocket'
-  }
+  HasComputedCardSchema
 
-export type ComputedTPocketSchema = BaseComputedSchema &
+export type ComputedTPocketSchema = HasTypeSchema<'computed-t-pocket'> &
+  BaseComputedSchema &
   HasUncutPathSchema &
   HasId &
-  HasComputedCardSchema & {
-    type: 'computed-t-pocket'
-  }
+  HasComputedCardSchema
 
-export type ComputedCardSchema = HasPathSchema &
+export type ComputedCardSchema = HasTypeSchema<'computed-card'> &
+  HasPathSchema &
   HasBoundingRectSchema & {
-    type: 'computed-card'
     card: CardSchema
   }
 
-export type ComputedPocketClusterSchema = BaseComputedSchema &
+export type ComputedPocketClusterSchema = HasTypeSchema<'computed-pocket-cluster'> &
+  BaseComputedSchema &
   HasUncutPathSchema & {
-    type: 'computed-pocket-cluster'
     frontPocket: ComputedTopPocketSchema
     tPockets: ComputedTPocketSchema[]
   }

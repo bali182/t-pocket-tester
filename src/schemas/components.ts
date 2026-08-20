@@ -1,4 +1,4 @@
-import { HasCornerRadiusSchema, HasIdentitySchema, HasSizeSchema } from './common'
+import { HasCornerRadiusSchema, HasIdentitySchema, HasSizeSchema, HasTypeSchema } from './common'
 import { CardSchemaId } from './valuables'
 
 export type HasColorSchema = {
@@ -27,22 +27,20 @@ export type LayoutOrientationSchema = 'horizontal' | 'vertical'
 export type LayoutOrderSchema = 'default' | 'reverse'
 
 /** A plain panel. Can have children (stuff placed on top of it) */
-export type RootPanelSchema = BaseComponentSchema &
+export type RootPanelSchema = HasTypeSchema<'root-panel'> &
+  BaseComponentSchema &
   HasLayoutSchema &
   HasChildrenSchema &
   HasCornerRadiusSchema &
-  HasSizeSchema & {
-    type: 'root-panel'
-  }
+  HasSizeSchema
 
 /** A plain panel. Can have children (stuff placed on top of it) */
-export type PanelSchema = BaseComponentSchema &
+export type PanelSchema = HasTypeSchema<'panel'> &
+  BaseComponentSchema &
   HasLayoutSchema &
   HasChildrenSchema &
   HasCornerRadiusSchema &
-  HasAutoDimensionsSchema & {
-    type: 'panel'
-  }
+  HasAutoDimensionsSchema
 
 export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
 
@@ -50,10 +48,10 @@ export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
  * A cluster of pockets.
  * Does not hold individual pockets, rather pocketCount-1 T-Pockets and 1 top pocket (computed internally).
  */
-export type PocketClusterSchema = BaseComponentSchema &
+export type PocketClusterSchema = HasTypeSchema<'pocket-cluster'> &
+  BaseComponentSchema &
   HasCornerRadiusSchema &
   HasAutoDimensionsSchema & {
-    type: 'pocket-cluster'
     /** How many pockets do we have in this cluster (min 1) */
     pocketCount: number
     /** How far each pocket is offset from the previous one along the stack axis */

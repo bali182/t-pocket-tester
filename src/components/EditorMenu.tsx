@@ -1,6 +1,6 @@
 import { Button, Card, HStack, IconButton, Menu, Portal, Separator } from '@chakra-ui/react'
 import { FC, useCallback, useMemo, useRef, useState } from 'react'
-import { PiCaretDown, PiCaretLeft, PiExport, PiRuler } from 'react-icons/pi'
+import { PiCaretDown, PiCaretLeft, PiExport, PiRuler, PiWalletDuotone } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useProject } from '../hooks/useProject'
@@ -20,7 +20,7 @@ export const EditorMenu = () => {
       <Card.Root ref={menuRef}>
         <Card.Body padding="2" flexDirection="row" alignItems="center">
           <Link to={appRoutes.projects}>
-            <IconButton size="sm" variant="ghost">
+            <IconButton size="sm" variant="ghost" mr="1" borderRadius="full">
               <PiCaretLeft />
             </IconButton>
           </Link>
@@ -28,7 +28,7 @@ export const EditorMenu = () => {
             anchorRef={menuRef}
             trigger={
               <Button size="sm" variant="ghost">
-                {project.name}
+                <PiWalletDuotone /> {project.name}
               </Button>
             }
           />

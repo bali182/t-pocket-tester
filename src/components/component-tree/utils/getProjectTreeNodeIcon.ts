@@ -1,15 +1,14 @@
 import { IconType } from 'react-icons'
-import { PiNeedle, PiRectangleDashed } from 'react-icons/pi'
-import { getComponentIcon } from '../../../utils/getComponentIcon'
+import { getModelIcon } from '../../../utils/getModelIcon'
 import { ProjectTreeNode } from '../types/nodeTypes'
 
 export const getProjectTreeNodeIcon = (node: ProjectTreeNode): IconType => {
   switch (node.kind) {
     case 'component':
-      return getComponentIcon(node.component.type)
+      return getModelIcon(node.component.type)
     case 'hole':
-      return PiRectangleDashed
+      return getModelIcon(node.hole.type)
     case 'stitch-line':
-      return PiNeedle
+      return getModelIcon(node.stitchLine.type)
   }
 }

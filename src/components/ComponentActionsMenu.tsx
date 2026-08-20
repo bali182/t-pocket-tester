@@ -1,7 +1,7 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
-import { PiCopy, PiDotsThreeVertical, PiNeedle, PiRectangleDashed, PiTrash } from 'react-icons/pi'
+import { PiCopy, PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
 import { appRoutes } from '../appRoutes'
 import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
@@ -13,7 +13,7 @@ import type { StitchLineSchema } from '../schemas/stitching'
 import { SubProjectSchema } from '../schemas/subProject'
 import { pendingSubProjectDeletionAtom } from '../state/pendigDeletionAtoms'
 import { useTranslation } from '../translations/translation'
-import { getComponentIcon } from '../utils/getComponentIcon'
+import { getModelIcon } from '../utils/getModelIcon'
 import { isDefined } from '../utils/isDefined'
 import { noop } from '../utils/noop'
 
@@ -136,6 +136,8 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
     addHole(component.id)
   }, [addHole, component.id])
 
+  const HoleIcon = getModelIcon('hole')
+
   return (
     <Box onClick={handleActionsClick}>
       <Menu.Root>
@@ -151,7 +153,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
                 <>
                   <AddChildComponentMenuSection component={component} onAddChild={handleAddChild} />
                   <Menu.Item value="hole" onSelect={handleAddHole}>
-                    <PiRectangleDashed />
+                    <HoleIcon />
                     <Menu.ItemText>{t.common.actions.addByName(t.hole.title)}</Menu.ItemText>
                   </Menu.Item>
                   <Menu.Separator />
@@ -211,7 +213,7 @@ const AddChildComponentMenuSection: FC<AddChildComponentMenuProps> = ({ onAddChi
   return (
     <>
       {possibleTypes.map((type) => {
-        const Icon = getComponentIcon(type)
+        const Icon = getModelIcon(type)
         return (
           <Menu.Item key={type} value={type} onSelect={() => onAddChild(type)}>
             <Icon />
@@ -256,9 +258,10 @@ export const AddComponentStitchLineMenu: FC<AddComponentStitchLineMenuProps> = (
   return (
     <>
       {possibleTypes.map((type) => {
+        const Icon = getModelIcon(type)
         return (
           <Menu.Item key={type} value={type} onSelect={() => onAddStitchLine(type)}>
-            <PiNeedle />
+            <Icon />
             <Menu.ItemText>{labels[type]}</Menu.ItemText>
           </Menu.Item>
         )

@@ -2,7 +2,7 @@ import { HStack, IconButton, Tabs } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
-import { PiPlus, PiWallet } from 'react-icons/pi'
+import { PiPlus, PiWalletDuotone } from 'react-icons/pi'
 import { appRoutes } from '../appRoutes'
 import { useCreateSubProject } from '../hooks/useCreateSubProject'
 import { useProject } from '../hooks/useProject'
@@ -37,7 +37,7 @@ export const EditorSubProjectTabs: FC = () => {
                 pr="2"
                 value={subProject.id}
               >
-                <PiWallet /> {rootPanel.name}
+                <PiWalletDuotone /> {rootPanel.name}
                 <ComponentActionsMenu size="2xs" component={rootPanel} subProjectOnly={true} subProject={subProject} />
               </Tabs.Trigger>
             </HStack>

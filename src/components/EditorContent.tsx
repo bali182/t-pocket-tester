@@ -38,7 +38,7 @@ export const EditorContent: FC = () => {
         <Splitter.Panel id="tree" minHeight="0" minWidth="0">
           <Card.Root bg="bg.panel" height="100%" minHeight="0" minWidth="0">
             <Card.Header>
-              <Heading size="sm">{t.editor.panels.leather}</Heading>
+              <Heading size="sm">{t.editor.panels.components}</Heading>
             </Card.Header>
             <Card.Body flex="1" minHeight="0" overflow="auto" padding="4">
               <EditorComponentTree />

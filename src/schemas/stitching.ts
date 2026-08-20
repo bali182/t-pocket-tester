@@ -1,4 +1,4 @@
-import { HasComponentTargetSchema, HasIdentitySchema, HasTargetSchema } from './common'
+import { HasComponentTargetSchema, HasIdentitySchema, HasTargetSchema, HasTypeSchema } from './common'
 import { PointSchema } from './geometry'
 
 export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
@@ -67,15 +67,11 @@ export type ComponentBoundsStitchLineOwnSchema = ComponentBoundsStitchLineOffset
     bottomLeftCorner: boolean
   }
 
-type ComponentBoundsStitchLineDiscriminatorSchema = {
-  type: 'component-bounds-stitch-line'
-}
-
-export type ComponentBoundsStitchLineSchema = HasIdentitySchema &
+export type ComponentBoundsStitchLineSchema = HasTypeSchema<'component-bounds-stitch-line'> &
+  HasIdentitySchema &
   HasTargetSchema &
   Partial<StitchLineCommonConfigSchema> &
-  ComponentBoundsStitchLineOwnSchema &
-  ComponentBoundsStitchLineDiscriminatorSchema
+  ComponentBoundsStitchLineOwnSchema
 
 export type PocketClusterStitchLineOffsetsSchema = {
   startOffset: number
@@ -87,15 +83,11 @@ export type PocketClusterStitchLineOwnSchema = PocketClusterStitchLineOffsetsSch
   stitchDirection: StitchDirectionSchema
 }
 
-type PocketClusterStitchLineDiscriminatorSchema = {
-  type: 'pocket-cluster-stitch-line'
-}
-
-export type PocketClusterStitchLineSchema = HasIdentitySchema &
+export type PocketClusterStitchLineSchema = HasTypeSchema<'pocket-cluster-stitch-line'> &
+  HasIdentitySchema &
   HasComponentTargetSchema &
   Partial<StitchLineCommonConfigSchema> &
-  PocketClusterStitchLineOwnSchema &
-  PocketClusterStitchLineDiscriminatorSchema
+  PocketClusterStitchLineOwnSchema
 
 export type StitchLineSchema = ComponentBoundsStitchLineSchema | PocketClusterStitchLineSchema
 
@@ -103,12 +95,12 @@ export type ResolvedComponentBoundsStitchLineSchema = HasIdentitySchema &
   HasTargetSchema &
   StitchLineCommonConfigSchema &
   ComponentBoundsStitchLineOwnSchema &
-  ComponentBoundsStitchLineDiscriminatorSchema
+  HasTypeSchema<'component-bounds-stitch-line'>
 
-export type ResolvedPocketClusterStitchLineSchema = HasIdentitySchema &
+export type ResolvedPocketClusterStitchLineSchema = HasTypeSchema<'pocket-cluster-stitch-line'> &
+  HasIdentitySchema &
   HasComponentTargetSchema &
   StitchLineCommonConfigSchema &
-  PocketClusterStitchLineOwnSchema &
-  PocketClusterStitchLineDiscriminatorSchema
+  PocketClusterStitchLineOwnSchema
 
 export type ResolvedStitchLineSchema = ResolvedComponentBoundsStitchLineSchema | ResolvedPocketClusterStitchLineSchema

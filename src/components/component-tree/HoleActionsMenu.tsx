@@ -1,9 +1,10 @@
 import { Box, IconButton, Menu, Portal, type IconButtonProps } from '@chakra-ui/react'
 import { useCallback, type FC, type MouseEvent } from 'react'
-import { PiCopy, PiDotsThreeVertical, PiNeedle, PiTrash } from 'react-icons/pi'
+import { PiCopy, PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
 import { useSubProjectOperations } from '../../hooks/useSubProjectOperations'
 import type { HoleSchema } from '../../schemas/hole'
 import { useTranslation } from '../../translations/translation'
+import { getModelIcon } from '../../utils/getModelIcon'
 import { noop } from '../../utils/noop'
 
 type HoleActionsMenuProps = {
@@ -33,6 +34,8 @@ export const HoleActionsMenu: FC<HoleActionsMenuProps> = ({ hole, size, onDelete
     onDelete(hole.id)
   }, [deleteHole, hole.id, onDelete])
 
+  const StitchLineIcon = getModelIcon('component-bounds-stitch-line')
+
   return (
     <Box onClick={handleClick}>
       <Menu.Root>
@@ -45,7 +48,7 @@ export const HoleActionsMenu: FC<HoleActionsMenuProps> = ({ hole, size, onDelete
           <Menu.Positioner>
             <Menu.Content>
               <Menu.Item onSelect={handleAddStitchLine} value="stitch-line">
-                <PiNeedle />
+                <StitchLineIcon />
                 <Menu.ItemText>{t.common.actions.addByName(t.stitchLine.types.componentBounds)}</Menu.ItemText>
               </Menu.Item>
               <Menu.Separator />

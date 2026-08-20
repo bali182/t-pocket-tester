@@ -1,4 +1,4 @@
-export type HasType<T extends string> = {
+export type HasTypeSchema<T extends string> = {
   type: T
 }
 

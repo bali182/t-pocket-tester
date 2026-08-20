@@ -11,7 +11,7 @@ import { useCallback, useMemo, type FC } from 'react'
 import { useSubProject } from '../../hooks/useSubProject'
 import type { ComponentSchema } from '../../schemas/components'
 import { useTranslation } from '../../translations/translation'
-import { getComponentIcon } from '../../utils/getComponentIcon'
+import { getModelIcon } from '../../utils/getModelIcon'
 import { isDefined } from '../../utils/isDefined'
 
 type ComponentSelectProps = {
@@ -24,7 +24,7 @@ export const ComponentSelect: FC<ComponentSelectProps> = ({ componentId, compone
   const t = useTranslation()
   const { subProject } = useSubProject()
   const component = isDefined(componentId) ? subProject.components[componentId] : undefined
-  const Icon = getComponentIcon(component?.type ?? 'panel')
+  const Icon = getModelIcon(component?.type ?? 'panel')
   const collection = useMemo<ListCollection<ComponentSchema>>(
     () =>
       createListCollection<ComponentSchema>({
@@ -92,7 +92,7 @@ type ComponentSelectItemProps = {
 }
 
 const ComponentSelectItem: FC<ComponentSelectItemProps> = ({ component }) => {
-  const Icon = getComponentIcon(component.type)
+  const Icon = getModelIcon(component.type)
 
   return (
     <Select.Item item={component}>

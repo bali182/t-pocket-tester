@@ -75,7 +75,7 @@ export const EN: typeof HU = {
         'Hold a ruler up to your screen and use the slider to make the ruler shown on screen 10 cm long. This will make the graphics appear at the correct scale.',
     },
     panels: {
-      leather: 'Leather',
+      components: 'Components',
       stitching: 'Stitching',
     },
   },

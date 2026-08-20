@@ -1,4 +1,4 @@
-import { HasType } from '../schemas/common'
+import { HasTypeSchema } from '../schemas/common'
 import { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import {
   ComputedComponentSchema,
@@ -70,16 +70,16 @@ export const narrowers = {
 }
 
 const hasType = <Data, CurrentType extends string, ExpectedType extends CurrentType>(
-  input: Data & HasType<CurrentType>,
+  input: Data & HasTypeSchema<CurrentType>,
   expectedType: ExpectedType,
-): input is Data & HasType<ExpectedType> => {
+): input is Data & HasTypeSchema<ExpectedType> => {
   return input.type === expectedType
 }
 
 const assertType = <Data, CurrentType extends string, ExpectedType extends CurrentType>(
-  input: Data & HasType<CurrentType>,
+  input: Data & HasTypeSchema<CurrentType>,
   expectedType: ExpectedType,
-): Data & HasType<ExpectedType> => {
+): Data & HasTypeSchema<ExpectedType> => {
   if (!hasType(input, expectedType)) {
     throw new Error(`Excpected type='${expectedType}', but was '${input.type}'.`)
   }

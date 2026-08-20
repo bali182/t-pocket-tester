@@ -1,4 +1,5 @@
 import type BigNumber from 'bignumber.js'
+import { HasTypeSchema } from './common'
 
 export type PointSchema = {
   x: BigNumber
@@ -44,26 +45,10 @@ export type CornerRadiusSchema = {
   bottomRight: number
 }
 
-export type PathMoveToSchema = {
-  type: 'moveTo'
-  point: PointSchema
-}
-
-export type PathLineToSchema = {
-  type: 'lineTo'
-  point: PointSchema
-}
-
-export type PathArcToSchema = {
-  type: 'arcTo'
-  radius: BigNumber
-  point: PointSchema
-  reversed: boolean
-}
-
-export type PathCloseSchema = {
-  type: 'close'
-}
+export type PathMoveToSchema = HasTypeSchema<'moveTo'> & { point: PointSchema }
+export type PathLineToSchema = HasTypeSchema<'lineTo'> & { point: PointSchema }
+export type PathArcToSchema = HasTypeSchema<'arcTo'> & { radius: BigNumber; point: PointSchema; reversed: boolean }
+export type PathCloseSchema = HasTypeSchema<'close'>
 
 export type PathCommand = PathMoveToSchema | PathLineToSchema | PathArcToSchema | PathCloseSchema
 
