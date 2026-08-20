@@ -1,4 +1,4 @@
-import { Grid, IconButton, SegmentGroup } from '@chakra-ui/react'
+import { Button, Grid, SegmentGroup } from '@chakra-ui/react'
 import { useCallback, useMemo, type ReactNode } from 'react'
 import {
   TbRadiusBottomLeft,
@@ -94,14 +94,19 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
     <SectionGroup.Section>
       <SectionGroup.SectionHeader
         rightAddon={
-          <IconButton
+          <Button
             onClick={handleRadiusTypeChange}
             size="2xs"
             borderRadius="full"
-            variant={editable.individualRadii ? 'subtle' : 'solid'}
+            height="5"
+            background={editable.individualRadii ? undefined : 'bg.emphasized'}
+            variant={editable.individualRadii ? 'subtle' : 'ghost'}
           >
             {editable.individualRadii ? <PiLinkBreak /> : <PiLink />}
-          </IconButton>
+            {editable.individualRadii
+              ? t.component.editor.cornerRadius.individual
+              : t.component.editor.cornerRadius.uniform}
+          </Button>
         }
       >
         {t.component.editor.cornerRadius.title}

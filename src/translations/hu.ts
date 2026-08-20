@@ -273,8 +273,8 @@ export const HU = {
       cornerRadius: {
         title: 'Lekerekítés',
         type: 'Típus',
-        individual: 'Egyedi',
-        uniform: 'Egységes',
+        individual: 'Egyedi lekerekítés',
+        uniform: 'Egységes lekerekítés',
         individualMeasure: 'Mérték',
         uniformMeasure: 'Mérték',
       },
