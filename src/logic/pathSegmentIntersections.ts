@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { TWO } from '../constants/layout'
 import type { PointSchema } from '../schemas/geometry'
 import type { ArcPathSegment, LinePathSegment, PathSegment, PathSegmentIntersection } from './pathSegmentTypes'
 import {
@@ -9,8 +10,6 @@ import {
   getSortedDistinctProgresses,
   isProgressInRange,
 } from './pathSegmentUtils'
-
-const TWO = new BigNumber(2)
 
 export const getPathSegmentIntersections = (first: PathSegment, second: PathSegment): PathSegmentIntersection[] => {
   if (first.type === 'line' && second.type === 'line') {

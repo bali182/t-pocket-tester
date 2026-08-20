@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { ZERO } from '../../constants/layout'
 import type { PathCommand, PathSchema, PointSchema } from '../../schemas/geometry'
 import type {
   ResolvedComponentBoundsStitchLineSchema,
@@ -10,8 +11,6 @@ import { arePointsEqual } from '../../utils/arePointsEqual'
 import { isDefined } from '../../utils/isDefined'
 import { getFittedCornerRadius } from '../cornerRadiusUtils'
 import { ComponentBoundsStitchLineTarget } from './helperTypes'
-
-const ZERO = new BigNumber(0)
 
 export type StitchSidePathFragment = {
   type: 'side'

@@ -1,10 +1,9 @@
 import BigNumber from 'bignumber.js'
 
+import { ZERO } from '../constants/layout'
 import type { PocketClusterSchema } from '../schemas/components'
 import type { CornerRadiusSchema, PathCommand, PathSchema, RectSchema } from '../schemas/geometry'
 import { getTPocketTabDepth } from './pocketUtils'
-
-const ZERO = new BigNumber(0)
 
 export const calculateTPocketPath = (
   rect: RectSchema,

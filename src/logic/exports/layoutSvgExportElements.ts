@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { ZERO } from '../../constants/layout'
 import type { PointSchema } from '../../schemas/geometry'
 import type {
   SvgExportElementSchema,
@@ -12,8 +13,6 @@ import { isDefined } from '../../utils/isDefined'
 import { translatePath } from '../translatePath'
 import { translateRect } from '../translateRect'
 import { getSvgExportElementLayoutBoundingRect } from './getSvgExportElementLayoutBoundingRect'
-
-const ZERO = new BigNumber(0)
 
 export type SvgExportElementsLayout = {
   contentWidth: BigNumber

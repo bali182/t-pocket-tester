@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { ZERO, ZERO_CORNER_RADIUS } from '../constants/layout'
 import type { PocketClusterSchema } from '../schemas/components'
 import type { ComputedTPocketSchema, ComputedTopPocketSchema } from '../schemas/computed'
 import type { CornerRadiusSchema, RectSchema } from '../schemas/geometry'
@@ -22,16 +23,6 @@ export type PocketClusterGeometry = {
   frontPocket: ComputedTopPocketSchema
   tPockets: ComputedTPocketSchema[]
 }
-
-// Only the first T-pocket has exposed corners; the remaining pockets are fully covered by the pockets above them.
-const zeroCornerRadius = {
-  topLeft: 0,
-  topRight: 0,
-  bottomRight: 0,
-  bottomLeft: 0,
-}
-
-const ZERO = new BigNumber(0)
 
 export const calculatePocketClusterGeometry = (
   pocketCluster: PocketClusterSchema,
@@ -67,11 +58,7 @@ export const calculatePocketClusterGeometry = (
     },
     tPockets: initial(pocketRects).map((pocketRect, index): ComputedTPocketSchema => {
       const cardBoundingRect = getPocketCardBoundingRect(normalizedPocketCluster, pocketRect, resolvedStitchLines, true)
-      const path = calculateTPocketPath(
-        pocketRect,
-        normalizedPocketCluster,
-        index === 0 ? cornerRadius : zeroCornerRadius,
-      )
+      const path = calculateTPocketPath(pocketRect, normalizedPocketCluster, index === 0 ? cornerRadius : ZERO_CORNER_RADIUS)
 
       return {
         type: 'computed-t-pocket',
@@ -173,8 +160,8 @@ const calculateTopPocketRadius = (pocketCluster: PocketClusterSchema): CornerRad
   switch (pocketCluster.orientation) {
     case 'up':
       return {
-        topLeft: 0,
-        topRight: 0,
+        topLeft: ZERO,
+        topRight: ZERO,
         bottomRight: clusterRadius.bottomRight,
         bottomLeft: clusterRadius.bottomLeft,
       }
@@ -182,21 +169,21 @@ const calculateTopPocketRadius = (pocketCluster: PocketClusterSchema): CornerRad
       return {
         topLeft: clusterRadius.topLeft,
         topRight: clusterRadius.topRight,
-        bottomRight: 0,
-        bottomLeft: 0,
+        bottomRight: ZERO,
+        bottomLeft: ZERO,
       }
     case 'left':
       return {
-        topLeft: 0,
+        topLeft: ZERO,
         topRight: clusterRadius.topRight,
         bottomRight: clusterRadius.bottomRight,
-        bottomLeft: 0,
+        bottomLeft: ZERO,
       }
     case 'right':
       return {
         topLeft: clusterRadius.topLeft,
-        topRight: 0,
-        bottomRight: 0,
+        topRight: ZERO,
+        bottomRight: ZERO,
         bottomLeft: clusterRadius.bottomLeft,
       }
   }

@@ -1,12 +1,11 @@
 import BigNumber from 'bignumber.js'
 
+import { TWO, ZERO } from '../../constants/layout'
 import type { PointSchema } from '../../schemas/geometry'
 import { isDefined } from '../../utils/isDefined'
 import { getPointDistance } from '../geometryUtils'
 import type { StitchCornerPathFragment, StitchPathFragment } from './calculateStitchLinePaths'
 
-const ZERO = new BigNumber(0)
-const TWO = new BigNumber(2)
 const PARAMETER_EPSILON = new BigNumber('0.000000000001')
 const STITCH_HOLE_ENDPOINT_EPSILON_MM = new BigNumber('0.0001')
 const ANGLE_EPSILON = 0.000000001

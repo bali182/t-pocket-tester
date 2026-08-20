@@ -1,9 +1,6 @@
-import BigNumber from 'bignumber.js'
-
+import { ZERO } from '../constants/layout'
 import type { CornerRadiusSchema, PathCommand, PathSchema, RectSchema } from '../schemas/geometry'
 import { getFittedCornerRadius } from './cornerRadiusUtils'
-
-const ZERO = new BigNumber(0)
 
 export const calculateRectPath = (rect: RectSchema, radius: CornerRadiusSchema): PathSchema => {
   const left = rect.x

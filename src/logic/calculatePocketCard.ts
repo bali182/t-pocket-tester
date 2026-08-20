@@ -29,10 +29,10 @@ export const calculatePocketCard = (
     card,
     boundingRect,
     path: calculateRectPath(boundingRect, {
-      topLeft: card.radius,
-      topRight: card.radius,
-      bottomRight: card.radius,
-      bottomLeft: card.radius,
+      topLeft: new BigNumber(card.radius),
+      topRight: new BigNumber(card.radius),
+      bottomRight: new BigNumber(card.radius),
+      bottomLeft: new BigNumber(card.radius),
     }),
   }
 }

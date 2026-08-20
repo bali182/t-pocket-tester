@@ -1,35 +1,25 @@
 import BigNumber from 'bignumber.js'
 
+import { ONE } from '../constants/layout'
 import type { HasCornerRadiusSchema } from '../schemas/common'
 import type { CornerRadiusSchema, RectSchema } from '../schemas/geometry'
-
-const ONE = new BigNumber(1)
-
-export type FittedCornerRadiusSchema = {
-  topLeft: BigNumber
-  topRight: BigNumber
-  bottomRight: BigNumber
-  bottomLeft: BigNumber
-}
 
 export const getNormalizedCornerRadius = (component: HasCornerRadiusSchema): CornerRadiusSchema => {
   const { individualRadii, borderRadius, bottomLeftRadius, bottomRightRadius, topLeftRadius, topRightRadius } =
     component
 
   return {
-    topLeft: individualRadii ? topLeftRadius : borderRadius,
-    topRight: individualRadii ? topRightRadius : borderRadius,
-    bottomRight: individualRadii ? bottomRightRadius : borderRadius,
-    bottomLeft: individualRadii ? bottomLeftRadius : borderRadius,
+    topLeft: new BigNumber(individualRadii ? topLeftRadius : borderRadius),
+    topRight: new BigNumber(individualRadii ? topRightRadius : borderRadius),
+    bottomRight: new BigNumber(individualRadii ? bottomRightRadius : borderRadius),
+    bottomLeft: new BigNumber(individualRadii ? bottomLeftRadius : borderRadius),
   }
 }
 
-export const getFittedCornerRadius = (rect: RectSchema, radius: CornerRadiusSchema): FittedCornerRadiusSchema => {
-  const topLeft = new BigNumber(radius.topLeft)
-  const topRight = new BigNumber(radius.topRight)
-  const bottomRight = new BigNumber(radius.bottomRight)
-  const bottomLeft = new BigNumber(radius.bottomLeft)
-
+export const getFittedCornerRadius = (
+  rect: RectSchema,
+  { bottomLeft, bottomRight, topLeft, topRight }: CornerRadiusSchema,
+): CornerRadiusSchema => {
   const scale = BigNumber.minimum(
     ONE,
     getCornerRadiusScale(rect.width, topLeft.plus(topRight)),

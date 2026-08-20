@@ -1,10 +1,9 @@
 import BigNumber from 'bignumber.js'
 
+import { TWO, ZERO } from '../constants/layout'
 import type { PathArcToSchema, PointSchema } from '../schemas/geometry'
 import type { ArcPathSegment, LinePathSegment, PathSegment } from './pathSegmentTypes'
 
-const ZERO = new BigNumber(0)
-const TWO = new BigNumber(2)
 const TWO_PI = Math.PI * 2
 const ARC_DISTANCE_SQUARED_EPSILON = new BigNumber('0.000000000001')
 
