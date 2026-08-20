@@ -1,6 +1,6 @@
+import { ZERO_CORNER_RADIUS } from '../../constants/layout'
 import type { ComponentSchema, PocketClusterSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedPocketClusterSchema } from '../../schemas/computed'
-import type { CornerRadiusSchema } from '../../schemas/geometry'
 import type { ComputedProjectSchema, ProjectSchema } from '../../schemas/project'
 import type { BaseExportSettingsSchema } from '../../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../../schemas/stitching'
@@ -18,13 +18,6 @@ import { getSvgExportChildMarkerPaths } from './getSvgExportChildMarkerPaths'
 import { getSvgExportCutHelperBoundingRect } from './getSvgExportCutHelperBoundingRect'
 import { getSvgExportStitchLines } from './getSvgExportStitchLines'
 import { layoutSvgExportElements } from './layoutSvgExportElements'
-
-const zeroCornerRadius: CornerRadiusSchema = {
-  topLeft: 0,
-  topRight: 0,
-  bottomRight: 0,
-  bottomLeft: 0,
-}
 
 export const getComputedSvgExport = (
   project: ProjectSchema,
@@ -148,7 +141,7 @@ const getSvgExportPanel = (
     boundingRect: computedComponent.boundingRect,
     ...(isDefined(cutHelperBoundingRect)
       ? {
-          cutHelper: calculateRectPath(cutHelperBoundingRect, zeroCornerRadius),
+          cutHelper: calculateRectPath(cutHelperBoundingRect, ZERO_CORNER_RADIUS),
           cutHelperBoundingRect,
         }
       : {}),
@@ -207,7 +200,7 @@ const getSvgExportFrontPocket = (
     pocket: computedComponent.frontPocket,
     ...(isDefined(cutHelperBoundingRect)
       ? {
-          cutHelper: calculateRectPath(cutHelperBoundingRect, zeroCornerRadius),
+          cutHelper: calculateRectPath(cutHelperBoundingRect, ZERO_CORNER_RADIUS),
           cutHelperBoundingRect,
         }
       : {}),
@@ -241,7 +234,7 @@ const getSvgExportTPocket = (
     pocket,
     ...(isDefined(cutHelperBoundingRect)
       ? {
-          cutHelper: calculateRectPath(cutHelperBoundingRect, zeroCornerRadius),
+          cutHelper: calculateRectPath(cutHelperBoundingRect, ZERO_CORNER_RADIUS),
           cutHelperBoundingRect,
         }
       : {}),

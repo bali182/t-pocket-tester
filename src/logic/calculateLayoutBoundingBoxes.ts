@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { ZERO } from '../constants/layout'
 import { getComponentChildren } from '../operations/subProject/utils/getComponentChildren'
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { RectSchema } from '../schemas/geometry'
@@ -8,8 +9,6 @@ import { clamp } from '../utils/clamp'
 
 type LayoutComponent = RootPanelSchema | PanelSchema
 type LayoutChildComponent = PanelSchema | PocketClusterSchema
-
-const ZERO = new BigNumber(0)
 
 export const calculateLayoutBoundingBoxes = (
   component: LayoutComponent,

@@ -274,8 +274,8 @@ export const EN: typeof HU = {
       cornerRadius: {
         title: 'Corner radius',
         type: 'Type',
-        individual: 'Individual',
-        uniform: 'Uniform',
+        individual: 'Individual radii',
+        uniform: 'Uniform radius',
         individualMeasure: 'Measurement',
         uniformMeasure: 'Measurement',
       },

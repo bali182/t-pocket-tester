@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { ZERO } from '../../constants/layout'
 import { pages } from '../../data/pages'
 import type { RectSchema, SizeSchema } from '../../schemas/geometry'
 import {
@@ -26,8 +27,6 @@ type CompactPage = {
   freeRects: RectSchema[]
   page: PdfExportPageSchema
 }
-
-const ZERO = new BigNumber(0)
 
 export const getPdfExportPageSize = (settings: PdfExportSettingsSchema): SizeSchema => {
   const page = pages.find((candidate) => candidate.id === settings.page)

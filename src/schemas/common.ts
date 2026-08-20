@@ -13,7 +13,6 @@ export type HasName = {
 export type HasIdentitySchema = HasId & HasName
 
 export type HasCornerRadiusValuesSchema = {
-  borderRadius: number
   topLeftRadius: number
   topRightRadius: number
   bottomLeftRadius: number

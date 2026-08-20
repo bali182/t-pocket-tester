@@ -15,13 +15,13 @@ type HoleEditorProps = {
   onChange: (updated: EditableSchema<HoleSchema>) => void
 }
 
-export const HoleEditor: FC<HoleEditorProps> = ({ editable, issues, onChange }) => {
+export const HoleEditor: FC<HoleEditorProps> = ({ editable, hole, issues, onChange }) => {
   return (
     <>
       <HoleBasicSettingsSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
       <HolePositionSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
       <WidthAndHeightSizeSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
-      <CornerRadiusSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
+      <CornerRadiusSection<HoleSchema> value={hole} editable={editable} issues={issues} onChange={onChange} />
     </>
   )
 }

@@ -48,7 +48,6 @@ export const validatePanelSchema = (
     context,
   )
   const layoutGapResult = validateNumber(input.layoutGap, currentValue.layoutGap, context, { min: 0 })
-  const borderRadiusResult = validateNumber(input.borderRadius, currentValue.borderRadius, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
   const bottomLeftRadiusResult = validateNumber(input.bottomLeftRadius, currentValue.bottomLeftRadius, context, {
@@ -63,7 +62,6 @@ export const validatePanelSchema = (
   const issues: ValidationIssuesSchema<PanelSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
-    borderRadius: borderRadiusResult.issues,
     bottomLeftRadius: bottomLeftRadiusResult.issues,
     bottomRightRadius: bottomRightRadiusResult.issues,
     children: input.children.map(() => undefined),
@@ -85,7 +83,6 @@ export const validatePanelSchema = (
   const committedValue: PanelSchema = {
     autoHeight: input.autoHeight,
     autoWidth: input.autoWidth,
-    borderRadius: borderRadiusResult.committedValue,
     bottomLeftRadius: bottomLeftRadiusResult.committedValue,
     bottomRightRadius: bottomRightRadiusResult.committedValue,
     children: currentValue.children,
@@ -113,7 +110,6 @@ export const validatePanelSchema = (
     !layoutOrientationResult.isValid ||
     !layoutOrderResult.isValid ||
     !layoutGapResult.isValid ||
-    !borderRadiusResult.isValid ||
     !topLeftRadiusResult.isValid ||
     !topRightRadiusResult.isValid ||
     !bottomLeftRadiusResult.isValid ||
@@ -127,7 +123,6 @@ export const validatePanelSchema = (
   const value: PanelSchema = {
     autoHeight: input.autoHeight,
     autoWidth: input.autoWidth,
-    borderRadius: borderRadiusResult.value,
     bottomLeftRadius: bottomLeftRadiusResult.value,
     bottomRightRadius: bottomRightRadiusResult.value,
     children: currentValue.children,

@@ -24,7 +24,6 @@ const defaultPosition: HolePositionSchema = {
 }
 
 const defaultCornerRadius: HasCornerRadiusSchema = {
-  borderRadius: 0,
   bottomLeftRadius: 0,
   bottomRightRadius: 0,
   individualRadii: false,

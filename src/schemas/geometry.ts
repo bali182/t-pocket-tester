@@ -39,10 +39,10 @@ export type FillableSizeSchema = {
 }
 
 export type CornerRadiusSchema = {
-  topLeft: number
-  topRight: number
-  bottomLeft: number
-  bottomRight: number
+  readonly topLeft: BigNumber
+  readonly topRight: BigNumber
+  readonly bottomLeft: BigNumber
+  readonly bottomRight: BigNumber
 }
 
 export type PathMoveToSchema = HasTypeSchema<'moveTo'> & { point: PointSchema }

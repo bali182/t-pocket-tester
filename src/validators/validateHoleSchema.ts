@@ -19,14 +19,12 @@ export const validateHoleSchema = (
   const positionResult = validateHolePositionSchema(input, currentValue, context)
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 1 })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 1 })
-  const borderRadiusResult = validateNumber(input.borderRadius, currentValue.borderRadius, context)
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context)
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context)
   const bottomLeftRadiusResult = validateNumber(input.bottomLeftRadius, currentValue.bottomLeftRadius, context)
   const bottomRightRadiusResult = validateNumber(input.bottomRightRadius, currentValue.bottomRightRadius, context)
   const issues: ValidationIssuesSchema<HoleSchema> = {
     type: undefined,
-    borderRadius: borderRadiusResult.issues,
     bottomLeftRadius: bottomLeftRadiusResult.issues,
     bottomRightRadius: bottomRightRadiusResult.issues,
     componentId: undefined,
@@ -44,7 +42,6 @@ export const validateHoleSchema = (
   }
   const committedValue: HoleSchema = {
     type: input.type,
-    borderRadius: borderRadiusResult.committedValue,
     bottomLeftRadius: bottomLeftRadiusResult.committedValue,
     bottomRightRadius: bottomRightRadiusResult.committedValue,
     componentId: input.componentId,
@@ -63,7 +60,6 @@ export const validateHoleSchema = (
     !positionResult.isValid ||
     !widthResult.isValid ||
     !heightResult.isValid ||
-    !borderRadiusResult.isValid ||
     !topLeftRadiusResult.isValid ||
     !topRightRadiusResult.isValid ||
     !bottomLeftRadiusResult.isValid ||
@@ -74,7 +70,6 @@ export const validateHoleSchema = (
 
   return createValidValidationResult(issues, {
     type: input.type,
-    borderRadius: borderRadiusResult.value,
     bottomLeftRadius: bottomLeftRadiusResult.value,
     bottomRightRadius: bottomRightRadiusResult.value,
     componentId: input.componentId,

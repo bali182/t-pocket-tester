@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { ZERO, ZERO_CORNER_RADIUS } from '../constants/layout'
 import type { PocketClusterSchema } from '../schemas/components'
 import type { ComputedTPocketSchema, ComputedTopPocketSchema } from '../schemas/computed'
 import type { CornerRadiusSchema, RectSchema } from '../schemas/geometry'
@@ -15,45 +16,28 @@ import { calculatePocketBoundingBox } from './calculatePocketBoundingBox'
 import { calculatePocketCard } from './calculatePocketCard'
 import { calculateRectPath } from './calculateRectPath'
 import { calculateTPocketPath } from './calculateTPocketPath'
-import { getNormalizedCornerRadius } from './cornerRadiusUtils'
-import { normalizePocketCluster } from './normalizePocketCluster'
 
 export type PocketClusterGeometry = {
   frontPocket: ComputedTopPocketSchema
   tPockets: ComputedTPocketSchema[]
 }
 
-// Only the first T-pocket has exposed corners; the remaining pockets are fully covered by the pockets above them.
-const zeroCornerRadius = {
-  topLeft: 0,
-  topRight: 0,
-  bottomRight: 0,
-  bottomLeft: 0,
-}
-
-const ZERO = new BigNumber(0)
-
 export const calculatePocketClusterGeometry = (
   pocketCluster: PocketClusterSchema,
   rect: RectSchema,
+  radius: CornerRadiusSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
 ): PocketClusterGeometry => {
-  const normalizedPocketCluster = normalizePocketCluster(pocketCluster, rect)
-  const cornerRadius = getNormalizedCornerRadius(normalizedPocketCluster)
-  const pocketRects = calculatePocketBoundingBoxes(normalizedPocketCluster, rect)
+  const pocketRects = calculatePocketBoundingBoxes(pocketCluster, rect)
   const topPocketRect = last(pocketRects)
 
   if (!topPocketRect) {
     throw new Error('Pocket cluster must contain at least one pocket')
   }
 
-  const topPocketCardBoundingRect = getPocketCardBoundingRect(
-    normalizedPocketCluster,
-    topPocketRect,
-    resolvedStitchLines,
-    false,
-  )
-  const frontPocketPath = calculateRectPath(topPocketRect, calculateTopPocketRadius(normalizedPocketCluster))
+  const topPocketCardBoundingRect = getPocketCardBoundingRect(pocketCluster, topPocketRect, resolvedStitchLines, false)
+  const topPocketRadius = calculateTopPocketRadius(pocketCluster, radius)
+  const frontPocketPath = calculateRectPath(topPocketRect, topPocketRadius)
 
   return {
     frontPocket: {
@@ -63,24 +47,23 @@ export const calculatePocketClusterGeometry = (
       boundingRect: topPocketRect,
       path: frontPocketPath,
       uncutPath: frontPocketPath,
-      card: calculatePocketCard(normalizedPocketCluster, topPocketCardBoundingRect),
+      cornerRadius: topPocketRadius,
+      card: calculatePocketCard(pocketCluster, topPocketCardBoundingRect),
     },
     tPockets: initial(pocketRects).map((pocketRect, index): ComputedTPocketSchema => {
-      const cardBoundingRect = getPocketCardBoundingRect(normalizedPocketCluster, pocketRect, resolvedStitchLines, true)
-      const path = calculateTPocketPath(
-        pocketRect,
-        normalizedPocketCluster,
-        index === 0 ? cornerRadius : zeroCornerRadius,
-      )
+      const cardBoundingRect = getPocketCardBoundingRect(pocketCluster, pocketRect, resolvedStitchLines, true)
+      const cornerRadius = index === 0 ? radius : ZERO_CORNER_RADIUS
+      const path = calculateTPocketPath(pocketRect, pocketCluster, cornerRadius)
 
       return {
         type: 'computed-t-pocket',
         componentId: pocketCluster.id,
         id: `${pocketCluster.id}-t-pocket-${index}`,
         boundingRect: pocketRect,
+        cornerRadius,
         path,
         uncutPath: path,
-        card: calculatePocketCard(normalizedPocketCluster, cardBoundingRect),
+        card: calculatePocketCard(pocketCluster, cardBoundingRect),
       }
     }),
   }
@@ -167,37 +150,38 @@ const calculatePocketBoundingBoxes = (pocketCluster: PocketClusterSchema, rect: 
   )
 }
 
-const calculateTopPocketRadius = (pocketCluster: PocketClusterSchema): CornerRadiusSchema => {
-  const clusterRadius = getNormalizedCornerRadius(pocketCluster)
-
+const calculateTopPocketRadius = (
+  pocketCluster: PocketClusterSchema,
+  radius: CornerRadiusSchema,
+): CornerRadiusSchema => {
   switch (pocketCluster.orientation) {
     case 'up':
       return {
-        topLeft: 0,
-        topRight: 0,
-        bottomRight: clusterRadius.bottomRight,
-        bottomLeft: clusterRadius.bottomLeft,
+        topLeft: ZERO,
+        topRight: ZERO,
+        bottomRight: radius.bottomRight,
+        bottomLeft: radius.bottomLeft,
       }
     case 'down':
       return {
-        topLeft: clusterRadius.topLeft,
-        topRight: clusterRadius.topRight,
-        bottomRight: 0,
-        bottomLeft: 0,
+        topLeft: radius.topLeft,
+        topRight: radius.topRight,
+        bottomRight: ZERO,
+        bottomLeft: ZERO,
       }
     case 'left':
       return {
-        topLeft: 0,
-        topRight: clusterRadius.topRight,
-        bottomRight: clusterRadius.bottomRight,
-        bottomLeft: 0,
+        topLeft: ZERO,
+        topRight: radius.topRight,
+        bottomRight: radius.bottomRight,
+        bottomLeft: ZERO,
       }
     case 'right':
       return {
-        topLeft: clusterRadius.topLeft,
-        topRight: 0,
-        bottomRight: 0,
-        bottomLeft: clusterRadius.bottomLeft,
+        topLeft: radius.topLeft,
+        topRight: ZERO,
+        bottomRight: ZERO,
+        bottomLeft: radius.bottomLeft,
       }
   }
 }
