@@ -1,13 +1,12 @@
 import { ZERO } from '../constants/layout'
 import type { CornerRadiusSchema, PathCommand, PathSchema, RectSchema } from '../schemas/geometry'
-import { getFittedCornerRadius } from './cornerRadiusUtils'
 
-export const calculateRectPath = (rect: RectSchema, radius: CornerRadiusSchema): PathSchema => {
+export const calculateRectPath = (rect: RectSchema, cornerRadius: CornerRadiusSchema): PathSchema => {
   const left = rect.x
   const top = rect.y
   const right = left.plus(rect.width)
   const bottom = top.plus(rect.height)
-  const { topLeft, topRight, bottomRight, bottomLeft } = getFittedCornerRadius(rect, radius)
+  const { bottomLeft, bottomRight, topLeft, topRight } = cornerRadius
 
   const commands: PathCommand[] = [
     {

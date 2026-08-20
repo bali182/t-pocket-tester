@@ -5,8 +5,9 @@ import type { RectSchema } from '../schemas/geometry'
 import type { HoleAnchorSchema, HoleSchema } from '../schemas/hole'
 import { isDefined } from '../utils/isDefined'
 import { calculateRectPath } from './calculateRectPath'
-import { getNormalizedCornerRadius } from './cornerRadiusUtils'
+import { getCornerRadius } from './cornerRadiusUtils'
 import { intersectClosedPaths, isClosedPathCoveredBy } from './flattenJsUtils'
+import { getAdjustedCornerRadius } from './getAdjustedCornerRadius'
 
 export const calculateHoles = (
   holes: HoleSchema[],
@@ -14,27 +15,14 @@ export const calculateHoles = (
 ): ComputedHoleSchema[] => {
   return holes.flatMap((hole): ComputedHoleSchema[] => {
     const ownerComponent = computedComponents[hole.componentId]
-
     if (!isDefined(ownerComponent)) {
       return []
     }
-
-    const geometry = calculateHoleGeometry(hole, ownerComponent)
-
-    return [
-      {
-        holeId: hole.id,
-        componentId: hole.componentId,
-        ...geometry,
-      },
-    ]
+    return [calculateHole(hole, ownerComponent)]
   })
 }
 
-const calculateHoleGeometry = (
-  hole: HoleSchema,
-  ownerComponent: ComputedComponentSchema,
-): Pick<ComputedHoleSchema, 'boundingRect' | 'path' | 'highlightPath'> => {
+const calculateHole = (hole: HoleSchema, ownerComponent: ComputedComponentSchema): ComputedHoleSchema => {
   const boundingRect = calculateHoleBoundingRect(
     ownerComponent.boundingRect,
     new BigNumber(hole.width),
@@ -42,11 +30,25 @@ const calculateHoleGeometry = (
     hole,
   )
 
-  const path = calculateRectPath(boundingRect, getNormalizedCornerRadius(hole))
+  // Holes have no parent, so parent component is not a limiting factor when calculating the radius
+  const baseCornerRadius = getCornerRadius(hole)
+
+  const cornerRadius = getAdjustedCornerRadius({
+    boundingRect,
+    cornerRadius: baseCornerRadius,
+    parentBoundingRect: boundingRect,
+    parentCornerRadius: baseCornerRadius,
+    isAuto: false,
+  })
+
+  const path = calculateRectPath(boundingRect, cornerRadius)
 
   return {
+    holeId: hole.id,
+    componentId: hole.componentId,
     boundingRect,
     path,
+    cornerRadius,
     highlightPath: isClosedPathCoveredBy(path, ownerComponent.path)
       ? path
       : intersectClosedPaths(path, ownerComponent.path),

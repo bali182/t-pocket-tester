@@ -1,7 +1,6 @@
 import type { ComponentSchema } from '../../schemas/components'
 import type { ComputedComponentSchema, ComputedStitchLineSchema } from '../../schemas/computed'
 import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
-import { getNormalizedCornerRadius } from '../cornerRadiusUtils'
 import { calculateComponentBoundsStitchLine } from './calculateComponentBoundsStitchLine'
 import { calculatePocketClusterStitchLine } from './calculatePocketClusterStitchLine'
 
@@ -15,7 +14,7 @@ export const calculateStitchLine = (
       return calculateComponentBoundsStitchLine(stitchLine, {
         componentId: computedComponent.componentId,
         boundingRect: computedComponent.boundingRect,
-        cornerRadius: getNormalizedCornerRadius(component),
+        cornerRadius: computedComponent.cornerRadius,
       })
     }
     case 'pocket-cluster-stitch-line': {

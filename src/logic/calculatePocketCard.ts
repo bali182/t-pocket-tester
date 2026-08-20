@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import { cards } from '../data/cards'
 import type { PocketClusterSchema } from '../schemas/components'
 import type { ComputedCardSchema } from '../schemas/computed'
-import type { RectSchema } from '../schemas/geometry'
+import type { CornerRadiusSchema, RectSchema } from '../schemas/geometry'
 import type { CardSchema } from '../schemas/valuables'
 import { isDefined } from '../utils/isDefined'
 import { calculateRectPath } from './calculateRectPath'
@@ -24,16 +24,19 @@ export const calculatePocketCard = (
 
   const boundingRect = getCardBoundingRect(card, pocketCluster, pocketBoundingRect)
 
+  const cornerRadius: CornerRadiusSchema = {
+    topLeft: new BigNumber(card.radius),
+    topRight: new BigNumber(card.radius),
+    bottomRight: new BigNumber(card.radius),
+    bottomLeft: new BigNumber(card.radius),
+  }
+
   return {
     type: 'computed-card',
     card,
     boundingRect,
-    path: calculateRectPath(boundingRect, {
-      topLeft: new BigNumber(card.radius),
-      topRight: new BigNumber(card.radius),
-      bottomRight: new BigNumber(card.radius),
-      bottomLeft: new BigNumber(card.radius),
-    }),
+    cornerRadius,
+    path: calculateRectPath(boundingRect, cornerRadius),
   }
 }
 

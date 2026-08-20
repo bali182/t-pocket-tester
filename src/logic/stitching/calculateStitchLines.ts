@@ -3,7 +3,6 @@ import type { ComputedComponentSchema, ComputedHoleSchema, ComputedStitchLineSch
 import type { HoleSchema } from '../../schemas/hole'
 import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { isDefined } from '../../utils/isDefined'
-import { getNormalizedCornerRadius } from '../cornerRadiusUtils'
 import { calculateComponentBoundsStitchLine } from './calculateComponentBoundsStitchLine'
 import { calculateStitchLine } from './calculateStitchLine'
 
@@ -29,7 +28,7 @@ export const calculateStitchLines = (
         calculateComponentBoundsStitchLine(stitchLine, {
           componentId: computedHole.componentId,
           boundingRect: computedHole.boundingRect,
-          cornerRadius: getNormalizedCornerRadius(hole),
+          cornerRadius: computedHole.cornerRadius,
         }),
       )
 

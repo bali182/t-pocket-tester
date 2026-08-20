@@ -9,7 +9,6 @@ import type {
 } from '../../schemas/stitching'
 import { arePointsEqual } from '../../utils/arePointsEqual'
 import { isDefined } from '../../utils/isDefined'
-import { getFittedCornerRadius } from '../cornerRadiusUtils'
 import { ComponentBoundsStitchLineTarget } from './helperTypes'
 
 export type StitchSidePathFragment = {
@@ -60,11 +59,10 @@ const calculateStitchLinePathFragments = (
 ): SelectableStitchPathFragment[] => {
   const margin = new BigNumber(stitchLine.stitchMargin)
   const boundingRect = getStitchLineBoundingRect(target, margin, stitchLine.targetType)
-  const cornerRadius = getFittedCornerRadius(target.boundingRect, target.cornerRadius)
-  const topLeftRadius = getStitchCornerRadius(cornerRadius.topLeft, margin, stitchLine.targetType)
-  const topRightRadius = getStitchCornerRadius(cornerRadius.topRight, margin, stitchLine.targetType)
-  const bottomRightRadius = getStitchCornerRadius(cornerRadius.bottomRight, margin, stitchLine.targetType)
-  const bottomLeftRadius = getStitchCornerRadius(cornerRadius.bottomLeft, margin, stitchLine.targetType)
+  const topLeftRadius = getStitchCornerRadius(target.cornerRadius.topLeft, margin, stitchLine.targetType)
+  const topRightRadius = getStitchCornerRadius(target.cornerRadius.topRight, margin, stitchLine.targetType)
+  const bottomRightRadius = getStitchCornerRadius(target.cornerRadius.bottomRight, margin, stitchLine.targetType)
+  const bottomLeftRadius = getStitchCornerRadius(target.cornerRadius.bottomLeft, margin, stitchLine.targetType)
   const left = boundingRect.x
   const top = boundingRect.y
   const right = boundingRect.x.plus(boundingRect.width)

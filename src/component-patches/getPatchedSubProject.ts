@@ -1,7 +1,6 @@
 import type { ProjectEditingSettingSchema } from '../schemas/settings'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { addComputedSizes } from './addComputedSizes'
-import { adjustCornerRadiiToParent } from './adjustCornerRadiiToParent'
 import { adjustStitchLines } from './adjustStitchLines'
 import { deleteOrphanedHoles } from './deleteOrphanedHoles'
 import { deleteOrphanedStitchLines } from './deleteOrphanedStitchLines'
@@ -14,7 +13,6 @@ type PatcherFunctionSchema = (
 
 const patchers: PatcherFunctionSchema[] = [
   addComputedSizes,
-  adjustCornerRadiiToParent,
   deleteOrphanedHoles,
   deleteOrphanedStitchLines,
   adjustStitchLines,
