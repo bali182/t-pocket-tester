@@ -1,11 +1,11 @@
 import { HasSizeSchema } from '../common'
 import { HasLayoutSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../components'
 import {
-  HasHorizontalDirectionsSchema,
-  HasDirectionalOffsetsSchema,
   ComponentBoundsStitchLineSchema,
-  HasVerticalDirectionsSchema,
   HasBasicOffsetsSchema,
+  HasDirectionalOffsetsSchema,
+  HasHorizontalDirectionsSchema,
+  HasVerticalDirectionsSchema,
   PocketClusterStitchLineOwnSchema,
   PocketClusterStitchLineSchema,
 } from '../stitching'
