@@ -289,6 +289,11 @@ export const HU = {
         lineThickness: 'Vonal vastagsága',
         reset: 'Projektérték használata',
       },
+      autoCornerRadius: {
+        auto: 'Automatikus',
+        manual: 'Manuális',
+        autoPlaceholder: 'Auto',
+      },
     },
   },
   validation: {

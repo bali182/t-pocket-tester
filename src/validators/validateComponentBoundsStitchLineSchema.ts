@@ -64,6 +64,14 @@ export const validateComponentBoundsStitchLineSchema = (
   const bottomEndOffsetResult = validateNumber(input.bottomEndOffset, currentValue.bottomEndOffset, context)
   const leftStartOffsetResult = validateNumber(input.leftStartOffset, currentValue.leftStartOffset, context)
   const leftEndOffsetResult = validateNumber(input.leftEndOffset, currentValue.leftEndOffset, context)
+  const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
+  const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
+  const bottomLeftRadiusResult = validateNumber(input.bottomLeftRadius, currentValue.bottomLeftRadius, context, {
+    min: 0,
+  })
+  const bottomRightRadiusResult = validateNumber(input.bottomRightRadius, currentValue.bottomRightRadius, context, {
+    min: 0,
+  })
 
   const issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema> = {
     bottom: undefined,
@@ -98,6 +106,12 @@ export const validateComponentBoundsStitchLineSchema = (
     topRightCorner: undefined,
     topStartOffset: topStartOffsetResult.issues,
     topStitchDirection: topStitchDirectionResult.issues,
+    autoCornerRadius: undefined,
+    individualRadii: undefined,
+    topLeftRadius: topLeftRadiusResult.issues,
+    topRightRadius: topRightRadiusResult.issues,
+    bottomLeftRadius: bottomLeftRadiusResult.issues,
+    bottomRightRadius: bottomRightRadiusResult.issues,
   }
 
   const committedValue: ComponentBoundsStitchLineSchema = {
@@ -127,6 +141,12 @@ export const validateComponentBoundsStitchLineSchema = (
     topStartOffset: topStartOffsetResult.committedValue,
     topStitchDirection: topStitchDirectionResult.committedValue,
     type: currentValue.type,
+    autoCornerRadius: input.autoCornerRadius,
+    individualRadii: input.individualRadii,
+    bottomLeftRadius: bottomLeftRadiusResult.committedValue,
+    bottomRightRadius: bottomRightRadiusResult.committedValue,
+    topLeftRadius: topLeftRadiusResult.committedValue,
+    topRightRadius: topRightRadiusResult.committedValue,
   }
 
   if (
@@ -143,7 +163,11 @@ export const validateComponentBoundsStitchLineSchema = (
     !bottomStartOffsetResult.isValid ||
     !bottomEndOffsetResult.isValid ||
     !leftStartOffsetResult.isValid ||
-    !leftEndOffsetResult.isValid
+    !leftEndOffsetResult.isValid ||
+    !topLeftRadiusResult.isValid ||
+    !topRightRadiusResult.isValid ||
+    !bottomLeftRadiusResult.isValid ||
+    !bottomRightRadiusResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }

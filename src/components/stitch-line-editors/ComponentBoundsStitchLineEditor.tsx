@@ -6,11 +6,13 @@ import type { ComponentBoundsStitchLineSchema, StitchLineCommonConfigSchema } fr
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { SectionGroup } from '../common/SectionGroup'
+import { CornerRadiusSection } from '../component-editors/sections/CornerRadiusSection'
 import { BasicSettingsSection } from './sections/BasicSettingsSection'
 import { StitchSidesAndCornersSection } from './sections/StitchSidesAndCornersSection'
 import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
 
 type ComponentBoundsStitchLineEditorProps = {
+  value: ComponentBoundsStitchLineSchema
   editable: EditableSchema<ComponentBoundsStitchLineSchema>
   issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
   onChange: (updated: EditableSchema<ComponentBoundsStitchLineSchema>) => void
@@ -19,6 +21,7 @@ type ComponentBoundsStitchLineEditorProps = {
 }
 
 export const ComponentBoundsStitchLineEditor: FC<ComponentBoundsStitchLineEditorProps> = ({
+  value,
   editable,
   issues,
   onChange,
@@ -40,6 +43,7 @@ export const ComponentBoundsStitchLineEditor: FC<ComponentBoundsStitchLineEditor
             onChange={onChange}
           />
           <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
+          <CornerRadiusSection value={value} editable={editable} issues={issues} onChange={onChange} />
         </SectionGroup.Root>
       </Tabs.Content>
       <Tabs.Content value="overrides" pt={0}>

@@ -39,6 +39,7 @@ export const StitchLineEditor: FC<StitchLineEditorProps> = ({
     case 'component-bounds-stitch-line':
       return (
         <ComponentBoundsStitchLineEditor
+          value={stitchLine}
           editable={editable as EditableSchema<ComponentBoundsStitchLineSchema>}
           issues={issues as ValidationIssuesSchema<ComponentBoundsStitchLineSchema>}
           onChange={onChange}

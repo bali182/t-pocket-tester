@@ -1,4 +1,11 @@
-import { HasComponentTargetSchema, HasIdentitySchema, HasTargetSchema, HasTypeSchema } from './common'
+import {
+  HasAutoCornerRadiusSchema,
+  HasComponentTargetSchema,
+  HasCornerRadiusSchema,
+  HasIdentitySchema,
+  HasTargetSchema,
+  HasTypeSchema,
+} from './common'
 import { PointSchema } from './geometry'
 
 export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
@@ -22,7 +29,7 @@ export type StitchLineCommonConfigSchema = {
   stitchLineColor: string
 }
 
-export type ComponentBoundsStitchLineOffsetsSchema = {
+export type HasDirectionalOffsetsSchema = {
   // Offsets of the sides we stitch. What are these used for?
   // For example when stitching the side of a panel to another (forming a pocket)
   // we can start stitching in between the top of the back panel and the front one, forming a stronger stitch.
@@ -39,21 +46,23 @@ export type ComponentBoundsStitchLineOffsetsSchema = {
   leftEndOffset: number
 }
 
-export type ComponentBoundsStitchLineHorizontalDirectionsSchema = {
+export type HasHorizontalDirectionsSchema = {
   // Stitching direction for sides. Can only be changed if the sides are not connected by a corner.
   topStitchDirection: HorizontalStitchDirectionSchema
   bottomStitchDirection: HorizontalStitchDirectionSchema
 }
 
-export type ComponentBoundsStitchLineVerticalDirectionsSchema = {
+export type HasVerticalDirectionsSchema = {
   // Stitching direction for sides. Can only be changed if the sides are not connected by a corner.
   rightStitchDirection: VerticalStitchDirectionSchema
   leftStitchDirection: VerticalStitchDirectionSchema
 }
 
-export type ComponentBoundsStitchLineOwnSchema = ComponentBoundsStitchLineOffsetsSchema &
-  ComponentBoundsStitchLineVerticalDirectionsSchema &
-  ComponentBoundsStitchLineHorizontalDirectionsSchema & {
+export type ComponentBoundsStitchLineOwnSchema = HasDirectionalOffsetsSchema &
+  HasAutoCornerRadiusSchema &
+  HasCornerRadiusSchema &
+  HasVerticalDirectionsSchema &
+  HasHorizontalDirectionsSchema & {
     // Are we stitching the given side?
     top: boolean
     right: boolean
@@ -73,12 +82,12 @@ export type ComponentBoundsStitchLineSchema = HasTypeSchema<'component-bounds-st
   Partial<StitchLineCommonConfigSchema> &
   ComponentBoundsStitchLineOwnSchema
 
-export type PocketClusterStitchLineOffsetsSchema = {
+export type HasBasicOffsetsSchema = {
   startOffset: number
   endOffset: number
 }
 
-export type PocketClusterStitchLineOwnSchema = PocketClusterStitchLineOffsetsSchema & {
+export type PocketClusterStitchLineOwnSchema = HasBasicOffsetsSchema & {
   stitchDirection: StitchDirectionSchema
 }
 

@@ -1,11 +1,11 @@
 import { HasSizeSchema } from '../common'
 import { HasLayoutSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../components'
 import {
-  ComponentBoundsStitchLineHorizontalDirectionsSchema,
-  ComponentBoundsStitchLineOffsetsSchema,
+  HasHorizontalDirectionsSchema,
+  HasDirectionalOffsetsSchema,
   ComponentBoundsStitchLineSchema,
-  ComponentBoundsStitchLineVerticalDirectionsSchema,
-  PocketClusterStitchLineOffsetsSchema,
+  HasVerticalDirectionsSchema,
+  HasBasicOffsetsSchema,
   PocketClusterStitchLineOwnSchema,
   PocketClusterStitchLineSchema,
 } from '../stitching'
@@ -17,12 +17,12 @@ export type MagicFixPanelFieldSchema = keyof HasSizeSchema | keyof Pick<HasLayou
 export type MagicFixPocketClusterFieldSchema = keyof HasSizeSchema | keyof Pick<PocketClusterSchema, 'pocketStep'>
 
 export type MagicFixComponentBoundsStitchLineFieldSchema =
-  | keyof ComponentBoundsStitchLineOffsetsSchema
-  | keyof ComponentBoundsStitchLineHorizontalDirectionsSchema
-  | keyof ComponentBoundsStitchLineVerticalDirectionsSchema
+  | keyof HasDirectionalOffsetsSchema
+  | keyof HasHorizontalDirectionsSchema
+  | keyof HasVerticalDirectionsSchema
 
 export type MagicFixPocketClusterStitchLineFieldSchema =
-  | keyof PocketClusterStitchLineOffsetsSchema
+  | keyof HasBasicOffsetsSchema
   | keyof Pick<PocketClusterStitchLineOwnSchema, 'stitchDirection'>
 
 // Path representation of components/stitchlines

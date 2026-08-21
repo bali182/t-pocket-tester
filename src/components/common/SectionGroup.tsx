@@ -1,4 +1,4 @@
-import { Box, Grid, Text, chakra } from '@chakra-ui/react'
+import { Box, Grid, Spacer, Text, chakra } from '@chakra-ui/react'
 import { ComponentProps, useMemo, type FC, type ReactNode } from 'react'
 
 import type { IssueSchema, SeveritySchema } from '../../schemas/validation'
@@ -17,6 +17,7 @@ type SectionGroupSectionProps = {
 type SectionGroupSectionHeaderProps = {
   children: ReactNode
   rightAddon?: ReactNode
+  leftAddon?: ReactNode
 }
 
 type SectionGroupSectionRowTitleProps = {
@@ -59,7 +60,7 @@ const SectionGroupSection: FC<SectionGroupSectionProps> = ({ children }) => {
   )
 }
 
-const SectionGroupSectionHeader: FC<SectionGroupSectionHeaderProps> = ({ children, rightAddon }) => {
+const SectionGroupSectionHeader: FC<SectionGroupSectionHeaderProps> = ({ children, rightAddon, leftAddon }) => {
   return (
     <Box
       bg="bg.muted"
@@ -71,11 +72,12 @@ const SectionGroupSectionHeader: FC<SectionGroupSectionHeaderProps> = ({ childre
       display="flex"
       flexDirection="row"
       alignItems="center"
-      justifyContent="space-between"
     >
-      <Text color="fg.muted" fontWeight="bold" textStyle="sm">
+      <Text color="fg.muted" fontWeight="bold" textStyle="sm" mr="2">
         {children}
       </Text>
+      {leftAddon}
+      <Spacer />
       {rightAddon}
     </Box>
   )

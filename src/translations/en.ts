@@ -291,6 +291,11 @@ export const EN: typeof HU = {
         lineThickness: 'Line thickness',
         reset: 'Use project value',
       },
+      autoCornerRadius: {
+        auto: 'Auto',
+        manual: 'Manual',
+        autoPlaceholder: 'Auto',
+      },
     },
   },
   validation: {
