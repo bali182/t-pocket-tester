@@ -79,7 +79,6 @@ export type PocketClusterStitchLineOffsetsSchema = {
 }
 
 export type PocketClusterStitchLineOwnSchema = PocketClusterStitchLineOffsetsSchema & {
-  enabled: boolean
   stitchDirection: StitchDirectionSchema
 }
 

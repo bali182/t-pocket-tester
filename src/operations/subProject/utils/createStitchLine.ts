@@ -46,7 +46,6 @@ const defaultStitchLine: ComponentBoundsStitchLineOwnSchema = {
 }
 
 const defaultPocketClusterStitchLine: PocketClusterStitchLineOwnSchema = {
-  enabled: true,
   endOffset: 0,
   startOffset: 0,
   stitchDirection: 'start-to-end',

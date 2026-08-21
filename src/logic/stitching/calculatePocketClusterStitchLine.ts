@@ -10,16 +10,6 @@ export const calculatePocketClusterStitchLine = (
   pocketCluster: PocketClusterSchema,
   computedPocketCluster: ComputedPocketClusterSchema,
 ): ComputedStitchLineSchema => {
-  if (!stitchLine.enabled) {
-    return {
-      stitchLineId: stitchLine.id,
-      targetType: stitchLine.targetType,
-      targetId: stitchLine.targetId,
-      componentId: stitchLine.targetId,
-      routes: [],
-    }
-  }
-
   const normalizedPocketCluster = normalizePocketCluster(pocketCluster, computedPocketCluster.boundingRect)
 
   return {

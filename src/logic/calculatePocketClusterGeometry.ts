@@ -85,9 +85,7 @@ const getPocketCardBoundingRect = (
   )
   const pocketClusterStitchLines = resolvedStitchLines.filter(
     (stitchLine): stitchLine is ResolvedPocketClusterStitchLineSchema =>
-      stitchLine.type === 'pocket-cluster-stitch-line' &&
-      stitchLine.targetId === pocketCluster.id &&
-      stitchLine.enabled,
+      stitchLine.type === 'pocket-cluster-stitch-line' && stitchLine.targetId === pocketCluster.id,
   )
   const leftInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.left))
   const rightInset = getMaximumStitchClearance(componentBoundsStitchLines.filter((stitchLine) => stitchLine.right))

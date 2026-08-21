@@ -21,12 +21,6 @@ export const PocketClusterStitchLineSettingsSection = ({
   onChange,
 }: PocketClusterStitchLineSettingsSectionProps): ReactNode => {
   const t = useTranslation()
-  const handleEnabledChange = useCallback(
-    (details: Switch.CheckedChangeDetails): void => {
-      onChange({ ...editable, enabled: details.checked })
-    },
-    [editable, onChange],
-  )
   const handleStartOffsetChange = useCallback(
     (startOffset: string): void => {
       onChange({ ...editable, startOffset })
@@ -49,17 +43,6 @@ export const PocketClusterStitchLineSettingsSection = ({
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.stitchLine.editor.pocketStitch.title}</SectionGroup.SectionHeader>
-
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.enabled}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor issue={issues.enabled}>
-        <Switch.Root checked={editable.enabled} onCheckedChange={handleEnabledChange} size="sm">
-          <Switch.HiddenInput />
-          <Switch.Control>
-            <Switch.Thumb />
-          </Switch.Control>
-        </Switch.Root>
-      </SectionGroup.SectionRowEditor>
-
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.pocketStitch.startOffset}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.startOffset}>
         <NumberInput
