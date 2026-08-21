@@ -7,7 +7,6 @@ import type { ComponentSchema } from '../../schemas/components'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
-import { SectionGroup } from '../common/SectionGroup'
 import { ComponentActionsMenu } from '../ComponentActionsMenu'
 import { ComponentEditor } from './ComponentEditor'
 
@@ -33,15 +32,13 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
         menu={<ComponentActionsMenu component={editedComponent} onDelete={onClose} size="xs" subProject={subProject} />}
         title={`#${editedComponent.id}`}
       />
-      <SectionGroup.Root>
-        <ComponentEditor
-          baseColor={project.componentSettings.baseColor}
-          component={editedComponent}
-          editable={editableComponent}
-          issues={validationIssues}
-          onChange={setComponent}
-        />
-      </SectionGroup.Root>
+      <ComponentEditor
+        baseColor={project.componentSettings.baseColor}
+        component={editedComponent}
+        editable={editableComponent}
+        issues={validationIssues}
+        onChange={setComponent}
+      />
     </FloatingEditor>
   )
 }

@@ -1,8 +1,11 @@
 import { type FC } from 'react'
 
+import { Tabs } from '@chakra-ui/react'
 import type { EditableSchema } from '../../schemas/editable'
 import type { PocketClusterStitchLineSchema, StitchLineCommonConfigSchema } from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { useTranslation } from '../../translations/translation'
+import { SectionGroup } from '../common/SectionGroup'
 import { BasicSettingsSection } from './sections/BasicSettingsSection'
 import { PocketClusterStitchLineSettingsSection } from './sections/PocketClusterStitchLineSettingsSection'
 import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
@@ -22,22 +25,35 @@ export const PocketClusterStitchLineEditor: FC<PocketClusterStitchLineEditorProp
   onReset,
   resolvedEditable,
 }) => {
+  const t = useTranslation()
   return (
-    <>
-      <BasicSettingsSection<PocketClusterStitchLineSchema>
-        componentTypes={['pocket-cluster']}
-        editable={editable}
-        issues={issues}
-        onChange={onChange}
-      />
-      <PocketClusterStitchLineSettingsSection editable={editable} issues={issues} onChange={onChange} />
-      <StitchingSettingsSection<PocketClusterStitchLineSchema>
-        editable={editable}
-        issues={issues}
-        onChange={onChange}
-        onReset={onReset}
-        resolvedEditable={resolvedEditable}
-      />
-    </>
+    <Tabs.Root defaultValue="settings">
+      <Tabs.List alignItems="center" pr="2">
+        <Tabs.Trigger value="settings">{t.stitchLine.editor.tabs.settings}</Tabs.Trigger>
+        <Tabs.Trigger value="overrides">{t.stitchLine.editor.tabs.overrides}</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="settings" pt={0}>
+        <SectionGroup.Root>
+          <BasicSettingsSection<PocketClusterStitchLineSchema>
+            componentTypes={['pocket-cluster']}
+            editable={editable}
+            issues={issues}
+            onChange={onChange}
+          />
+          <PocketClusterStitchLineSettingsSection editable={editable} issues={issues} onChange={onChange} />
+        </SectionGroup.Root>
+      </Tabs.Content>
+      <Tabs.Content value="overrides" pt={0}>
+        <SectionGroup.Root>
+          <StitchingSettingsSection<PocketClusterStitchLineSchema>
+            editable={editable}
+            issues={issues}
+            onChange={onChange}
+            onReset={onReset}
+            resolvedEditable={resolvedEditable}
+          />
+        </SectionGroup.Root>
+      </Tabs.Content>
+    </Tabs.Root>
   )
 }

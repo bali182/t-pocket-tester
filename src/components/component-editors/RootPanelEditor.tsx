@@ -2,6 +2,7 @@ import { FC } from 'react'
 import type { RootPanelSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { SectionGroup } from '../common/SectionGroup'
 import { CornerRadiusSection } from './sections/CornerRadiusSection'
 import { LayoutSection } from './sections/LayoutSection'
 import { NameAndColorSection } from './sections/NameAndColorSection'
@@ -25,7 +26,7 @@ export const RootPanelEditor: FC<RootPanelEditorProps> = ({
   onResetColor,
 }) => {
   return (
-    <>
+    <SectionGroup.Root>
       <NameAndColorSection
         baseColor={baseColor}
         editable={editable}
@@ -36,6 +37,6 @@ export const RootPanelEditor: FC<RootPanelEditorProps> = ({
       <WidthAndHeightSizeSection<RootPanelSchema> editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection<RootPanelSchema> value={component} editable={editable} issues={issues} onChange={onChange} />
       <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />
-    </>
+    </SectionGroup.Root>
   )
 }

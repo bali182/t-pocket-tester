@@ -9,7 +9,7 @@ type FloatingEditorHeaderProps = {
 export const FloatingEditorHeader: FC<FloatingEditorHeaderProps> = ({ menu, title }) => {
   return (
     <Popover.Header p="0">
-      <HStack justify="space-between" pl="4" pr="4" pt="3" pb="3">
+      <HStack justify="space-between" px="4" py="2">
         <Text fontWeight="semibold" textStyle="xs">
           {title}
         </Text>
