@@ -3,7 +3,7 @@ import { FC, useCallback, useMemo, type ReactNode } from 'react'
 import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
 
 import { IconType } from 'react-icons'
-import { PiChecks, PiLink, PiLinkBreak, PiPencilLine } from 'react-icons/pi'
+import { PiCar, PiLink, PiLinkBreak, PiPencilLine } from 'react-icons/pi'
 import { HasAutoCornerRadiusSchema, HasCornerRadiusSchema, HasCornerRadiusValuesSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
@@ -92,7 +92,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema & Partial<Ha
           hasAuto ? (
             <SectionHeaderToggle
               onIcon={PiPencilLine}
-              offIcon={PiChecks}
+              offIcon={PiCar}
               onLabel={t.stitchLine.editor.autoCornerRadius.manual}
               offLabel={t.stitchLine.editor.autoCornerRadius.auto}
               value={!Boolean(editable.autoCornerRadius)}
@@ -187,6 +187,7 @@ const SectionHeaderToggle: FC<SectionHeaderToggleProps> = ({
       size="2xs"
       borderRadius="full"
       height="5"
+      borderColor="border.emphasized"
       background={value ? 'bg.emphasized' : undefined}
       variant={value ? 'ghost' : 'subtle'}
     >

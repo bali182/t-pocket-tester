@@ -9,6 +9,7 @@ import type {
 } from '../../schemas/stitching'
 import { arePointsEqual } from '../../utils/arePointsEqual'
 import { isDefined } from '../../utils/isDefined'
+import { getCornerRadius } from '../cornerRadiusUtils'
 import { ComponentBoundsStitchLineTarget } from './helperTypes'
 
 export type StitchSidePathFragment = {
@@ -59,10 +60,18 @@ const calculateStitchLinePathFragments = (
 ): SelectableStitchPathFragment[] => {
   const margin = new BigNumber(stitchLine.stitchMargin)
   const boundingRect = getStitchLineBoundingRect(target, margin, stitchLine.targetType)
-  const topLeftRadius = getStitchCornerRadius(target.cornerRadius.topLeft, margin, stitchLine.targetType)
-  const topRightRadius = getStitchCornerRadius(target.cornerRadius.topRight, margin, stitchLine.targetType)
-  const bottomRightRadius = getStitchCornerRadius(target.cornerRadius.bottomRight, margin, stitchLine.targetType)
-  const bottomLeftRadius = getStitchCornerRadius(target.cornerRadius.bottomLeft, margin, stitchLine.targetType)
+  const defaultTopLeftRadius = getStitchCornerRadius(target.cornerRadius.topLeft, margin, stitchLine.targetType)
+  const defaultTopRightRadius = getStitchCornerRadius(target.cornerRadius.topRight, margin, stitchLine.targetType)
+  const defaultBottomRightRadius = getStitchCornerRadius(target.cornerRadius.bottomRight, margin, stitchLine.targetType)
+  const defaultBottomLeftRadius = getStitchCornerRadius(target.cornerRadius.bottomLeft, margin, stitchLine.targetType)
+
+  const overrideRadius = getCornerRadius(stitchLine)
+
+  const topLeftRadius = stitchLine.autoCornerRadius ? defaultTopLeftRadius : overrideRadius.topLeft
+  const topRightRadius = stitchLine.autoCornerRadius ? defaultTopRightRadius : overrideRadius.topRight
+  const bottomRightRadius = stitchLine.autoCornerRadius ? defaultBottomRightRadius : overrideRadius.bottomRight
+  const bottomLeftRadius = stitchLine.autoCornerRadius ? defaultBottomLeftRadius : overrideRadius.bottomLeft
+
   const left = boundingRect.x
   const top = boundingRect.y
   const right = boundingRect.x.plus(boundingRect.width)

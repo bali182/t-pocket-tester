@@ -292,7 +292,7 @@ export const EN: typeof HU = {
         reset: 'Use project value',
       },
       autoCornerRadius: {
-        auto: 'Auto',
+        auto: 'Automatic',
         manual: 'Manual',
         autoPlaceholder: 'Auto',
       },
