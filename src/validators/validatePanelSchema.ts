@@ -48,6 +48,11 @@ export const validatePanelSchema = (
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 0, minInclusive: false })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 0, minInclusive: false })
 
+  const topSqueezeResult = validateNumber(input.topSqueeze, currentValue.topSqueeze, context, { min: 0 })
+  const rightSqueezeResult = validateNumber(input.rightSqueeze, currentValue.rightSqueeze, context, { min: 0 })
+  const bottomSqueezeResult = validateNumber(input.bottomSqueeze, currentValue.bottomSqueeze, context, { min: 0 })
+  const leftSqueezeResult = validateNumber(input.leftSqueeze, currentValue.leftSqueeze, context, { min: 0 })
+
   const issues: ValidationIssuesSchema<PanelSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
@@ -67,6 +72,10 @@ export const validatePanelSchema = (
     width: widthResult.issues,
     autoLayoutGap: undefined,
     offAxisAnchor: undefined,
+    topSqueeze: topSqueezeResult.issues,
+    rightSqueeze: rightSqueezeResult.issues,
+    bottomSqueeze: bottomSqueezeResult.issues,
+    leftSqueeze: leftSqueezeResult.issues,
   }
 
   const committedValue: PanelSchema = {
@@ -87,6 +96,10 @@ export const validatePanelSchema = (
     width: widthResult.committedValue,
     autoLayoutGap: input.autoLayoutGap,
     offAxisAnchor: input.offAxisAnchor,
+    topSqueeze: topSqueezeResult.committedValue,
+    rightSqueeze: rightSqueezeResult.committedValue,
+    bottomSqueeze: bottomSqueezeResult.committedValue,
+    leftSqueeze: leftSqueezeResult.committedValue,
   }
 
   if (isDefined(colorResult.committedValue)) {
@@ -103,7 +116,11 @@ export const validatePanelSchema = (
     !bottomLeftRadiusResult.isValid ||
     !bottomRightRadiusResult.isValid ||
     !widthResult.isValid ||
-    !heightResult.isValid
+    !heightResult.isValid ||
+    !topSqueezeResult.isValid ||
+    !rightSqueezeResult.isValid ||
+    !bottomSqueezeResult.isValid ||
+    !leftSqueezeResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }
@@ -126,6 +143,10 @@ export const validatePanelSchema = (
     width: widthResult.value,
     autoLayoutGap: input.autoLayoutGap,
     offAxisAnchor: input.offAxisAnchor,
+    topSqueeze: topSqueezeResult.value,
+    rightSqueeze: rightSqueezeResult.value,
+    bottomSqueeze: bottomSqueezeResult.value,
+    leftSqueeze: leftSqueezeResult.value,
   }
 
   if (isDefined(colorResult.value)) {

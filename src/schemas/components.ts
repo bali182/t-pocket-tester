@@ -1,4 +1,11 @@
-import { AnchorSchema, HasCornerRadiusSchema, HasIdentitySchema, HasSizeSchema, HasTypeSchema } from './common'
+import {
+  AnchorSchema,
+  HasCornerRadiusSchema,
+  HasIdentitySchema,
+  HasSizeSchema,
+  HasSqueezeSchema,
+  HasTypeSchema,
+} from './common'
 import { CardSchemaId } from './valuables'
 
 export type HasColorSchema = {
@@ -39,7 +46,8 @@ export type PanelSchema = HasTypeSchema<'panel'> &
   HasLayoutSchema &
   HasChildrenSchema &
   HasCornerRadiusSchema &
-  HasAutoDimensionsSchema
+  HasAutoDimensionsSchema &
+  HasSqueezeSchema
 
 export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
 
@@ -50,7 +58,8 @@ export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
 export type PocketClusterSchema = HasTypeSchema<'pocket-cluster'> &
   BaseComponentSchema &
   HasCornerRadiusSchema &
-  HasAutoDimensionsSchema & {
+  HasAutoDimensionsSchema &
+  HasSqueezeSchema & {
     /** How many pockets do we have in this cluster (min 1) */
     pocketCount: number
     /** How far each pocket is offset from the previous one along the stack axis */

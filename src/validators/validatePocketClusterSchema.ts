@@ -72,6 +72,11 @@ export const validatePocketClusterSchema = (
     min: 0,
     minInclusive: false,
   })
+  const topSqueezeResult = validateNumber(input.topSqueeze, currentValue.topSqueeze, context, { min: 0 })
+  const rightSqueezeResult = validateNumber(input.rightSqueeze, currentValue.rightSqueeze, context, { min: 0 })
+  const bottomSqueezeResult = validateNumber(input.bottomSqueeze, currentValue.bottomSqueeze, context, { min: 0 })
+  const leftSqueezeResult = validateNumber(input.leftSqueeze, currentValue.leftSqueeze, context, { min: 0 })
+
   const issues: ValidationIssuesSchema<PocketClusterSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
@@ -92,6 +97,10 @@ export const validatePocketClusterSchema = (
     topRightRadius: topRightRadiusResult.issues,
     type: undefined,
     width: widthResult.issues,
+    topSqueeze: topSqueezeResult.issues,
+    rightSqueeze: rightSqueezeResult.issues,
+    bottomSqueeze: bottomSqueezeResult.issues,
+    leftSqueeze: leftSqueezeResult.issues,
   }
 
   const committedValue: PocketClusterSchema = {
@@ -113,6 +122,10 @@ export const validatePocketClusterSchema = (
     topRightRadius: topRightRadiusResult.committedValue,
     type: currentValue.type,
     width: widthResult.committedValue,
+    topSqueeze: topSqueezeResult.committedValue,
+    rightSqueeze: rightSqueezeResult.committedValue,
+    bottomSqueeze: bottomSqueezeResult.committedValue,
+    leftSqueeze: leftSqueezeResult.committedValue,
   }
 
   if (isDefined(colorResult.committedValue)) {
@@ -133,7 +146,11 @@ export const validatePocketClusterSchema = (
     !pocketCountResult.isValid ||
     !pocketStepResult.isValid ||
     !tPocketTabWidthResult.isValid ||
-    !tPocketTaperResult.isValid
+    !tPocketTaperResult.isValid ||
+    !topSqueezeResult.isValid ||
+    !rightSqueezeResult.isValid ||
+    !bottomSqueezeResult.isValid ||
+    !leftSqueezeResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }
@@ -157,6 +174,10 @@ export const validatePocketClusterSchema = (
     topRightRadius: topRightRadiusResult.value,
     type: currentValue.type,
     width: widthResult.value,
+    topSqueeze: topSqueezeResult.value,
+    rightSqueeze: rightSqueezeResult.value,
+    bottomSqueeze: bottomSqueezeResult.value,
+    leftSqueeze: leftSqueezeResult.value,
   }
 
   if (isDefined(colorResult.value)) {

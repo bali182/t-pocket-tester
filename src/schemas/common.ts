@@ -58,3 +58,10 @@ export type HasXYOffsetSchema = {
   xOffset: number
   yOffset: number
 }
+
+export type HasSqueezeSchema = {
+  topSqueeze: number
+  rightSqueeze: number
+  bottomSqueeze: number
+  leftSqueeze: number
+}
