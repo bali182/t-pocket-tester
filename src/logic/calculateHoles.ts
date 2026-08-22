@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js'
 
+import type { AnchorSchema } from '../schemas/common'
 import type { ComputedComponentSchema, ComputedHoleSchema } from '../schemas/computed'
 import type { RectSchema } from '../schemas/geometry'
-import type { HoleAnchorSchema, HoleSchema } from '../schemas/hole'
+import type { HoleSchema } from '../schemas/hole'
 import { isDefined } from '../utils/isDefined'
 import { calculateRectPath } from './calculateRectPath'
 import { getCornerRadius } from './cornerRadiusUtils'
@@ -64,7 +65,7 @@ const calculateAnchoredAxisStart = (
   ownerStart: BigNumber,
   ownerLength: BigNumber,
   holeLength: BigNumber,
-  anchor: HoleAnchorSchema,
+  anchor: AnchorSchema,
   offset: number,
 ): BigNumber => {
   switch (anchor) {

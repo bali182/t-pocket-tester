@@ -9,8 +9,9 @@ import {
   PiAlignTopSimple,
 } from 'react-icons/pi'
 
+import type { AnchorSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
-import type { HoleAnchorSchema, HolePositionSchema } from '../../../schemas/hole'
+import type { HolePositionSchema } from '../../../schemas/hole'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
@@ -30,13 +31,13 @@ export function HolePositionSection<T extends HolePositionSchema>({
   const t = useTranslation()
   const handleXAnchorChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails): void => {
-      onChange({ ...editable, xAnchor: details.value as HoleAnchorSchema })
+      onChange({ ...editable, xAnchor: details.value as AnchorSchema })
     },
     [editable, onChange],
   )
   const handleYAnchorChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails): void => {
-      onChange({ ...editable, yAnchor: details.value as HoleAnchorSchema })
+      onChange({ ...editable, yAnchor: details.value as AnchorSchema })
     },
     [editable, onChange],
   )

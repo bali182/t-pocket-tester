@@ -1,5 +1,6 @@
+import type { AnchorSchema } from '../schemas/common'
 import type { EditableSchema } from '../schemas/editable'
-import type { HoleAnchorSchema, HolePositionSchema } from '../schemas/hole'
+import type { HolePositionSchema } from '../schemas/hole'
 import type {
   ComponentBasedValidationContextSchema,
   ValidationIssuesSchema,
@@ -9,7 +10,7 @@ import { createInvalidValidationResult, createValidValidationResult } from './cr
 import { validateNumber } from './validateNumber'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
 
-const holeAnchorValues: Record<HoleAnchorSchema, boolean> = {
+const holeAnchorValues: Record<AnchorSchema, boolean> = {
   start: true,
   middle: true,
   end: true,

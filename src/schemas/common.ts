@@ -1,3 +1,5 @@
+export type AnchorSchema = 'start' | 'middle' | 'end'
+
 export type HasTypeSchema<T extends string> = {
   type: T
 }

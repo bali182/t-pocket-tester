@@ -1,4 +1,5 @@
 import {
+  AnchorSchema,
   HasComponentReferenceSchema,
   HasCornerRadiusSchema,
   HasIdentitySchema,
@@ -6,12 +7,10 @@ import {
   HasTypeSchema,
 } from './common'
 
-export type HoleAnchorSchema = 'start' | 'middle' | 'end'
-
 export type HolePositionSchema = {
-  xAnchor: HoleAnchorSchema
+  xAnchor: AnchorSchema
   xOffset: number
-  yAnchor: HoleAnchorSchema
+  yAnchor: AnchorSchema
   yOffset: number
 }
 
