@@ -3,6 +3,7 @@ import type { ResolvedComponentBoundsStitchLineSchema } from '../../schemas/stit
 import { calculateStitchLineHoles } from './calculateStitchLineHoles'
 import { calculateStitchLinePaths } from './calculateStitchLinePaths'
 import type { ComponentBoundsStitchLineTarget } from './helperTypes'
+import { getStitchLineAutoCornerRadius } from './stitchLineRadiusUtils'
 
 export const calculateComponentBoundsStitchLine = (
   stitchLine: ResolvedComponentBoundsStitchLineSchema,
@@ -15,6 +16,7 @@ export const calculateComponentBoundsStitchLine = (
     targetType: stitchLine.targetType,
     targetId: stitchLine.targetId,
     componentId: target.componentId,
+    autoComputedCornerRadius: getStitchLineAutoCornerRadius(stitchLine, target),
     routes: calculatedPaths.map((calculatedPath) => ({
       path: calculatedPath.path,
       holes: calculateStitchLineHoles(stitchLine, calculatedPath),

@@ -94,5 +94,6 @@ export type ComputedStitchRouteSchema = {
 export type ComputedStitchLineSchema = HasTargetSchema & {
   stitchLineId: string
   componentId: string
+  autoComputedCornerRadius: CornerRadiusSchema
   routes: ComputedStitchRouteSchema[]
 }
