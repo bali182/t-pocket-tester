@@ -9,21 +9,21 @@ import {
   PiAlignTopSimple,
 } from 'react-icons/pi'
 
-import type { AnchorSchema } from '../../../schemas/common'
+import type { AnchorSchema, HasLayoutOffsetsSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
-import type { HolePositionSchema } from '../../../schemas/hole'
+import type { HasAnchorsSchema } from '../../../schemas/hole'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type HolePositionSectionProps<T extends HolePositionSchema> = {
+type HolePositionSectionProps<T> = {
   editable: EditableSchema<T>
-  issues: ValidationIssuesSchema<HolePositionSchema>
+  issues: ValidationIssuesSchema<T>
   onChange: (updated: EditableSchema<T>) => void
 }
 
-export function HolePositionSection<T extends HolePositionSchema>({
+export function HolePositionSection<T extends HasAnchorsSchema & HasLayoutOffsetsSchema>({
   editable,
   issues,
   onChange,
