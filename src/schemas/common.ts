@@ -23,6 +23,10 @@ export type HasCornerRadiusSchema = HasCornerRadiusValuesSchema & {
   individualRadii: boolean
 }
 
+export type HasAutoCornerRadiusSchema = {
+  autoCornerRadius: boolean
+}
+
 export type HasSizeSchema = {
   width: number
   height: number

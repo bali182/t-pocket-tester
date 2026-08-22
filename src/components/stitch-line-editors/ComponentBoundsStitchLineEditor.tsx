@@ -1,13 +1,18 @@
 import { type FC } from 'react'
 
+import { Tabs } from '@chakra-ui/react'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ComponentBoundsStitchLineSchema, StitchLineCommonConfigSchema } from '../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { useTranslation } from '../../translations/translation'
+import { SectionGroup } from '../common/SectionGroup'
+import { CornerRadiusSection } from '../component-editors/sections/CornerRadiusSection'
 import { BasicSettingsSection } from './sections/BasicSettingsSection'
 import { StitchSidesAndCornersSection } from './sections/StitchSidesAndCornersSection'
 import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
 
 type ComponentBoundsStitchLineEditorProps = {
+  value: ComponentBoundsStitchLineSchema
   editable: EditableSchema<ComponentBoundsStitchLineSchema>
   issues: ValidationIssuesSchema<ComponentBoundsStitchLineSchema>
   onChange: (updated: EditableSchema<ComponentBoundsStitchLineSchema>) => void
@@ -16,23 +21,42 @@ type ComponentBoundsStitchLineEditorProps = {
 }
 
 export const ComponentBoundsStitchLineEditor: FC<ComponentBoundsStitchLineEditorProps> = ({
+  value,
   editable,
   issues,
   onChange,
   onReset,
   resolvedEditable,
 }) => {
+  const t = useTranslation()
   return (
-    <>
-      <BasicSettingsSection<ComponentBoundsStitchLineSchema> editable={editable} issues={issues} onChange={onChange} />
-      <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
-      <StitchingSettingsSection<ComponentBoundsStitchLineSchema>
-        editable={editable}
-        issues={issues}
-        onChange={onChange}
-        onReset={onReset}
-        resolvedEditable={resolvedEditable}
-      />
-    </>
+    <Tabs.Root defaultValue="settings">
+      <Tabs.List alignItems="center" pr="2">
+        <Tabs.Trigger value="settings">{t.stitchLine.editor.tabs.settings}</Tabs.Trigger>
+        <Tabs.Trigger value="overrides">{t.stitchLine.editor.tabs.overrides}</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="settings" pt={0}>
+        <SectionGroup.Root>
+          <BasicSettingsSection<ComponentBoundsStitchLineSchema>
+            editable={editable}
+            issues={issues}
+            onChange={onChange}
+          />
+          <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
+          <CornerRadiusSection value={value} editable={editable} issues={issues} onChange={onChange} />
+        </SectionGroup.Root>
+      </Tabs.Content>
+      <Tabs.Content value="overrides" pt={0}>
+        <SectionGroup.Root>
+          <StitchingSettingsSection<ComponentBoundsStitchLineSchema>
+            editable={editable}
+            issues={issues}
+            onChange={onChange}
+            onReset={onReset}
+            resolvedEditable={resolvedEditable}
+          />
+        </SectionGroup.Root>
+      </Tabs.Content>
+    </Tabs.Root>
   )
 }

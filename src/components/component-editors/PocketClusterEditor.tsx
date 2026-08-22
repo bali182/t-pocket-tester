@@ -3,6 +3,7 @@ import { type FC } from 'react'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
+import { SectionGroup } from '../common/SectionGroup'
 import { CornerRadiusSection } from './sections/CornerRadiusSection'
 import { FillableSizeSection } from './sections/FillableSizeSection'
 import { NameAndColorSection } from './sections/NameAndColorSection'
@@ -27,7 +28,7 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
   onResetColor,
 }) => {
   return (
-    <>
+    <SectionGroup.Root>
       <NameAndColorSection
         baseColor={baseColor}
         editable={editable}
@@ -44,6 +45,6 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
       />
       <PocketClusterSettingsSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <TPocketShapeSection component={component} editable={editable} issues={issues} onChange={onChange} />
-    </>
+    </SectionGroup.Root>
   )
 }

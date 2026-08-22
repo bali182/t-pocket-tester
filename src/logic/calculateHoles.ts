@@ -31,15 +31,7 @@ const calculateHole = (hole: HoleSchema, ownerComponent: ComputedComponentSchema
   )
 
   // Holes have no parent, so parent component is not a limiting factor when calculating the radius
-  const baseCornerRadius = getCornerRadius(hole)
-
-  const cornerRadius = getAdjustedCornerRadius({
-    boundingRect,
-    cornerRadius: baseCornerRadius,
-    parentBoundingRect: boundingRect,
-    parentCornerRadius: baseCornerRadius,
-    isAuto: false,
-  })
+  const cornerRadius = getAdjustedCornerRadius({ boundingRect, cornerRadius: getCornerRadius(hole) })
 
   const path = calculateRectPath(boundingRect, cornerRadius)
 

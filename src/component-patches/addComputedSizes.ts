@@ -1,5 +1,5 @@
 import { updateProjectComponents } from '../operations/subProject/utils/updateProjectComponents'
-import { ComponentSchema, HasChildrenSchema, HasAutoDimensionsSchema, HasLayoutSchema } from '../schemas/components'
+import { ComponentSchema, HasAutoDimensionsSchema, HasChildrenSchema, HasLayoutSchema } from '../schemas/components'
 import { ComputedComponentSchema, HasComputedLayoutGapSchema } from '../schemas/computed'
 import type { ProjectEditingSettingSchema } from '../schemas/settings'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'

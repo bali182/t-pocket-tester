@@ -5,14 +5,13 @@ import { isDefined } from '../utils/isDefined'
 import { getUniformCornerRadius } from './cornerRadiusUtils'
 
 type BaseCornerRadiusAdjustmentParams = {
-  parentBoundingRect: RectSchema
-  parentCornerRadius: CornerRadiusSchema
+  parentBoundingRect?: RectSchema
+  parentCornerRadius?: CornerRadiusSchema
   boundingRect: RectSchema
   cornerRadius: CornerRadiusSchema
 }
 
 type GetAdjustedCornerRadiusParams = BaseCornerRadiusAdjustmentParams & {
-  isAuto: boolean
   radiusCap?: CornerRadiusSchema | BigNumber
 }
 
@@ -32,13 +31,13 @@ type GetAdjustedCornerRadiusParams = BaseCornerRadiusAdjustmentParams & {
  */
 
 export const getAdjustedCornerRadius = (params: GetAdjustedCornerRadiusParams): CornerRadiusSchema => {
-  const { parentBoundingRect, boundingRect, cornerRadius, isAuto, parentCornerRadius, radiusCap } = params
+  const { parentBoundingRect, boundingRect, cornerRadius, parentCornerRadius, radiusCap } = params
   const cap = getCornerRadiusCap(radiusCap, boundingRect)
   const parentAdjustedRadius = adjustToParentRadius({
     boundingRect,
-    cornerRadius: isAuto ? ZERO_CORNER_RADIUS : cornerRadius,
-    parentBoundingRect,
-    parentCornerRadius,
+    cornerRadius: cornerRadius,
+    parentBoundingRect: parentBoundingRect ?? boundingRect,
+    parentCornerRadius: parentCornerRadius ?? ZERO_CORNER_RADIUS,
   })
   const cappedRadius = capCornerRadius(parentAdjustedRadius, cap)
   return cappedRadius
@@ -49,7 +48,7 @@ const adjustToParentRadius = ({
   cornerRadius,
   parentBoundingRect,
   parentCornerRadius,
-}: BaseCornerRadiusAdjustmentParams): CornerRadiusSchema => {
+}: Required<BaseCornerRadiusAdjustmentParams>): CornerRadiusSchema => {
   const parentLeft = parentBoundingRect.x
   const parentTop = parentBoundingRect.y
   const parentWidth = parentBoundingRect.width

@@ -5,7 +5,6 @@ import type { HoleSchema } from '../../schemas/hole'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
 import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
-import { SectionGroup } from '../common/SectionGroup'
 import { HoleActionsMenu } from '../component-tree/HoleActionsMenu'
 import { HoleEditor } from './HoleEditor'
 
@@ -21,9 +20,7 @@ export const HoleFloatingEditor: FC<HoleFloatingEditorProps> = ({ anchorElement,
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
       <FloatingEditorHeader menu={<HoleActionsMenu hole={editedHole} size="xs" />} title={`#${editedHole.id}`} />
-      <SectionGroup.Root>
-        <HoleEditor editable={editableHole} hole={editedHole} issues={validationIssues} onChange={setHole} />
-      </SectionGroup.Root>
+      <HoleEditor editable={editableHole} hole={editedHole} issues={validationIssues} onChange={setHole} />
     </FloatingEditor>
   )
 }

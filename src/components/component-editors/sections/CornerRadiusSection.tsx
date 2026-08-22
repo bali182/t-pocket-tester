@@ -1,77 +1,72 @@
-import { Button, Grid, SegmentGroup } from '@chakra-ui/react'
-import { useCallback, useMemo, type ReactNode } from 'react'
-import {
-  TbRadiusBottomLeft,
-  TbRadiusBottomRight,
-  TbRadiusTopLeft,
-  TbRadiusTopRight,
-  TbSquareRounded,
-} from 'react-icons/tb'
+import { Button, Grid } from '@chakra-ui/react'
+import { FC, useCallback, useMemo, type ReactNode } from 'react'
+import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
 
-import { PiLink, PiLinkBreak } from 'react-icons/pi'
-import { HasCornerRadiusSchema } from '../../../schemas/common'
+import { IconType } from 'react-icons'
+import { PiCar, PiLink, PiLinkBreak, PiPencilLine } from 'react-icons/pi'
+import { HasAutoCornerRadiusSchema, HasCornerRadiusSchema, HasCornerRadiusValuesSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
+import { has } from '../../../utils/has'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type CornerRadiusSectionProps<T extends HasCornerRadiusSchema> = {
+type CornerRadiusSectionProps<T extends HasCornerRadiusSchema & Partial<HasAutoCornerRadiusSchema>> = {
   value: T
   editable: EditableSchema<T>
   issues: ValidationIssuesSchema<HasCornerRadiusSchema>
   onChange: (updated: EditableSchema<T>) => void
 }
 
-type IndividualRadiusKey = 'topLeftRadius' | 'topRightRadius' | 'bottomRightRadius' | 'bottomLeftRadius'
-type RadiusTypeValue = 'individual' | 'uniform'
-
-const RadiusTypeValues: Record<RadiusTypeValue, boolean> = {
-  individual: true,
-  uniform: false,
-}
-
-const RadiusTypes: Record<RadiusTypeValue, RadiusTypeValue> = {
-  individual: 'individual',
-  uniform: 'uniform',
-}
-
-export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
+export function CornerRadiusSection<T extends HasCornerRadiusSchema & Partial<HasAutoCornerRadiusSchema>>({
   editable,
   issues,
   value,
   onChange,
 }: CornerRadiusSectionProps<T>): ReactNode {
   const t = useTranslation()
+
+  const hasAuto = has<Partial<HasAutoCornerRadiusSchema>>(editable, 'autoCornerRadius')
+  const disabled = hasAuto && Boolean(editable.autoCornerRadius)
+
   const individualRadiusIssues = useMemo(
     () => [issues.topLeftRadius, issues.topRightRadius, issues.bottomLeftRadius, issues.bottomRightRadius],
     [issues.bottomLeftRadius, issues.bottomRightRadius, issues.topLeftRadius, issues.topRightRadius],
   )
-  const handleIndividualRadiiChange = useCallback(
-    (details: SegmentGroup.ValueChangeDetails) => {
-      const value = details.value as RadiusTypeValue
-      onChange({ ...editable, individualRadii: RadiusTypeValues[value] })
+
+  const handleRadiusTypeChange = useCallback(
+    (uniformRadii: boolean) => {
+      const largestRadius = [value.bottomLeftRadius, value.bottomRightRadius, value.topLeftRadius, value.topRightRadius]
+        .reduce((max, radius) => Math.max(max, radius), 0)
+        .toString()
+
+      const radiusOverrides: EditableSchema<HasCornerRadiusValuesSchema> = {
+        topLeftRadius: largestRadius,
+        topRightRadius: largestRadius,
+        bottomLeftRadius: largestRadius,
+        bottomRightRadius: largestRadius,
+      }
+      onChange({
+        ...editable,
+        individualRadii: !uniformRadii,
+        ...(uniformRadii ? radiusOverrides : {}),
+      })
+    },
+    [editable, onChange, value.bottomLeftRadius, value.bottomRightRadius, value.topLeftRadius, value.topRightRadius],
+  )
+  const handleAutoChange = useCallback(
+    (manualRadii: boolean) => {
+      onChange({
+        ...editable,
+        autoCornerRadius: !manualRadii,
+      })
     },
     [editable, onChange],
   )
 
-  const handleRadiusTypeChange = useCallback(() => {
-    const largestRadius = [value.bottomLeftRadius, value.bottomRightRadius, value.topLeftRadius, value.topRightRadius]
-      .reduce((max, radius) => Math.max(max, radius), 0)
-      .toString()
-
-    onChange({
-      ...editable,
-      individualRadii: !editable.individualRadii,
-      topLeftRadius: largestRadius,
-      topRightRadius: largestRadius,
-      bottomLeftRadius: largestRadius,
-      bottomRightRadius: largestRadius,
-    })
-  }, [editable, onChange, value.bottomLeftRadius, value.bottomRightRadius, value.topLeftRadius, value.topRightRadius])
-
   const handleIndividualRadiusChange = useCallback(
-    (key: IndividualRadiusKey) => (radius: string) => {
+    (key: keyof HasCornerRadiusValuesSchema) => (radius: string) => {
       if (editable.individualRadii) {
         onChange({
           ...editable,
@@ -93,81 +88,111 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema>({
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader
+        leftAddon={
+          hasAuto ? (
+            <SectionHeaderToggle
+              onIcon={PiPencilLine}
+              offIcon={PiCar}
+              onLabel={t.stitchLine.editor.autoCornerRadius.manual}
+              offLabel={t.stitchLine.editor.autoCornerRadius.auto}
+              value={!Boolean(editable.autoCornerRadius)}
+              onChange={handleAutoChange}
+            />
+          ) : undefined
+        }
         rightAddon={
-          <Button
-            onClick={handleRadiusTypeChange}
-            size="2xs"
-            borderRadius="full"
-            height="5"
-            background={editable.individualRadii ? undefined : 'bg.emphasized'}
-            variant={editable.individualRadii ? 'subtle' : 'ghost'}
-          >
-            {editable.individualRadii ? <PiLinkBreak /> : <PiLink />}
-            {editable.individualRadii
-              ? t.component.editor.cornerRadius.individual
-              : t.component.editor.cornerRadius.uniform}
-          </Button>
+          !disabled ? (
+            <SectionHeaderToggle
+              onIcon={PiLink}
+              offIcon={PiLinkBreak}
+              onLabel={t.component.editor.cornerRadius.uniform}
+              offLabel={t.component.editor.cornerRadius.individual}
+              value={!editable.individualRadii}
+              onChange={handleRadiusTypeChange}
+            />
+          ) : undefined
         }
       >
         {t.component.editor.cornerRadius.title}
       </SectionGroup.SectionHeader>
-      {/* UI will be useful for auto/manual radius */}
-      {false && (
-        <>
-          <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.type}</SectionGroup.SectionRowTitle>
-          <SectionGroup.SectionRowEditor issue={issues.individualRadii}>
-            <SegmentGroup.Root
-              onValueChange={handleIndividualRadiiChange}
-              size="sm"
-              value={editable.individualRadii ? RadiusTypes.individual : RadiusTypes.uniform}
-            >
-              <SegmentGroup.Indicator />
-              <SegmentGroup.Item aria-label={t.component.editor.cornerRadius.uniform} value={RadiusTypes.uniform}>
-                <SegmentGroup.ItemHiddenInput />
-                <TbSquareRounded /> {t.component.editor.cornerRadius.uniform}
-              </SegmentGroup.Item>
-              <SegmentGroup.Item aria-label={t.component.editor.cornerRadius.individual} value={RadiusTypes.individual}>
-                <SegmentGroup.ItemHiddenInput />
-                <TbRadiusTopLeft /> {t.component.editor.cornerRadius.individual}
-              </SegmentGroup.Item>
-            </SegmentGroup.Root>
-          </SectionGroup.SectionRowEditor>
-        </>
-      )}
-
       <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.individualMeasure}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={individualRadiusIssues}>
         <Grid columnGap="1" gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" rowGap="1">
           <NumberInput
-            issue={issues.topLeftRadius}
+            issue={disabled ? undefined : issues.topLeftRadius}
             onChange={handleIndividualRadiusChange('topLeftRadius')}
             startAddon={<TbRadiusTopLeft />}
             unit="mm"
-            value={editable.topLeftRadius}
+            disabled={disabled}
+            value={disabled ? '' : editable.topLeftRadius}
+            placeholder={disabled ? t.stitchLine.editor.autoCornerRadius.autoPlaceholder : undefined}
           />
           <NumberInput
-            issue={issues.topRightRadius}
+            issue={disabled ? undefined : issues.topRightRadius}
             onChange={handleIndividualRadiusChange('topRightRadius')}
             startAddon={<TbRadiusTopRight />}
             unit="mm"
-            value={editable.topRightRadius}
+            disabled={disabled}
+            value={disabled ? '' : editable.topRightRadius}
+            placeholder={disabled ? t.stitchLine.editor.autoCornerRadius.autoPlaceholder : undefined}
           />
           <NumberInput
-            issue={issues.bottomLeftRadius}
+            issue={disabled ? undefined : issues.bottomLeftRadius}
             onChange={handleIndividualRadiusChange('bottomLeftRadius')}
             startAddon={<TbRadiusBottomLeft />}
             unit="mm"
-            value={editable.bottomLeftRadius}
+            disabled={disabled}
+            value={disabled ? '' : editable.bottomLeftRadius}
+            placeholder={disabled ? t.stitchLine.editor.autoCornerRadius.autoPlaceholder : undefined}
           />
           <NumberInput
-            issue={issues.bottomRightRadius}
+            issue={disabled ? undefined : issues.bottomRightRadius}
             onChange={handleIndividualRadiusChange('bottomRightRadius')}
             startAddon={<TbRadiusBottomRight />}
             unit="mm"
-            value={editable.bottomRightRadius}
+            disabled={disabled}
+            value={disabled ? '' : editable.bottomRightRadius}
+            placeholder={disabled ? t.stitchLine.editor.autoCornerRadius.autoPlaceholder : undefined}
           />
         </Grid>
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
+  )
+}
+
+type SectionHeaderToggleProps = {
+  value: boolean
+  onLabel: string
+  offLabel: string
+  onIcon: IconType
+  offIcon: IconType
+  onChange: (newValue: boolean) => void
+}
+
+const SectionHeaderToggle: FC<SectionHeaderToggleProps> = ({
+  value,
+  onIcon: OnIcon,
+  offIcon: OffIcon,
+  onLabel,
+  offLabel,
+  onChange,
+}) => {
+  const handleClick = useCallback(() => {
+    onChange(!value)
+  }, [onChange, value])
+
+  return (
+    <Button
+      onClick={handleClick}
+      size="2xs"
+      borderRadius="full"
+      height="5"
+      borderColor="border.emphasized"
+      background={value ? 'bg.emphasized' : undefined}
+      variant={value ? 'ghost' : 'subtle'}
+    >
+      {value ? <OnIcon /> : <OffIcon />}
+      {value ? onLabel : offLabel}
+    </Button>
   )
 }
