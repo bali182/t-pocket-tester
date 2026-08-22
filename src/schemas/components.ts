@@ -13,7 +13,6 @@ export type HasChildrenSchema = {
 
 export type HasLayoutSchema = {
   layoutOrientation: LayoutOrientationSchema
-  layoutOrder: LayoutOrderSchema
   layoutGap: number
   autoLayoutGap: boolean
 }
@@ -24,7 +23,6 @@ export type HasAutoDimensionsSchema = HasSizeSchema & {
 }
 
 export type LayoutOrientationSchema = 'horizontal' | 'vertical'
-export type LayoutOrderSchema = 'default' | 'reverse'
 
 /** A plain panel. Can have children (stuff placed on top of it) */
 export type RootPanelSchema = HasTypeSchema<'root-panel'> &

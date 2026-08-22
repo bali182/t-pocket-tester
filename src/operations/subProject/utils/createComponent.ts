@@ -50,7 +50,6 @@ const defaultHasCornerRadius: HasCornerRadiusSchema = {
 
 const defaultHasLayout: HasLayoutSchema = {
   layoutOrientation: 'horizontal',
-  layoutOrder: 'default',
   layoutGap: 0,
   autoLayoutGap: false,
 }

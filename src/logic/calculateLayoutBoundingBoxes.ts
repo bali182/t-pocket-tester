@@ -40,13 +40,9 @@ const calculateChildBoundingBoxes = (
 ): [LayoutChildComponent, RectSchema][] => {
   switch (parent.layoutOrientation) {
     case 'horizontal':
-      return parent.layoutOrder === 'default'
-        ? calculateHorizontalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
-        : calculateHorizontalReverseBoundingBoxes(children, parentBoundingBox, parent, gap)
+      return calculateHorizontalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
     case 'vertical':
-      return parent.layoutOrder === 'default'
-        ? calculateVerticalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
-        : calculateVerticalReverseBoundingBoxes(children, parentBoundingBox, parent, gap)
+      return calculateVerticalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
   }
 }
 
@@ -75,32 +71,6 @@ const calculateHorizontalDefaultBoundingBoxes = (
   })
 }
 
-const calculateHorizontalReverseBoundingBoxes = (
-  children: LayoutChildComponent[],
-  parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
-  gap: BigNumber,
-): [LayoutChildComponent, RectSchema][] => {
-  const widths = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  let nextRight = parentBoundingBox.x.plus(parentBoundingBox.width)
-
-  return children.map((child): [LayoutChildComponent, RectSchema] => {
-    const width = widths[child.id]
-    const height = calculateCrossAxisSize(child, parentBoundingBox, parent)
-    const left = nextRight.minus(width)
-    const boundingBox: RectSchema = {
-      x: left,
-      y: parentBoundingBox.y,
-      width,
-      height,
-    }
-
-    nextRight = left.minus(gap)
-
-    return [child, boundingBox]
-  })
-}
-
 const calculateVerticalDefaultBoundingBoxes = (
   children: LayoutChildComponent[],
   parentBoundingBox: RectSchema,
@@ -121,32 +91,6 @@ const calculateVerticalDefaultBoundingBoxes = (
     }
 
     nextTop = nextTop.plus(height).plus(gap)
-
-    return [child, boundingBox]
-  })
-}
-
-const calculateVerticalReverseBoundingBoxes = (
-  children: LayoutChildComponent[],
-  parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
-  gap: BigNumber,
-): [LayoutChildComponent, RectSchema][] => {
-  const heights = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  let nextBottom = parentBoundingBox.y.plus(parentBoundingBox.height)
-
-  return children.map((child): [LayoutChildComponent, RectSchema] => {
-    const width = calculateCrossAxisSize(child, parentBoundingBox, parent)
-    const height = heights[child.id]
-    const top = nextBottom.minus(height)
-    const boundingBox: RectSchema = {
-      x: parentBoundingBox.x,
-      y: top,
-      width,
-      height,
-    }
-
-    nextBottom = top.minus(gap)
 
     return [child, boundingBox]
   })

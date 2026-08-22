@@ -1,16 +1,6 @@
 import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
-import {
-  PiArrowDown,
-  PiArrowLeft,
-  PiArrowRight,
-  PiArrowUp,
-  PiArrowsHorizontal,
-  PiArrowsVertical,
-  PiColumns,
-  PiRows,
-  PiRuler,
-} from 'react-icons/pi'
+import { PiArrowsHorizontal, PiArrowsVertical, PiColumns, PiRows, PiRuler } from 'react-icons/pi'
 
 import type { HasLayoutSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
@@ -35,13 +25,6 @@ export function LayoutSection<T extends HasLayoutSchema>({
   const handleOrientationChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails) => {
       onChange({ ...editable, layoutOrientation: details.value })
-    },
-    [editable, onChange],
-  )
-
-  const handleOrderChange = useCallback(
-    (details: SegmentGroup.ValueChangeDetails) => {
-      onChange({ ...editable, layoutOrder: details.value })
     },
     [editable, onChange],
   )
@@ -74,23 +57,6 @@ export function LayoutSection<T extends HasLayoutSchema>({
           <SegmentGroup.Item aria-label={t.component.editor.layout.vertical} value="vertical">
             <SegmentGroup.ItemHiddenInput />
             <PiRows /> {t.component.editor.layout.vertical}
-          </SegmentGroup.Item>
-        </SegmentGroup.Root>
-      </SectionGroup.SectionRowEditor>
-
-      <SectionGroup.SectionRowTitle>{t.component.editor.layout.order}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor issue={issues.layoutOrder}>
-        <SegmentGroup.Root onValueChange={handleOrderChange} size="sm" value={editable.layoutOrder}>
-          <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label={t.component.editor.layout.defaultOrder} value="default">
-            <SegmentGroup.ItemHiddenInput />
-            {editable.layoutOrientation === 'horizontal' ? <PiArrowRight /> : <PiArrowDown />}
-            {t.component.editor.layout.defaultOrder}
-          </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.component.editor.layout.reverseOrder} value="reverse">
-            <SegmentGroup.ItemHiddenInput />
-            {editable.layoutOrientation === 'horizontal' ? <PiArrowLeft /> : <PiArrowUp />}
-            {t.component.editor.layout.reverseOrder}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
