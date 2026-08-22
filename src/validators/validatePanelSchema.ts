@@ -48,6 +48,9 @@ export const validatePanelSchema = (
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 0, minInclusive: false })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 0, minInclusive: false })
 
+  const xOffsetResult = validateNumber(input.yOffset, currentValue.yOffset, context, { min: 0 })
+  const yOffsetResult = validateNumber(input.xOffset, currentValue.xOffset, context, { min: 0 })
+
   const issues: ValidationIssuesSchema<PanelSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
@@ -66,6 +69,9 @@ export const validatePanelSchema = (
     type: undefined,
     width: widthResult.issues,
     autoLayoutGap: undefined,
+    offAxisAnchor: undefined,
+    xOffset: xOffsetResult.issues,
+    yOffset: yOffsetResult.issues,
   }
 
   const committedValue: PanelSchema = {
@@ -85,6 +91,9 @@ export const validatePanelSchema = (
     type: currentValue.type,
     width: widthResult.committedValue,
     autoLayoutGap: input.autoLayoutGap,
+    offAxisAnchor: input.offAxisAnchor,
+    xOffset: xOffsetResult.committedValue,
+    yOffset: yOffsetResult.committedValue,
   }
 
   if (isDefined(colorResult.committedValue)) {
@@ -101,7 +110,9 @@ export const validatePanelSchema = (
     !bottomLeftRadiusResult.isValid ||
     !bottomRightRadiusResult.isValid ||
     !widthResult.isValid ||
-    !heightResult.isValid
+    !heightResult.isValid ||
+    !xOffsetResult.isValid ||
+    !yOffsetResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }
@@ -123,6 +134,9 @@ export const validatePanelSchema = (
     type: currentValue.type,
     width: widthResult.value,
     autoLayoutGap: input.autoLayoutGap,
+    offAxisAnchor: input.offAxisAnchor,
+    xOffset: xOffsetResult.value,
+    yOffset: yOffsetResult.value,
   }
 
   if (isDefined(colorResult.value)) {
