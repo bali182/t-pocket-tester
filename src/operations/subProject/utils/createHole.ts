@@ -1,4 +1,4 @@
-import type { HasCornerRadiusSchema, HasLayoutOffsetsSchema } from '../../../schemas/common'
+import type { HasCornerRadiusSchema, HasXYOffsetSchema } from '../../../schemas/common'
 import type { HasAnchorsSchema, HoleSchema } from '../../../schemas/hole'
 
 type CreateHoleParams = {
@@ -21,7 +21,7 @@ const defaultAnchors: HasAnchorsSchema = {
   yAnchor: 'middle',
 }
 
-const defaultOffsets: HasLayoutOffsetsSchema = {
+const defaultOffsets: HasXYOffsetSchema = {
   xOffset: 0,
   yOffset: 0,
 }

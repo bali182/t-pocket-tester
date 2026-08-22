@@ -1,11 +1,4 @@
-import {
-  AnchorSchema,
-  HasCornerRadiusSchema,
-  HasIdentitySchema,
-  HasLayoutOffsetsSchema,
-  HasSizeSchema,
-  HasTypeSchema,
-} from './common'
+import { AnchorSchema, HasCornerRadiusSchema, HasIdentitySchema, HasSizeSchema, HasTypeSchema } from './common'
 import { CardSchemaId } from './valuables'
 
 export type HasColorSchema = {
@@ -18,7 +11,7 @@ export type HasChildrenSchema = {
   children: string[]
 }
 
-export type HasLayoutSchema = HasLayoutOffsetsSchema & {
+export type HasLayoutSchema = {
   layoutOrientation: LayoutOrientationSchema
   offAxisAnchor: AnchorSchema
   layoutGap: number

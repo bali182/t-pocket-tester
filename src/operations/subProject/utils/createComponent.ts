@@ -1,4 +1,4 @@
-import { HasCornerRadiusSchema } from '../../../schemas/common'
+import { HasCornerRadiusSchema, HasXYOffsetSchema } from '../../../schemas/common'
 import {
   HasAutoDimensionsSchema,
   HasLayoutSchema,
@@ -51,10 +51,13 @@ const defaultHasCornerRadius: HasCornerRadiusSchema = {
 const defaultHasLayout: HasLayoutSchema = {
   layoutOrientation: 'horizontal',
   offAxisAnchor: 'middle',
-  xOffset: 0,
-  yOffset: 0,
   layoutGap: 0,
   autoLayoutGap: false,
+}
+
+const defaultHasOffset: HasXYOffsetSchema = {
+  xOffset: 0,
+  yOffset: 0,
 }
 
 const defaultHasFillableSize: HasAutoDimensionsSchema = {
@@ -79,6 +82,7 @@ const DEFAULT_PANEL: PanelSchema = {
   ...defaultHasLayout,
   ...defaultHasCornerRadius,
   ...defaultHasFillableSize,
+  ...defaultHasOffset,
   type: 'panel',
   id: '',
   name: '',
@@ -88,6 +92,7 @@ const DEFAULT_PANEL: PanelSchema = {
 const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   ...defaultHasCornerRadius,
   ...defaultHasFillableSize,
+  ...defaultHasOffset,
   type: 'pocket-cluster',
   id: '',
   name: '',

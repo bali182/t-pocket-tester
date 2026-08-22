@@ -40,6 +40,13 @@ export const HU = {
       bottomLeft: 'Bal alsó sarok',
       bottomRight: 'Jobb alsó sarok',
     },
+    anchors: {
+      left: 'Bal',
+      center: 'Közép',
+      right: 'Jobb',
+      top: 'Fent',
+      bottom: 'Lent',
+    },
   },
   editor: {
     menus: {
@@ -186,6 +193,10 @@ export const HU = {
         defaultOrder: 'Alapértelmezett',
         reverseOrder: 'Fordított',
         gap: 'Térköz',
+        anchor: 'Igazítás',
+        offset: 'Eltolás',
+        xOffset: 'X',
+        yOffset: 'Y',
       },
       cornerRadius: {
         title: 'Lekerekítés',
@@ -217,15 +228,10 @@ export const HU = {
     editor: {
       position: {
         title: 'Pozíció',
-        xAnchor: 'Vízszintes igazítás',
-        yAnchor: 'Függőleges igazítás',
         xOffset: 'X eltolás',
         yOffset: 'Y eltolás',
-        left: 'Bal',
-        center: 'Közép',
-        right: 'Jobb',
-        top: 'Fent',
-        bottom: 'Lent',
+        xAnchor: 'Vízszintes igazítás',
+        yAnchor: 'Függőleges igazítás',
       },
       size: {
         radius: 'Sugár',

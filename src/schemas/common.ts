@@ -54,7 +54,7 @@ export type HasHoleTargetSchema = {
 
 export type HasTargetSchema = HasComponentTargetSchema | HasHoleTargetSchema
 
-export type HasLayoutOffsetsSchema = {
+export type HasXYOffsetSchema = {
   xOffset: number
   yOffset: number
 }

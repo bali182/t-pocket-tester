@@ -42,6 +42,13 @@ export const EN: typeof HU = {
       bottomLeft: 'Bottom-left corner',
       bottomRight: 'Bottom-right corner',
     },
+    anchors: {
+      left: 'Left',
+      center: 'Center',
+      right: 'Right',
+      top: 'Top',
+      bottom: 'Bottom',
+    },
   },
   editor: {
     menus: {
@@ -188,6 +195,10 @@ export const EN: typeof HU = {
         defaultOrder: 'Default',
         reverseOrder: 'Reverse',
         gap: 'Gap',
+        anchor: 'Alignment',
+        offset: 'Offset',
+        xOffset: 'X',
+        yOffset: 'Y',
       },
       cornerRadius: {
         title: 'Corner radius',
@@ -219,15 +230,10 @@ export const EN: typeof HU = {
     editor: {
       position: {
         title: 'Position',
-        xAnchor: 'Horizontal alignment',
-        yAnchor: 'Vertical alignment',
         xOffset: 'X offset',
         yOffset: 'Y offset',
-        left: 'Left',
-        center: 'Center',
-        right: 'Right',
-        top: 'Top',
-        bottom: 'Bottom',
+        xAnchor: 'Horizontal alignment',
+        yAnchor: 'Vertical alignment',
       },
       size: {
         radius: 'Radius',

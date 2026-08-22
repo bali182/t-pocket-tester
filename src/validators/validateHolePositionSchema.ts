@@ -1,4 +1,4 @@
-import type { AnchorSchema, HasLayoutOffsetsSchema } from '../schemas/common'
+import type { AnchorSchema, HasXYOffsetSchema } from '../schemas/common'
 import type { EditableSchema } from '../schemas/editable'
 import type { HasAnchorsSchema } from '../schemas/hole'
 import type {
@@ -17,22 +17,22 @@ const holeAnchorValues: Record<AnchorSchema, boolean> = {
 }
 
 export const validateHolePositionSchema = (
-  input: EditableSchema<HasAnchorsSchema & HasLayoutOffsetsSchema>,
-  currentValue: HasAnchorsSchema & HasLayoutOffsetsSchema,
+  input: EditableSchema<HasAnchorsSchema & HasXYOffsetSchema>,
+  currentValue: HasAnchorsSchema & HasXYOffsetSchema,
   context: ComponentBasedValidationContextSchema,
-): ValidationResultSchema<HasAnchorsSchema & HasLayoutOffsetsSchema> => {
+): ValidationResultSchema<HasAnchorsSchema & HasXYOffsetSchema> => {
   const xAnchorResult = validatePrimitiveUnion(input.xAnchor, currentValue.xAnchor, holeAnchorValues, context)
   const yAnchorResult = validatePrimitiveUnion(input.yAnchor, currentValue.yAnchor, holeAnchorValues, context)
   const xOffsetResult = validateNumber(input.xOffset, currentValue.xOffset, context)
   const yOffsetResult = validateNumber(input.yOffset, currentValue.yOffset, context)
 
-  const issues: ValidationIssuesSchema<HasAnchorsSchema & HasLayoutOffsetsSchema> = {
+  const issues: ValidationIssuesSchema<HasAnchorsSchema & HasXYOffsetSchema> = {
     xAnchor: xAnchorResult.issues,
     xOffset: xOffsetResult.issues,
     yAnchor: yAnchorResult.issues,
     yOffset: yOffsetResult.issues,
   }
-  const committedValue: HasAnchorsSchema & HasLayoutOffsetsSchema = {
+  const committedValue: HasAnchorsSchema & HasXYOffsetSchema = {
     xAnchor: xAnchorResult.committedValue,
     xOffset: xOffsetResult.committedValue,
     yAnchor: yAnchorResult.committedValue,

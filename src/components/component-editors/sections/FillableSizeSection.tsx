@@ -8,10 +8,10 @@ import { useTranslation } from '../../../translations/translation'
 import { AutoDimensionEditor } from '../../common/AutoDimensionEditor'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type FillableSizeSectionProps<T extends HasAutoDimensionsSchema> = {
+type FillableSizeSectionProps<T> = {
   component: T
   editable: EditableSchema<T>
-  issues: ValidationIssuesSchema<HasAutoDimensionsSchema>
+  issues: ValidationIssuesSchema<T>
   onChange: (updated: EditableSchema<T>) => void
 }
 
