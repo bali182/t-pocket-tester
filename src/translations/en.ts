@@ -208,6 +208,11 @@ export const EN: typeof HU = {
         individualMeasure: 'Measurement',
         uniformMeasure: 'Measurement',
       },
+      squeeze: {
+        title: 'Squeeze',
+        horizontal: 'Horizontal',
+        vertical: 'Vertical',
+      },
       pocketCluster: {
         title: 'Pockets',
         card: 'Card',

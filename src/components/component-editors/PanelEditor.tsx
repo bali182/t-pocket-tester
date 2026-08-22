@@ -7,6 +7,7 @@ import { CornerRadiusSection } from './sections/CornerRadiusSection'
 import { FillableSizeSection } from './sections/FillableSizeSection'
 import { LayoutSection } from './sections/LayoutSection'
 import { NameAndColorSection } from './sections/NameAndColorSection'
+import { SqueezeSection } from './sections/SqueezeSection'
 
 type PanelEditorProps = {
   baseColor: string
@@ -35,6 +36,7 @@ export const PanelEditor: FC<PanelEditorProps> = ({
         onResetColor={onResetColor}
       />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
+      <SqueezeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection<PanelSchema> value={component} editable={editable} issues={issues} onChange={onChange} />
       <LayoutSection component={component} editable={editable} issues={issues} onChange={onChange} />
     </SectionGroup.Root>

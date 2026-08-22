@@ -206,6 +206,11 @@ export const HU = {
         individualMeasure: 'Mérték',
         uniformMeasure: 'Mérték',
       },
+      squeeze: {
+        title: 'Összenyomás',
+        horizontal: 'Vízszintes',
+        vertical: 'Függőleges',
+      },
       pocketCluster: {
         title: 'Zsebek',
         card: 'Kártya',

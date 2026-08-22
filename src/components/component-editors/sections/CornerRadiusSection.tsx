@@ -117,7 +117,7 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema & Partial<Ha
       </SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.component.editor.cornerRadius.individualMeasure}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={individualRadiusIssues}>
-        <Grid columnGap="1" gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" rowGap="1">
+        <Grid gridTemplateColumns="repeat(2, minmax(0, 1fr))" minWidth="0" columnGap="3" rowGap="3">
           <NumberInput
             issue={disabled ? undefined : issues.topLeftRadius}
             onChange={handleIndividualRadiusChange('topLeftRadius')}

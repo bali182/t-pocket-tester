@@ -22,7 +22,7 @@ import { useTranslation } from '../../../translations/translation'
 import { AutoDimensionEditor } from '../../common/AutoDimensionEditor'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type LayoutSectionProps<T extends HasLayoutSchema> = {
+type LayoutSectionProps<T> = {
   component: T
   editable: EditableSchema<T>
   issues: ValidationIssuesSchema<T>

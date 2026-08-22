@@ -8,6 +8,7 @@ import { CornerRadiusSection } from './sections/CornerRadiusSection'
 import { FillableSizeSection } from './sections/FillableSizeSection'
 import { NameAndColorSection } from './sections/NameAndColorSection'
 import { PocketClusterSettingsSection } from './sections/PocketClusterSettingsSection'
+import { SqueezeSection } from './sections/SqueezeSection'
 import { TPocketShapeSection } from './sections/TPocketShapeSection'
 
 type PocketClusterEditorProps = {
@@ -37,6 +38,7 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
         onResetColor={onResetColor}
       />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
+      <SqueezeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection<PocketClusterSchema>
         value={component}
         editable={editable}

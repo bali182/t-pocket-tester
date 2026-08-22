@@ -7,7 +7,7 @@ import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type WidthAndHeightSizeSectionProps<T extends HasSizeSchema> = {
+type WidthAndHeightSizeSectionProps<T> = {
   editable: EditableSchema<T>
   issues: ValidationIssuesSchema<HasSizeSchema>
   onChange: (updated: EditableSchema<T>) => void
@@ -21,20 +21,14 @@ export function WidthAndHeightSizeSection<T extends HasSizeSchema>({
   const t = useTranslation()
   const handleWidthChange = useCallback(
     (width: string) => {
-      onChange({
-        ...editable,
-        width,
-      })
+      onChange({ ...editable, width })
     },
     [editable, onChange],
   )
 
   const handleHeightChange = useCallback(
     (height: string) => {
-      onChange({
-        ...editable,
-        height,
-      })
+      onChange({ ...editable, height })
     },
     [editable, onChange],
   )
