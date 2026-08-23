@@ -27,7 +27,10 @@ export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, i
     }),
     [],
   )
-  const { handleOpenChange, handleValueChange, pickerColor } = useColorPickerValue(value, onChange)
+  const { handleOpenChange, handleValueChange, isPickerOpen, pickerColor, pickerColorValue } = useColorPickerValue(
+    value,
+    onChange,
+  )
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   return (
@@ -80,7 +83,7 @@ export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, i
             fieldSizing={fieldSizing}
             onChange={(event) => onChange(event.currentTarget.value)}
             size="xs"
-            value={value}
+            value={isPickerOpen ? pickerColorValue : value}
             w={isContentSized ? 'auto' : undefined}
           />
         </InputGroup>

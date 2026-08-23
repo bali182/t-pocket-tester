@@ -1,5 +1,5 @@
 import { Color, ColorPicker, type ColorPickerValueChangeDetails, parseColor } from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { isDefined } from '../../utils/isDefined'
 
@@ -8,18 +8,18 @@ type ColorPickerOpenChangeHandler = NonNullable<ColorPicker.RootProps['onOpenCha
 type UseColorPickerValueResult = {
   handleOpenChange: ColorPickerOpenChangeHandler
   handleValueChange: (details: ColorPickerValueChangeDetails) => void
+  isPickerOpen: boolean
   pickerColor: Color
+  pickerColorValue: string
 }
 
 export const useColorPickerValue = (value: string, onChange: (value: string) => void): UseColorPickerValueResult => {
   const parsedColor = useMemo<Color | undefined>(() => getColor(value), [value])
+  const [isPickerOpen, setIsPickerOpen] = useState(false)
   const [pickerColor, setPickerColor] = useState<Color>(() => parsedColor ?? parseColor('#000000'))
-  const colorOnPickerOpenRef = useRef<string | undefined>(undefined)
 
   useEffect(() => {
     if (isDefined(parsedColor)) {
-      colorOnPickerOpenRef.current = getColorValue(parsedColor)
-
       setPickerColor((currentColor) => (getColorValue(currentColor) === value ? currentColor : parsedColor))
     }
   }, [parsedColor, value])
@@ -30,23 +30,26 @@ export const useColorPickerValue = (value: string, onChange: (value: string) => 
 
   const handleOpenChange = useCallback<ColorPickerOpenChangeHandler>(
     (details): void => {
-      if (details.open) {
-        colorOnPickerOpenRef.current = getColorValue(pickerColor)
-        return
+      setIsPickerOpen(details.open)
+
+      if (!details.open) {
+        const pickerColorValue = getColorValue(pickerColor)
+
+        if (pickerColorValue !== value) {
+          onChange(pickerColorValue)
+        }
       }
-
-      const pickerColorValue = getColorValue(pickerColor)
-
-      if (colorOnPickerOpenRef.current !== pickerColorValue) {
-        onChange(pickerColorValue)
-      }
-
-      colorOnPickerOpenRef.current = undefined
     },
-    [onChange, pickerColor],
+    [onChange, pickerColor, value],
   )
 
-  return { handleOpenChange, handleValueChange, pickerColor }
+  return {
+    handleOpenChange,
+    handleValueChange,
+    isPickerOpen,
+    pickerColor,
+    pickerColorValue: getColorValue(pickerColor),
+  }
 }
 
 const getColor = (value: string): Color | undefined => {

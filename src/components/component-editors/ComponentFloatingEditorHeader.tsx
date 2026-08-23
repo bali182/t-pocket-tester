@@ -69,7 +69,10 @@ type HeaderColorInputProps = {
 
 const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: HeaderColorInputProps) => {
   const t = useTranslation()
-  const { handleOpenChange, handleValueChange, pickerColor } = useColorPickerValue(value, onChange)
+  const { handleOpenChange, handleValueChange, isPickerOpen, pickerColor, pickerColorValue } = useColorPickerValue(
+    value,
+    onChange,
+  )
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   return (
@@ -103,7 +106,7 @@ const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: H
             focusRingColor="colorPalette.focusRing"
             onChange={(event) => onChange(event.currentTarget.value)}
             size="xs"
-            value={value}
+            value={isPickerOpen ? pickerColorValue : value}
             w="auto"
           />
         </HStack>
