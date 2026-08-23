@@ -151,6 +151,16 @@ export const EN: typeof HU = {
     actions: {
       create: 'New project',
     },
+    empty: {
+      noProjects: {
+        title: 'No projects yet',
+        description: 'Create a new project to get started.',
+      },
+      noSearchResults: {
+        title: 'No matches found',
+        description: 'Try a different search term.',
+      },
+    },
     createDialog: {
       title: 'Create new project',
       actions: {

@@ -1,7 +1,7 @@
 # Basic instructions
 
 - The package manager is npm.
-- Testing framework is vitest. Explicitly ask, if tests are necessary when writing code. Don't assume they are, and start writing tests. Don't try to sneak them into plans either. Check with the user, if tests are wanted for a given task.
+- Testing framework is vitest. Explicitly ask, if tests are necessary when writing code. Don't assume they are, and start writing tests. Don't try to sneak them into plans either. Check with the user, if tests are wanted for a given task, if it's related to business logic - UI is not currently testable.
 - Never perform any mutating git operations (commit, push, etc)
 
 ## Editing code.
@@ -26,6 +26,7 @@
 - You are writing plans for another developer. Don't write vague requirements business analyst style, but exactly what you are planning to do in the code. The goal is, that you don't rely on the "Write something -> Try to compile -> Doesn't work -> Start again" loop excessively. You should always start implementation with a concise plan, while the user has a clear understanding of what you will do.
 - Checks after writing code: `npm run typecheck`, `npm run lint` and if that's in order `npm run pretty`. Don't try to run a dev server, don't write manual test steps, don't suggest testing libraries.
 - Before planning always ASK for architectural and even smaller decisions.
+- If you suggest something, and the user says "Ok" or "rendben" as one word (confirmation style), you are allowed to do it.
 
 ## Coding style
 

@@ -149,6 +149,16 @@ export const HU = {
     actions: {
       create: 'Új projekt',
     },
+    empty: {
+      noProjects: {
+        title: 'Még nincs projekted',
+        description: 'Hozz létre egy új projektet a kezdéshez.',
+      },
+      noSearchResults: {
+        title: 'Nincs találat',
+        description: 'Próbálj másik keresési kifejezést.',
+      },
+    },
     createDialog: {
       title: 'Új projekt létrehozása',
       actions: {
