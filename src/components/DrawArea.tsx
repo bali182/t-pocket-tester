@@ -9,17 +9,11 @@ export const DrawArea: FC = () => {
   const scaling = useAtomValue(scalingAtom)
 
   return (
-    <Box
-      alignItems="center"
-      boxSizing="border-box"
-      display="flex"
-      height="100%"
-      justifyContent="center"
-      overflow="auto"
-      width="100%"
-    >
-      <Box style={{ zoom: scaling }}>
-        <SvgRoot />
+    <Box boxSizing="border-box" height="100%" overflow="auto" width="100%">
+      <Box alignItems="center" display="flex" justifyContent="center" minHeight="100%" minWidth="100%">
+        <Box style={{ zoom: scaling }}>
+          <SvgRoot />
+        </Box>
       </Box>
     </Box>
   )
