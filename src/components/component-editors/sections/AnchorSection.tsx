@@ -10,7 +10,7 @@ import {
 } from 'react-icons/pi'
 
 import type { AnchorSchema, HasOffAxisAnchor } from '../../../schemas/common'
-import type { PanelSchema, RootPanelSchema } from '../../../schemas/components'
+import type { HasAutoDimensionsSchema, PanelSchema, RootPanelSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
@@ -23,13 +23,14 @@ type AnchorSectionProps<T> = {
   onChange: (updated: EditableSchema<T>) => void
 }
 
-export function AnchorSection<T extends HasOffAxisAnchor>({
+export function AnchorSection<T extends HasOffAxisAnchor & HasAutoDimensionsSchema>({
   parent,
   editable,
   issues,
   onChange,
 }: AnchorSectionProps<T>): ReactNode {
   const t = useTranslation()
+  const isOffAxisFill = parent.layoutOrientation === 'horizontal' ? editable.autoHeight : editable.autoWidth
   const handleOffAxisAnchorChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails) => {
       onChange({ ...editable, offAxisAnchor: details.value as AnchorSchema })
@@ -42,7 +43,12 @@ export function AnchorSection<T extends HasOffAxisAnchor>({
       <SectionGroup.SectionHeader>{t.component.editor.anchor.title}</SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.component.editor.anchor.title}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.offAxisAnchor}>
-        <SegmentGroup.Root onValueChange={handleOffAxisAnchorChange} size="sm" value={editable.offAxisAnchor}>
+        <SegmentGroup.Root
+          disabled={isOffAxisFill}
+          onValueChange={handleOffAxisAnchorChange}
+          size="sm"
+          value={isOffAxisFill ? null : editable.offAxisAnchor}
+        >
           <SegmentGroup.Indicator />
           <SegmentGroup.Item value="start">
             <SegmentGroup.ItemHiddenInput />
