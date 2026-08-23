@@ -1,5 +1,5 @@
 import { Box, HStack, IconButton, Input, InputGroup, Separator, type InputProps } from '@chakra-ui/react'
-import { type FC, type ReactNode } from 'react'
+import { useEffect, useRef, type FC, type ReactNode } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import { useNumberEditorStepContext } from '../../contexts/NumberEditorStepContext'
@@ -36,6 +36,16 @@ export const NumberInput: FC<NumberInputProps> = ({
 }) => {
   const isInvalid = isDefined(issue) && issue.severity === 'error'
   const { step } = useNumberEditorStepContext()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  // React leaves defaultValue unchanged while a number input is focused, but the browser uses it as the native step base.
+  useEffect(() => {
+    const inputElement = inputRef.current
+
+    if (isDefined(inputElement)) {
+      inputElement.defaultValue = value ?? ''
+    }
+  }, [value])
 
   const input = (
     <Input
@@ -43,6 +53,7 @@ export const NumberInput: FC<NumberInputProps> = ({
       disabled={disabled}
       inputMode="decimal"
       onChange={(event) => onChange(event.currentTarget.value)}
+      ref={inputRef}
       step={overwriteStep ?? step}
       type="number"
       value={value}
