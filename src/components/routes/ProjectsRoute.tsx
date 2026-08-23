@@ -14,30 +14,27 @@ import { useCallback, useEffect, useState, type FC } from 'react'
 import { LiaFrogSolid } from 'react-icons/lia'
 import { PiFolderDuotone, PiMagnifyingGlass, PiPlus, PiWalletDuotone } from 'react-icons/pi'
 import { Link } from 'react-router'
-import { format } from 'timeago.js'
 
-import { appRoutes } from '../../appRoutes'
-import { useProjects } from '../../hooks/useProjects'
+import { useRecentProjects } from '../../hooks/useRecentProjects'
 import { useTranslation } from '../../translations/translation'
-import { isDefined } from '../../utils/isDefined'
 import { CreateProjectDialog } from '../CreateProjectDialog'
 import { ProjectActionsMenu } from '../ProjectActionsMenu'
 
 export const ProjectsRoute: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const { projects } = useProjects()
+  const recentProjects = useRecentProjects()
   const t = useTranslation()
   const { contains } = useFilter({ sensitivity: 'base' })
   const { collection, filter, set } = useListCollection({
     filter: contains,
-    initialItems: projects,
-    itemToString: (project) => project.name,
-    itemToValue: (project) => project.id,
+    initialItems: recentProjects,
+    itemToString: (project) => project.projectName,
+    itemToValue: (project) => project.projectId,
   })
 
   useEffect(() => {
-    set(projects)
-  }, [projects, set])
+    set(recentProjects)
+  }, [recentProjects, set])
 
   const openCreateDialog = useCallback((): void => {
     setIsCreateDialogOpen(true)
@@ -55,7 +52,7 @@ export const ProjectsRoute: FC = () => {
             collection={collection}
             display="flex"
             flexDirection="column"
-            height={projects.length > 0 ? '50dvh' : 'auto'}
+            height={recentProjects.length > 0 ? '50dvh' : 'auto'}
             highlightedValue={null}
           >
             <Listbox.Input
@@ -66,31 +63,27 @@ export const ProjectsRoute: FC = () => {
             />
             <Listbox.Content maxHeight="calc(50dvh - 6rem)" overflowY="auto">
               {collection.items.map((project) => {
-                const firstSubProject = project.subProjects[0]
-                const target = isDefined(firstSubProject)
-                  ? appRoutes.subProject(project.id, firstSubProject.id)
-                  : appRoutes.project(project.id)
                 return (
-                  <Listbox.Item flex="none" item={project} key={project.id}>
+                  <Listbox.Item flex="none" item={project} key={project.projectId}>
                     <HStack gap="3" width="100%">
-                      <Link style={{ flex: 1 }} to={target}>
+                      <Link style={{ flex: 1 }} to={project.link}>
                         <HStack gap="3">
-                          <PiWalletDuotone />
+                          <PiWalletDuotone size={18} />
                           <Listbox.ItemText>
-                            {project.name}
+                            {project.projectName}
                             <Text color="fg.muted" fontSize="xs" mt="1">
-                              {format(new Date())}
+                              {project.formattedLastOpenedAt}
                             </Text>
                           </Listbox.ItemText>
                         </HStack>
                       </Link>
-                      <ProjectActionsMenu projectId={project.id} size="xs" />
+                      <ProjectActionsMenu projectId={project.projectId} size="xs" />
                     </HStack>
                   </Listbox.Item>
                 )
               })}
               <Listbox.Empty>
-                {projects.length === 0 && (
+                {recentProjects.length === 0 && (
                   <EmptyState.Root size="sm">
                     <EmptyState.Content>
                       <EmptyState.Indicator>
@@ -101,7 +94,7 @@ export const ProjectsRoute: FC = () => {
                     </EmptyState.Content>
                   </EmptyState.Root>
                 )}
-                {projects.length !== 0 && collection.items.length === 0 && (
+                {recentProjects.length !== 0 && collection.items.length === 0 && (
                   <EmptyState.Root size="sm">
                     <EmptyState.Content>
                       <EmptyState.Indicator>

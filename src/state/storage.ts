@@ -2,9 +2,10 @@ import typia from 'typia'
 
 import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
 import type { ProjectSchema } from '../schemas/project'
+import type { RecentProjectSchema } from '../schemas/recentProject'
 import type { BaseExportSettingsSchema } from '../schemas/settings'
 
-type StorageKey = 'pdf-export-params' | 'projects' | 'scaling' | 'svg-export-params'
+type StorageKey = 'pdf-export-params' | 'projects' | 'recent-projects' | 'scaling' | 'svg-export-params'
 
 export const readProjectsFromStorage = (): ProjectSchema[] => {
   return safeReadStorage<ProjectSchema[]>('projects', [], (raw) => typia.assert<ProjectSchema[]>(raw))
@@ -12,6 +13,16 @@ export const readProjectsFromStorage = (): ProjectSchema[] => {
 
 export const saveProjectsToStorage = (projects: ProjectSchema[]): void => {
   safeWriteStorage('projects', projects)
+}
+
+export const readRecentProjectsFromStorage = (): Record<string, RecentProjectSchema> => {
+  return safeReadStorage<Record<string, RecentProjectSchema>>('recent-projects', {}, (raw) =>
+    typia.assert<Record<string, RecentProjectSchema>>(raw),
+  )
+}
+
+export const saveRecentProjectsToStorage = (recentProjects: Record<string, RecentProjectSchema>): void => {
+  safeWriteStorage('recent-projects', recentProjects)
 }
 
 export const readScalingFromStorage = (): number => {

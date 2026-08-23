@@ -4,6 +4,7 @@ import { useEffect, type FC } from 'react'
 import { PiWarningCircle } from 'react-icons/pi'
 import { useNavigate, useParams } from 'react-router'
 import { useOptionalSubProject } from '../../hooks/useOptionalSubProject'
+import { useRecentProjectOperations } from '../../hooks/useRecentProjectOperations'
 import type { SubProjectRouteParams } from '../../schemas/routeParams'
 import { pendingSubProjectDeletionAtom } from '../../state/pendigDeletionAtoms'
 import { useTranslation } from '../../translations/translation'
@@ -12,11 +13,21 @@ import { EditorContent } from '../EditorContent'
 
 export const SubProjectRoute: FC = () => {
   const t = useTranslation()
-  const { subProjectId } = useParams<SubProjectRouteParams>()
+  const { projectId, subProjectId } = useParams<SubProjectRouteParams>()
   const pendingSubProjectDeletion = useAtomValue(pendingSubProjectDeletionAtom)
   const { subProject, computedSubProject } = useOptionalSubProject()
+  const { markProjectOpened } = useRecentProjectOperations()
+  const isSubProjectValid = isDefined(subProject) && isDefined(computedSubProject)
 
-  if (!isDefined(subProject) || !isDefined(computedSubProject)) {
+  useEffect(() => {
+    if (!isSubProjectValid || !isDefined(projectId) || !isDefined(subProjectId)) {
+      return
+    }
+
+    markProjectOpened(projectId, subProjectId)
+  }, [isSubProjectValid, markProjectOpened, projectId, subProjectId])
+
+  if (!isSubProjectValid) {
     if (isDefined(pendingSubProjectDeletion) && pendingSubProjectDeletion.subProjectId === subProjectId) {
       return <PendingSubProjectDeletionRedirect redirectPath={pendingSubProjectDeletion.redirectPath} />
     }
