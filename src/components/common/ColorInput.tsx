@@ -1,18 +1,10 @@
-import {
-  Color,
-  ColorPicker,
-  ColorPickerValueChangeDetails,
-  IconButton,
-  Input,
-  InputGroup,
-  Portal,
-  parseColor,
-} from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
+import { ColorPicker, IconButton, Input, InputGroup, Portal } from '@chakra-ui/react'
+import { useMemo, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
+import { useColorPickerValue } from './useColorPickerValue'
 
 type ColorInputProps = {
   fieldSizing?: 'content' | 'fixed'
@@ -27,16 +19,7 @@ type ColorPickerPositioning = {
   placement: 'bottom-start'
 }
 
-const getColor = (value: string): Color | undefined => {
-  try {
-    return parseColor(value)
-  } catch {
-    return undefined
-  }
-}
-
 export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, issue, onChange, onReset, value }) => {
-  const parsedColor = useMemo<Color | undefined>(() => getColor(value), [value])
   const isContentSized = fieldSizing === 'content'
   const positioning = useMemo<ColorPickerPositioning>(
     () => ({
@@ -44,28 +27,18 @@ export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, i
     }),
     [],
   )
-  const [pickerColor, setPickerColor] = useState<Color>(() => parsedColor ?? parseColor('#000000'))
+  const { handleOpenChange, handleValueChange, pickerColor } = useColorPickerValue(value, onChange)
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
-  useEffect(() => {
-    if (isDefined(parsedColor)) {
-      setPickerColor(parsedColor)
-    }
-  }, [parsedColor])
-
-  const handleValueChange = useCallback(
-    (details: ColorPickerValueChangeDetails) => {
-      const nextColor = details.value
-      const nextValue =
-        nextColor.getChannelValue('alpha') === 1 ? nextColor.toString('hex') : nextColor.toString('hexa')
-
-      onChange(nextValue)
-    },
-    [onChange],
-  )
-
   return (
-    <ColorPicker.Root onValueChange={handleValueChange} positioning={positioning} size="xs" value={pickerColor}>
+    <ColorPicker.Root
+      format="hsba"
+      onOpenChange={handleOpenChange}
+      onValueChange={handleValueChange}
+      positioning={positioning}
+      size="xs"
+      value={pickerColor}
+    >
       <ColorPicker.Control>
         <InputGroup
           endAddon={

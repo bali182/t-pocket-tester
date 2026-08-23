@@ -1,12 +1,15 @@
+import { Button, ColorPicker, HStack, Input, Portal } from '@chakra-ui/react'
 import { useCallback, type ReactElement } from 'react'
 import type { IconType } from 'react-icons'
+import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { BaseComponentSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
+import type { IssueSchema, ValidationIssuesSchema } from '../../schemas/validation'
+import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
-import { ColorInput } from '../common/ColorInput'
 import { IdentityFloatingEditorHeader } from '../common/IdentityFloatingEditorHeader'
+import { useColorPickerValue } from '../common/useColorPickerValue'
 
 type ComponentFloatingEditorHeaderProps<T extends BaseComponentSchema> = {
   baseColor: string
@@ -44,8 +47,7 @@ export const ComponentFloatingEditorHeader = <T extends BaseComponentSchema>({
       menu={menu}
       onChange={onChange}
       rightAddon={
-        <ColorInput
-          fieldSizing="content"
+        <HeaderColorInput
           isResetEnabled={isDefined(editable.color)}
           issue={issues.color}
           onChange={handleColorChange}
@@ -54,5 +56,80 @@ export const ComponentFloatingEditorHeader = <T extends BaseComponentSchema>({
         />
       }
     />
+  )
+}
+
+type HeaderColorInputProps = {
+  isResetEnabled: boolean
+  issue: IssueSchema | undefined
+  onChange: (value: string) => void
+  onReset: () => void
+  value: string
+}
+
+const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: HeaderColorInputProps) => {
+  const t = useTranslation()
+  const { handleOpenChange, handleValueChange, pickerColor } = useColorPickerValue(value, onChange)
+  const isInvalid = isDefined(issue) && issue.severity === 'error'
+
+  return (
+    <ColorPicker.Root
+      format="hsba"
+      onOpenChange={handleOpenChange}
+      onValueChange={handleValueChange}
+      positioning={{ placement: 'bottom-end' }}
+      size="xs"
+      value={pickerColor}
+    >
+      <ColorPicker.Control>
+        <HStack gap="1">
+          <ColorPicker.Trigger
+            alignItems="center"
+            aria-invalid={isInvalid}
+            border="0"
+            display="flex"
+            justifyContent="center"
+            p="0"
+            unstyled
+          >
+            <ColorPicker.ValueSwatch />
+          </ColorPicker.Trigger>
+          <Input
+            aria-invalid={isInvalid}
+            _invalid={{ borderColor: 'border.error', focusRingColor: 'border.error' }}
+            borderColor="transparent"
+            fieldSizing="content"
+            focusRing="inside"
+            focusRingColor="colorPalette.focusRing"
+            onChange={(event) => onChange(event.currentTarget.value)}
+            size="xs"
+            value={value}
+            w="auto"
+          />
+        </HStack>
+      </ColorPicker.Control>
+      <Portal>
+        <ColorPicker.Positioner>
+          <ColorPicker.Content>
+            <ColorPicker.Area>
+              <ColorPicker.AreaBackground />
+              <ColorPicker.AreaThumb />
+            </ColorPicker.Area>
+            <ColorPicker.ChannelSlider channel="hue">
+              <ColorPicker.ChannelSliderTrack />
+              <ColorPicker.ChannelSliderThumb />
+            </ColorPicker.ChannelSlider>
+            <ColorPicker.ChannelSlider channel="alpha">
+              <ColorPicker.ChannelSliderTrack />
+              <ColorPicker.ChannelSliderThumb />
+            </ColorPicker.ChannelSlider>
+            <Button disabled={!isResetEnabled} onClick={onReset} size="xs" variant="outline">
+              <PiArrowCounterClockwise />
+              {t.common.actions.reset}
+            </Button>
+          </ColorPicker.Content>
+        </ColorPicker.Positioner>
+      </Portal>
+    </ColorPicker.Root>
   )
 }

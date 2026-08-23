@@ -40,8 +40,8 @@ export function IdentityFloatingEditorHeader<T extends HasIdentitySchema>({
           <Icon />
           <Input
             aria-invalid={hasNameError}
-            bg="transparent"
-            borderColor={hasNameError ? 'border.error' : 'transparent'}
+            _invalid={{ borderColor: 'border.error', focusRingColor: 'border.error' }}
+            borderColor="transparent"
             fieldSizing="content"
             focusRing="inside"
             focusRingColor="colorPalette.focusRing"

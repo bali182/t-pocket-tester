@@ -4,6 +4,7 @@ export const EN: typeof HU = {
   common: {
     actions: {
       add: 'Add',
+      reset: 'Reset',
       cancel: 'Cancel',
       next: 'Next',
       remove: 'Delete',

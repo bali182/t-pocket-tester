@@ -2,6 +2,7 @@ export const HU = {
   common: {
     actions: {
       add: 'Hozzáadás',
+      reset: 'Visszaállítás',
       cancel: 'Mégse',
       next: 'Tovább',
       apply: 'Alkalmaz',
