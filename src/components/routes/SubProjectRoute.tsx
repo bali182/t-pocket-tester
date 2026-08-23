@@ -27,8 +27,8 @@ export const SubProjectRoute: FC = () => {
           <EmptyState.Indicator>
             <PiWarningCircle />
           </EmptyState.Indicator>
-          <EmptyState.Title>{t.projects.notFound.title}</EmptyState.Title>
-          <EmptyState.Description textAlign="center">{t.projects.notFound.description}</EmptyState.Description>
+          <EmptyState.Title>{t.projects.moduleNotFound.title}</EmptyState.Title>
+          <EmptyState.Description textAlign="center">{t.projects.moduleNotFound.description}</EmptyState.Description>
         </EmptyState.Content>
       </EmptyState.Root>
     )

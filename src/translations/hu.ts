@@ -31,6 +31,9 @@ export const HU = {
       fill: 'Kitöltés',
       selectComponent: 'Komponens kiválasztása',
     },
+    emptyStates: {
+      noMatchingValues: 'Nincs egyező érték.',
+    },
     directions: {
       top: 'Felső oldal',
       right: 'Jobb oldal',
@@ -148,6 +151,7 @@ export const HU = {
     title: 'Projektek',
     actions: {
       create: 'Új projekt',
+      createModule: 'Új modul',
     },
     empty: {
       noProjects: {
@@ -157,6 +161,10 @@ export const HU = {
       noSearchResults: {
         title: 'Nincs találat',
         description: 'Próbálj másik keresési kifejezést.',
+      },
+      noModules: {
+        title: 'Még nincs modulod',
+        description: 'Hozz létre egy új modult a szerkesztés megkezdéséhez.',
       },
     },
     createDialog: {
@@ -179,6 +187,10 @@ export const HU = {
     notFound: {
       title: 'A projekt nem található',
       description: 'A megnyitni kívánt projekt nem létezik.',
+    },
+    moduleNotFound: {
+      title: 'A modul nem található',
+      description: 'A megnyitni kívánt modul nem létezik.',
     },
   },
   component: {
