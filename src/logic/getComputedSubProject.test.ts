@@ -1,15 +1,33 @@
 import { describe, expect, it } from 'vitest'
 
 import { defaultStitchingSettings } from '../defaultStates'
+import type { PanelSchema, RootPanelSchema } from '../schemas/components'
 import type { ComputedComponentSchema } from '../schemas/computed'
 import { d } from '../testData'
 import { accessors } from '../utils/accessors'
 import { getComputedSubProject } from './getComputedSubProject'
 
-const expectBoundingRect = (
-  component: ComputedComponentSchema,
-  expected: readonly [number, number, number, number],
-) => {
+type ExpectedBoundingRect = readonly [number, number, number, number]
+
+type FixedLayoutTestCase = {
+  rootPanel: Partial<RootPanelSchema>
+  firstPanel: Partial<PanelSchema>
+  secondPanel: Partial<PanelSchema>
+  expectedFirstPanelBoundingRect: ExpectedBoundingRect
+  expectedSecondPanelBoundingRect: ExpectedBoundingRect
+}
+
+type LayoutGapTestCase = {
+  rootPanel: Partial<RootPanelSchema>
+  expectedComputedLayoutGap: number
+}
+
+type OffAxisAnchorTestCase = {
+  rootPanel: Partial<RootPanelSchema>
+  expectedCrossAxisPosition: number
+}
+
+const expectBoundingRect = (component: ComputedComponentSchema, expected: ExpectedBoundingRect) => {
   expect([
     component.boundingRect.x.toNumber(),
     component.boundingRect.y.toNumber(),
@@ -19,33 +37,30 @@ const expectBoundingRect = (
 }
 
 describe('getComputedSubProject layout', () => {
-  it.each([
+  it.each<FixedLayoutTestCase>([
     {
-      orientation: 'horizontal' as const,
-      root: { width: 100, height: 60 },
-      first: { width: 20, autoWidth: false },
-      second: { width: 20, autoWidth: false },
-      firstRect: [0, 0, 20, 60] as const,
-      secondRect: [30, 0, 20, 60] as const,
+      rootPanel: { width: 100, height: 60, layoutOrientation: 'horizontal' },
+      firstPanel: { width: 20, autoWidth: false },
+      secondPanel: { width: 20, autoWidth: false },
+      expectedFirstPanelBoundingRect: [0, 0, 20, 60],
+      expectedSecondPanelBoundingRect: [30, 0, 20, 60],
     },
     {
-      orientation: 'vertical' as const,
-      root: { width: 60, height: 100 },
-      first: { height: 20, autoHeight: false },
-      second: { height: 20, autoHeight: false },
-      firstRect: [0, 0, 60, 20] as const,
-      secondRect: [0, 30, 60, 20] as const,
+      rootPanel: { width: 60, height: 100, layoutOrientation: 'vertical' },
+      firstPanel: { height: 20, autoHeight: false },
+      secondPanel: { height: 20, autoHeight: false },
+      expectedFirstPanelBoundingRect: [0, 0, 60, 20],
+      expectedSecondPanelBoundingRect: [0, 30, 60, 20],
     },
-  ])('positions fixed $orientation children with a manual gap', (testCase) => {
+  ])('positions fixed children with a manual gap', (testCase) => {
     const root = d.rootPanel({
       id: 'root',
-      ...testCase.root,
-      layoutOrientation: testCase.orientation,
+      ...testCase.rootPanel,
       layoutGap: 10,
       children: ['first', 'second'],
     })
-    const first = d.panel({ id: 'first', ...testCase.first })
-    const second = d.panel({ id: 'second', ...testCase.second })
+    const first = d.panel({ id: 'first', ...testCase.firstPanel })
+    const second = d.panel({ id: 'second', ...testCase.secondPanel })
     const computed = accessors.computedSubProject(
       getComputedSubProject(
         d.subProject({ id: 'sub-project', root, components: [first, second] }),
@@ -54,37 +69,34 @@ describe('getComputedSubProject layout', () => {
     )
 
     expect(computed.rootPanel().computedLayoutGap.toNumber()).toBe(10)
-    expectBoundingRect(computed.panel(first.id), testCase.firstRect)
-    expectBoundingRect(computed.panel(second.id), testCase.secondRect)
+    expectBoundingRect(computed.panel(first.id), testCase.expectedFirstPanelBoundingRect)
+    expectBoundingRect(computed.panel(second.id), testCase.expectedSecondPanelBoundingRect)
   })
 
-  it.each([
+  it.each<FixedLayoutTestCase>([
     {
-      orientation: 'horizontal' as const,
-      root: { width: 100, height: 40 },
-      first: { width: 20, autoWidth: false },
-      second: { width: 20, autoWidth: false },
-      firstRect: [0, 0, 20, 40] as const,
-      secondRect: [80, 0, 20, 40] as const,
+      rootPanel: { width: 100, height: 40, layoutOrientation: 'horizontal' },
+      firstPanel: { width: 20, autoWidth: false },
+      secondPanel: { width: 20, autoWidth: false },
+      expectedFirstPanelBoundingRect: [0, 0, 20, 40],
+      expectedSecondPanelBoundingRect: [80, 0, 20, 40],
     },
     {
-      orientation: 'vertical' as const,
-      root: { width: 40, height: 100 },
-      first: { height: 20, autoHeight: false },
-      second: { height: 20, autoHeight: false },
-      firstRect: [0, 0, 40, 20] as const,
-      secondRect: [0, 80, 40, 20] as const,
+      rootPanel: { width: 40, height: 100, layoutOrientation: 'vertical' },
+      firstPanel: { height: 20, autoHeight: false },
+      secondPanel: { height: 20, autoHeight: false },
+      expectedFirstPanelBoundingRect: [0, 0, 40, 20],
+      expectedSecondPanelBoundingRect: [0, 80, 40, 20],
     },
-  ])('positions fixed $orientation children with an automatic gap', (testCase) => {
+  ])('positions fixed children with an automatic gap', (testCase) => {
     const root = d.rootPanel({
       id: 'root',
-      ...testCase.root,
-      layoutOrientation: testCase.orientation,
+      ...testCase.rootPanel,
       autoLayoutGap: true,
       children: ['first', 'second'],
     })
-    const first = d.panel({ id: 'first', ...testCase.first })
-    const second = d.panel({ id: 'second', ...testCase.second })
+    const first = d.panel({ id: 'first', ...testCase.firstPanel })
+    const second = d.panel({ id: 'second', ...testCase.secondPanel })
     const computed = accessors.computedSubProject(
       getComputedSubProject(
         d.subProject({ id: 'sub-project', root, components: [first, second] }),
@@ -93,8 +105,8 @@ describe('getComputedSubProject layout', () => {
     )
 
     expect(computed.rootPanel().computedLayoutGap.toNumber()).toBe(60)
-    expectBoundingRect(computed.panel(first.id), testCase.firstRect)
-    expectBoundingRect(computed.panel(second.id), testCase.secondRect)
+    expectBoundingRect(computed.panel(first.id), testCase.expectedFirstPanelBoundingRect)
+    expectBoundingRect(computed.panel(second.id), testCase.expectedSecondPanelBoundingRect)
   })
 
   it('shares automatic space between a gap and an auto-sized child', () => {
@@ -187,6 +199,7 @@ describe('getComputedSubProject layout', () => {
       id: 'root',
       width: 100,
       height: 60,
+      offAxisAnchor: 'start',
       children: ['wide', 'tall'],
     })
     const wide = d.panel({ id: 'wide', width: 200, autoWidth: false, height: 20, autoHeight: false })
@@ -202,30 +215,30 @@ describe('getComputedSubProject layout', () => {
     expectBoundingRect(computed.panel(tall.id), [100, 0, 20, 60])
   })
 
-  it.each([
-    { autoLayoutGap: false, layoutGap: 10, expectedGap: 10 },
-    { autoLayoutGap: true, layoutGap: 10, expectedGap: 0 },
-  ])('handles an empty layout with autoLayoutGap=$autoLayoutGap', (testCase) => {
-    const root = d.rootPanel({ id: 'root', ...testCase, children: [] })
+  it.each<LayoutGapTestCase>([
+    { rootPanel: { autoLayoutGap: false, layoutGap: 10 }, expectedComputedLayoutGap: 10 },
+    { rootPanel: { autoLayoutGap: true, layoutGap: 10 }, expectedComputedLayoutGap: 0 },
+  ])('handles an empty layout', (testCase) => {
+    const root = d.rootPanel({ id: 'root', ...testCase.rootPanel, children: [] })
     const computed = accessors.computedSubProject(
       getComputedSubProject(d.subProject({ id: 'sub-project', root }), defaultStitchingSettings),
     )
 
     expect(computed.rootPanel().children).toEqual([])
-    expect(computed.rootPanel().computedLayoutGap.toNumber()).toBe(testCase.expectedGap)
+    expect(computed.rootPanel().computedLayoutGap.toNumber()).toBe(testCase.expectedComputedLayoutGap)
   })
 
-  it.each([
-    { autoLayoutGap: false, layoutGap: 10, expectedGap: 10 },
-    { autoLayoutGap: true, layoutGap: 10, expectedGap: 100 },
-  ])('handles a single auto-sized child with autoLayoutGap=$autoLayoutGap', (testCase) => {
-    const root = d.rootPanel({ id: 'root', width: 100, height: 40, ...testCase, children: ['child'] })
+  it.each<LayoutGapTestCase>([
+    { rootPanel: { autoLayoutGap: false, layoutGap: 10 }, expectedComputedLayoutGap: 10 },
+    { rootPanel: { autoLayoutGap: true, layoutGap: 10 }, expectedComputedLayoutGap: 100 },
+  ])('handles a single auto-sized child', (testCase) => {
+    const root = d.rootPanel({ id: 'root', width: 100, height: 40, ...testCase.rootPanel, children: ['child'] })
     const child = d.panel({ id: 'child' })
     const computed = accessors.computedSubProject(
       getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
     )
 
-    expect(computed.rootPanel().computedLayoutGap.toNumber()).toBe(testCase.expectedGap)
+    expect(computed.rootPanel().computedLayoutGap.toNumber()).toBe(testCase.expectedComputedLayoutGap)
     expectBoundingRect(computed.panel(child.id), [0, 0, 100, 40])
   })
 
@@ -314,5 +327,102 @@ describe('getComputedSubProject layout', () => {
     expect(() => getComputedSubProject(subProject, defaultStitchingSettings)).toThrow(
       'Unsupported child component type: root-panel',
     )
+  })
+
+  it.each<OffAxisAnchorTestCase>([
+    { rootPanel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
+    { rootPanel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 20 },
+    { rootPanel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 40 },
+  ])('positions a fixed-height horizontal child', (testCase) => {
+    const root = d.rootPanel({
+      id: 'root',
+      width: 100,
+      height: 100,
+      ...testCase.rootPanel,
+      children: ['child'],
+    })
+    const child = d.panel({ id: 'child', height: 60, autoHeight: false })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [0, testCase.expectedCrossAxisPosition, 100, 60])
+  })
+
+  it.each<OffAxisAnchorTestCase>([
+    { rootPanel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
+    { rootPanel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 20 },
+    { rootPanel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 40 },
+  ])('positions a fixed-width vertical child', (testCase) => {
+    const root = d.rootPanel({
+      id: 'root',
+      width: 100,
+      height: 100,
+      layoutOrientation: 'vertical',
+      ...testCase.rootPanel,
+      children: ['child'],
+    })
+    const child = d.panel({ id: 'child', width: 60, autoWidth: false })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [testCase.expectedCrossAxisPosition, 0, 60, 100])
+  })
+
+  it.each<OffAxisAnchorTestCase>([
+    { rootPanel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
+    { rootPanel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 0 },
+    { rootPanel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 0 },
+  ])('does not offset an auto-height horizontal child', (testCase) => {
+    const root = d.rootPanel({
+      id: 'root',
+      width: 100,
+      height: 100,
+      ...testCase.rootPanel,
+      children: ['child'],
+    })
+    const child = d.panel({ id: 'child' })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [0, testCase.expectedCrossAxisPosition, 100, 100])
+  })
+
+  it('uses a nested panel off-axis anchor', () => {
+    const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: ['container'] })
+    const container = d.panel({
+      id: 'container',
+      width: 100,
+      autoWidth: false,
+      offAxisAnchor: 'end',
+      children: ['child'],
+    })
+    const child = d.panel({ id: 'child', height: 60, autoHeight: false })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(
+        d.subProject({ id: 'sub-project', root, components: [container, child] }),
+        defaultStitchingSettings,
+      ),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [0, 40, 100, 60])
+  })
+
+  it('uses the clamped cross-axis size to position a fixed child', () => {
+    const root = d.rootPanel({
+      id: 'root',
+      width: 100,
+      height: 60,
+      offAxisAnchor: 'end',
+      children: ['child'],
+    })
+    const child = d.panel({ id: 'child', height: 100, autoHeight: false })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [0, 0, 100, 60])
   })
 })

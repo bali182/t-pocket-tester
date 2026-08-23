@@ -36,9 +36,11 @@ const calculateHorizontalDefaultBoundingBoxes = ({
   for (const child of children) {
     const width = widths[child.id]
     const height = calculateCrossAxisSize(child, boundingRect, component)
+    const y = calculateHorizontalCrossAxisPosition(boundingRect, component, height)
+
     const boundingBox: RectSchema = {
       x: nextLeft,
-      y: boundingRect.y,
+      y,
       width,
       height,
     }
@@ -64,8 +66,10 @@ const calculateVerticalDefaultBoundingBoxes = ({
   for (const child of children) {
     const width = calculateCrossAxisSize(child, boundingRect, component)
     const height = heights[child.id]
+    const x = calculateVerticalCrossAxisPosition(boundingRect, component, width)
+
     const boundingBox: RectSchema = {
-      x: boundingRect.x,
+      x,
       y: nextTop,
       width,
       height,
@@ -131,6 +135,36 @@ const calculateCrossAxisSize = (
   }
 
   return clamp(getCrossAxisSize(child, parent), ZERO, parentSpace)
+}
+
+const calculateHorizontalCrossAxisPosition = (
+  parentBoundingBox: RectSchema,
+  parent: RootPanelSchema | PanelSchema,
+  childHeight: BigNumber,
+): BigNumber => {
+  switch (parent.offAxisAnchor) {
+    case 'start':
+      return parentBoundingBox.y
+    case 'middle':
+      return parentBoundingBox.y.plus(parentBoundingBox.height.minus(childHeight).dividedBy(2))
+    case 'end':
+      return parentBoundingBox.y.plus(parentBoundingBox.height.minus(childHeight))
+  }
+}
+
+const calculateVerticalCrossAxisPosition = (
+  parentBoundingBox: RectSchema,
+  parent: RootPanelSchema | PanelSchema,
+  childWidth: BigNumber,
+): BigNumber => {
+  switch (parent.offAxisAnchor) {
+    case 'start':
+      return parentBoundingBox.x
+    case 'middle':
+      return parentBoundingBox.x.plus(parentBoundingBox.width.minus(childWidth).dividedBy(2))
+    case 'end':
+      return parentBoundingBox.x.plus(parentBoundingBox.width.minus(childWidth))
+  }
 }
 
 const isMainAxisAuto = (child: PanelSchema | PocketClusterSchema, parent: RootPanelSchema | PanelSchema): boolean => {
