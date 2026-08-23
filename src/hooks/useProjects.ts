@@ -4,10 +4,12 @@ import { useCallback } from 'react'
 import type { ProjectSchema } from '../schemas/project'
 import { projectsAtom } from '../state/projectsAtom'
 import { isDefined } from '../utils/isDefined'
+import { useRecentProjectOperations } from './useRecentProjectOperations'
 
 // TODO this should contain real projects
 export const useProjects = () => {
   const projects = useAtomValue(projectsAtom)
+  const { removeRecentProject } = useRecentProjectOperations()
 
   const addProject = useAtomCallback(
     useCallback((get, set, project: ProjectSchema): ProjectSchema => {
@@ -32,12 +34,16 @@ export const useProjects = () => {
   )
 
   const deleteProject = useAtomCallback(
-    useCallback((get, set, projectId: string): void => {
-      set(
-        projectsAtom,
-        get(projectsAtom).filter((project) => project.id !== projectId),
-      )
-    }, []),
+    useCallback(
+      (get, set, projectId: string): void => {
+        set(
+          projectsAtom,
+          get(projectsAtom).filter((project) => project.id !== projectId),
+        )
+        removeRecentProject(projectId)
+      },
+      [removeRecentProject],
+    ),
   )
 
   const getProjectById = useAtomCallback(

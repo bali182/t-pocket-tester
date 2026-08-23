@@ -33,6 +33,9 @@ export const EN: typeof HU = {
       fill: 'Fill',
       selectComponent: 'Select a component',
     },
+    emptyStates: {
+      noMatchingValues: 'No matching values.',
+    },
     directions: {
       top: 'Top edge',
       right: 'Right edge',
@@ -150,6 +153,21 @@ export const EN: typeof HU = {
     title: 'Projects',
     actions: {
       create: 'New project',
+      createModule: 'New module',
+    },
+    empty: {
+      noProjects: {
+        title: 'No projects yet',
+        description: 'Create a new project to get started.',
+      },
+      noSearchResults: {
+        title: 'No matches found',
+        description: 'Try a different search term.',
+      },
+      noModules: {
+        title: 'No modules yet',
+        description: 'Create a new module to start editing.',
+      },
     },
     createDialog: {
       title: 'Create new project',
@@ -171,6 +189,10 @@ export const EN: typeof HU = {
     notFound: {
       title: 'Project not found',
       description: 'The project you want to open does not exist.',
+    },
+    moduleNotFound: {
+      title: 'Module not found',
+      description: 'The module you want to open does not exist.',
     },
   },
   component: {

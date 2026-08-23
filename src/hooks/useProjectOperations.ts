@@ -8,9 +8,11 @@ import type { SubProjectSchema } from '../schemas/subProject'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
 import { useProject } from './useProject'
+import { useRecentProjectOperations } from './useRecentProjectOperations'
 
 export const useProjectOperations = () => {
-  const { setProject } = useProject()
+  const { project, setProject } = useProject()
+  const { clearLastOpenedSubProject } = useRecentProjectOperations()
 
   const updateEditingSettings = useCallback(
     (update: Partial<ProjectEditingSettingSchema>): void => {
@@ -60,8 +62,9 @@ export const useProjectOperations = () => {
   const deleteSubProject = useCallback(
     (id: string): void => {
       setProject((currentProject) => deleteSubProjectPure(currentProject, { subProjectId: id }))
+      clearLastOpenedSubProject(project.id, id)
     },
-    [setProject],
+    [clearLastOpenedSubProject, project.id, setProject],
   )
 
   return { cloneSubProject, deleteSubProject, updateEditingSettings }
