@@ -15,6 +15,7 @@ import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
 
 type ColorInputProps = {
+  fieldSizing?: 'content' | 'fixed'
   isResetEnabled?: boolean
   issue: IssueSchema | undefined
   onChange: (value: string) => void
@@ -34,8 +35,9 @@ const getColor = (value: string): Color | undefined => {
   }
 }
 
-export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
+export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, issue, onChange, onReset, value }) => {
   const parsedColor = useMemo<Color | undefined>(() => getColor(value), [value])
+  const isContentSized = fieldSizing === 'content'
   const positioning = useMemo<ColorPickerPositioning>(
     () => ({
       placement: 'bottom-start',
@@ -98,12 +100,15 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
             </ColorPicker.Trigger>
           }
           startAddonProps={{ px: '1.5', size: 'xs' }}
+          w={isContentSized ? 'auto' : undefined}
         >
           <Input
             aria-invalid={isInvalid}
+            fieldSizing={fieldSizing}
             onChange={(event) => onChange(event.currentTarget.value)}
             size="xs"
             value={value}
+            w={isContentSized ? 'auto' : undefined}
           />
         </InputGroup>
       </ColorPicker.Control>

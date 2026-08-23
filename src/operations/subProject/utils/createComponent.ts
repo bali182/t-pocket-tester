@@ -66,7 +66,7 @@ const defaultHasOffAxisAnchor: HasOffAxisAnchor = {
 }
 
 const defaultHasSqueeze: HasSqueezeSchema = {
-  individualSqueeze: false,
+  individualSqueeze: true,
   topSqueeze: 0,
   rightSqueeze: 0,
   bottomSqueeze: 0,
