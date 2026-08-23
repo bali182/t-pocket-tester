@@ -47,7 +47,7 @@ const calculateHorizontalDefaultBoundingBoxes = ({
 
     nextLeft = nextLeft.plus(width).plus(computedGap)
 
-    boundingBoxes[child.id] = boundingBox
+    boundingBoxes[child.id] = applySqueezeToBoundingBox(child, boundingBox, boundingRect)
   }
 
   return boundingBoxes
@@ -77,7 +77,7 @@ const calculateVerticalDefaultBoundingBoxes = ({
 
     nextTop = nextTop.plus(height).plus(computedGap)
 
-    boundingBoxes[child.id] = boundingBox
+    boundingBoxes[child.id] = applySqueezeToBoundingBox(child, boundingBox, boundingRect)
   }
 
   return boundingBoxes
@@ -164,6 +164,48 @@ const calculateVerticalCrossAxisPosition = (
       return parentBoundingBox.x.plus(parentBoundingBox.width.minus(childWidth).dividedBy(2))
     case 'end':
       return parentBoundingBox.x.plus(parentBoundingBox.width.minus(childWidth))
+  }
+}
+
+const applySqueezeToBoundingBox = (
+  component: PanelSchema | PocketClusterSchema,
+  boundingBox: RectSchema,
+  parentBoundingBox: RectSchema,
+): RectSchema => {
+  const maximumHorizontalSqueeze = BigNumber.maximum(boundingBox.width.dividedBy(2).minus(0.5), ZERO)
+  const maximumVerticalSqueeze = BigNumber.maximum(boundingBox.height.dividedBy(2).minus(0.5), ZERO)
+  const leftSqueeze = clamp(
+    component.leftSqueeze,
+    BigNumber.minimum(parentBoundingBox.x.minus(boundingBox.x), ZERO),
+    maximumHorizontalSqueeze,
+  )
+  const rightSqueeze = clamp(
+    component.rightSqueeze,
+    BigNumber.minimum(
+      boundingBox.x.plus(boundingBox.width).minus(parentBoundingBox.x.plus(parentBoundingBox.width)),
+      ZERO,
+    ),
+    maximumHorizontalSqueeze,
+  )
+  const topSqueeze = clamp(
+    component.topSqueeze,
+    BigNumber.minimum(parentBoundingBox.y.minus(boundingBox.y), ZERO),
+    maximumVerticalSqueeze,
+  )
+  const bottomSqueeze = clamp(
+    component.bottomSqueeze,
+    BigNumber.minimum(
+      boundingBox.y.plus(boundingBox.height).minus(parentBoundingBox.y.plus(parentBoundingBox.height)),
+      ZERO,
+    ),
+    maximumVerticalSqueeze,
+  )
+
+  return {
+    x: boundingBox.x.plus(leftSqueeze),
+    y: boundingBox.y.plus(topSqueeze),
+    width: boundingBox.width.minus(leftSqueeze).minus(rightSqueeze),
+    height: boundingBox.height.minus(topSqueeze).minus(bottomSqueeze),
   }
 }
 

@@ -66,7 +66,6 @@ export function SqueezeSection<T extends HasSqueezeSchema & HasAutoDimensionsSch
       <SectionGroup.SectionRowEditor issue={verticalIssues}>
         <HStack gap="3">
           <NumberInput
-            disabled={!editable.autoHeight}
             issue={issues.topSqueeze}
             onChange={handleTopSqueezeChange}
             startAddon={<PiArrowLineDown />}
@@ -74,7 +73,6 @@ export function SqueezeSection<T extends HasSqueezeSchema & HasAutoDimensionsSch
             value={editable.topSqueeze}
           />
           <NumberInput
-            disabled={!editable.autoHeight}
             issue={issues.bottomSqueeze}
             onChange={handleBottomSqueezeChange}
             startAddon={<PiArrowLineUp />}
@@ -88,7 +86,6 @@ export function SqueezeSection<T extends HasSqueezeSchema & HasAutoDimensionsSch
       <SectionGroup.SectionRowEditor issue={horizontalIssues}>
         <HStack gap="3">
           <NumberInput
-            disabled={!editable.autoWidth}
             issue={issues.leftSqueeze}
             onChange={handleLeftSqueezeChange}
             startAddon={<PiArrowLineRight />}
@@ -96,7 +93,6 @@ export function SqueezeSection<T extends HasSqueezeSchema & HasAutoDimensionsSch
             value={editable.leftSqueeze}
           />
           <NumberInput
-            disabled={!editable.autoWidth}
             issue={issues.rightSqueeze}
             onChange={handleRightSqueezeChange}
             startAddon={<PiArrowLineLeft />}

@@ -32,6 +32,11 @@ type PocketClusterOffAxisAnchorTestCase = {
   expectedCrossAxisPosition: number
 }
 
+type PositiveSqueezeTestCase = {
+  panel: Partial<PanelSchema>
+  expectedBoundingRect: ExpectedBoundingRect
+}
+
 const expectBoundingRect = (component: ComputedComponentSchema, expected: ExpectedBoundingRect) => {
   expect([
     component.boundingRect.x.toNumber(),
@@ -451,5 +456,131 @@ describe('getComputedSubProject layout', () => {
     )
 
     expectBoundingRect(computed.pocketCluster(cluster.id), [0, testCase.expectedCrossAxisPosition, 100, 60])
+  })
+
+  it.each<PositiveSqueezeTestCase>([
+    { panel: { topSqueeze: 10 }, expectedBoundingRect: [0, 10, 60, 50] },
+    { panel: { rightSqueeze: 10 }, expectedBoundingRect: [0, 0, 50, 60] },
+    { panel: { bottomSqueeze: 10 }, expectedBoundingRect: [0, 0, 60, 50] },
+    { panel: { leftSqueeze: 10 }, expectedBoundingRect: [10, 0, 50, 60] },
+  ])('squeezes each panel edge inward', (testCase) => {
+    const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: ['child'] })
+    const child = d.panel({
+      id: 'child',
+      width: 60,
+      autoWidth: false,
+      height: 60,
+      autoHeight: false,
+      offAxisAnchor: 'start',
+      ...testCase.panel,
+    })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), testCase.expectedBoundingRect)
+  })
+
+  it('clamps each positive squeeze to half of the original axis size minus one', () => {
+    const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: ['child'] })
+    const child = d.panel({
+      id: 'child',
+      width: 60,
+      autoWidth: false,
+      height: 60,
+      autoHeight: false,
+      offAxisAnchor: 'start',
+      topSqueeze: 100,
+      rightSqueeze: 100,
+      bottomSqueeze: 100,
+      leftSqueeze: 100,
+    })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [29, 29, 2, 2])
+  })
+
+  it('clamps negative vertical squeezes to the parent bounds independently', () => {
+    const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: ['child'] })
+    const child = d.panel({
+      id: 'child',
+      width: 60,
+      autoWidth: false,
+      height: 60,
+      autoHeight: false,
+      offAxisAnchor: 'middle',
+      topSqueeze: -100,
+      bottomSqueeze: -100,
+    })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [0, 0, 60, 100])
+  })
+
+  it('clamps negative horizontal squeezes to the parent bounds independently', () => {
+    const root = d.rootPanel({
+      id: 'root',
+      width: 100,
+      height: 100,
+      layoutOrientation: 'vertical',
+      children: ['child'],
+    })
+    const child = d.panel({
+      id: 'child',
+      width: 60,
+      autoWidth: false,
+      height: 60,
+      autoHeight: false,
+      offAxisAnchor: 'middle',
+      rightSqueeze: -100,
+      leftSqueeze: -100,
+    })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.panel(child.id), [0, 0, 100, 60])
+  })
+
+  it('does not use a squeezed bounding box to position the next sibling', () => {
+    const root = d.rootPanel({
+      id: 'root',
+      width: 100,
+      height: 40,
+      layoutGap: 10,
+      children: ['first', 'second'],
+    })
+    const first = d.panel({ id: 'first', width: 20, autoWidth: false, rightSqueeze: -100 })
+    const second = d.panel({ id: 'second', width: 20, autoWidth: false })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(
+        d.subProject({ id: 'sub-project', root, components: [first, second] }),
+        defaultStitchingSettings,
+      ),
+    )
+
+    expectBoundingRect(computed.panel(first.id), [0, 0, 100, 40])
+    expectBoundingRect(computed.panel(second.id), [30, 0, 20, 40])
+  })
+
+  it('applies squeeze to pocket clusters', () => {
+    const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: ['cluster'] })
+    const cluster = d.pocketCluster({
+      id: 'cluster',
+      height: 60,
+      autoHeight: false,
+      offAxisAnchor: 'middle',
+      topSqueeze: 10,
+      bottomSqueeze: 20,
+    })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [cluster] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.pocketCluster(cluster.id), [0, 30, 100, 30])
   })
 })

@@ -57,10 +57,10 @@ export const validatePanelSchema = (
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 0, minInclusive: false })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 0, minInclusive: false })
 
-  const topSqueezeResult = validateNumber(input.topSqueeze, currentValue.topSqueeze, context, { min: 0 })
-  const rightSqueezeResult = validateNumber(input.rightSqueeze, currentValue.rightSqueeze, context, { min: 0 })
-  const bottomSqueezeResult = validateNumber(input.bottomSqueeze, currentValue.bottomSqueeze, context, { min: 0 })
-  const leftSqueezeResult = validateNumber(input.leftSqueeze, currentValue.leftSqueeze, context, { min: 0 })
+  const topSqueezeResult = validateNumber(input.topSqueeze, currentValue.topSqueeze, context)
+  const rightSqueezeResult = validateNumber(input.rightSqueeze, currentValue.rightSqueeze, context)
+  const bottomSqueezeResult = validateNumber(input.bottomSqueeze, currentValue.bottomSqueeze, context)
+  const leftSqueezeResult = validateNumber(input.leftSqueeze, currentValue.leftSqueeze, context)
 
   const issues: ValidationIssuesSchema<PanelSchema> = {
     autoHeight: undefined,
