@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 
+import { getComponentChildren } from '../operations/subProject/utils/getComponentChildren'
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type {
   ComputedComponentSchema,
@@ -13,6 +14,7 @@ import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subP
 import { getResolvedStitchLine } from '../utils/getResolvedStitchLine'
 import { isDefined } from '../utils/isDefined'
 import { applyHolePathsToComputedComponents } from './applyHolePathsToComputedComponents'
+import { calculateGap } from './calculateGap'
 import { calculateHoles } from './calculateHoles'
 import { calculateLayoutBoundingBoxes } from './calculateLayoutBoundingBoxes'
 import { calculatePocketClusterGeometry } from './calculatePocketClusterGeometry'
@@ -106,10 +108,14 @@ const computeRootPanel = (
 ): ComputedRootPanelSchema => {
   const cornerRadius = getAdjustedCornerRadius({ boundingRect, cornerRadius: getCornerRadius(rootPanel) })
   const path = calculateRectPath(boundingRect, cornerRadius)
-  const { children, computedLayoutGap } = computeLayoutChildren(
+  const layoutChildren = assertLayoutChildren(getComponentChildren(rootPanel, subProject))
+  const computedLayoutGap = calculateGap(layoutChildren, boundingRect, rootPanel)
+  const children = computeLayoutChildren(
     rootPanel,
     boundingRect,
     cornerRadius,
+    computedLayoutGap,
+    layoutChildren,
     subProject,
     resolvedStitchLines,
     computedComponents,
@@ -146,10 +152,14 @@ const computePanel = (
     parentCornerRadius,
   })
   const path = calculateRectPath(boundingRect, cornerRadius)
-  const { children, computedLayoutGap } = computeLayoutChildren(
+  const layoutChildren = assertLayoutChildren(getComponentChildren(panel, subProject))
+  const computedLayoutGap = calculateGap(layoutChildren, boundingRect, panel)
+  const children = computeLayoutChildren(
     panel,
     boundingRect,
     cornerRadius,
+    computedLayoutGap,
+    layoutChildren,
     subProject,
     resolvedStitchLines,
     computedComponents,
@@ -209,33 +219,42 @@ const computePocketCluster = (
   return computed
 }
 
-type ComputedLayoutChildren = {
-  children: ComputedComponentSchema[]
-  computedLayoutGap: BigNumber
-}
-
 const computeLayoutChildren = (
   component: RootPanelSchema | PanelSchema,
   boundingRect: RectSchema,
   cornerRadius: CornerRadiusSchema,
+  computedLayoutGap: BigNumber,
+  children: (PanelSchema | PocketClusterSchema)[],
   subProject: SubProjectSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
   computedComponents: Record<string, ComputedComponentSchema>,
-): ComputedLayoutChildren => {
-  const [boundingBoxes, computedLayoutGap] = calculateLayoutBoundingBoxes(component, subProject, boundingRect)
+): ComputedComponentSchema[] => {
+  const boundingBoxes = calculateLayoutBoundingBoxes({
+    component,
+    children,
+    computedGap: computedLayoutGap,
+    boundingRect,
+  })
 
-  return {
-    children: boundingBoxes.map(([child, childBoundingRect]) =>
-      computeComponent(
-        child,
-        childBoundingRect,
-        boundingRect,
-        cornerRadius,
-        subProject,
-        resolvedStitchLines,
-        computedComponents,
-      ),
+  return children.map((child) =>
+    computeComponent(
+      child,
+      boundingBoxes[child.id],
+      boundingRect,
+      cornerRadius,
+      subProject,
+      resolvedStitchLines,
+      computedComponents,
     ),
-    computedLayoutGap,
-  }
+  )
+}
+
+const assertLayoutChildren = (children: ComponentSchema[]): (PanelSchema | PocketClusterSchema)[] => {
+  return children.map((child) => {
+    if (child.type !== 'panel' && child.type !== 'pocket-cluster') {
+      throw new Error(`Unsupported child component type: ${child.type}`)
+    }
+
+    return child
+  })
 }

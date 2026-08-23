@@ -1,105 +1,88 @@
 import BigNumber from 'bignumber.js'
 
 import { ZERO } from '../constants/layout'
-import { getComponentChildren } from '../operations/subProject/utils/getComponentChildren'
-import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
+import type { PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { RectSchema } from '../schemas/geometry'
-import type { SubProjectSchema } from '../schemas/subProject'
 import { clamp } from '../utils/clamp'
 
-type LayoutComponent = RootPanelSchema | PanelSchema
-type LayoutChildComponent = PanelSchema | PocketClusterSchema
+type CalculateLayoutBoundingBoxesParams = {
+  component: RootPanelSchema | PanelSchema
+  children: (PanelSchema | PocketClusterSchema)[]
+  computedGap: BigNumber
+  boundingRect: RectSchema
+}
 
 export const calculateLayoutBoundingBoxes = (
-  component: LayoutComponent,
-  subProject: SubProjectSchema,
-  rect: RectSchema,
-): [[LayoutChildComponent, RectSchema][], BigNumber] => {
-  const children = getComponentChildren(component, subProject)
-  const layoutChildren = assertLayoutChildren(children)
-  const computedLayoutGap = calculateMainAxisGap(layoutChildren, rect, component)
-
-  return [calculateChildBoundingBoxes(layoutChildren, rect, component, computedLayoutGap), computedLayoutGap] as const
-}
-
-const assertLayoutChildren = (children: ComponentSchema[]): LayoutChildComponent[] => {
-  return children.map((child) => {
-    if (child.type !== 'panel' && child.type !== 'pocket-cluster') {
-      throw new Error(`Unsupported child component type: ${child.type}`)
-    }
-
-    return child
-  })
-}
-
-const calculateChildBoundingBoxes = (
-  children: LayoutChildComponent[],
-  parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
-  gap: BigNumber,
-): [LayoutChildComponent, RectSchema][] => {
-  switch (parent.layoutOrientation) {
+  params: CalculateLayoutBoundingBoxesParams,
+): Record<string, RectSchema> => {
+  switch (params.component.layoutOrientation) {
     case 'horizontal':
-      return calculateHorizontalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
+      return calculateHorizontalDefaultBoundingBoxes(params)
     case 'vertical':
-      return calculateVerticalDefaultBoundingBoxes(children, parentBoundingBox, parent, gap)
+      return calculateVerticalDefaultBoundingBoxes(params)
   }
 }
 
-const calculateHorizontalDefaultBoundingBoxes = (
-  children: LayoutChildComponent[],
-  parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
-  gap: BigNumber,
-): [LayoutChildComponent, RectSchema][] => {
-  const widths = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  let nextLeft = parentBoundingBox.x
+const calculateHorizontalDefaultBoundingBoxes = ({
+  component,
+  children,
+  computedGap,
+  boundingRect,
+}: CalculateLayoutBoundingBoxesParams): Record<string, RectSchema> => {
+  const widths = calculateMainAxisSizes(children, boundingRect, component)
+  let nextLeft = boundingRect.x
+  const boundingBoxes: Record<string, RectSchema> = {}
 
-  return children.map((child): [LayoutChildComponent, RectSchema] => {
+  for (const child of children) {
     const width = widths[child.id]
-    const height = calculateCrossAxisSize(child, parentBoundingBox, parent)
+    const height = calculateCrossAxisSize(child, boundingRect, component)
     const boundingBox: RectSchema = {
       x: nextLeft,
-      y: parentBoundingBox.y,
+      y: boundingRect.y,
       width,
       height,
     }
 
-    nextLeft = nextLeft.plus(width).plus(gap)
+    nextLeft = nextLeft.plus(width).plus(computedGap)
 
-    return [child, boundingBox]
-  })
+    boundingBoxes[child.id] = boundingBox
+  }
+
+  return boundingBoxes
 }
 
-const calculateVerticalDefaultBoundingBoxes = (
-  children: LayoutChildComponent[],
-  parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
-  gap: BigNumber,
-): [LayoutChildComponent, RectSchema][] => {
-  const heights = calculateMainAxisSizes(children, parentBoundingBox, parent)
-  let nextTop = parentBoundingBox.y
+const calculateVerticalDefaultBoundingBoxes = ({
+  component,
+  children,
+  computedGap,
+  boundingRect,
+}: CalculateLayoutBoundingBoxesParams): Record<string, RectSchema> => {
+  const heights = calculateMainAxisSizes(children, boundingRect, component)
+  let nextTop = boundingRect.y
+  const boundingBoxes: Record<string, RectSchema> = {}
 
-  return children.map((child): [LayoutChildComponent, RectSchema] => {
-    const width = calculateCrossAxisSize(child, parentBoundingBox, parent)
+  for (const child of children) {
+    const width = calculateCrossAxisSize(child, boundingRect, component)
     const height = heights[child.id]
     const boundingBox: RectSchema = {
-      x: parentBoundingBox.x,
+      x: boundingRect.x,
       y: nextTop,
       width,
       height,
     }
 
-    nextTop = nextTop.plus(height).plus(gap)
+    nextTop = nextTop.plus(height).plus(computedGap)
 
-    return [child, boundingBox]
-  })
+    boundingBoxes[child.id] = boundingBox
+  }
+
+  return boundingBoxes
 }
 
 const calculateMainAxisSizes = (
-  children: LayoutChildComponent[],
+  children: (PanelSchema | PocketClusterSchema)[],
   parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
+  parent: RootPanelSchema | PanelSchema,
 ): Record<string, BigNumber> => {
   const parentSpace = parent.layoutOrientation === 'horizontal' ? parentBoundingBox.width : parentBoundingBox.height
   const gapSpace = parent.autoLayoutGap
@@ -136,36 +119,10 @@ const calculateMainAxisSizes = (
   return sizesById
 }
 
-const calculateMainAxisGap = (
-  children: LayoutChildComponent[],
-  parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
-): BigNumber => {
-  if (!parent.autoLayoutGap) {
-    return new BigNumber(parent.layoutGap)
-  }
-
-  const parentSpace = parent.layoutOrientation === 'horizontal' ? parentBoundingBox.width : parentBoundingBox.height
-  const fixedComponentSpace = children.reduce((sum, child) => {
-    if (isMainAxisAuto(child, parent)) {
-      return sum
-    }
-
-    return sum.plus(clamp(getMainAxisSize(child, parent), ZERO, parentSpace))
-  }, ZERO)
-  const autoSizeCount = new BigNumber(children.filter((child) => isMainAxisAuto(child, parent)).length).plus(
-    BigNumber.maximum(new BigNumber(children.length).minus(1), ZERO),
-  )
-
-  return autoSizeCount.isZero()
-    ? ZERO
-    : BigNumber.maximum(parentSpace.minus(fixedComponentSpace), ZERO).dividedBy(autoSizeCount)
-}
-
 const calculateCrossAxisSize = (
-  child: LayoutChildComponent,
+  child: PanelSchema | PocketClusterSchema,
   parentBoundingBox: RectSchema,
-  parent: LayoutComponent,
+  parent: RootPanelSchema | PanelSchema,
 ): BigNumber => {
   const parentSpace = parent.layoutOrientation === 'horizontal' ? parentBoundingBox.height : parentBoundingBox.width
 
@@ -176,18 +133,18 @@ const calculateCrossAxisSize = (
   return clamp(getCrossAxisSize(child, parent), ZERO, parentSpace)
 }
 
-const isMainAxisAuto = (child: LayoutChildComponent, parent: LayoutComponent): boolean => {
+const isMainAxisAuto = (child: PanelSchema | PocketClusterSchema, parent: RootPanelSchema | PanelSchema): boolean => {
   return parent.layoutOrientation === 'horizontal' ? child.autoWidth : child.autoHeight
 }
 
-const getMainAxisSize = (child: LayoutChildComponent, parent: LayoutComponent): number => {
+const getMainAxisSize = (child: PanelSchema | PocketClusterSchema, parent: RootPanelSchema | PanelSchema): number => {
   return parent.layoutOrientation === 'horizontal' ? child.width : child.height
 }
 
-const isCrossAxisAuto = (child: LayoutChildComponent, parent: LayoutComponent): boolean => {
+const isCrossAxisAuto = (child: PanelSchema | PocketClusterSchema, parent: RootPanelSchema | PanelSchema): boolean => {
   return parent.layoutOrientation === 'horizontal' ? child.autoHeight : child.autoWidth
 }
 
-const getCrossAxisSize = (child: LayoutChildComponent, parent: LayoutComponent): number => {
+const getCrossAxisSize = (child: PanelSchema | PocketClusterSchema, parent: RootPanelSchema | PanelSchema): number => {
   return parent.layoutOrientation === 'horizontal' ? child.height : child.width
 }
