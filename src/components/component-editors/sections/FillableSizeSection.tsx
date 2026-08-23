@@ -1,6 +1,8 @@
+import { HStack, Text } from '@chakra-ui/react'
 import { useCallback } from 'react'
-import { PiArrowsHorizontal, PiArrowsVertical, PiRuler } from 'react-icons/pi'
+import { PiArrowsHorizontal, PiArrowsVertical, PiRuler, PiWarningBold } from 'react-icons/pi'
 
+import type { HasSqueezeSchema } from '../../../schemas/common'
 import type { HasAutoDimensionsSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
@@ -15,12 +17,17 @@ type FillableSizeSectionProps<T> = {
   onChange: (updated: EditableSchema<T>) => void
 }
 
-export function FillableSizeSection<T extends HasAutoDimensionsSchema>({
+export function FillableSizeSection<T extends HasAutoDimensionsSchema & HasSqueezeSchema>({
   editable,
   issues,
   onChange,
 }: FillableSizeSectionProps<T>) {
   const t = useTranslation()
+  const hasActiveHorizontalSqueeze = editable.leftSqueeze !== '0' || editable.rightSqueeze !== '0'
+  const hasActiveVerticalSqueeze = editable.topSqueeze !== '0' || editable.bottomSqueeze !== '0'
+  const hasTransformedManualSize =
+    (!editable.autoWidth && hasActiveHorizontalSqueeze) || (!editable.autoHeight && hasActiveVerticalSqueeze)
+
   const handleAutoWidthChange = useCallback(
     (autoWidth: boolean) => {
       onChange({
@@ -63,7 +70,20 @@ export function FillableSizeSection<T extends HasAutoDimensionsSchema>({
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.common.labels.size}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader
+        rightAddon={
+          hasTransformedManualSize ? (
+            <HStack color="fg.warning" gap="1">
+              <PiWarningBold />
+              <Text fontWeight="bold" textStyle="xs">
+                {t.component.editor.squeeze.active}
+              </Text>
+            </HStack>
+          ) : undefined
+        }
+      >
+        {t.common.labels.size}
+      </SectionGroup.SectionHeader>
       <SectionGroup.SectionRowTitle>{t.common.labels.width}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.width}>
         <AutoDimensionEditor

@@ -30,7 +30,9 @@ export function AnchorSection<T extends HasOffAxisAnchor & HasAutoDimensionsSche
   onChange,
 }: AnchorSectionProps<T>): ReactNode {
   const t = useTranslation()
+
   const isOffAxisFill = parent.layoutOrientation === 'horizontal' ? editable.autoHeight : editable.autoWidth
+
   const handleOffAxisAnchorChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails) => {
       onChange({ ...editable, offAxisAnchor: details.value as AnchorSchema })
