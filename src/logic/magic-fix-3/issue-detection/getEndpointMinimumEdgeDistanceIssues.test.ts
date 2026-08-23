@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { defaultMagicFix3Settings, defaultStitchingSettings } from '../../../defaultStates'
 import { d } from '../../../testData'
-import { getSubComputedSubProject } from '../../getSubComputedProject'
+import { getComputedSubProject } from '../../getComputedSubProject'
 import { getEndpointMinimumEdgeDistanceIssues } from './getEndpointMinimumEdgeDistanceIssues'
 
 describe('getEndpointMinimumEdgeDistanceIssues', () => {
@@ -28,7 +28,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 2 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getEndpointMinimumEdgeDistanceIssues({
       subProject,
@@ -80,7 +80,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, accuracy: 0.1, minimumEdgeDistance: 1.05 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEndpointMinimumEdgeDistanceIssues({
@@ -123,7 +123,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 3 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEndpointMinimumEdgeDistanceIssues({
@@ -146,7 +146,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 100 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEndpointMinimumEdgeDistanceIssues({
@@ -182,7 +182,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 2 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getEndpointMinimumEdgeDistanceIssues({
       subProject,
@@ -226,7 +226,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 100 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEndpointMinimumEdgeDistanceIssues({
@@ -269,7 +269,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 100 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEndpointMinimumEdgeDistanceIssues({
@@ -307,7 +307,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 100 }
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getEndpointMinimumEdgeDistanceIssues({
       subProject,
@@ -354,7 +354,7 @@ describe('getEndpointMinimumEdgeDistanceIssues', () => {
       subProjects: [subProject],
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 5 },
     })
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeDistance: 2 }
     const invalidIssues = getEndpointMinimumEdgeDistanceIssues({
       subProject,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { getSubComputedSubProject } from '../logic/getSubComputedProject'
+import { getComputedSubProject } from '../logic/getComputedSubProject'
 import { d } from '../testData'
 import { accessors } from './accessors'
 
@@ -19,7 +19,7 @@ describe('computedSubProject accessor', () => {
       stitchLines: [stitchLine],
     })
     const project = d.project({ id: 'project', subProjects: [subProject] })
-    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getComputedSubProject(subProject, project.stitchingSettings)
     const accessor = accessors.computedSubProject(computed)
 
     expect(accessor.component(panel.id)).toBe(computed.components[panel.id])
@@ -34,7 +34,7 @@ describe('computedSubProject accessor', () => {
     const root = d.rootPanel({ id: 'root' })
     const subProject = d.subProject({ id: 'sub-project', root })
     const project = d.project({ id: 'project', subProjects: [subProject] })
-    const accessor = accessors.computedSubProject(getSubComputedSubProject(subProject, project.stitchingSettings))
+    const accessor = accessors.computedSubProject(getComputedSubProject(subProject, project.stitchingSettings))
 
     expect(() => accessor.component('missing-component')).toThrow('Missing component')
     expect(() => accessor.stitchLine('missing-stitch-line')).toThrow('Missing stitch line')
@@ -47,7 +47,7 @@ describe('computedSubProject accessor', () => {
     const pocketCluster = d.pocketCluster({ id: 'pocket-cluster' })
     const subProject = d.subProject({ id: 'sub-project', root, components: [panel, pocketCluster] })
     const project = d.project({ id: 'project', subProjects: [subProject] })
-    const accessor = accessors.computedSubProject(getSubComputedSubProject(subProject, project.stitchingSettings))
+    const accessor = accessors.computedSubProject(getComputedSubProject(subProject, project.stitchingSettings))
 
     expect(() => accessor.panel(pocketCluster.id)).toThrow("Excpected type='computed-panel'")
     expect(() => accessor.pocketCluster(panel.id)).toThrow("Excpected type='computed-pocket-cluster'")
