@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { defaultMagicFix3Settings, defaultStitchingSettings } from '../../../defaultStates'
 import { d } from '../../../testData'
-import { getComputedSubProject } from '../../getComputedProject'
+import { getSubComputedSubProject } from '../../getSubComputedProject'
 import { getSharpCornerStitchHoleDistanceIssues } from './getSharpCornerStitchHoleDistanceIssues'
 
 describe('getSharpCornerStitchHoleDistanceIssues', () => {
@@ -29,7 +29,7 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getSharpCornerStitchHoleDistanceIssues({
@@ -65,7 +65,7 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, accuracy: 0.1 }
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getSharpCornerStitchHoleDistanceIssues({
@@ -101,7 +101,7 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getSharpCornerStitchHoleDistanceIssues({
       subProject,
@@ -148,7 +148,7 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getSharpCornerStitchHoleDistanceIssues({
@@ -184,7 +184,7 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(computed.stitchLines[0]?.routes).toHaveLength(2)
     expect(
@@ -217,7 +217,7 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
     const subProject = d.subProject({ id: 'sub-project', root, stitchLines: [stitchLine] })
     const project = d.project({ id: 'project', subProjects: [subProject] })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getSharpCornerStitchHoleDistanceIssues({
       subProject,
@@ -265,7 +265,7 @@ describe('getSharpCornerStitchHoleDistanceIssues', () => {
       subProjects: [subProject],
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
     const invalidIssues = getSharpCornerStitchHoleDistanceIssues({
       subProject,
       computed,

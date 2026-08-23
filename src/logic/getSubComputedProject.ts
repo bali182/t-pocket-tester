@@ -24,7 +24,7 @@ import { getAdjustedCornerRadius } from './getAdjustedCornerRadius'
 import { normalizePocketCluster } from './normalizePocketCluster'
 import { calculateStitchLines } from './stitching/calculateStitchLines'
 
-export const getComputedSubProject = (
+export const getSubComputedSubProject = (
   subProject: SubProjectSchema,
   stitchingSettings: StitchLineCommonConfigSchema,
 ): ComputedSubProjectSchema => {

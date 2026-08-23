@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { defaultMagicFix3Settings, defaultStitchingSettings } from '../../../defaultStates'
 import { d } from '../../../testData'
-import { getComputedSubProject } from '../../getComputedProject'
+import { getSubComputedSubProject } from '../../getSubComputedProject'
 import { getClosedRouteStitchHoleDistanceIssues } from './getClosedRouteStitchHoleDistanceIssues'
 
 describe('getClosedRouteStitchHoleDistanceIssues', () => {
@@ -29,7 +29,7 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getClosedRouteStitchHoleDistanceIssues({
@@ -65,7 +65,7 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, accuracy: 1 }
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getClosedRouteStitchHoleDistanceIssues({
@@ -101,7 +101,7 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getClosedRouteStitchHoleDistanceIssues({
       subProject,
@@ -145,7 +145,7 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getClosedRouteStitchHoleDistanceIssues({
@@ -173,7 +173,7 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getClosedRouteStitchHoleDistanceIssues({
@@ -221,7 +221,7 @@ describe('getClosedRouteStitchHoleDistanceIssues', () => {
       subProjects: [subProject],
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 0 },
     })
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
     const invalidIssues = getClosedRouteStitchHoleDistanceIssues({
       subProject,
       computed,

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { defaultMagicFix3Settings, defaultStitchingSettings } from '../../../defaultStates'
 import { d } from '../../../testData'
-import { getComputedSubProject } from '../../getComputedProject'
+import { getSubComputedSubProject } from '../../getSubComputedProject'
 import { getEdgeCrossingMinimumStitchHoleDistanceIssues } from './getEdgeCrossingMinimumStitchHoleDistanceIssues'
 
 describe('getEdgeCrossingMinimumStitchHoleDistanceIssues', () => {
@@ -29,7 +29,7 @@ describe('getEdgeCrossingMinimumStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 2 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeCrossingMultiplier: 0.5 }
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getEdgeCrossingMinimumStitchHoleDistanceIssues({
       subProject,
@@ -73,7 +73,7 @@ describe('getEdgeCrossingMinimumStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 1 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeCrossingMultiplier: 0.5 }
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEdgeCrossingMinimumStitchHoleDistanceIssues({
@@ -109,7 +109,7 @@ describe('getEdgeCrossingMinimumStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 2 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, accuracy: 0.1, minimumEdgeCrossingMultiplier: 0.275 }
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEdgeCrossingMinimumStitchHoleDistanceIssues({
@@ -146,7 +146,7 @@ describe('getEdgeCrossingMinimumStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 2 },
     })
     const magicFixSettings = { ...defaultMagicFix3Settings, minimumEdgeCrossingMultiplier: 0.5 }
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     const issues = getEdgeCrossingMinimumStitchHoleDistanceIssues({
       subProject,
@@ -200,7 +200,7 @@ describe('getEdgeCrossingMinimumStitchHoleDistanceIssues', () => {
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 2 },
     })
     const magicFixSettings = defaultMagicFix3Settings
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
 
     expect(
       getEdgeCrossingMinimumStitchHoleDistanceIssues({
@@ -246,7 +246,7 @@ describe('getEdgeCrossingMinimumStitchHoleDistanceIssues', () => {
       subProjects: [subProject],
       stitchingSettings: { ...defaultStitchingSettings, stitchMargin: 1, stitchHoleDistance: 2 },
     })
-    const computed = getComputedSubProject(subProject, project.stitchingSettings)
+    const computed = getSubComputedSubProject(subProject, project.stitchingSettings)
     const invalidIssues = getEdgeCrossingMinimumStitchHoleDistanceIssues({
       subProject,
       computed,

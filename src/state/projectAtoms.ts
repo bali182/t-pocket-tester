@@ -3,7 +3,7 @@ import { atomFamily } from 'jotai-family'
 import type { SetStateAction } from 'react'
 
 import { getPatchedSubProject } from '../component-patches/getPatchedSubProject'
-import { getComputedSubProject } from '../logic/getComputedProject'
+import { getSubComputedSubProject } from '../logic/getSubComputedProject'
 import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
@@ -25,7 +25,7 @@ const getPatchedProject = (project: ProjectSchema): ProjectSchema => {
   return {
     ...project,
     subProjects: project.subProjects.map((subProject) => {
-      const computedSubProject = getComputedSubProject(subProject, project.stitchingSettings)
+      const computedSubProject = getSubComputedSubProject(subProject, project.stitchingSettings)
       return getPatchedSubProject(subProject, computedSubProject, project.editingSettings)
     }),
   }
@@ -77,7 +77,7 @@ export const subProjectAtomFamily = atomFamily((reference: SubProjectAtomReferen
       }
 
       const updatedSubProject = typeof update === 'function' ? update(currentSubProject) : update
-      const computedSubProject = getComputedSubProject(updatedSubProject, project.stitchingSettings)
+      const computedSubProject = getSubComputedSubProject(updatedSubProject, project.stitchingSettings)
       const patchedSubProject = getPatchedSubProject(updatedSubProject, computedSubProject, project.editingSettings)
 
       set(projectsAtom, (projects) =>
@@ -107,7 +107,7 @@ export const computedSubProjectAtomFamily = atomFamily((reference: SubProjectAto
       return undefined
     }
 
-    return getComputedSubProject(subProject, project.stitchingSettings)
+    return getSubComputedSubProject(subProject, project.stitchingSettings)
   })
 }, isSameSubProjectAtomReference)
 
