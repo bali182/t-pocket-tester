@@ -21,6 +21,7 @@ import { useProjects } from '../../hooks/useProjects'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 import { CreateProjectDialog } from '../CreateProjectDialog'
+import { ProjectActionsMenu } from '../ProjectActionsMenu'
 
 export const ProjectsRoute: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -55,6 +56,7 @@ export const ProjectsRoute: FC = () => {
             display="flex"
             flexDirection="column"
             height={projects.length > 0 ? '50dvh' : 'auto'}
+            highlightedValue={null}
           >
             <Listbox.Input
               as={Input}
@@ -69,18 +71,21 @@ export const ProjectsRoute: FC = () => {
                   ? appRoutes.subProject(project.id, firstSubProject.id)
                   : appRoutes.project(project.id)
                 return (
-                  <Listbox.Item asChild flex="none" item={project} key={project.id}>
-                    <Link to={target}>
-                      <HStack gap="3">
-                        <PiWalletDuotone />
-                        <Listbox.ItemText>
-                          {project.name}
-                          <Text color="fg.muted" fontSize="xs" mt="1">
-                            {format(new Date())}
-                          </Text>
-                        </Listbox.ItemText>
-                      </HStack>
-                    </Link>
+                  <Listbox.Item flex="none" item={project} key={project.id}>
+                    <HStack gap="3" width="100%">
+                      <Link style={{ flex: 1 }} to={target}>
+                        <HStack gap="3">
+                          <PiWalletDuotone />
+                          <Listbox.ItemText>
+                            {project.name}
+                            <Text color="fg.muted" fontSize="xs" mt="1">
+                              {format(new Date())}
+                            </Text>
+                          </Listbox.ItemText>
+                        </HStack>
+                      </Link>
+                      <ProjectActionsMenu projectId={project.id} size="xs" />
+                    </HStack>
                   </Listbox.Item>
                 )
               })}
