@@ -3,16 +3,18 @@ import {
   Button,
   EmptyState,
   HStack,
+  IconButton,
   Input,
+  InputGroup,
   Listbox,
   Stack,
   Text,
   useFilter,
   useListCollection,
 } from '@chakra-ui/react'
-import { useCallback, useEffect, useState, type FC } from 'react'
+import { useCallback, useEffect, useState, type ChangeEvent, type FC } from 'react'
 import { LiaFrogSolid } from 'react-icons/lia'
-import { PiFolderDuotone, PiMagnifyingGlass, PiPlus, PiWalletDuotone } from 'react-icons/pi'
+import { PiFolderDuotone, PiMagnifyingGlass, PiPlus, PiWalletDuotone, PiX } from 'react-icons/pi'
 import { Link } from 'react-router'
 
 import { useRecentProjects } from '../../hooks/useRecentProjects'
@@ -22,6 +24,7 @@ import { ProjectActionsMenu } from '../ProjectActionsMenu'
 
 export const ProjectsRoute: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [search, setSearch] = useState('')
   const recentProjects = useRecentProjects()
   const t = useTranslation()
   const { contains } = useFilter({ sensitivity: 'base' })
@@ -40,6 +43,20 @@ export const ProjectsRoute: FC = () => {
     setIsCreateDialogOpen(true)
   }, [])
 
+  const handleSearchChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>): void => {
+      const search = event.target.value
+      setSearch(search)
+      filter(search)
+    },
+    [filter],
+  )
+
+  const clearSearch = useCallback((): void => {
+    setSearch('')
+    filter('')
+  }, [filter])
+
   return (
     <Box bg="bg.emphasized" height="100%" padding="8">
       <Stack align="center" height="100%" justify="center">
@@ -55,12 +72,19 @@ export const ProjectsRoute: FC = () => {
             height={recentProjects.length > 0 ? '50dvh' : 'auto'}
             highlightedValue={null}
           >
-            <Listbox.Input
-              as={Input}
-              onChange={(event) => filter(event.target.value)}
-              placeholder="Keresés..."
+            <InputGroup
+              startElement={<PiMagnifyingGlass />}
+              endElement={
+                search.length > 0 ? (
+                  <IconButton aria-label={t.common.actions.reset} onClick={clearSearch} size="2xs" variant="ghost">
+                    <PiX />
+                  </IconButton>
+                ) : undefined
+              }
               mb="2"
-            />
+            >
+              <Input bg="bg.panel" onChange={handleSearchChange} placeholder="Keresés..." value={search} />
+            </InputGroup>
             <Listbox.Content maxHeight="calc(50dvh - 6rem)" overflowY="auto">
               {collection.items.map((project) => {
                 return (
