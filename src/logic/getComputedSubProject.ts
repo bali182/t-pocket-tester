@@ -67,6 +67,7 @@ export const getComputedSubProject = (
 const computeComponent = (
   component: ComponentSchema,
   boundingRect: RectSchema,
+  layoutBoundingRect: RectSchema,
   parentBoundingRect: RectSchema | undefined,
   parentCornerRadius: CornerRadiusSchema | undefined,
   subProject: SubProjectSchema,
@@ -81,6 +82,7 @@ const computeComponent = (
       return computePanel(
         component,
         boundingRect,
+        layoutBoundingRect,
         parentBoundingRect,
         parentCornerRadius,
         subProject,
@@ -91,6 +93,7 @@ const computeComponent = (
       return computePocketCluster(
         component,
         boundingRect,
+        layoutBoundingRect,
         parentBoundingRect,
         parentCornerRadius,
         resolvedStitchLines,
@@ -139,6 +142,7 @@ const computeRootPanel = (
 const computePanel = (
   panel: PanelSchema,
   boundingRect: RectSchema,
+  layoutBoundingRect: RectSchema,
   parentBoundingRect: RectSchema,
   parentCornerRadius: CornerRadiusSchema,
   subProject: SubProjectSchema,
@@ -168,6 +172,7 @@ const computePanel = (
     type: 'computed-panel',
     componentId: panel.id,
     boundingRect,
+    layoutBoundingRect,
     path,
     uncutPath: path,
     children,
@@ -183,6 +188,7 @@ const computePanel = (
 const computePocketCluster = (
   pocketCluster: PocketClusterSchema,
   boundingRect: RectSchema,
+  layoutBoundingRect: RectSchema,
   parentBoundingRect: RectSchema,
   parentCornerRadius: CornerRadiusSchema,
   resolvedStitchLines: ResolvedStitchLineSchema[],
@@ -207,6 +213,7 @@ const computePocketCluster = (
     type: 'computed-pocket-cluster',
     componentId: pocketCluster.id,
     boundingRect,
+    layoutBoundingRect,
     path,
     uncutPath: path,
     cornerRadius,
@@ -239,7 +246,8 @@ const computeLayoutChildren = (
   return children.map((child) =>
     computeComponent(
       child,
-      boundingBoxes[child.id],
+      boundingBoxes[child.id].boundingRect,
+      boundingBoxes[child.id].layoutBoundingRect,
       boundingRect,
       cornerRadius,
       subProject,

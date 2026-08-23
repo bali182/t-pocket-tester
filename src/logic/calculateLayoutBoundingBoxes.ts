@@ -12,9 +12,14 @@ type CalculateLayoutBoundingBoxesParams = {
   boundingRect: RectSchema
 }
 
+type LayoutBoundingBox = {
+  boundingRect: RectSchema
+  layoutBoundingRect: RectSchema
+}
+
 export const calculateLayoutBoundingBoxes = (
   params: CalculateLayoutBoundingBoxesParams,
-): Record<string, RectSchema> => {
+): Record<string, LayoutBoundingBox> => {
   switch (params.component.layoutOrientation) {
     case 'horizontal':
       return calculateHorizontalDefaultBoundingBoxes(params)
@@ -28,10 +33,10 @@ const calculateHorizontalDefaultBoundingBoxes = ({
   children,
   computedGap,
   boundingRect,
-}: CalculateLayoutBoundingBoxesParams): Record<string, RectSchema> => {
+}: CalculateLayoutBoundingBoxesParams): Record<string, LayoutBoundingBox> => {
   const widths = calculateMainAxisSizes(children, boundingRect, component)
   let nextLeft = boundingRect.x
-  const boundingBoxes: Record<string, RectSchema> = {}
+  const boundingBoxes: Record<string, LayoutBoundingBox> = {}
 
   for (const child of children) {
     const width = widths[child.id]
@@ -47,7 +52,10 @@ const calculateHorizontalDefaultBoundingBoxes = ({
 
     nextLeft = nextLeft.plus(width).plus(computedGap)
 
-    boundingBoxes[child.id] = applySqueezeToBoundingBox(child, boundingBox, boundingRect)
+    boundingBoxes[child.id] = {
+      boundingRect: applySqueezeToBoundingBox(child, boundingBox, boundingRect),
+      layoutBoundingRect: boundingBox,
+    }
   }
 
   return boundingBoxes
@@ -58,10 +66,10 @@ const calculateVerticalDefaultBoundingBoxes = ({
   children,
   computedGap,
   boundingRect,
-}: CalculateLayoutBoundingBoxesParams): Record<string, RectSchema> => {
+}: CalculateLayoutBoundingBoxesParams): Record<string, LayoutBoundingBox> => {
   const heights = calculateMainAxisSizes(children, boundingRect, component)
   let nextTop = boundingRect.y
-  const boundingBoxes: Record<string, RectSchema> = {}
+  const boundingBoxes: Record<string, LayoutBoundingBox> = {}
 
   for (const child of children) {
     const width = calculateCrossAxisSize(child, boundingRect, component)
@@ -77,7 +85,10 @@ const calculateVerticalDefaultBoundingBoxes = ({
 
     nextTop = nextTop.plus(height).plus(computedGap)
 
-    boundingBoxes[child.id] = applySqueezeToBoundingBox(child, boundingBox, boundingRect)
+    boundingBoxes[child.id] = {
+      boundingRect: applySqueezeToBoundingBox(child, boundingBox, boundingRect),
+      layoutBoundingRect: boundingBox,
+    }
   }
 
   return boundingBoxes
