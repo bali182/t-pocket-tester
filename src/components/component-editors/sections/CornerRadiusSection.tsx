@@ -1,8 +1,7 @@
-import { Button, Grid } from '@chakra-ui/react'
-import { FC, useCallback, useMemo, type ReactNode } from 'react'
+import { Grid } from '@chakra-ui/react'
+import { useCallback, useMemo, type ReactNode } from 'react'
 import { TbRadiusBottomLeft, TbRadiusBottomRight, TbRadiusTopLeft, TbRadiusTopRight } from 'react-icons/tb'
 
-import { IconType } from 'react-icons'
 import { PiCar, PiLink, PiLinkBreak, PiPencilLine } from 'react-icons/pi'
 import { HasAutoCornerRadiusSchema, HasCornerRadiusSchema, HasCornerRadiusValuesSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
@@ -11,6 +10,7 @@ import { useTranslation } from '../../../translations/translation'
 import { has } from '../../../utils/has'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
+import { SectionHeaderToggle } from '../../common/SectionHeaderToggle'
 
 type CornerRadiusSectionProps<T extends HasCornerRadiusSchema & Partial<HasAutoCornerRadiusSchema>> = {
   value: T
@@ -37,9 +37,12 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema & Partial<Ha
 
   const handleRadiusTypeChange = useCallback(
     (uniformRadii: boolean) => {
-      const largestRadius = [value.bottomLeftRadius, value.bottomRightRadius, value.topLeftRadius, value.topRightRadius]
-        .reduce((max, radius) => Math.max(max, radius), 0)
-        .toString()
+      const largestRadius = Math.max(
+        value.bottomLeftRadius,
+        value.bottomRightRadius,
+        value.topLeftRadius,
+        value.topRightRadius,
+      ).toString()
 
       const radiusOverrides: EditableSchema<HasCornerRadiusValuesSchema> = {
         topLeftRadius: largestRadius,
@@ -157,42 +160,5 @@ export function CornerRadiusSection<T extends HasCornerRadiusSchema & Partial<Ha
         </Grid>
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
-  )
-}
-
-type SectionHeaderToggleProps = {
-  value: boolean
-  onLabel: string
-  offLabel: string
-  onIcon: IconType
-  offIcon: IconType
-  onChange: (newValue: boolean) => void
-}
-
-const SectionHeaderToggle: FC<SectionHeaderToggleProps> = ({
-  value,
-  onIcon: OnIcon,
-  offIcon: OffIcon,
-  onLabel,
-  offLabel,
-  onChange,
-}) => {
-  const handleClick = useCallback(() => {
-    onChange(!value)
-  }, [onChange, value])
-
-  return (
-    <Button
-      onClick={handleClick}
-      size="2xs"
-      borderRadius="full"
-      height="5"
-      borderColor="border.emphasized"
-      background={value ? 'bg.emphasized' : undefined}
-      variant={value ? 'ghost' : 'subtle'}
-    >
-      {value ? <OnIcon /> : <OffIcon />}
-      {value ? onLabel : offLabel}
-    </Button>
   )
 }

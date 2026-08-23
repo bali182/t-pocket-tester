@@ -1,14 +1,15 @@
 import { useCallback, useMemo, type ReactNode } from 'react'
 
 import { HStack } from '@chakra-ui/react'
-import { PiArrowLineDown, PiArrowLineLeft, PiArrowLineRight, PiArrowLineUp } from 'react-icons/pi'
-import { HasSqueezeSchema } from '../../../schemas/common'
-import { HasAutoDimensionsSchema } from '../../../schemas/components'
+import { PiArrowLineDown, PiArrowLineLeft, PiArrowLineRight, PiArrowLineUp, PiLink, PiLinkBreak } from 'react-icons/pi'
+import type { HasSqueezeSchema, HasSqueezeValuesSchema } from '../../../schemas/common'
+import type { HasAutoDimensionsSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
+import { SectionHeaderToggle } from '../../common/SectionHeaderToggle'
 
 type SqueezeSectionProps<T> = {
   component: T
@@ -18,6 +19,7 @@ type SqueezeSectionProps<T> = {
 }
 
 export function SqueezeSection<T extends HasSqueezeSchema & HasAutoDimensionsSchema>({
+  component,
   editable,
   issues,
   onChange,
@@ -33,48 +35,77 @@ export function SqueezeSection<T extends HasSqueezeSchema & HasAutoDimensionsSch
     [issues.bottomSqueeze, issues.topSqueeze],
   )
 
-  const handleLeftSqueezeChange = useCallback(
-    (leftSqueeze: string) => {
-      onChange({ ...editable, leftSqueeze })
+  const handleSqueezeTypeChange = useCallback(
+    (uniformSqueeze: boolean) => {
+      const largestSqueeze = Math.max(
+        component.topSqueeze,
+        component.rightSqueeze,
+        component.bottomSqueeze,
+        component.leftSqueeze,
+      ).toString()
+
+      const squeezeOverrides: EditableSchema<HasSqueezeValuesSchema> = {
+        topSqueeze: largestSqueeze,
+        rightSqueeze: largestSqueeze,
+        bottomSqueeze: largestSqueeze,
+        leftSqueeze: largestSqueeze,
+      }
+
+      onChange({
+        ...editable,
+        individualSqueeze: !uniformSqueeze,
+        ...(uniformSqueeze ? squeezeOverrides : {}),
+      })
     },
-    [editable, onChange],
+    [component.bottomSqueeze, component.leftSqueeze, component.rightSqueeze, component.topSqueeze, editable, onChange],
   )
-  const handleRightSqueezeChange = useCallback(
-    (rightSqueeze: string) => {
-      onChange({ ...editable, rightSqueeze })
-    },
-    [editable, onChange],
-  )
-  const handleTopSqueezeChange = useCallback(
-    (topSqueeze: string) => {
-      onChange({ ...editable, topSqueeze })
-    },
-    [editable, onChange],
-  )
-  const handleBottomSqueezeChange = useCallback(
-    (bottomSqueeze: string) => {
-      onChange({ ...editable, bottomSqueeze })
+  const handleSqueezeChange = useCallback(
+    (key: keyof HasSqueezeValuesSchema) => (squeeze: string) => {
+      if (editable.individualSqueeze) {
+        onChange({ ...editable, [key]: squeeze })
+      } else {
+        onChange({
+          ...editable,
+          topSqueeze: squeeze,
+          rightSqueeze: squeeze,
+          bottomSqueeze: squeeze,
+          leftSqueeze: squeeze,
+        })
+      }
     },
     [editable, onChange],
   )
 
   return (
     <SectionGroup.Section>
-      <SectionGroup.SectionHeader>{t.component.editor.squeeze.title}</SectionGroup.SectionHeader>
+      <SectionGroup.SectionHeader
+        rightAddon={
+          <SectionHeaderToggle
+            onIcon={PiLink}
+            offIcon={PiLinkBreak}
+            onLabel={t.component.editor.squeeze.uniform}
+            offLabel={t.component.editor.squeeze.individual}
+            value={!editable.individualSqueeze}
+            onChange={handleSqueezeTypeChange}
+          />
+        }
+      >
+        {t.component.editor.squeeze.title}
+      </SectionGroup.SectionHeader>
 
       <SectionGroup.SectionRowTitle>{t.component.editor.squeeze.vertical}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={verticalIssues}>
         <HStack gap="3">
           <NumberInput
             issue={issues.topSqueeze}
-            onChange={handleTopSqueezeChange}
+            onChange={handleSqueezeChange('topSqueeze')}
             startAddon={<PiArrowLineDown />}
             unit="mm"
             value={editable.topSqueeze}
           />
           <NumberInput
             issue={issues.bottomSqueeze}
-            onChange={handleBottomSqueezeChange}
+            onChange={handleSqueezeChange('bottomSqueeze')}
             startAddon={<PiArrowLineUp />}
             unit="mm"
             value={editable.bottomSqueeze}
@@ -87,14 +118,14 @@ export function SqueezeSection<T extends HasSqueezeSchema & HasAutoDimensionsSch
         <HStack gap="3">
           <NumberInput
             issue={issues.leftSqueeze}
-            onChange={handleLeftSqueezeChange}
+            onChange={handleSqueezeChange('leftSqueeze')}
             startAddon={<PiArrowLineRight />}
             unit="mm"
             value={editable.leftSqueeze}
           />
           <NumberInput
             issue={issues.rightSqueeze}
-            onChange={handleRightSqueezeChange}
+            onChange={handleSqueezeChange('rightSqueeze')}
             startAddon={<PiArrowLineLeft />}
             unit="mm"
             value={editable.rightSqueeze}

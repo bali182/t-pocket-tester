@@ -214,6 +214,8 @@ export const EN: typeof HU = {
         title: 'Squeeze',
         horizontal: 'Horizontal',
         vertical: 'Vertical',
+        individual: 'Individual squeeze',
+        uniform: 'Uniform squeeze',
         active: 'Squeeze is active!',
       },
       pocketCluster: {

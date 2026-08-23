@@ -212,6 +212,8 @@ export const HU = {
         title: 'Összenyomás',
         horizontal: 'Vízszintes',
         vertical: 'Függőleges',
+        individual: 'Egyedi összenyomás',
+        uniform: 'Egységes összenyomás',
         active: 'Az összenyomás aktív!',
       },
       pocketCluster: {
