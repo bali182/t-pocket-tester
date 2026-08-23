@@ -3,9 +3,9 @@ import {
   HasComponentReferenceSchema,
   HasCornerRadiusSchema,
   HasIdentitySchema,
-  HasXYOffsetSchema,
   HasSizeSchema,
   HasTypeSchema,
+  HasXYOffsetSchema,
 } from './common'
 
 export type HasAnchorsSchema = {

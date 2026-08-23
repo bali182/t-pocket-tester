@@ -1,15 +1,16 @@
-import { type FC } from 'react'
+import { useCallback, type FC } from 'react'
 
 import { useEditableComponent } from '../../hooks/useEditableComponent'
 import { useProject } from '../../hooks/useProject'
 import { useSubProject } from '../../hooks/useSubProject'
 import { getComponentParent } from '../../operations/subProject/utils/getComponentParent'
 import type { ComponentSchema } from '../../schemas/components'
+import { getModelIcon } from '../../utils/getModelIcon'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
-import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
 import { ComponentActionsMenu } from '../ComponentActionsMenu'
 import { ComponentEditor } from './ComponentEditor'
+import { ComponentFloatingEditorHeader } from './ComponentFloatingEditorHeader'
 
 type ComponentFloatingEditorProps = {
   anchorElement: FloatingEditorAnchor
@@ -20,22 +21,35 @@ type ComponentFloatingEditorProps = {
 export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anchorElement, component, onClose }) => {
   const { project } = useProject()
   const { subProject } = useSubProject()
+
+  const Icon = getModelIcon(component.type)
+  const parent = getComponentParent(component.id, subProject)
+
   const {
     component: editedComponent,
     editableComponent,
     setComponent,
     validationIssues,
   } = useEditableComponent(component.id)
-  const parent = getComponentParent(editedComponent.id, subProject)
+
+  const handleColorReset = useCallback((): void => {
+    const updatedEditable = { ...editableComponent }
+    delete updatedEditable.color
+    setComponent(updatedEditable)
+  }, [editableComponent, setComponent])
 
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
-      <FloatingEditorHeader
+      <ComponentFloatingEditorHeader
+        baseColor={project.componentSettings.baseColor}
+        editable={editableComponent}
+        icon={Icon}
+        issues={validationIssues}
         menu={<ComponentActionsMenu component={editedComponent} onDelete={onClose} size="xs" subProject={subProject} />}
-        title={`#${editedComponent.id}`}
+        onChange={setComponent}
+        onResetColor={handleColorReset}
       />
       <ComponentEditor
-        baseColor={project.componentSettings.baseColor}
         component={editedComponent}
         editable={editableComponent}
         issues={validationIssues}
