@@ -6,7 +6,6 @@ import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { SectionGroup } from '../common/SectionGroup'
 import { CornerRadiusSection } from '../component-editors/sections/CornerRadiusSection'
 import { WidthAndHeightSizeSection } from '../component-editors/sections/WidthAndHeightSizeSection'
-import { HoleBasicSettingsSection } from './sections/HoleBasicSettingsSection'
 import { HolePositionSection } from './sections/HolePositionSection'
 
 type HoleEditorProps = {
@@ -19,7 +18,6 @@ type HoleEditorProps = {
 export const HoleEditor: FC<HoleEditorProps> = ({ editable, hole, issues, onChange }) => {
   return (
     <SectionGroup.Root>
-      <HoleBasicSettingsSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
       <HolePositionSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
       <WidthAndHeightSizeSection<HoleSchema> editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection<HoleSchema> value={hole} editable={editable} issues={issues} onChange={onChange} />

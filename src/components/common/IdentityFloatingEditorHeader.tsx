@@ -1,33 +1,36 @@
 import { HStack, Input, Popover } from '@chakra-ui/react'
-import { useCallback, type ChangeEvent, type FC, type ReactElement, type ReactNode } from 'react'
+import { useCallback, type ChangeEvent, type ReactElement, type ReactNode } from 'react'
 import type { IconType } from 'react-icons'
 
-import type { IssueSchema } from '../../schemas/validation'
+import type { HasIdentitySchema } from '../../schemas/common'
+import type { EditableSchema } from '../../schemas/editable'
+import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
 
-type EditableFloatingEditorHeaderProps = {
+type IdentityFloatingEditorHeaderProps<T> = {
+  editable: EditableSchema<T>
   icon: IconType
+  issues: ValidationIssuesSchema<T>
   menu: ReactElement
-  name: string
-  nameIssue: IssueSchema | undefined
-  onNameChange: (name: string) => void
-  rightAddon: ReactNode
+  onChange: (updated: EditableSchema<T>) => void
+  rightAddon?: ReactNode
 }
 
-export const EditableFloatingEditorHeader: FC<EditableFloatingEditorHeaderProps> = ({
+export function IdentityFloatingEditorHeader<T extends HasIdentitySchema>({
+  editable,
   icon: Icon,
+  issues,
   menu,
-  name,
-  nameIssue,
-  onNameChange,
+  onChange,
   rightAddon,
-}) => {
-  const hasNameError = isDefined(nameIssue) && nameIssue.severity === 'error'
+}: IdentityFloatingEditorHeaderProps<T>): ReactElement {
+  const hasNameError = isDefined(issues.name) && issues.name.severity === 'error'
+
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
-      onNameChange(event.currentTarget.value)
+      onChange({ ...editable, name: event.currentTarget.value })
     },
-    [onNameChange],
+    [editable, onChange],
   )
 
   return (
@@ -46,7 +49,7 @@ export const EditableFloatingEditorHeader: FC<EditableFloatingEditorHeaderProps>
             onChange={handleNameChange}
             px="1"
             size="sm"
-            value={name}
+            value={editable.name}
             w="auto"
           />
         </HStack>

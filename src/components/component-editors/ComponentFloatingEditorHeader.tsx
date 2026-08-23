@@ -6,7 +6,7 @@ import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
 import { ColorInput } from '../common/ColorInput'
-import { EditableFloatingEditorHeader } from '../common/EditableFloatingEditorHeader'
+import { IdentityFloatingEditorHeader } from '../common/IdentityFloatingEditorHeader'
 
 type ComponentFloatingEditorHeaderProps<T extends BaseComponentSchema> = {
   baseColor: string
@@ -29,13 +29,6 @@ export const ComponentFloatingEditorHeader = <T extends BaseComponentSchema>({
 }: ComponentFloatingEditorHeaderProps<T>) => {
   const effectiveColor = editable.color ?? baseColor
 
-  const handleNameChange = useCallback(
-    (name: string) => {
-      onChange({ ...editable, name })
-    },
-    [editable, onChange],
-  )
-
   const handleColorChange = useCallback(
     (color: string) => {
       onChange({ ...editable, color })
@@ -44,12 +37,12 @@ export const ComponentFloatingEditorHeader = <T extends BaseComponentSchema>({
   )
 
   return (
-    <EditableFloatingEditorHeader
+    <IdentityFloatingEditorHeader
+      editable={editable}
       icon={icon}
+      issues={issues}
       menu={menu}
-      name={editable.name}
-      nameIssue={issues.name}
-      onNameChange={handleNameChange}
+      onChange={onChange}
       rightAddon={
         <ColorInput
           fieldSizing="content"

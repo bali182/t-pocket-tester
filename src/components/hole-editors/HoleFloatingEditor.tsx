@@ -2,9 +2,10 @@ import { type FC } from 'react'
 
 import { useEditableHole } from '../../hooks/useEditableHole'
 import type { HoleSchema } from '../../schemas/hole'
+import { getModelIcon } from '../../utils/getModelIcon'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
-import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
+import { IdentityFloatingEditorHeader } from '../common/IdentityFloatingEditorHeader'
 import { HoleActionsMenu } from '../component-tree/HoleActionsMenu'
 import { HoleEditor } from './HoleEditor'
 
@@ -19,7 +20,13 @@ export const HoleFloatingEditor: FC<HoleFloatingEditorProps> = ({ anchorElement,
 
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
-      <FloatingEditorHeader menu={<HoleActionsMenu hole={editedHole} size="xs" />} title={`#${editedHole.id}`} />
+      <IdentityFloatingEditorHeader<HoleSchema>
+        editable={editableHole}
+        icon={getModelIcon(editedHole.type)}
+        issues={validationIssues}
+        menu={<HoleActionsMenu hole={editedHole} size="xs" />}
+        onChange={setHole}
+      />
       <HoleEditor editable={editableHole} hole={editedHole} issues={validationIssues} onChange={setHole} />
     </FloatingEditor>
   )
