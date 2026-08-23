@@ -195,10 +195,12 @@ export const EN: typeof HU = {
         defaultOrder: 'Default',
         reverseOrder: 'Reverse',
         gap: 'Gap',
-        anchor: 'Alignment',
         offset: 'Offset',
         xOffset: 'X',
         yOffset: 'Y',
+      },
+      anchor: {
+        title: 'Alignment',
       },
       cornerRadius: {
         title: 'Corner radius',

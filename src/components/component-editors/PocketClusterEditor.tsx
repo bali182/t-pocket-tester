@@ -1,9 +1,10 @@
 import { type FC } from 'react'
 
-import type { PocketClusterSchema } from '../../schemas/components'
+import type { PanelSchema, PocketClusterSchema, RootPanelSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { SectionGroup } from '../common/SectionGroup'
+import { AnchorSection } from './sections/AnchorSection'
 import { CornerRadiusSection } from './sections/CornerRadiusSection'
 import { FillableSizeSection } from './sections/FillableSizeSection'
 import { NameAndColorSection } from './sections/NameAndColorSection'
@@ -18,6 +19,7 @@ type PocketClusterEditorProps = {
   issues: ValidationIssuesSchema<PocketClusterSchema>
   onChange: (updated: EditableSchema<PocketClusterSchema>) => void
   onResetColor: () => void
+  parent: RootPanelSchema | PanelSchema
 }
 
 export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
@@ -27,6 +29,7 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
   issues,
   onChange,
   onResetColor,
+  parent,
 }) => {
   return (
     <SectionGroup.Root>
@@ -38,6 +41,7 @@ export const PocketClusterEditor: FC<PocketClusterEditorProps> = ({
         onResetColor={onResetColor}
       />
       <FillableSizeSection component={component} editable={editable} issues={issues} onChange={onChange} />
+      <AnchorSection<PocketClusterSchema> parent={parent} editable={editable} issues={issues} onChange={onChange} />
       <SqueezeSection component={component} editable={editable} issues={issues} onChange={onChange} />
       <CornerRadiusSection<PocketClusterSchema>
         value={component}

@@ -1,7 +1,7 @@
 import {
-  AnchorSchema,
   HasCornerRadiusSchema,
   HasIdentitySchema,
+  HasOffAxisAnchor,
   HasSizeSchema,
   HasSqueezeSchema,
   HasTypeSchema,
@@ -20,7 +20,6 @@ export type HasChildrenSchema = {
 
 export type HasLayoutSchema = {
   layoutOrientation: LayoutOrientationSchema
-  offAxisAnchor: AnchorSchema
   layoutGap: number
   autoLayoutGap: boolean
 }
@@ -44,6 +43,7 @@ export type RootPanelSchema = HasTypeSchema<'root-panel'> &
 export type PanelSchema = HasTypeSchema<'panel'> &
   BaseComponentSchema &
   HasLayoutSchema &
+  HasOffAxisAnchor &
   HasChildrenSchema &
   HasCornerRadiusSchema &
   HasAutoDimensionsSchema &
@@ -57,6 +57,7 @@ export type PocketOrientationSchema = 'up' | 'down' | 'left' | 'right'
  */
 export type PocketClusterSchema = HasTypeSchema<'pocket-cluster'> &
   BaseComponentSchema &
+  HasOffAxisAnchor &
   HasCornerRadiusSchema &
   HasAutoDimensionsSchema &
   HasSqueezeSchema & {

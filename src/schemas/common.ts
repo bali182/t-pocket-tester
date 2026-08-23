@@ -65,3 +65,7 @@ export type HasSqueezeSchema = {
   bottomSqueeze: number
   leftSqueeze: number
 }
+
+export type HasOffAxisAnchor = {
+  offAxisAnchor: AnchorSchema
+}

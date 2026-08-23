@@ -36,7 +36,7 @@ const calculateHorizontalDefaultBoundingBoxes = ({
   for (const child of children) {
     const width = widths[child.id]
     const height = calculateCrossAxisSize(child, boundingRect, component)
-    const y = calculateHorizontalCrossAxisPosition(boundingRect, component, height)
+    const y = calculateHorizontalCrossAxisPosition(boundingRect, child, height)
 
     const boundingBox: RectSchema = {
       x: nextLeft,
@@ -66,7 +66,7 @@ const calculateVerticalDefaultBoundingBoxes = ({
   for (const child of children) {
     const width = calculateCrossAxisSize(child, boundingRect, component)
     const height = heights[child.id]
-    const x = calculateVerticalCrossAxisPosition(boundingRect, component, width)
+    const x = calculateVerticalCrossAxisPosition(boundingRect, child, width)
 
     const boundingBox: RectSchema = {
       x,
@@ -139,10 +139,10 @@ const calculateCrossAxisSize = (
 
 const calculateHorizontalCrossAxisPosition = (
   parentBoundingBox: RectSchema,
-  parent: RootPanelSchema | PanelSchema,
+  child: PanelSchema | PocketClusterSchema,
   childHeight: BigNumber,
 ): BigNumber => {
-  switch (parent.offAxisAnchor) {
+  switch (child.offAxisAnchor) {
     case 'start':
       return parentBoundingBox.y
     case 'middle':
@@ -154,10 +154,10 @@ const calculateHorizontalCrossAxisPosition = (
 
 const calculateVerticalCrossAxisPosition = (
   parentBoundingBox: RectSchema,
-  parent: RootPanelSchema | PanelSchema,
+  child: PanelSchema | PocketClusterSchema,
   childWidth: BigNumber,
 ): BigNumber => {
-  switch (parent.offAxisAnchor) {
+  switch (child.offAxisAnchor) {
     case 'start':
       return parentBoundingBox.x
     case 'middle':

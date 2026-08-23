@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { defaultStitchingSettings } from '../defaultStates'
-import type { PanelSchema, RootPanelSchema } from '../schemas/components'
+import type { PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { ComputedComponentSchema } from '../schemas/computed'
 import { d } from '../testData'
 import { accessors } from '../utils/accessors'
@@ -23,7 +23,12 @@ type LayoutGapTestCase = {
 }
 
 type OffAxisAnchorTestCase = {
-  rootPanel: Partial<RootPanelSchema>
+  panel: Partial<PanelSchema>
+  expectedCrossAxisPosition: number
+}
+
+type PocketClusterOffAxisAnchorTestCase = {
+  pocketCluster: Partial<PocketClusterSchema>
   expectedCrossAxisPosition: number
 }
 
@@ -199,11 +204,24 @@ describe('getComputedSubProject layout', () => {
       id: 'root',
       width: 100,
       height: 60,
-      offAxisAnchor: 'start',
       children: ['wide', 'tall'],
     })
-    const wide = d.panel({ id: 'wide', width: 200, autoWidth: false, height: 20, autoHeight: false })
-    const tall = d.panel({ id: 'tall', width: 20, autoWidth: false, height: 100, autoHeight: false })
+    const wide = d.panel({
+      id: 'wide',
+      width: 200,
+      autoWidth: false,
+      height: 20,
+      autoHeight: false,
+      offAxisAnchor: 'start',
+    })
+    const tall = d.panel({
+      id: 'tall',
+      width: 20,
+      autoWidth: false,
+      height: 100,
+      autoHeight: false,
+      offAxisAnchor: 'end',
+    })
     const computed = accessors.computedSubProject(
       getComputedSubProject(
         d.subProject({ id: 'sub-project', root, components: [wide, tall] }),
@@ -330,18 +348,17 @@ describe('getComputedSubProject layout', () => {
   })
 
   it.each<OffAxisAnchorTestCase>([
-    { rootPanel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
-    { rootPanel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 20 },
-    { rootPanel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 40 },
+    { panel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
+    { panel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 20 },
+    { panel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 40 },
   ])('positions a fixed-height horizontal child', (testCase) => {
     const root = d.rootPanel({
       id: 'root',
       width: 100,
       height: 100,
-      ...testCase.rootPanel,
       children: ['child'],
     })
-    const child = d.panel({ id: 'child', height: 60, autoHeight: false })
+    const child = d.panel({ id: 'child', height: 60, autoHeight: false, ...testCase.panel })
     const computed = accessors.computedSubProject(
       getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
     )
@@ -350,19 +367,18 @@ describe('getComputedSubProject layout', () => {
   })
 
   it.each<OffAxisAnchorTestCase>([
-    { rootPanel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
-    { rootPanel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 20 },
-    { rootPanel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 40 },
+    { panel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
+    { panel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 20 },
+    { panel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 40 },
   ])('positions a fixed-width vertical child', (testCase) => {
     const root = d.rootPanel({
       id: 'root',
       width: 100,
       height: 100,
       layoutOrientation: 'vertical',
-      ...testCase.rootPanel,
       children: ['child'],
     })
-    const child = d.panel({ id: 'child', width: 60, autoWidth: false })
+    const child = d.panel({ id: 'child', width: 60, autoWidth: false, ...testCase.panel })
     const computed = accessors.computedSubProject(
       getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
     )
@@ -371,18 +387,17 @@ describe('getComputedSubProject layout', () => {
   })
 
   it.each<OffAxisAnchorTestCase>([
-    { rootPanel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
-    { rootPanel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 0 },
-    { rootPanel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 0 },
+    { panel: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
+    { panel: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 0 },
+    { panel: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 0 },
   ])('does not offset an auto-height horizontal child', (testCase) => {
     const root = d.rootPanel({
       id: 'root',
       width: 100,
       height: 100,
-      ...testCase.rootPanel,
       children: ['child'],
     })
-    const child = d.panel({ id: 'child' })
+    const child = d.panel({ id: 'child', ...testCase.panel })
     const computed = accessors.computedSubProject(
       getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
     )
@@ -396,10 +411,9 @@ describe('getComputedSubProject layout', () => {
       id: 'container',
       width: 100,
       autoWidth: false,
-      offAxisAnchor: 'end',
       children: ['child'],
     })
-    const child = d.panel({ id: 'child', height: 60, autoHeight: false })
+    const child = d.panel({ id: 'child', height: 60, autoHeight: false, offAxisAnchor: 'end' })
     const computed = accessors.computedSubProject(
       getComputedSubProject(
         d.subProject({ id: 'sub-project', root, components: [container, child] }),
@@ -415,14 +429,27 @@ describe('getComputedSubProject layout', () => {
       id: 'root',
       width: 100,
       height: 60,
-      offAxisAnchor: 'end',
       children: ['child'],
     })
-    const child = d.panel({ id: 'child', height: 100, autoHeight: false })
+    const child = d.panel({ id: 'child', height: 100, autoHeight: false, offAxisAnchor: 'end' })
     const computed = accessors.computedSubProject(
       getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
     )
 
     expectBoundingRect(computed.panel(child.id), [0, 0, 100, 60])
+  })
+
+  it.each<PocketClusterOffAxisAnchorTestCase>([
+    { pocketCluster: { offAxisAnchor: 'start' }, expectedCrossAxisPosition: 0 },
+    { pocketCluster: { offAxisAnchor: 'middle' }, expectedCrossAxisPosition: 20 },
+    { pocketCluster: { offAxisAnchor: 'end' }, expectedCrossAxisPosition: 40 },
+  ])('positions a fixed-height pocket cluster', (testCase) => {
+    const root = d.rootPanel({ id: 'root', width: 100, height: 100, children: ['cluster'] })
+    const cluster = d.pocketCluster({ id: 'cluster', height: 60, autoHeight: false, ...testCase.pocketCluster })
+    const computed = accessors.computedSubProject(
+      getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [cluster] }), defaultStitchingSettings),
+    )
+
+    expectBoundingRect(computed.pocketCluster(cluster.id), [0, testCase.expectedCrossAxisPosition, 100, 60])
   })
 })

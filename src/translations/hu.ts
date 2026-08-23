@@ -193,10 +193,12 @@ export const HU = {
         defaultOrder: 'Alapértelmezett',
         reverseOrder: 'Fordított',
         gap: 'Térköz',
-        anchor: 'Igazítás',
         offset: 'Eltolás',
         xOffset: 'X',
         yOffset: 'Y',
+      },
+      anchor: {
+        title: 'Igazítás',
       },
       cornerRadius: {
         title: 'Lekerekítés',

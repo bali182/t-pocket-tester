@@ -1,4 +1,4 @@
-import { HasCornerRadiusSchema, HasSqueezeSchema } from '../../../schemas/common'
+import { HasCornerRadiusSchema, HasOffAxisAnchor, HasSqueezeSchema } from '../../../schemas/common'
 import {
   HasAutoDimensionsSchema,
   HasLayoutSchema,
@@ -50,7 +50,6 @@ const defaultHasCornerRadius: HasCornerRadiusSchema = {
 
 const defaultHasLayout: HasLayoutSchema = {
   layoutOrientation: 'horizontal',
-  offAxisAnchor: 'middle',
   layoutGap: 0,
   autoLayoutGap: false,
 }
@@ -60,6 +59,10 @@ const defaultHasFillableSize: HasAutoDimensionsSchema = {
   height: 10,
   autoHeight: true,
   autoWidth: true,
+}
+
+const defaultHasOffAxisAnchor: HasOffAxisAnchor = {
+  offAxisAnchor: 'middle',
 }
 
 const defaultHasSqueeze: HasSqueezeSchema = {
@@ -84,6 +87,7 @@ const DEFAULT_PANEL: PanelSchema = {
   ...defaultHasLayout,
   ...defaultHasCornerRadius,
   ...defaultHasFillableSize,
+  ...defaultHasOffAxisAnchor,
   ...defaultHasSqueeze,
   type: 'panel',
   id: '',
@@ -94,6 +98,7 @@ const DEFAULT_PANEL: PanelSchema = {
 const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   ...defaultHasCornerRadius,
   ...defaultHasFillableSize,
+  ...defaultHasOffAxisAnchor,
   ...defaultHasSqueeze,
   type: 'pocket-cluster',
   id: '',

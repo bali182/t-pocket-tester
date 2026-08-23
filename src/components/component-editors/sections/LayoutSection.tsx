@@ -1,20 +1,7 @@
-import { SegmentGroup, SegmentGroupValueChangeDetails } from '@chakra-ui/react'
+import { SegmentGroup } from '@chakra-ui/react'
 import { useCallback, type ReactNode } from 'react'
-import {
-  PiAlignBottomSimple,
-  PiAlignCenterHorizontalSimple,
-  PiAlignCenterVerticalSimple,
-  PiAlignLeftSimple,
-  PiAlignRightSimple,
-  PiAlignTopSimple,
-  PiArrowsHorizontal,
-  PiArrowsVertical,
-  PiColumns,
-  PiRows,
-  PiRuler,
-} from 'react-icons/pi'
+import { PiArrowsHorizontal, PiArrowsVertical, PiColumns, PiRows, PiRuler } from 'react-icons/pi'
 
-import { AnchorSchema } from '../../../schemas/common'
 import type { HasLayoutSchema } from '../../../schemas/components'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
@@ -56,13 +43,6 @@ export function LayoutSection<T extends HasLayoutSchema>({
     [editable, onChange],
   )
 
-  const handleOffAxisAnchorChange = useCallback(
-    (details: SegmentGroupValueChangeDetails) => {
-      onChange({ ...editable, offAxisAnchor: details.value as AnchorSchema })
-    },
-    [editable, onChange],
-  )
-
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.component.editor.layout.title}</SectionGroup.SectionHeader>
@@ -77,32 +57,6 @@ export function LayoutSection<T extends HasLayoutSchema>({
           <SegmentGroup.Item aria-label={t.component.editor.layout.vertical} value="vertical">
             <SegmentGroup.ItemHiddenInput />
             <PiRows /> {t.component.editor.layout.vertical}
-          </SegmentGroup.Item>
-        </SegmentGroup.Root>
-      </SectionGroup.SectionRowEditor>
-
-      <SectionGroup.SectionRowTitle>{t.component.editor.layout.anchor}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor issue={issues.offAxisAnchor}>
-        <SegmentGroup.Root onValueChange={handleOffAxisAnchorChange} size="sm" value={editable.offAxisAnchor}>
-          <SegmentGroup.Indicator />
-          <SegmentGroup.Item value="start">
-            <SegmentGroup.ItemHiddenInput />
-            {editable.layoutOrientation === 'horizontal' ? <PiAlignTopSimple /> : <PiAlignLeftSimple />}
-            {editable.layoutOrientation === 'horizontal' ? t.common.anchors.top : t.common.anchors.left}
-          </SegmentGroup.Item>
-          <SegmentGroup.Item value="middle">
-            <SegmentGroup.ItemHiddenInput />
-            {editable.layoutOrientation === 'horizontal' ? (
-              <PiAlignCenterVerticalSimple />
-            ) : (
-              <PiAlignCenterHorizontalSimple />
-            )}
-            {t.common.anchors.center}
-          </SegmentGroup.Item>
-          <SegmentGroup.Item value="end">
-            <SegmentGroup.ItemHiddenInput />
-            {editable.layoutOrientation === 'horizontal' ? <PiAlignBottomSimple /> : <PiAlignRightSimple />}
-            {editable.layoutOrientation === 'horizontal' ? t.common.anchors.bottom : t.common.anchors.right}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>

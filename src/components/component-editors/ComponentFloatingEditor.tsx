@@ -3,6 +3,7 @@ import { type FC } from 'react'
 import { useEditableComponent } from '../../hooks/useEditableComponent'
 import { useProject } from '../../hooks/useProject'
 import { useSubProject } from '../../hooks/useSubProject'
+import { getComponentParent } from '../../operations/subProject/utils/getComponentParent'
 import type { ComponentSchema } from '../../schemas/components'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
@@ -25,6 +26,7 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
     setComponent,
     validationIssues,
   } = useEditableComponent(component.id)
+  const parent = getComponentParent(editedComponent.id, subProject)
 
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
@@ -38,6 +40,7 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
         editable={editableComponent}
         issues={validationIssues}
         onChange={setComponent}
+        parent={parent}
       />
     </FloatingEditor>
   )

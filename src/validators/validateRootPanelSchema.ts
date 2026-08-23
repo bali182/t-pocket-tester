@@ -68,7 +68,6 @@ export const validateRootPanelSchema = (
     type: undefined,
     width: widthResult.issues,
     autoLayoutGap: undefined,
-    offAxisAnchor: undefined,
   }
 
   const committedValue: RootPanelSchema = {
@@ -86,7 +85,6 @@ export const validateRootPanelSchema = (
     type: currentValue.type,
     width: widthResult.committedValue,
     autoLayoutGap: input.autoLayoutGap,
-    offAxisAnchor: input.offAxisAnchor,
   }
 
   if (isDefined(colorResult.committedValue)) {
@@ -123,7 +121,6 @@ export const validateRootPanelSchema = (
     type: currentValue.type,
     width: widthResult.value,
     autoLayoutGap: input.autoLayoutGap,
-    offAxisAnchor: input.offAxisAnchor,
   }
 
   if (isDefined(colorResult.value)) {
