@@ -1,5 +1,5 @@
-import type { HasCornerRadiusSchema } from '../../../schemas/common'
-import type { HolePositionSchema, HoleSchema } from '../../../schemas/hole'
+import type { HasCornerRadiusSchema, HasXYOffsetSchema } from '../../../schemas/common'
+import type { HasAnchorsSchema, HoleSchema } from '../../../schemas/hole'
 
 type CreateHoleParams = {
   id: string
@@ -16,10 +16,13 @@ export const createHole = (params: CreateHoleParams): HoleSchema => {
   }
 }
 
-const defaultPosition: HolePositionSchema = {
+const defaultAnchors: HasAnchorsSchema = {
   xAnchor: 'middle',
-  xOffset: 0,
   yAnchor: 'middle',
+}
+
+const defaultOffsets: HasXYOffsetSchema = {
+  xOffset: 0,
   yOffset: 0,
 }
 
@@ -32,7 +35,8 @@ const defaultCornerRadius: HasCornerRadiusSchema = {
 }
 
 const DEFAULT_HOLE: HoleSchema = {
-  ...defaultPosition,
+  ...defaultAnchors,
+  ...defaultOffsets,
   ...defaultCornerRadius,
   type: 'hole',
   componentId: '',

@@ -1,5 +1,6 @@
+import type { AnchorSchema, HasXYOffsetSchema } from '../schemas/common'
 import type { EditableSchema } from '../schemas/editable'
-import type { HoleAnchorSchema, HolePositionSchema } from '../schemas/hole'
+import type { HasAnchorsSchema } from '../schemas/hole'
 import type {
   ComponentBasedValidationContextSchema,
   ValidationIssuesSchema,
@@ -9,29 +10,29 @@ import { createInvalidValidationResult, createValidValidationResult } from './cr
 import { validateNumber } from './validateNumber'
 import { validatePrimitiveUnion } from './validatePrimitiveUnion'
 
-const holeAnchorValues: Record<HoleAnchorSchema, boolean> = {
+const holeAnchorValues: Record<AnchorSchema, boolean> = {
   start: true,
   middle: true,
   end: true,
 }
 
 export const validateHolePositionSchema = (
-  input: EditableSchema<HolePositionSchema>,
-  currentValue: HolePositionSchema,
+  input: EditableSchema<HasAnchorsSchema & HasXYOffsetSchema>,
+  currentValue: HasAnchorsSchema & HasXYOffsetSchema,
   context: ComponentBasedValidationContextSchema,
-): ValidationResultSchema<HolePositionSchema> => {
+): ValidationResultSchema<HasAnchorsSchema & HasXYOffsetSchema> => {
   const xAnchorResult = validatePrimitiveUnion(input.xAnchor, currentValue.xAnchor, holeAnchorValues, context)
   const yAnchorResult = validatePrimitiveUnion(input.yAnchor, currentValue.yAnchor, holeAnchorValues, context)
   const xOffsetResult = validateNumber(input.xOffset, currentValue.xOffset, context)
   const yOffsetResult = validateNumber(input.yOffset, currentValue.yOffset, context)
 
-  const issues: ValidationIssuesSchema<HolePositionSchema> = {
+  const issues: ValidationIssuesSchema<HasAnchorsSchema & HasXYOffsetSchema> = {
     xAnchor: xAnchorResult.issues,
     xOffset: xOffsetResult.issues,
     yAnchor: yAnchorResult.issues,
     yOffset: yOffsetResult.issues,
   }
-  const committedValue: HolePositionSchema = {
+  const committedValue: HasAnchorsSchema & HasXYOffsetSchema = {
     xAnchor: xAnchorResult.committedValue,
     xOffset: xOffsetResult.committedValue,
     yAnchor: yAnchorResult.committedValue,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { getComputedSubProject } from '../logic/getComputedProject'
+import { getComputedSubProject } from '../logic/getComputedSubProject'
 import { d } from '../testData'
 import { accessors } from './accessors'
 

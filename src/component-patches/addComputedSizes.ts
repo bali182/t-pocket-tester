@@ -1,6 +1,6 @@
 import { updateProjectComponents } from '../operations/subProject/utils/updateProjectComponents'
 import { ComponentSchema, HasAutoDimensionsSchema, HasChildrenSchema, HasLayoutSchema } from '../schemas/components'
-import { ComputedComponentSchema, HasComputedLayoutGapSchema } from '../schemas/computed'
+import { ComputedPanelSchema, ComputedPocketClusterSchema, HasComputedLayoutGapSchema } from '../schemas/computed'
 import type { ProjectEditingSettingSchema } from '../schemas/settings'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { narrowers } from '../utils/narrowers'
@@ -34,9 +34,12 @@ export const addComputedSizes = (
 
 type AutoSizeComponent = ComponentSchema & HasAutoDimensionsSchema
 
-const updateAutoSizeComponent = <T extends AutoSizeComponent>(component: T, computed: ComputedComponentSchema): T => {
-  const width = component.autoWidth ? computed.boundingRect.width.toNumber() : component.width
-  const height = component.autoHeight ? computed.boundingRect.height.toNumber() : component.height
+const updateAutoSizeComponent = <T extends AutoSizeComponent>(
+  component: T,
+  computed: ComputedPanelSchema | ComputedPocketClusterSchema,
+): T => {
+  const width = component.autoWidth ? computed.layoutBoundingRect.width.toNumber() : component.width
+  const height = component.autoHeight ? computed.layoutBoundingRect.height.toNumber() : component.height
 
   if (width === component.width && height === component.height) {
     return component

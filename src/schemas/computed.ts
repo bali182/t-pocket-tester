@@ -13,6 +13,10 @@ type HasBoundingRectSchema = {
   boundingRect: RectSchema
 }
 
+type HasLayoutBoundingRectSchema = {
+  layoutBoundingRect: RectSchema
+}
+
 type HasComputedCornerRadiusSchema = {
   cornerRadius: CornerRadiusSchema
 }
@@ -44,6 +48,7 @@ export type ComputedRootPanelSchema = HasTypeSchema<'computed-root-panel'> &
 
 export type ComputedPanelSchema = HasTypeSchema<'computed-panel'> &
   BaseComputedSchema &
+  HasLayoutBoundingRectSchema &
   HasUncutPathSchema &
   HasComputedCornerRadiusSchema &
   HasComputedLayoutGapSchema &
@@ -72,6 +77,7 @@ export type ComputedCardSchema = HasTypeSchema<'computed-card'> &
 
 export type ComputedPocketClusterSchema = HasTypeSchema<'computed-pocket-cluster'> &
   BaseComputedSchema &
+  HasLayoutBoundingRectSchema &
   HasUncutPathSchema &
   HasComputedCornerRadiusSchema & {
     frontPocket: ComputedTopPocketSchema

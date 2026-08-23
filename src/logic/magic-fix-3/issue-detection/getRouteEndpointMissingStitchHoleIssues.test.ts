@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { defaultMagicFix3Settings, defaultStitchingSettings } from '../../../defaultStates'
 import { d } from '../../../testData'
-import { getComputedSubProject } from '../../getComputedProject'
+import { getComputedSubProject } from '../../getComputedSubProject'
 import { getRouteEndpointMissingStitchHoleIssues } from './getRouteEndpointMissingStitchHoleIssues'
 
 describe('getRouteEndpointMissingStitchHoleIssues', () => {

@@ -2,9 +2,10 @@ import { type FC } from 'react'
 
 import { useEditableStitchLine } from '../../hooks/useEditableStitchLine'
 import type { StitchLineSchema } from '../../schemas/stitching'
+import { getModelIcon } from '../../utils/getModelIcon'
 import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 import { FloatingEditor } from '../common/FloatingEditor'
-import { FloatingEditorHeader } from '../common/FloatingEditorHeader'
+import { IdentityFloatingEditorHeader } from '../common/IdentityFloatingEditorHeader'
 import { StitchLineActionsMenu } from '../StitchLineActionsMenu'
 import { StitchLineEditor } from './StitchLineEditor'
 
@@ -25,9 +26,12 @@ export const StitchLineFloatingEditor: FC<StitchLineFloatingEditorProps> = ({ an
 
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
-      <FloatingEditorHeader
+      <IdentityFloatingEditorHeader<StitchLineSchema>
+        editable={editableStitchLine}
+        icon={getModelIcon(editedStitchLine.type)}
+        issues={validationIssues}
         menu={<StitchLineActionsMenu size="xs" stitchLine={editedStitchLine} />}
-        title={`#${editedStitchLine.id}`}
+        onChange={setStitchLine}
       />
       <StitchLineEditor
         editable={editableStitchLine}

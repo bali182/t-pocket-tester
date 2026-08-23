@@ -7,7 +7,6 @@ import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { SectionGroup } from '../common/SectionGroup'
 import { CornerRadiusSection } from '../component-editors/sections/CornerRadiusSection'
-import { BasicSettingsSection } from './sections/BasicSettingsSection'
 import { StitchSidesAndCornersSection } from './sections/StitchSidesAndCornersSection'
 import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
 
@@ -37,11 +36,6 @@ export const ComponentBoundsStitchLineEditor: FC<ComponentBoundsStitchLineEditor
       </Tabs.List>
       <Tabs.Content value="settings" pt={0}>
         <SectionGroup.Root>
-          <BasicSettingsSection<ComponentBoundsStitchLineSchema>
-            editable={editable}
-            issues={issues}
-            onChange={onChange}
-          />
           <StitchSidesAndCornersSection editable={editable} issues={issues} onChange={onChange} />
           <CornerRadiusSection value={value} editable={editable} issues={issues} onChange={onChange} />
         </SectionGroup.Root>

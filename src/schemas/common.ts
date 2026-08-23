@@ -1,3 +1,5 @@
+export type AnchorSchema = 'start' | 'middle' | 'end'
+
 export type HasTypeSchema<T extends string> = {
   type: T
 }
@@ -51,3 +53,23 @@ export type HasHoleTargetSchema = {
 }
 
 export type HasTargetSchema = HasComponentTargetSchema | HasHoleTargetSchema
+
+export type HasXYOffsetSchema = {
+  xOffset: number
+  yOffset: number
+}
+
+export type HasSqueezeValuesSchema = {
+  topSqueeze: number
+  rightSqueeze: number
+  bottomSqueeze: number
+  leftSqueeze: number
+}
+
+export type HasSqueezeSchema = HasSqueezeValuesSchema & {
+  individualSqueeze: boolean
+}
+
+export type HasOffAxisAnchor = {
+  offAxisAnchor: AnchorSchema
+}

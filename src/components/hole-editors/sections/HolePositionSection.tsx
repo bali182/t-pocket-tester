@@ -9,20 +9,21 @@ import {
   PiAlignTopSimple,
 } from 'react-icons/pi'
 
+import type { AnchorSchema, HasXYOffsetSchema } from '../../../schemas/common'
 import type { EditableSchema } from '../../../schemas/editable'
-import type { HoleAnchorSchema, HolePositionSchema } from '../../../schemas/hole'
+import type { HasAnchorsSchema } from '../../../schemas/hole'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 
-type HolePositionSectionProps<T extends HolePositionSchema> = {
+type HolePositionSectionProps<T> = {
   editable: EditableSchema<T>
-  issues: ValidationIssuesSchema<HolePositionSchema>
+  issues: ValidationIssuesSchema<T>
   onChange: (updated: EditableSchema<T>) => void
 }
 
-export function HolePositionSection<T extends HolePositionSchema>({
+export function HolePositionSection<T extends HasAnchorsSchema & HasXYOffsetSchema>({
   editable,
   issues,
   onChange,
@@ -30,13 +31,13 @@ export function HolePositionSection<T extends HolePositionSchema>({
   const t = useTranslation()
   const handleXAnchorChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails): void => {
-      onChange({ ...editable, xAnchor: details.value as HoleAnchorSchema })
+      onChange({ ...editable, xAnchor: details.value as AnchorSchema })
     },
     [editable, onChange],
   )
   const handleYAnchorChange = useCallback(
     (details: SegmentGroup.ValueChangeDetails): void => {
-      onChange({ ...editable, yAnchor: details.value as HoleAnchorSchema })
+      onChange({ ...editable, yAnchor: details.value as AnchorSchema })
     },
     [editable, onChange],
   )
@@ -60,17 +61,17 @@ export function HolePositionSection<T extends HolePositionSchema>({
       <SectionGroup.SectionRowEditor issue={issues.xAnchor}>
         <SegmentGroup.Root onValueChange={handleXAnchorChange} size="sm" value={editable.xAnchor}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label={t.hole.editor.position.left} value="start">
+          <SegmentGroup.Item value="start">
             <SegmentGroup.ItemHiddenInput />
-            <PiAlignLeftSimple /> {t.hole.editor.position.left}
+            <PiAlignLeftSimple /> {t.common.anchors.left}
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.hole.editor.position.center} value="middle">
+          <SegmentGroup.Item value="middle">
             <SegmentGroup.ItemHiddenInput />
-            <PiAlignCenterHorizontalSimple /> {t.hole.editor.position.center}
+            <PiAlignCenterHorizontalSimple /> {t.common.anchors.center}
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.hole.editor.position.right} value="end">
+          <SegmentGroup.Item value="end">
             <SegmentGroup.ItemHiddenInput />
-            <PiAlignRightSimple /> {t.hole.editor.position.right}
+            <PiAlignRightSimple /> {t.common.anchors.right}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>
@@ -82,17 +83,17 @@ export function HolePositionSection<T extends HolePositionSchema>({
       <SectionGroup.SectionRowEditor issue={issues.yAnchor}>
         <SegmentGroup.Root onValueChange={handleYAnchorChange} size="sm" value={editable.yAnchor}>
           <SegmentGroup.Indicator />
-          <SegmentGroup.Item aria-label={t.hole.editor.position.top} value="start">
+          <SegmentGroup.Item value="start">
             <SegmentGroup.ItemHiddenInput />
-            <PiAlignTopSimple /> {t.hole.editor.position.top}
+            <PiAlignTopSimple /> {t.common.anchors.top}
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.hole.editor.position.center} value="middle">
+          <SegmentGroup.Item value="middle">
             <SegmentGroup.ItemHiddenInput />
-            <PiAlignCenterVerticalSimple /> {t.hole.editor.position.center}
+            <PiAlignCenterVerticalSimple /> {t.common.anchors.center}
           </SegmentGroup.Item>
-          <SegmentGroup.Item aria-label={t.hole.editor.position.bottom} value="end">
+          <SegmentGroup.Item value="end">
             <SegmentGroup.ItemHiddenInput />
-            <PiAlignBottomSimple /> {t.hole.editor.position.bottom}
+            <PiAlignBottomSimple /> {t.common.anchors.bottom}
           </SegmentGroup.Item>
         </SegmentGroup.Root>
       </SectionGroup.SectionRowEditor>

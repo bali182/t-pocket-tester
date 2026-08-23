@@ -1,20 +1,13 @@
-import {
-  Color,
-  ColorPicker,
-  ColorPickerValueChangeDetails,
-  IconButton,
-  Input,
-  InputGroup,
-  Portal,
-  parseColor,
-} from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useState, type FC } from 'react'
+import { ColorPicker, IconButton, Input, InputGroup, Portal } from '@chakra-ui/react'
+import { useMemo, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
+import { useColorPickerValue } from './useColorPickerValue'
 
 type ColorInputProps = {
+  fieldSizing?: 'content' | 'fixed'
   isResetEnabled?: boolean
   issue: IssueSchema | undefined
   onChange: (value: string) => void
@@ -26,44 +19,29 @@ type ColorPickerPositioning = {
   placement: 'bottom-start'
 }
 
-const getColor = (value: string): Color | undefined => {
-  try {
-    return parseColor(value)
-  } catch {
-    return undefined
-  }
-}
-
-export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
-  const parsedColor = useMemo<Color | undefined>(() => getColor(value), [value])
+export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, issue, onChange, onReset, value }) => {
+  const isContentSized = fieldSizing === 'content'
   const positioning = useMemo<ColorPickerPositioning>(
     () => ({
       placement: 'bottom-start',
     }),
     [],
   )
-  const [pickerColor, setPickerColor] = useState<Color>(() => parsedColor ?? parseColor('#000000'))
+  const { handleOpenChange, handleValueChange, isPickerOpen, pickerColor, pickerColorValue } = useColorPickerValue(
+    value,
+    onChange,
+  )
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
-  useEffect(() => {
-    if (isDefined(parsedColor)) {
-      setPickerColor(parsedColor)
-    }
-  }, [parsedColor])
-
-  const handleValueChange = useCallback(
-    (details: ColorPickerValueChangeDetails) => {
-      const nextColor = details.value
-      const nextValue =
-        nextColor.getChannelValue('alpha') === 1 ? nextColor.toString('hex') : nextColor.toString('hexa')
-
-      onChange(nextValue)
-    },
-    [onChange],
-  )
-
   return (
-    <ColorPicker.Root onValueChange={handleValueChange} positioning={positioning} size="xs" value={pickerColor}>
+    <ColorPicker.Root
+      format="hsba"
+      onOpenChange={handleOpenChange}
+      onValueChange={handleValueChange}
+      positioning={positioning}
+      size="xs"
+      value={pickerColor}
+    >
       <ColorPicker.Control>
         <InputGroup
           endAddon={
@@ -98,12 +76,15 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
             </ColorPicker.Trigger>
           }
           startAddonProps={{ px: '1.5', size: 'xs' }}
+          w={isContentSized ? 'auto' : undefined}
         >
           <Input
             aria-invalid={isInvalid}
+            fieldSizing={fieldSizing}
             onChange={(event) => onChange(event.currentTarget.value)}
             size="xs"
-            value={value}
+            value={isPickerOpen ? pickerColorValue : value}
+            w={isContentSized ? 'auto' : undefined}
           />
         </InputGroup>
       </ColorPicker.Control>

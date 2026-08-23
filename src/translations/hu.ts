@@ -2,6 +2,7 @@ export const HU = {
   common: {
     actions: {
       add: 'Hozzáadás',
+      reset: 'Visszaállítás',
       cancel: 'Mégse',
       next: 'Tovább',
       apply: 'Alkalmaz',
@@ -39,6 +40,13 @@ export const HU = {
       topRight: 'Jobb felső sarok',
       bottomLeft: 'Bal alsó sarok',
       bottomRight: 'Jobb alsó sarok',
+    },
+    anchors: {
+      left: 'Bal',
+      center: 'Közép',
+      right: 'Jobb',
+      top: 'Fent',
+      bottom: 'Lent',
     },
   },
   editor: {
@@ -186,6 +194,12 @@ export const HU = {
         defaultOrder: 'Alapértelmezett',
         reverseOrder: 'Fordított',
         gap: 'Térköz',
+        offset: 'Eltolás',
+        xOffset: 'X',
+        yOffset: 'Y',
+      },
+      anchor: {
+        title: 'Igazítás',
       },
       cornerRadius: {
         title: 'Lekerekítés',
@@ -194,6 +208,14 @@ export const HU = {
         uniform: 'Egységes lekerekítés',
         individualMeasure: 'Mérték',
         uniformMeasure: 'Mérték',
+      },
+      squeeze: {
+        title: 'Összenyomás',
+        horizontal: 'Vízszintes',
+        vertical: 'Függőleges',
+        individual: 'Egyedi összenyomás',
+        uniform: 'Egységes összenyomás',
+        active: 'Az összenyomás aktív!',
       },
       pocketCluster: {
         title: 'Zsebek',
@@ -217,15 +239,10 @@ export const HU = {
     editor: {
       position: {
         title: 'Pozíció',
-        xAnchor: 'Vízszintes igazítás',
-        yAnchor: 'Függőleges igazítás',
         xOffset: 'X eltolás',
         yOffset: 'Y eltolás',
-        left: 'Bal',
-        center: 'Közép',
-        right: 'Jobb',
-        top: 'Fent',
-        bottom: 'Lent',
+        xAnchor: 'Vízszintes igazítás',
+        yAnchor: 'Függőleges igazítás',
       },
       size: {
         radius: 'Sugár',

@@ -3,7 +3,7 @@ import { atomFamily } from 'jotai-family'
 import type { SetStateAction } from 'react'
 
 import { getPatchedSubProject } from '../component-patches/getPatchedSubProject'
-import { getComputedSubProject } from '../logic/getComputedProject'
+import { getComputedSubProject } from '../logic/getComputedSubProject'
 import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'

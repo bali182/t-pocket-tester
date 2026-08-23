@@ -6,7 +6,6 @@ import type { PocketClusterStitchLineSchema, StitchLineCommonConfigSchema } from
 import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { SectionGroup } from '../common/SectionGroup'
-import { BasicSettingsSection } from './sections/BasicSettingsSection'
 import { PocketClusterStitchLineSettingsSection } from './sections/PocketClusterStitchLineSettingsSection'
 import { StitchingSettingsSection } from './sections/StitchingSettingsSection'
 
@@ -34,12 +33,6 @@ export const PocketClusterStitchLineEditor: FC<PocketClusterStitchLineEditorProp
       </Tabs.List>
       <Tabs.Content value="settings" pt={0}>
         <SectionGroup.Root>
-          <BasicSettingsSection<PocketClusterStitchLineSchema>
-            componentTypes={['pocket-cluster']}
-            editable={editable}
-            issues={issues}
-            onChange={onChange}
-          />
           <PocketClusterStitchLineSettingsSection editable={editable} issues={issues} onChange={onChange} />
         </SectionGroup.Root>
       </Tabs.Content>

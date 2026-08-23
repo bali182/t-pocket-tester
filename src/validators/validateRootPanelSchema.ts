@@ -1,4 +1,4 @@
-import type { LayoutOrderSchema, LayoutOrientationSchema, RootPanelSchema } from '../schemas/components'
+import type { LayoutOrientationSchema, RootPanelSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
 import type {
   ComponentBasedValidationContextSchema,
@@ -15,11 +15,6 @@ import { validatePrimitiveUnion } from './validatePrimitiveUnion'
 const layoutOrientationValues: Record<LayoutOrientationSchema, boolean> = {
   horizontal: true,
   vertical: true,
-}
-
-const layoutOrderValues: Record<LayoutOrderSchema, boolean> = {
-  default: true,
-  reverse: true,
 }
 
 export const validateRootPanelSchema = (
@@ -45,12 +40,6 @@ export const validateRootPanelSchema = (
     layoutOrientationValues,
     context,
   )
-  const layoutOrderResult = validatePrimitiveUnion(
-    input.layoutOrder,
-    currentValue.layoutOrder,
-    layoutOrderValues,
-    context,
-  )
   const layoutGapResult = validateNumber(input.layoutGap, currentValue.layoutGap, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
@@ -62,6 +51,7 @@ export const validateRootPanelSchema = (
   })
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 0, minInclusive: false })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 0, minInclusive: false })
+
   const issues: ValidationIssuesSchema<RootPanelSchema> = {
     bottomLeftRadius: bottomLeftRadiusResult.issues,
     bottomRightRadius: bottomRightRadiusResult.issues,
@@ -71,7 +61,6 @@ export const validateRootPanelSchema = (
     id: undefined,
     individualRadii: undefined,
     layoutGap: layoutGapResult.issues,
-    layoutOrder: layoutOrderResult.issues,
     layoutOrientation: layoutOrientationResult.issues,
     name: nameResult.issues,
     topLeftRadius: topLeftRadiusResult.issues,
@@ -89,7 +78,6 @@ export const validateRootPanelSchema = (
     id: currentValue.id,
     individualRadii: input.individualRadii,
     layoutGap: layoutGapResult.committedValue,
-    layoutOrder: layoutOrderResult.committedValue,
     layoutOrientation: layoutOrientationResult.committedValue,
     name: nameResult.committedValue,
     topLeftRadius: topLeftRadiusResult.committedValue,
@@ -107,7 +95,6 @@ export const validateRootPanelSchema = (
     !nameResult.isValid ||
     !colorResult.isValid ||
     !layoutOrientationResult.isValid ||
-    !layoutOrderResult.isValid ||
     !layoutGapResult.isValid ||
     !topLeftRadiusResult.isValid ||
     !topRightRadiusResult.isValid ||
@@ -127,7 +114,6 @@ export const validateRootPanelSchema = (
     id: currentValue.id,
     individualRadii: input.individualRadii,
     layoutGap: layoutGapResult.value,
-    layoutOrder: layoutOrderResult.value,
     layoutOrientation: layoutOrientationResult.value,
     name: nameResult.value,
     topLeftRadius: topLeftRadiusResult.value,

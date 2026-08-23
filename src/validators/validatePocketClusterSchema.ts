@@ -1,3 +1,4 @@
+import type { AnchorSchema } from '../schemas/common'
 import type { PocketClusterSchema, PocketOrientationSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
 import type {
@@ -26,6 +27,8 @@ const cardIdValues: Record<CardSchemaId, boolean> = {
   'ID-3': true,
 }
 
+const anchorValues: Record<AnchorSchema, boolean> = { start: true, middle: true, end: true }
+
 export const validatePocketClusterSchema = (
   input: EditableSchema<PocketClusterSchema>,
   currentValue: PocketClusterSchema,
@@ -39,6 +42,12 @@ export const validatePocketClusterSchema = (
     context,
   )
   const colorResult = validateOptionalHexColor(input.color, currentValue.color, context)
+  const offAxisAnchorResult = validatePrimitiveUnion(
+    input.offAxisAnchor,
+    currentValue.offAxisAnchor,
+    anchorValues,
+    context,
+  )
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
   const bottomLeftRadiusResult = validateNumber(input.bottomLeftRadius, currentValue.bottomLeftRadius, context, {
@@ -72,9 +81,15 @@ export const validatePocketClusterSchema = (
     min: 0,
     minInclusive: false,
   })
+  const topSqueezeResult = validateNumber(input.topSqueeze, currentValue.topSqueeze, context)
+  const rightSqueezeResult = validateNumber(input.rightSqueeze, currentValue.rightSqueeze, context)
+  const bottomSqueezeResult = validateNumber(input.bottomSqueeze, currentValue.bottomSqueeze, context)
+  const leftSqueezeResult = validateNumber(input.leftSqueeze, currentValue.leftSqueeze, context)
+
   const issues: ValidationIssuesSchema<PocketClusterSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
+    offAxisAnchor: offAxisAnchorResult.issues,
     bottomLeftRadius: bottomLeftRadiusResult.issues,
     bottomRightRadius: bottomRightRadiusResult.issues,
     cardId: cardIdResult.issues,
@@ -82,6 +97,7 @@ export const validatePocketClusterSchema = (
     height: heightResult.issues,
     id: undefined,
     individualRadii: undefined,
+    individualSqueeze: undefined,
     name: nameResult.issues,
     orientation: orientationResult.issues,
     pocketCount: pocketCountResult.issues,
@@ -92,6 +108,10 @@ export const validatePocketClusterSchema = (
     topRightRadius: topRightRadiusResult.issues,
     type: undefined,
     width: widthResult.issues,
+    topSqueeze: topSqueezeResult.issues,
+    rightSqueeze: rightSqueezeResult.issues,
+    bottomSqueeze: bottomSqueezeResult.issues,
+    leftSqueeze: leftSqueezeResult.issues,
   }
 
   const committedValue: PocketClusterSchema = {
@@ -103,8 +123,10 @@ export const validatePocketClusterSchema = (
     height: heightResult.committedValue,
     id: currentValue.id,
     individualRadii: input.individualRadii,
+    individualSqueeze: input.individualSqueeze,
     name: nameResult.committedValue,
     orientation: orientationResult.committedValue,
+    offAxisAnchor: offAxisAnchorResult.committedValue,
     pocketCount: pocketCountResult.committedValue,
     pocketStep: pocketStepResult.committedValue,
     tPocketTabWidth: tPocketTabWidthResult.committedValue,
@@ -113,6 +135,10 @@ export const validatePocketClusterSchema = (
     topRightRadius: topRightRadiusResult.committedValue,
     type: currentValue.type,
     width: widthResult.committedValue,
+    topSqueeze: topSqueezeResult.committedValue,
+    rightSqueeze: rightSqueezeResult.committedValue,
+    bottomSqueeze: bottomSqueezeResult.committedValue,
+    leftSqueeze: leftSqueezeResult.committedValue,
   }
 
   if (isDefined(colorResult.committedValue)) {
@@ -122,6 +148,7 @@ export const validatePocketClusterSchema = (
   if (
     !nameResult.isValid ||
     !colorResult.isValid ||
+    !offAxisAnchorResult.isValid ||
     !topLeftRadiusResult.isValid ||
     !topRightRadiusResult.isValid ||
     !bottomLeftRadiusResult.isValid ||
@@ -133,7 +160,11 @@ export const validatePocketClusterSchema = (
     !pocketCountResult.isValid ||
     !pocketStepResult.isValid ||
     !tPocketTabWidthResult.isValid ||
-    !tPocketTaperResult.isValid
+    !tPocketTaperResult.isValid ||
+    !topSqueezeResult.isValid ||
+    !rightSqueezeResult.isValid ||
+    !bottomSqueezeResult.isValid ||
+    !leftSqueezeResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }
@@ -147,8 +178,10 @@ export const validatePocketClusterSchema = (
     height: heightResult.value,
     id: currentValue.id,
     individualRadii: input.individualRadii,
+    individualSqueeze: input.individualSqueeze,
     name: nameResult.value,
     orientation: orientationResult.value,
+    offAxisAnchor: offAxisAnchorResult.value,
     pocketCount: pocketCountResult.value,
     pocketStep: pocketStepResult.value,
     tPocketTabWidth: tPocketTabWidthResult.value,
@@ -157,6 +190,10 @@ export const validatePocketClusterSchema = (
     topRightRadius: topRightRadiusResult.value,
     type: currentValue.type,
     width: widthResult.value,
+    topSqueeze: topSqueezeResult.value,
+    rightSqueeze: rightSqueezeResult.value,
+    bottomSqueeze: bottomSqueezeResult.value,
+    leftSqueeze: leftSqueezeResult.value,
   }
 
   if (isDefined(colorResult.value)) {

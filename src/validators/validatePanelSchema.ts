@@ -1,4 +1,5 @@
-import type { LayoutOrderSchema, LayoutOrientationSchema, PanelSchema } from '../schemas/components'
+import type { AnchorSchema } from '../schemas/common'
+import type { LayoutOrientationSchema, PanelSchema } from '../schemas/components'
 import type { EditableSchema } from '../schemas/editable'
 import type {
   ComponentBasedValidationContextSchema,
@@ -17,10 +18,7 @@ const layoutOrientationValues: Record<LayoutOrientationSchema, boolean> = {
   vertical: true,
 }
 
-const layoutOrderValues: Record<LayoutOrderSchema, boolean> = {
-  default: true,
-  reverse: true,
-}
+const anchorValues: Record<AnchorSchema, boolean> = { start: true, middle: true, end: true }
 
 export const validatePanelSchema = (
   input: EditableSchema<PanelSchema>,
@@ -41,13 +39,13 @@ export const validatePanelSchema = (
     layoutOrientationValues,
     context,
   )
-  const layoutOrderResult = validatePrimitiveUnion(
-    input.layoutOrder,
-    currentValue.layoutOrder,
-    layoutOrderValues,
+  const layoutGapResult = validateNumber(input.layoutGap, currentValue.layoutGap, context, { min: 0 })
+  const offAxisAnchorResult = validatePrimitiveUnion(
+    input.offAxisAnchor,
+    currentValue.offAxisAnchor,
+    anchorValues,
     context,
   )
-  const layoutGapResult = validateNumber(input.layoutGap, currentValue.layoutGap, context, { min: 0 })
   const topLeftRadiusResult = validateNumber(input.topLeftRadius, currentValue.topLeftRadius, context, { min: 0 })
   const topRightRadiusResult = validateNumber(input.topRightRadius, currentValue.topRightRadius, context, { min: 0 })
   const bottomLeftRadiusResult = validateNumber(input.bottomLeftRadius, currentValue.bottomLeftRadius, context, {
@@ -59,6 +57,11 @@ export const validatePanelSchema = (
   const widthResult = validateNumber(input.width, currentValue.width, context, { min: 0, minInclusive: false })
   const heightResult = validateNumber(input.height, currentValue.height, context, { min: 0, minInclusive: false })
 
+  const topSqueezeResult = validateNumber(input.topSqueeze, currentValue.topSqueeze, context)
+  const rightSqueezeResult = validateNumber(input.rightSqueeze, currentValue.rightSqueeze, context)
+  const bottomSqueezeResult = validateNumber(input.bottomSqueeze, currentValue.bottomSqueeze, context)
+  const leftSqueezeResult = validateNumber(input.leftSqueeze, currentValue.leftSqueeze, context)
+
   const issues: ValidationIssuesSchema<PanelSchema> = {
     autoHeight: undefined,
     autoWidth: undefined,
@@ -69,8 +72,8 @@ export const validatePanelSchema = (
     height: heightResult.issues,
     id: undefined,
     individualRadii: undefined,
+    individualSqueeze: undefined,
     layoutGap: layoutGapResult.issues,
-    layoutOrder: layoutOrderResult.issues,
     layoutOrientation: layoutOrientationResult.issues,
     name: nameResult.issues,
     topLeftRadius: topLeftRadiusResult.issues,
@@ -78,6 +81,11 @@ export const validatePanelSchema = (
     type: undefined,
     width: widthResult.issues,
     autoLayoutGap: undefined,
+    offAxisAnchor: offAxisAnchorResult.issues,
+    topSqueeze: topSqueezeResult.issues,
+    rightSqueeze: rightSqueezeResult.issues,
+    bottomSqueeze: bottomSqueezeResult.issues,
+    leftSqueeze: leftSqueezeResult.issues,
   }
 
   const committedValue: PanelSchema = {
@@ -89,8 +97,8 @@ export const validatePanelSchema = (
     height: heightResult.committedValue,
     id: currentValue.id,
     individualRadii: input.individualRadii,
+    individualSqueeze: input.individualSqueeze,
     layoutGap: layoutGapResult.committedValue,
-    layoutOrder: layoutOrderResult.committedValue,
     layoutOrientation: layoutOrientationResult.committedValue,
     name: nameResult.committedValue,
     topLeftRadius: topLeftRadiusResult.committedValue,
@@ -98,6 +106,11 @@ export const validatePanelSchema = (
     type: currentValue.type,
     width: widthResult.committedValue,
     autoLayoutGap: input.autoLayoutGap,
+    offAxisAnchor: offAxisAnchorResult.committedValue,
+    topSqueeze: topSqueezeResult.committedValue,
+    rightSqueeze: rightSqueezeResult.committedValue,
+    bottomSqueeze: bottomSqueezeResult.committedValue,
+    leftSqueeze: leftSqueezeResult.committedValue,
   }
 
   if (isDefined(colorResult.committedValue)) {
@@ -108,14 +121,18 @@ export const validatePanelSchema = (
     !nameResult.isValid ||
     !colorResult.isValid ||
     !layoutOrientationResult.isValid ||
-    !layoutOrderResult.isValid ||
     !layoutGapResult.isValid ||
+    !offAxisAnchorResult.isValid ||
     !topLeftRadiusResult.isValid ||
     !topRightRadiusResult.isValid ||
     !bottomLeftRadiusResult.isValid ||
     !bottomRightRadiusResult.isValid ||
     !widthResult.isValid ||
-    !heightResult.isValid
+    !heightResult.isValid ||
+    !topSqueezeResult.isValid ||
+    !rightSqueezeResult.isValid ||
+    !bottomSqueezeResult.isValid ||
+    !leftSqueezeResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }
@@ -129,8 +146,8 @@ export const validatePanelSchema = (
     height: heightResult.value,
     id: currentValue.id,
     individualRadii: input.individualRadii,
+    individualSqueeze: input.individualSqueeze,
     layoutGap: layoutGapResult.value,
-    layoutOrder: layoutOrderResult.value,
     layoutOrientation: layoutOrientationResult.value,
     name: nameResult.value,
     topLeftRadius: topLeftRadiusResult.value,
@@ -138,6 +155,11 @@ export const validatePanelSchema = (
     type: currentValue.type,
     width: widthResult.value,
     autoLayoutGap: input.autoLayoutGap,
+    offAxisAnchor: offAxisAnchorResult.value,
+    topSqueeze: topSqueezeResult.value,
+    rightSqueeze: rightSqueezeResult.value,
+    bottomSqueeze: bottomSqueezeResult.value,
+    leftSqueeze: leftSqueezeResult.value,
   }
 
   if (isDefined(colorResult.value)) {

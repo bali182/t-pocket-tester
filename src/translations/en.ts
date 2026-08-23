@@ -4,6 +4,7 @@ export const EN: typeof HU = {
   common: {
     actions: {
       add: 'Add',
+      reset: 'Reset',
       cancel: 'Cancel',
       next: 'Next',
       remove: 'Delete',
@@ -41,6 +42,13 @@ export const EN: typeof HU = {
       topRight: 'Top-right corner',
       bottomLeft: 'Bottom-left corner',
       bottomRight: 'Bottom-right corner',
+    },
+    anchors: {
+      left: 'Left',
+      center: 'Center',
+      right: 'Right',
+      top: 'Top',
+      bottom: 'Bottom',
     },
   },
   editor: {
@@ -188,6 +196,12 @@ export const EN: typeof HU = {
         defaultOrder: 'Default',
         reverseOrder: 'Reverse',
         gap: 'Gap',
+        offset: 'Offset',
+        xOffset: 'X',
+        yOffset: 'Y',
+      },
+      anchor: {
+        title: 'Alignment',
       },
       cornerRadius: {
         title: 'Corner radius',
@@ -196,6 +210,14 @@ export const EN: typeof HU = {
         uniform: 'Uniform radius',
         individualMeasure: 'Measurement',
         uniformMeasure: 'Measurement',
+      },
+      squeeze: {
+        title: 'Squeeze',
+        horizontal: 'Horizontal',
+        vertical: 'Vertical',
+        individual: 'Individual squeeze',
+        uniform: 'Uniform squeeze',
+        active: 'Squeeze is active!',
       },
       pocketCluster: {
         title: 'Pockets',
@@ -219,15 +241,10 @@ export const EN: typeof HU = {
     editor: {
       position: {
         title: 'Position',
-        xAnchor: 'Horizontal alignment',
-        yAnchor: 'Vertical alignment',
         xOffset: 'X offset',
         yOffset: 'Y offset',
-        left: 'Left',
-        center: 'Center',
-        right: 'Right',
-        top: 'Top',
-        bottom: 'Bottom',
+        xAnchor: 'Horizontal alignment',
+        yAnchor: 'Vertical alignment',
       },
       size: {
         radius: 'Radius',
