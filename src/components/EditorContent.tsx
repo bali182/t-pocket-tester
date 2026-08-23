@@ -4,6 +4,8 @@ import { DrawAreaContext } from '../contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../hooks/useEditorDrawArea'
 import { useTranslation } from '../translations/translation'
 import { DrawArea } from './DrawArea'
+import { EditorMenu } from './EditorMenu'
+import { EditorSubProjectTabs } from './EditorSubProjectTabs'
 import { FloatingEditors } from './FloatingEditors'
 import { EditorComponentTree } from './component-tree/EditorComponentTree'
 
@@ -27,6 +29,19 @@ export const EditorContent: FC = () => {
         <Splitter.Panel id="draw-area" minHeight="0" minWidth="0">
           <Box height="100%" minHeight="0" minWidth="0" overflow="hidden" position="relative">
             <DrawArea />
+
+            <Box left="3" position="absolute" right="3" top="3" zIndex="1">
+              <Box maxWidth="100%" width="fit-content">
+                <EditorMenu />
+              </Box>
+            </Box>
+
+            <Box bottom="0" left="0" overflowX="auto" overflowY="hidden" position="absolute" right="3" zIndex="1">
+              <Box minWidth="100%" width="max-content">
+                <EditorSubProjectTabs />
+              </Box>
+            </Box>
+
             <FloatingEditors />
           </Box>
         </Splitter.Panel>
@@ -36,14 +51,16 @@ export const EditorContent: FC = () => {
         </Splitter.ResizeTrigger>
 
         <Splitter.Panel id="tree" minHeight="0" minWidth="0">
-          <Card.Root bg="bg.panel" height="100%" minHeight="0" minWidth="0">
-            <Card.Header>
-              <Heading size="sm">{t.editor.panels.components}</Heading>
-            </Card.Header>
-            <Card.Body flex="1" minHeight="0" overflow="auto" padding="4">
-              <EditorComponentTree />
-            </Card.Body>
-          </Card.Root>
+          <Box height="100%" minHeight="0" minWidth="0" pb="3" pr="3" pt="3">
+            <Card.Root bg="bg.panel" height="100%" minHeight="0" minWidth="0">
+              <Card.Header>
+                <Heading size="sm">{t.editor.panels.components}</Heading>
+              </Card.Header>
+              <Card.Body flex="1" minHeight="0" overflow="auto" padding="4">
+                <EditorComponentTree />
+              </Card.Body>
+            </Card.Root>
+          </Box>
         </Splitter.Panel>
       </Splitter.Root>
     </DrawAreaContext.Provider>

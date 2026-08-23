@@ -1,4 +1,4 @@
-import { Button, Card, HStack, IconButton, Menu, Portal, Separator } from '@chakra-ui/react'
+import { Button, Card, HStack, IconButton, Menu, Portal, Separator, Text } from '@chakra-ui/react'
 import { FC, useCallback, useMemo, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiRuler, PiWalletDuotone } from 'react-icons/pi'
 import { Link } from 'react-router'
@@ -27,8 +27,11 @@ export const EditorMenu = () => {
           <ProjectSettingsPopover
             anchorRef={menuRef}
             trigger={
-              <Button size="sm" variant="ghost">
-                <PiWalletDuotone /> {project.name}
+              <Button flexShrink="1" minWidth="0" size="sm" variant="ghost">
+                <PiWalletDuotone />
+                <Text maxWidth="sm" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                  {project.name}
+                </Text>
               </Button>
             }
           />

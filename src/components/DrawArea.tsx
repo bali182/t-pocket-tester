@@ -10,7 +10,15 @@ export const DrawArea: FC = () => {
 
   return (
     <Box boxSizing="border-box" height="100%" overflow="auto" width="100%">
-      <Box alignItems="center" display="flex" justifyContent="center" minHeight="100%" minWidth="100%">
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="center"
+        minHeight="100%"
+        minWidth="100%"
+        py="5"
+        width="max-content"
+      >
         <Box style={{ zoom: scaling }}>
           <SvgRoot />
         </Box>
