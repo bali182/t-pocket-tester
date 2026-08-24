@@ -1,3 +1,4 @@
+import { leatherColors } from '../data/leatherColors'
 import type { HU } from './hu'
 
 export const EN: typeof HU = {
@@ -371,4 +372,31 @@ export const EN: typeof HU = {
     rootComponentName: 'Module',
     stitchLineName: (number: number) => `Stitch line ${number}`,
   },
+  leatherColors: {
+    black: 'Black',
+    darkGray: 'Dark gray',
+    mediumGray: 'Medium gray',
+    lightGray: 'Light gray',
+    white: 'White',
+    darkBrown: 'Dark brown',
+    mediumBrown: 'Medium brown',
+    lightBrown: 'Light brown',
+    natural: 'Natural',
+    bone: 'Bone',
+    burgundy: 'Burgundy',
+    red: 'Red',
+    pink: 'Pink',
+    orange: 'Orange',
+    yellow: 'Yellow',
+    navy: 'Navy',
+    indigo: 'Indigo',
+    mediumBlue: 'Medium blue',
+    lightBlue: 'Light blue',
+    purple: 'Purple',
+    darkGreen: 'Dark green',
+    olive: 'Olive',
+    mediumGreen: 'Medium green',
+    lightGreen: 'Light green',
+    cyan: 'Cyan',
+  } satisfies Record<keyof typeof leatherColors, string>,
 }
