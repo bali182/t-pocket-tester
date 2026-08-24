@@ -2,15 +2,14 @@ import type { Getter } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback, useMemo } from 'react'
 
+import { addSubProject as addSubProjectPure } from '../operations/project/addSubProject'
 import { cloneSubProject as cloneSubProjectPure } from '../operations/project/cloneSubProject'
 import { deleteSubProject as deleteSubProjectPure } from '../operations/project/deleteSubProject'
-import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
 import type { ProjectSchema } from '../schemas/project'
 import { ProjectEditingSettingSchema } from '../schemas/settings'
 import type { SubProjectSchema } from '../schemas/subProject'
 import { projectAtomFamily } from '../state/projectAtoms'
 import { useTranslation } from '../translations/translation'
-import { createSubProject as createSubProjectSchema } from '../utils/createSubProject'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
 import { useOptionalProject } from './useOptionalProject'
@@ -39,20 +38,9 @@ export const useProjectOperations = () => {
     useCallback(
       (get, set): SubProjectSchema => {
         const project = ensureProject(get, projectId)
-        const usedRootNames = new Set(
-          project.subProjects
-            .map((subProject) => subProject.components[subProject.root])
-            .filter(isDefined)
-            .map((rootPanel) => rootPanel.name),
-        )
-        const rootName = getUnusedName(t.defaults.rootComponentName, usedRootNames)
-        const subProject = createSubProjectSchema(rootName)
-
-        set(projectAtomFamily(projectId), {
-          ...project,
-          subProjects: [...project.subProjects, subProject],
-        })
-        return subProject
+        const result = addSubProjectPure(project, { baseRootComponentName: t.defaults.rootComponentName })
+        set(projectAtomFamily(projectId), result.project)
+        return result.subProject
       },
       [projectId, t],
     ),
