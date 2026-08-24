@@ -10,6 +10,7 @@ import type { ProjectSchema } from '../schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
 import { createProject } from '../utils/createProject'
+import { createSubProject } from '../utils/createSubProject'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
 import { validateProjectSchema } from '../validators/validateProjectSchema'
 import { ProjectSettingsEditor } from './project-settings-editors/ProjectSettingsEditor'
@@ -69,12 +70,16 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
         return
       }
 
-      const createdProject = validationResult.value
+      const initialSubProject = createSubProject(t.defaults.rootComponentName)
+      const createdProject: ProjectSchema = {
+        ...validationResult.value,
+        subProjects: [initialSubProject],
+      }
       addProject(createdProject)
       onOpenChange(false)
-      navigate(appRoutes.project(createdProject.id))
+      navigate(appRoutes.subProject(createdProject.id, initialSubProject.id))
     },
-    [addProject, context, editableValue, navigate, onOpenChange, project],
+    [addProject, context, editableValue, navigate, onOpenChange, project, t],
   )
 
   return (
