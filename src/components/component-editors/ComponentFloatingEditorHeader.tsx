@@ -1,5 +1,5 @@
-import { Button, ColorSwatch, HStack, Input } from '@chakra-ui/react'
-import { useCallback, type ReactElement } from 'react'
+import { Button, ColorSwatch, HStack, Input, type PopoverRootProps } from '@chakra-ui/react'
+import { useCallback, useMemo, useRef, type ReactElement } from 'react'
 import type { IconType } from 'react-icons'
 
 import type { BaseComponentSchema } from '../../schemas/components'
@@ -66,6 +66,14 @@ type HeaderColorInputProps = {
 }
 
 const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: HeaderColorInputProps) => {
+  const inputRef = useRef<HTMLDivElement>(null)
+  const positioning = useMemo<PopoverRootProps['positioning']>(
+    () => ({
+      getAnchorElement: () => inputRef.current,
+      placement: 'bottom-end',
+    }),
+    [],
+  )
   const handlePopoverChange = useCallback(
     (color: string | undefined): void => {
       if (isDefined(color)) {
@@ -79,12 +87,12 @@ const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: H
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   return (
-    <HStack gap="1">
+    <HStack gap="1" ref={inputRef}>
       <ColorPopover
         canReset={isResetEnabled}
         color={value}
         onChange={handlePopoverChange}
-        positioning={{ placement: 'bottom-end' }}
+        positioning={positioning}
         trigger={
           <Button
             alignItems="center"

@@ -1,5 +1,5 @@
-import { ColorSwatch, IconButton, Input, InputGroup } from '@chakra-ui/react'
-import { useCallback, type FC } from 'react'
+import { ColorSwatch, IconButton, Input, InputGroup, type PopoverRootProps } from '@chakra-ui/react'
+import { useCallback, useMemo, useRef, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
@@ -15,6 +15,14 @@ type ColorInputProps = {
 }
 
 export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
+  const inputGroupRef = useRef<HTMLDivElement>(null)
+  const positioning = useMemo<PopoverRootProps['positioning']>(
+    () => ({
+      getAnchorElement: () => inputGroupRef.current,
+      placement: 'bottom-start',
+    }),
+    [],
+  )
   const handlePopoverChange = useCallback(
     (color: string | undefined): void => {
       if (isDefined(color)) {
@@ -27,6 +35,7 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
 
   return (
     <InputGroup
+      ref={inputGroupRef}
       endAddon={
         isDefined(onReset) ? (
           <IconButton
@@ -48,6 +57,7 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
           canReset={false}
           color={value}
           onChange={handlePopoverChange}
+          positioning={positioning}
           trigger={
             <IconButton
               alignItems="center"

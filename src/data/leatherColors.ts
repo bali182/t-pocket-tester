@@ -8,7 +8,7 @@ export const leatherColors = {
   darkBrown: '#633116',
   mediumBrown: '#9A5328',
   lightBrown: '#CB8146',
-  natural: '#EBA55B',
+  natural: '#DEA673',
   bone: '#EFE0CD',
 
   burgundy: '#8A1E29',
