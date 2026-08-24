@@ -1,6 +1,6 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext, type DrawAreaComponentStyleParams } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
@@ -22,6 +22,11 @@ export const RootPanel: FC<RootPanelProps> = ({ componentId, nestingLevel }) => 
   const rootPanel = useComponent<RootPanelSchema>(componentId)
   const computedRootPanel = useComputedComponent<ComputedRootPanelSchema>(componentId)
   const pathData = usePath(computedRootPanel.path)
+  const styleParams: DrawAreaComponentStyleParams = {
+    component: rootPanel,
+    isHovered,
+    nestingLevel,
+  }
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGPathElement>>(() => {
     setIsHovered(true)
@@ -41,10 +46,10 @@ export const RootPanel: FC<RootPanelProps> = ({ componentId, nestingLevel }) => 
     <>
       <path
         d={pathData}
-        fill={componentStyles.getBackgroundColor(rootPanel, nestingLevel, isHovered)}
-        filter={componentStyles.getFilter(rootPanel, isHovered)}
-        stroke={componentStyles.getBorderColor(rootPanel, isHovered)}
-        strokeWidth={componentStyles.getBorderThickness(rootPanel, isHovered)}
+        fill={componentStyles.getBackgroundColor(styleParams)}
+        filter={componentStyles.getFilter(styleParams)}
+        stroke={componentStyles.getBorderColor(styleParams)}
+        strokeWidth={componentStyles.getBorderThickness(styleParams)}
         data-component-id={rootPanel.id}
         onPointerEnter={isInteractive ? handlePointerEnter : undefined}
         onPointerLeave={isInteractive ? handlePointerLeave : undefined}

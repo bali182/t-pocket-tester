@@ -14,5 +14,5 @@ type TPocketProps = {
 export const TPocket: FC<TPocketProps> = ({ fill, path, filter, stroke, strokeWidth }) => {
   const pathData = usePath(path)
 
-  return <path d={pathData} fill={fill} stroke={stroke} strokeWidth={strokeWidth} filter={filter} />
+  return <path d={pathData} fill={fill} filter={filter} stroke={stroke} strokeWidth={strokeWidth} />
 }

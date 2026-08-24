@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext, type DrawAreaComponentStyleParams } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
@@ -26,6 +26,11 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId, nestingLeve
   const pathData = usePath(computedPocketCluster.path)
   const frontPocketPathData = usePath(computedPocketCluster.frontPocket.path)
   const isSelected = selection.isComponentSelected(pocketCluster.id) || isHovered
+  const clusterStyleParams: DrawAreaComponentStyleParams = {
+    component: pocketCluster,
+    isHovered,
+    nestingLevel,
+  }
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
     setIsHovered(true)
@@ -52,35 +57,37 @@ export const PocketCluster: FC<PocketClusterProps> = ({ componentId, nestingLeve
         {isSelected && (
           <path
             d={pathData}
-            fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}
-            filter={componentStyles.getFilter(pocketCluster, isHovered)}
-            stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
-            strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
+            fill={componentStyles.getBackgroundColor(clusterStyleParams)}
+            filter={componentStyles.getFilter(clusterStyleParams)}
+            stroke={componentStyles.getBorderColor(clusterStyleParams)}
+            strokeWidth={componentStyles.getBorderThickness(clusterStyleParams)}
           />
         )}
-        {computedPocketCluster.tPockets.map((pocket, pocketIndex) => (
-          <Fragment key={pocket.id}>
-            {isShowingCards && isDefined(pocket.card) && (
-              <Card isParentHovered={isHovered} owner={pocketCluster} path={pocket.card.path} />
-            )}
-            <TPocket
-              fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}
-              path={pocket.path}
-              stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
-              strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
-            />
-            <TPocketStitchLines componentId={pocketCluster.id} pocketIndex={pocketIndex} />
-          </Fragment>
-        ))}
+        {computedPocketCluster.tPockets.map((pocket, pocketIndex) => {
+          return (
+            <Fragment key={pocket.id}>
+              {isShowingCards && isDefined(pocket.card) && (
+                <Card isParentHovered={isHovered} owner={pocketCluster} path={pocket.card.path} />
+              )}
+              <TPocket
+                fill={componentStyles.getBackgroundColor(clusterStyleParams)}
+                path={pocket.path}
+                stroke={componentStyles.getBorderColor(clusterStyleParams)}
+                strokeWidth={componentStyles.getBorderThickness(clusterStyleParams)}
+              />
+              <TPocketStitchLines componentId={pocketCluster.id} pocketIndex={pocketIndex} />
+            </Fragment>
+          )
+        })}
 
         {isShowingCards && isDefined(computedPocketCluster.frontPocket.card) && (
           <Card isParentHovered={isHovered} owner={pocketCluster} path={computedPocketCluster.frontPocket.card.path} />
         )}
         <path
           d={frontPocketPathData}
-          fill={componentStyles.getBackgroundColor(pocketCluster, nestingLevel, isHovered)}
-          stroke={componentStyles.getBorderColor(pocketCluster, isHovered)}
-          strokeWidth={componentStyles.getBorderThickness(pocketCluster, isHovered)}
+          fill={componentStyles.getBackgroundColor(clusterStyleParams)}
+          stroke={componentStyles.getBorderColor(clusterStyleParams)}
+          strokeWidth={componentStyles.getBorderThickness(clusterStyleParams)}
         />
       </g>
       <StitchLines componentId={pocketCluster.id} />
