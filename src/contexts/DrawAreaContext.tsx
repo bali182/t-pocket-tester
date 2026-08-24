@@ -15,7 +15,7 @@ export type DrawAreaComponentStyleParams = {
 
 export type DrawAreaCardStyleParams = {
   owner: PocketClusterSchema
-  isHovered: boolean
+  isParentHovered: boolean
 }
 
 export type DrawAreaHoleStyleParams = {

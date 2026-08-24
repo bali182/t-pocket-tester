@@ -14,7 +14,7 @@ type CardProps = {
 export const Card: FC<CardProps> = ({ isParentHovered, owner, path }) => {
   const { cardStyles } = useDrawAreaContext()
   const pathData = usePath(path)
-  const styleParams: DrawAreaCardStyleParams = { isHovered: isParentHovered, owner }
+  const styleParams: DrawAreaCardStyleParams = { isParentHovered, owner }
 
   return (
     <path

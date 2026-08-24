@@ -96,8 +96,13 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
 
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
-      getBackgroundColor: ({ component, nestingLevel }) => {
+      getBackgroundColor: ({ component, isHovered, nestingLevel }) => {
         const color = component.color ?? getComponentColor(project.componentSettings.baseColor, nestingLevel)
+
+        if (component.type === 'pocket-cluster' && (isComponentSelected(component.id) || isHovered)) {
+          return addAlpha(color)
+        }
+
         return selectionObstructingComponentIds.has(component.id) ? addAlpha(color) : color
       },
       getBorderColor: ({ component, isHovered }) => {
@@ -125,7 +130,11 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
 
   const cardStyles = useMemo<DrawAreaCardStyles>(
     () => ({
-      getBackgroundColor: ({ owner }) => {
+      getBackgroundColor: ({ owner, isParentHovered }) => {
+        if (isComponentSelected(owner.id) || isParentHovered) {
+          return addAlpha(CARD_COLOR)
+        }
+
         return selectionObstructingComponentIds.has(owner.id) ? addAlpha(CARD_COLOR) : CARD_COLOR
       },
       getStrokeColor: ({ owner }) => {
@@ -135,7 +144,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
         return STROKE_THICKNESS
       },
     }),
-    [selectionObstructingComponentIds],
+    [isComponentSelected, selectionObstructingComponentIds],
   )
 
   const holeStyles = useMemo<DrawAreaHoleStyles>(
