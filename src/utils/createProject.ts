@@ -1,4 +1,4 @@
-import { LEATHER_BASE_COLOR } from '../constants/drawing'
+import { leatherColors } from '../data/leatherColors'
 import { defaultStitchingSettings } from '../defaultStates'
 import type { ProjectSchema } from '../schemas/project'
 import { id } from './id'
@@ -9,7 +9,7 @@ export const createProject = (name: string): ProjectSchema => {
     name,
     subProjects: [],
     componentSettings: {
-      baseColor: LEATHER_BASE_COLOR,
+      baseColor: leatherColors.natural,
     },
     editingSettings: {
       addComputedSizesToAutoSized: true,
