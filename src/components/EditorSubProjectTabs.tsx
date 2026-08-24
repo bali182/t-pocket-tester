@@ -4,15 +4,15 @@ import { useNavigate, useParams } from 'react-router'
 
 import { PiPlus, PiWalletDuotone } from 'react-icons/pi'
 import { appRoutes } from '../appRoutes'
-import { useCreateSubProject } from '../hooks/useCreateSubProject'
 import { useProject } from '../hooks/useProject'
+import { useProjectOperations } from '../hooks/useProjectOperations'
 import { SubProjectRouteParams } from '../schemas/routeParams'
 import { accessors } from '../utils/accessors'
 import { ComponentActionsMenu } from './ComponentActionsMenu'
 
 export const EditorSubProjectTabs: FC = () => {
   const { project } = useProject()
-  const { createSubProject } = useCreateSubProject()
+  const { createSubProject } = useProjectOperations()
   const navigate = useNavigate()
   const { subProjectId } = useParams<SubProjectRouteParams>()
 
@@ -22,6 +22,11 @@ export const EditorSubProjectTabs: FC = () => {
     },
     [navigate, project.id],
   )
+
+  const handleCreateSubProject = useCallback((): void => {
+    const subProject = createSubProject()
+    navigate(appRoutes.subProject(project.id, subProject.id))
+  }, [createSubProject, navigate, project.id])
 
   return (
     <Tabs.Root size="md" value={subProjectId} variant="outline" width="100%">
@@ -43,7 +48,7 @@ export const EditorSubProjectTabs: FC = () => {
             </HStack>
           )
         })}
-        <IconButton size="xs" variant="ghost" ml="2" onClick={createSubProject}>
+        <IconButton size="xs" variant="ghost" ml="2" onClick={handleCreateSubProject}>
           <PiPlus />
         </IconButton>
       </Tabs.List>

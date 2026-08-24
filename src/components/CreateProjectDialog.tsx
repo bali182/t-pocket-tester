@@ -6,6 +6,7 @@ import { appRoutes } from '../appRoutes'
 import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
 import { useProjects } from '../hooks/useProjects'
+import { addSubProject } from '../operations/project/addSubProject'
 import type { ProjectSchema } from '../schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
@@ -69,12 +70,14 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
         return
       }
 
-      const createdProject = validationResult.value
+      const { project: createdProject, subProject: initialSubProject } = addSubProject(validationResult.value, {
+        baseRootComponentName: t.defaults.rootComponentName,
+      })
       addProject(createdProject)
       onOpenChange(false)
-      navigate(appRoutes.project(createdProject.id))
+      navigate(appRoutes.subProject(createdProject.id, initialSubProject.id))
     },
-    [addProject, context, editableValue, navigate, onOpenChange, project],
+    [addProject, context, editableValue, navigate, onOpenChange, project, t],
   )
 
   return (
