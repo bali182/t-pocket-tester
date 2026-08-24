@@ -1,5 +1,5 @@
 export const leatherColors = {
-  black: '#1A1A1A',
+  black: '#000000',
   darkGray: '#4C5156',
   mediumGray: '#7D8489',
   lightGray: '#BDC4C9',
