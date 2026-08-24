@@ -84,7 +84,13 @@ export const HU = {
         'Tegyél egy vonalzót a képernyőhöz, és a csúszkával állítsd be, hogy a képen látható vonalzó 10cm hosszúságú legyen. Így a grafikák méretarányosan fognak megjelenni.',
     },
     panels: {
-      components: 'Elemek',
+      components: {
+        empty: {
+          title: 'Nincs kiválasztott modul',
+          description: 'Válassz vagy hozz létre egy modult.',
+        },
+        title: 'Elemek',
+      },
       stitching: 'Varrás',
     },
   },
