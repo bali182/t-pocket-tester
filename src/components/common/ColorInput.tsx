@@ -1,85 +1,65 @@
-import {
-  ColorPicker,
-  IconButton,
-  Input,
-  InputGroup,
-  Portal,
-  type ColorPickerValueChangeDetails,
-} from '@chakra-ui/react'
-import { useCallback, useMemo, type FC } from 'react'
+import { ColorSwatch, IconButton, Input, InputGroup, type PopoverRootProps } from '@chakra-ui/react'
+import { useCallback, useMemo, useRef, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
-import { getColor, getColorValue } from './colorPickerUtils'
+import { ColorPopover } from './ColorPopover'
 
 type ColorInputProps = {
-  fieldSizing?: 'content' | 'fixed'
   isResetEnabled?: boolean
   issue: IssueSchema | undefined
   onChange: (value: string) => void
   onReset?: () => void
   value: string
-  fallbackColor: string
 }
 
-type ColorPickerPositioning = {
-  placement: 'bottom-start'
-}
-
-export const ColorInput: FC<ColorInputProps> = ({
-  fieldSizing,
-  isResetEnabled,
-  fallbackColor,
-  issue,
-  onChange,
-  onReset,
-  value,
-}) => {
-  const isContentSized = fieldSizing === 'content'
-  const positioning = useMemo<ColorPickerPositioning>(
+export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
+  const inputGroupRef = useRef<HTMLDivElement>(null)
+  const positioning = useMemo<PopoverRootProps['positioning']>(
     () => ({
+      getAnchorElement: () => inputGroupRef.current,
       placement: 'bottom-start',
     }),
     [],
   )
-  const pickerColor = useMemo(() => getColor(value, fallbackColor), [fallbackColor, value])
-  const handleValueChange = useCallback(
-    (details: ColorPickerValueChangeDetails): void => {
-      onChange(getColorValue(details.value))
+  const handlePopoverChange = useCallback(
+    (color: string | undefined): void => {
+      if (isDefined(color)) {
+        onChange(color)
+      }
     },
     [onChange],
   )
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   return (
-    <ColorPicker.Root
-      format="hsba"
-      onValueChange={handleValueChange}
-      positioning={positioning}
-      size="xs"
-      value={pickerColor}
-    >
-      <ColorPicker.Control>
-        <InputGroup
-          endAddon={
-            isDefined(onReset) ? (
-              <IconButton
-                alignSelf="stretch"
-                borderRadius="0"
-                disabled={!isResetEnabled}
-                height="auto"
-                onClick={onReset}
-                size="xs"
-                variant="plain"
-              >
-                <PiArrowCounterClockwise />
-              </IconButton>
-            ) : undefined
-          }
-          endAddonProps={{ px: 0, size: 'xs' }}
-          startAddon={
-            <ColorPicker.Trigger
+    <InputGroup
+      ref={inputGroupRef}
+      endAddon={
+        isDefined(onReset) ? (
+          <IconButton
+            alignSelf="stretch"
+            borderRadius="0"
+            disabled={!isResetEnabled}
+            height="auto"
+            onClick={onReset}
+            size="xs"
+            variant="plain"
+          >
+            <PiArrowCounterClockwise />
+          </IconButton>
+        ) : undefined
+      }
+      endAddonProps={{ px: 0, size: 'xs' }}
+      startAddon={
+        <ColorPopover
+          canReset={false}
+          color={value}
+          onChange={handlePopoverChange}
+          positioning={positioning}
+          trigger={
+            <IconButton
               alignItems="center"
               alignSelf="stretch"
               border="0"
@@ -90,40 +70,19 @@ export const ColorInput: FC<ColorInputProps> = ({
               p="0"
               unstyled
             >
-              <ColorPicker.ValueSwatch />
-            </ColorPicker.Trigger>
+              <ColorSwatch value={value} />
+            </IconButton>
           }
-          startAddonProps={{ px: '1.5', size: 'xs' }}
-          w={isContentSized ? 'auto' : undefined}
-        >
-          <Input
-            aria-invalid={isInvalid}
-            fieldSizing={fieldSizing}
-            onChange={(event) => onChange(event.currentTarget.value)}
-            size="xs"
-            value={value}
-            w={isContentSized ? 'auto' : undefined}
-          />
-        </InputGroup>
-      </ColorPicker.Control>
-      <Portal>
-        <ColorPicker.Positioner>
-          <ColorPicker.Content>
-            <ColorPicker.Area>
-              <ColorPicker.AreaBackground />
-              <ColorPicker.AreaThumb />
-            </ColorPicker.Area>
-            <ColorPicker.ChannelSlider channel="hue">
-              <ColorPicker.ChannelSliderTrack />
-              <ColorPicker.ChannelSliderThumb />
-            </ColorPicker.ChannelSlider>
-            <ColorPicker.ChannelSlider channel="alpha">
-              <ColorPicker.ChannelSliderTrack />
-              <ColorPicker.ChannelSliderThumb />
-            </ColorPicker.ChannelSlider>
-          </ColorPicker.Content>
-        </ColorPicker.Positioner>
-      </Portal>
-    </ColorPicker.Root>
+        />
+      }
+      startAddonProps={{ px: '1.5', size: 'xs' }}
+    >
+      <Input
+        aria-invalid={isInvalid}
+        onChange={(event) => onChange(event.currentTarget.value)}
+        size="xs"
+        value={value}
+      />
+    </InputGroup>
   )
 }

@@ -1,3 +1,5 @@
+import { leatherColors } from '../data/leatherColors'
+
 export const HU = {
   common: {
     actions: {
@@ -369,4 +371,31 @@ export const HU = {
     rootComponentName: 'Modul',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },
+  leatherColors: {
+    black: 'Fekete',
+    darkGray: 'Sötétszürke',
+    mediumGray: 'Középszürke',
+    lightGray: 'Világosszürke',
+    white: 'Fehér',
+    darkBrown: 'Sötétbarna',
+    mediumBrown: 'Középbarna',
+    lightBrown: 'Világosbarna',
+    natural: 'Natúr',
+    bone: 'Csontszín',
+    burgundy: 'Bordó',
+    red: 'Piros',
+    pink: 'Rózsaszín',
+    orange: 'Narancssárga',
+    yellow: 'Sárga',
+    navy: 'Tengerészkék',
+    indigo: 'Indigókék',
+    mediumBlue: 'Középkék',
+    lightBlue: 'Világoskék',
+    purple: 'Lila',
+    darkGreen: 'Sötétzöld',
+    olive: 'Olívazöld',
+    mediumGreen: 'Középzöld',
+    lightGreen: 'Világoszöld',
+    cyan: 'Ciánkék',
+  } satisfies Record<keyof typeof leatherColors, string>,
 }

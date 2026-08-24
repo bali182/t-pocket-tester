@@ -1,8 +1,7 @@
-export const LEATHER_BASE_COLOR = '#532E21'
 export const STROKE_COLOR = '#000000'
 export const STITCH_LINE_STORKE_COLOR = '#000000'
 export const STITCH_HOLE_COLOR = '#000000'
-export const CARD_COLOR = '#1CABFF'
+export const CARD_COLOR = '#1cabff'
 
 export const SELECTED_STROKE_COLOR = '#0f6cbd'
 export const SELECTED_STITCH_LINE_STROKE_COLOR = '#0f6cbdbf'
