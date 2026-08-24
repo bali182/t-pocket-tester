@@ -1,19 +1,17 @@
-import type { HoleSchema } from '../../schemas/hole'
 import type { ProjectSchema } from '../../schemas/project'
-import type { StitchLineSchema } from '../../schemas/stitching'
 import type { SubProjectSchema } from '../../schemas/subProject'
 import { isDefined } from '../../utils/isDefined'
-import { cloneComponentTree } from '../subProject/cloneComponent'
+import { cloneComponentTree } from '../subProject/cloneComponentTree'
+import { getUnusedName } from '../subProject/utils/getUnusedName'
 
 export type CloneSubProjectParams = {
   getUnusedId: () => string
-  rootName: string
   subProject: SubProjectSchema
 }
 
 export const cloneSubProject = (
   project: ProjectSchema,
-  { getUnusedId, rootName, subProject: sourceSubProject }: CloneSubProjectParams,
+  { getUnusedId, subProject: sourceSubProject }: CloneSubProjectParams,
 ): ProjectSchema => {
   const sourceRootPanel = sourceSubProject.components[sourceSubProject.root]
 
@@ -21,68 +19,57 @@ export const cloneSubProject = (
     return project
   }
 
-  const componentCloneResult = cloneComponentTree(sourceSubProject, {
+  const cloneResult = cloneComponentTree({
+    subProject: sourceSubProject,
     componentId: sourceSubProject.root,
-    getUnusedId,
-    getClonedName: (component) => (component.id === sourceSubProject.root ? rootName : component.name),
+    settings: { cloneComponentTree: true, cloneHoles: true, cloneStitchLines: true },
+    ids: {
+      component: getUnusedId,
+      hole: getUnusedId,
+      stitchLine: getUnusedId,
+    },
+    names: {
+      component: (sourceName) => sourceName,
+      hole: (sourceName) => sourceName,
+      stitchLine: (sourceName) => sourceName,
+    },
   })
 
-  if (!isDefined(componentCloneResult)) {
+  if (!isDefined(cloneResult)) {
     return project
   }
 
-  const clonedHoleIdBySourceHoleId = Object.fromEntries(sourceSubProject.holes.map((hole) => [hole.id, getUnusedId()]))
-  const clonedHoles: HoleSchema[] = []
+  const clonedRoot = cloneResult.clonedComponents[cloneResult.clonedRootId]
 
-  for (const hole of sourceSubProject.holes) {
-    const componentId = componentCloneResult.clonedComponentIdBySourceComponentId[hole.componentId]
-
-    if (!isDefined(componentId)) {
-      return project
-    }
-
-    clonedHoles.push({
-      ...hole,
-      componentId,
-      id: clonedHoleIdBySourceHoleId[hole.id],
-    })
-  }
-
-  const clonedStitchLines: StitchLineSchema[] = []
-
-  for (const stitchLine of sourceSubProject.stitchLines) {
-    const targetId =
-      stitchLine.targetType === 'component'
-        ? componentCloneResult.clonedComponentIdBySourceComponentId[stitchLine.targetId]
-        : clonedHoleIdBySourceHoleId[stitchLine.targetId]
-
-    if (!isDefined(targetId)) {
-      return project
-    }
-
-    clonedStitchLines.push({
-      ...stitchLine,
-      id: getUnusedId(),
-      targetId,
-    })
-  }
-
-  const clonedRootId = componentCloneResult.clonedComponentIdBySourceComponentId[sourceSubProject.root]
-
-  if (!isDefined(clonedRootId)) {
+  if (!isDefined(clonedRoot)) {
     return project
   }
 
-  const clonedSubProject: SubProjectSchema = {
-    components: componentCloneResult.clonedComponents,
-    holes: clonedHoles,
-    id: getUnusedId(),
-    root: clonedRootId,
-    stitchLines: clonedStitchLines,
-  }
+  const usedRootNames = new Set(
+    project.subProjects
+      .map((subProject) => subProject.components[subProject.root])
+      .filter(isDefined)
+      .map((root) => root.name),
+  )
+  const rootName = getUnusedName(sourceRootPanel.name, usedRootNames)
 
   return {
     ...project,
-    subProjects: [...project.subProjects, clonedSubProject],
+    subProjects: [
+      ...project.subProjects,
+      {
+        components: {
+          ...cloneResult.clonedComponents,
+          [cloneResult.clonedRootId]: {
+            ...clonedRoot,
+            name: rootName,
+          },
+        },
+        holes: cloneResult.clonedHoles,
+        id: getUnusedId(),
+        root: cloneResult.clonedRootId,
+        stitchLines: cloneResult.clonedStitchLines,
+      },
+    ],
   }
 }

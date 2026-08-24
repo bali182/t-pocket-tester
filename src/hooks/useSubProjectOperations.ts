@@ -140,15 +140,25 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
     useCallback(
       (get, set, componentId: string): void => {
         const [, subProject] = ensureProject(get, reference)
-        const result = cloneComponentPure(subProject, {
+        const clonedSubProject = cloneComponentPure(subProject, {
           componentId,
-          getUnusedId: id,
-          getUnusedName,
+          ids: {
+            component: id,
+            hole: id,
+            stitchLine: id,
+          },
+          names: {
+            component: getUnusedName,
+            hole: getUnusedName,
+            stitchLine: getUnusedName,
+          },
+          settings: {
+            cloneHoles: true,
+            cloneStitchLines: true,
+            cloneComponentTree: true,
+          },
         })
-        if (!isDefined(result)) {
-          return
-        }
-        set(subProjectAtomFamily(reference), result.subProject)
+        set(subProjectAtomFamily(reference), clonedSubProject)
       },
       [reference],
     ),
