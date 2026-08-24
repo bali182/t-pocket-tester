@@ -7,17 +7,33 @@ import { SvgExportElementSchema } from '../schemas/svgExport'
 import { produce } from '../utils/produce'
 import { defaultSubProjectSelection, SubProjectSelectionContextValue } from './SubProjectSelectionContext'
 
+export type DrawAreaComponentStyleParams = {
+  component: ComponentSchema
+  nestingLevel: number
+  isHovered: boolean
+}
+
+export type DrawAreaCardStyleParams = {
+  owner: PocketClusterSchema
+  isHovered: boolean
+}
+
+export type DrawAreaHoleStyleParams = {
+  hole: HoleSchema
+  isHovered: boolean
+}
+
 export type DrawAreaComponentStyles = {
-  getBackgroundColor: (component: ComponentSchema, nestingLevel: number, isHovered: boolean) => string | undefined
-  getBorderColor: (component: ComponentSchema, isHovered: boolean) => string | undefined
-  getBorderThickness: (component: ComponentSchema, isHovered: boolean) => number | undefined
-  getFilter: (component: ComponentSchema, isHovered: boolean) => string | undefined
+  getBackgroundColor: (params: DrawAreaComponentStyleParams) => string | undefined
+  getBorderColor: (params: DrawAreaComponentStyleParams) => string | undefined
+  getBorderThickness: (params: DrawAreaComponentStyleParams) => number | undefined
+  getFilter: (params: DrawAreaComponentStyleParams) => string | undefined
 }
 
 export type DrawAreaCardStyles = {
-  getBackgroundColor: (owner: PocketClusterSchema, isParentHovered: boolean) => string | undefined
-  getStrokeColor: (owner: PocketClusterSchema, isParentHovered: boolean) => string | undefined
-  getStrokeThickness: (owner: PocketClusterSchema, isParentHovered: boolean) => number | undefined
+  getBackgroundColor: (params: DrawAreaCardStyleParams) => string | undefined
+  getStrokeColor: (params: DrawAreaCardStyleParams) => string | undefined
+  getStrokeThickness: (params: DrawAreaCardStyleParams) => number | undefined
 }
 
 export type DrawAreaStitchLineStyles = {
@@ -28,11 +44,10 @@ export type DrawAreaStitchLineStyles = {
 }
 
 export type DrawAreaHoleStyles = {
-  getFillColor: (hole: HoleSchema, isHovered: boolean) => string | undefined
-  getStrokeColor: (hole: HoleSchema, isHovered: boolean) => string | undefined
-  getStrokeThickness: (hole: HoleSchema, isHovered: boolean) => number | undefined
+  getFillColor: (params: DrawAreaHoleStyleParams) => string | undefined
+  getStrokeColor: (params: DrawAreaHoleStyleParams) => string | undefined
+  getStrokeThickness: (params: DrawAreaHoleStyleParams) => number | undefined
 }
-
 export type DrawAreaExportIdentifiers = {
   getElementId: (element: SvgExportElementSchema) => string | undefined
   getStitchLineId: (element: ResolvedStitchLineSchema) => string | undefined

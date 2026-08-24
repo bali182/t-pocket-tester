@@ -96,20 +96,20 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
 
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
-      getBackgroundColor: (component, nestingLevel) => {
+      getBackgroundColor: ({ component, nestingLevel }) => {
         const color = component.color ?? getComponentColor(project.componentSettings.baseColor, nestingLevel)
         return selectionObstructingComponentIds.has(component.id) ? addAlpha(color) : color
       },
-      getBorderColor: (component, isHovered) => {
+      getBorderColor: ({ component, isHovered }) => {
         if (isComponentSelected(component.id) || isComponentTreeHovered(component.id) || isHovered) {
           return SELECTED_STROKE_COLOR
         }
         return selectionObstructingComponentIds.has(component.id) ? addAlpha(STROKE_COLOR) : STROKE_COLOR
       },
-      getBorderThickness: (_component, _isHovered) => {
+      getBorderThickness: () => {
         return STROKE_THICKNESS
       },
-      getFilter: (component, isHovered) => {
+      getFilter: ({ component, isHovered }) => {
         return isComponentSelected(component.id) || isComponentTreeHovered(component.id) || isHovered
           ? `drop-shadow(0px 0px 2px ${SELECTED_STROKE_COLOR})`
           : undefined
@@ -125,13 +125,13 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
 
   const cardStyles = useMemo<DrawAreaCardStyles>(
     () => ({
-      getBackgroundColor: (owner) => {
+      getBackgroundColor: ({ owner }) => {
         return selectionObstructingComponentIds.has(owner.id) ? addAlpha(CARD_COLOR) : CARD_COLOR
       },
-      getStrokeColor: (owner) => {
+      getStrokeColor: ({ owner }) => {
         return selectionObstructingComponentIds.has(owner.id) ? addAlpha(STROKE_COLOR) : STROKE_COLOR
       },
-      getStrokeThickness: (_owner, _isParentHovered) => {
+      getStrokeThickness: () => {
         return STROKE_THICKNESS
       },
     }),
@@ -140,17 +140,17 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
 
   const holeStyles = useMemo<DrawAreaHoleStyles>(
     () => ({
-      getFillColor: (hole, isHovered) => {
+      getFillColor: ({ hole, isHovered }) => {
         return selectedHole?.id === hole.id || isHoleTreeHovered(hole.id) || isHovered
           ? SELECTED_HOLE_FILL_COLOR
           : 'transparent'
       },
-      getStrokeColor: (hole, isHovered) => {
+      getStrokeColor: ({ hole, isHovered }) => {
         return selectedHole?.id === hole.id || isHoleTreeHovered(hole.id) || isHovered
           ? SELECTED_HOLE_STROKE_COLOR
           : 'transparent'
       },
-      getStrokeThickness: (_hole, _isHovered) => {
+      getStrokeThickness: () => {
         return STROKE_THICKNESS
       },
     }),

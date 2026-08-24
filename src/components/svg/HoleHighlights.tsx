@@ -1,6 +1,6 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext, type DrawAreaHoleStyleParams } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import { useSubProject } from '../../hooks/useSubProject'
 import type { ComputedHoleSchema } from '../../schemas/computed'
@@ -39,6 +39,7 @@ const HoleHighlight: FC<HoleHighlightProps> = ({ computedHole, hole }) => {
   const { holeStyles, isInteractive, selection } = useDrawAreaContext()
   const [isHovered, setIsHovered] = useState(false)
   const pathData = usePath(computedHole.highlightPath)
+  const styleParams: DrawAreaHoleStyleParams = { hole, isHovered }
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGPathElement>>(() => {
     setIsHovered(true)
@@ -61,13 +62,13 @@ const HoleHighlight: FC<HoleHighlightProps> = ({ computedHole, hole }) => {
       cursor={isInteractive ? 'pointer' : undefined}
       d={pathData}
       data-hole-id={hole.id}
-      fill={holeStyles.getFillColor(hole, isHovered)}
+      fill={holeStyles.getFillColor(styleParams)}
       onClick={isInteractive ? handleClick : undefined}
       onPointerEnter={isInteractive ? handlePointerEnter : undefined}
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
       pointerEvents={isInteractive ? 'fill' : 'none'}
-      stroke={holeStyles.getStrokeColor(hole, isHovered)}
-      strokeWidth={holeStyles.getStrokeThickness(hole, isHovered)}
+      stroke={holeStyles.getStrokeColor(styleParams)}
+      strokeWidth={holeStyles.getStrokeThickness(styleParams)}
     />
   )
 }

@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext, type DrawAreaComponentStyleParams } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { SvgExportTPocketSchema } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
@@ -15,15 +15,20 @@ type ExportTPocketProps = {
 export const ExportTPocket: FC<ExportTPocketProps> = ({ element }) => {
   const { componentStyles, exportIdentifiers } = useDrawAreaContext()
   const pathData = usePath(element.pocket.path)
+  const styleParams: DrawAreaComponentStyleParams = {
+    component: element.ownerComponent,
+    isHovered: false,
+    nestingLevel: 0,
+  }
 
   return (
     <g data-element-id={exportIdentifiers.getElementId(element)}>
       {isDefined(element.cutHelper) && <ExportMarkerPath path={element.cutHelper} />}
       <path
         d={pathData}
-        fill={componentStyles.getBackgroundColor(element.ownerComponent, 0, false)}
-        stroke={componentStyles.getBorderColor(element.ownerComponent, false)}
-        strokeWidth={componentStyles.getBorderThickness(element.ownerComponent, false)}
+        fill={componentStyles.getBackgroundColor(styleParams)}
+        stroke={componentStyles.getBorderColor(styleParams)}
+        strokeWidth={componentStyles.getBorderThickness(styleParams)}
       />
 
       {element.stitchLines.map((stitchLine) => (
