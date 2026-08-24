@@ -1,5 +1,6 @@
 import { useCallback, type ReactNode } from 'react'
 
+import { STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR } from '../../../constants/drawing'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { StitchLineCommonConfigSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
@@ -102,6 +103,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchHoleColorChange}
           onReset={isDefined(onReset) ? handleStitchHoleColorReset : undefined}
           value={resolvedEditable.stitchHoleColor}
+          fallbackColor={STITCH_HOLE_COLOR}
         />
       </SectionGroup.SectionRowEditor>
 
@@ -113,6 +115,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchLineColorChange}
           onReset={isDefined(onReset) ? handleStitchLineColorReset : undefined}
           value={resolvedEditable.stitchLineColor}
+          fallbackColor={STITCH_LINE_STORKE_COLOR}
         />
       </SectionGroup.SectionRowEditor>
 

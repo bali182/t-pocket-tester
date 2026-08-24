@@ -1,15 +1,16 @@
-import { Button, ColorPicker, HStack, Input, Portal } from '@chakra-ui/react'
-import { useCallback, type ReactElement } from 'react'
+import { Button, ColorPicker, HStack, Input, Portal, type ColorPickerValueChangeDetails } from '@chakra-ui/react'
+import { useCallback, useMemo, type ReactElement } from 'react'
 import type { IconType } from 'react-icons'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
+import { LEATHER_BASE_COLOR } from '../../constants/drawing'
 import type { BaseComponentSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { IssueSchema, ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
+import { getColor, getColorValue } from '../common/colorPickerUtils'
 import { IdentityFloatingEditorHeader } from '../common/IdentityFloatingEditorHeader'
-import { useColorPickerValue } from '../common/useColorPickerValue'
 
 type ComponentFloatingEditorHeaderProps<T extends BaseComponentSchema> = {
   baseColor: string
@@ -69,16 +70,18 @@ type HeaderColorInputProps = {
 
 const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: HeaderColorInputProps) => {
   const t = useTranslation()
-  const { handleOpenChange, handleValueChange, isPickerOpen, pickerColor, pickerColorValue } = useColorPickerValue(
-    value,
-    onChange,
+  const pickerColor = useMemo(() => getColor(value, LEATHER_BASE_COLOR), [value])
+  const handleValueChange = useCallback(
+    (details: ColorPickerValueChangeDetails): void => {
+      onChange(getColorValue(details.value))
+    },
+    [onChange],
   )
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   return (
     <ColorPicker.Root
       format="hsba"
-      onOpenChange={handleOpenChange}
       onValueChange={handleValueChange}
       positioning={{ placement: 'bottom-end' }}
       size="xs"
@@ -106,7 +109,7 @@ const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: H
             focusRingColor="colorPalette.focusRing"
             onChange={(event) => onChange(event.currentTarget.value)}
             size="xs"
-            value={isPickerOpen ? pickerColorValue : value}
+            value={value}
             w="auto"
           />
         </HStack>

@@ -1,5 +1,6 @@
 import { useCallback, type FC } from 'react'
 
+import { LEATHER_BASE_COLOR } from '../../constants/drawing'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ProjectSchema } from '../../schemas/project'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
@@ -41,6 +42,7 @@ export const ProjectComponentSettingsSection: FC<ProjectComponentSettingsSection
           issue={issues.componentSettings.baseColor}
           onChange={handleBaseColorChange}
           value={editable.componentSettings.baseColor}
+          fallbackColor={LEATHER_BASE_COLOR}
         />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>

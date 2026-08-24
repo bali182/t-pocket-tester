@@ -1,10 +1,17 @@
-import { ColorPicker, IconButton, Input, InputGroup, Portal } from '@chakra-ui/react'
-import { useMemo, type FC } from 'react'
+import {
+  ColorPicker,
+  IconButton,
+  Input,
+  InputGroup,
+  Portal,
+  type ColorPickerValueChangeDetails,
+} from '@chakra-ui/react'
+import { useCallback, useMemo, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
-import { useColorPickerValue } from './useColorPickerValue'
+import { getColor, getColorValue } from './colorPickerUtils'
 
 type ColorInputProps = {
   fieldSizing?: 'content' | 'fixed'
@@ -13,13 +20,22 @@ type ColorInputProps = {
   onChange: (value: string) => void
   onReset?: () => void
   value: string
+  fallbackColor: string
 }
 
 type ColorPickerPositioning = {
   placement: 'bottom-start'
 }
 
-export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, issue, onChange, onReset, value }) => {
+export const ColorInput: FC<ColorInputProps> = ({
+  fieldSizing,
+  isResetEnabled,
+  fallbackColor,
+  issue,
+  onChange,
+  onReset,
+  value,
+}) => {
   const isContentSized = fieldSizing === 'content'
   const positioning = useMemo<ColorPickerPositioning>(
     () => ({
@@ -27,16 +43,18 @@ export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, i
     }),
     [],
   )
-  const { handleOpenChange, handleValueChange, isPickerOpen, pickerColor, pickerColorValue } = useColorPickerValue(
-    value,
-    onChange,
+  const pickerColor = useMemo(() => getColor(value, fallbackColor), [fallbackColor, value])
+  const handleValueChange = useCallback(
+    (details: ColorPickerValueChangeDetails): void => {
+      onChange(getColorValue(details.value))
+    },
+    [onChange],
   )
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   return (
     <ColorPicker.Root
       format="hsba"
-      onOpenChange={handleOpenChange}
       onValueChange={handleValueChange}
       positioning={positioning}
       size="xs"
@@ -83,7 +101,7 @@ export const ColorInput: FC<ColorInputProps> = ({ fieldSizing, isResetEnabled, i
             fieldSizing={fieldSizing}
             onChange={(event) => onChange(event.currentTarget.value)}
             size="xs"
-            value={isPickerOpen ? pickerColorValue : value}
+            value={value}
             w={isContentSized ? 'auto' : undefined}
           />
         </InputGroup>
