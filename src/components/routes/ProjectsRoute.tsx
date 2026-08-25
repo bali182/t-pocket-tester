@@ -69,7 +69,7 @@ export const ProjectsRoute: FC = () => {
             collection={collection}
             display="flex"
             flexDirection="column"
-            height={recentProjects.length > 0 ? '50dvh' : 'auto'}
+            height="50dvh"
             highlightedValue={null}
           >
             <InputGroup
@@ -85,7 +85,7 @@ export const ProjectsRoute: FC = () => {
             >
               <Input bg="bg.panel" onChange={handleSearchChange} placeholder="Keresés..." value={search} />
             </InputGroup>
-            <Listbox.Content maxHeight="calc(50dvh - 6rem)" overflowY="auto">
+            <Listbox.Content overflowY="auto">
               {collection.items.map((project) => {
                 return (
                   <Listbox.Item flex="none" item={project} key={project.projectId}>
