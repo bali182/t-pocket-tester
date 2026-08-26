@@ -1,4 +1,4 @@
-import { leatherColors } from '../data/leatherColors'
+import { leatherColors } from '../data/colors'
 import { defaultStitchingSettings } from '../defaultStates'
 import type { ProjectSchema } from '../schemas/project'
 import { id } from './id'

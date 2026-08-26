@@ -1,4 +1,4 @@
-import { leatherColors } from '../data/leatherColors'
+import type { ColorKey } from '../data/colors'
 import type { HU } from './hu'
 
 export const EN: typeof HU = {
@@ -372,7 +372,7 @@ export const EN: typeof HU = {
     rootComponentName: 'Module',
     stitchLineName: (number: number) => `Stitch line ${number}`,
   },
-  leatherColors: {
+  colors: {
     black: 'Black',
     darkGray: 'Dark gray',
     mediumGray: 'Medium gray',
@@ -398,5 +398,5 @@ export const EN: typeof HU = {
     mediumGreen: 'Medium green',
     lightGreen: 'Light green',
     cyan: 'Cyan',
-  } satisfies Record<keyof typeof leatherColors, string>,
+  } satisfies Record<ColorKey, string>,
 }

@@ -1,5 +1,7 @@
 import { useCallback, type FC } from 'react'
 
+import { leatherColors } from '../../data/colors'
+import { useColors } from '../../hooks/useColors'
 import type { EditableSchema } from '../../schemas/editable'
 import type { ProjectSchema } from '../../schemas/project'
 import type { ValidationIssuesSchema } from '../../schemas/validation'
@@ -19,6 +21,7 @@ export const ProjectComponentSettingsSection: FC<ProjectComponentSettingsSection
   onChange,
 }) => {
   const t = useTranslation()
+  const popoverLeatherColors = useColors(leatherColors)
   const handleBaseColorChange = useCallback(
     (baseColor: string): void => {
       onChange({
@@ -38,6 +41,7 @@ export const ProjectComponentSettingsSection: FC<ProjectComponentSettingsSection
       <SectionGroup.SectionRowTitle>{t.projects.settingsDialog.components.baseColor}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.componentSettings.baseColor}>
         <ColorInput
+          colors={popoverLeatherColors}
           issue={issues.componentSettings.baseColor}
           onChange={handleBaseColorChange}
           value={editable.componentSettings.baseColor}

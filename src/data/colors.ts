@@ -1,10 +1,13 @@
-export const leatherColors = {
+export const grayScaleColors = {
   black: '#000000',
   darkGray: '#4c5156',
   mediumGray: '#7d8489',
   lightGray: '#bdc4c9',
   white: '#fdfdfc',
+} as const
 
+export const leatherColors = {
+  ...grayScaleColors,
   darkBrown: '#633116',
   mediumBrown: '#9a5328',
   lightBrown: '#cb8146',
@@ -28,4 +31,9 @@ export const leatherColors = {
   mediumGreen: '#428c42',
   lightGreen: '#89c382',
   cyan: '#4aaab0',
-}
+} as const
+
+export type GrayScaleColorKey = keyof typeof grayScaleColors
+export type LeatherColorKey = keyof typeof leatherColors
+
+export type ColorKey = GrayScaleColorKey | LeatherColorKey

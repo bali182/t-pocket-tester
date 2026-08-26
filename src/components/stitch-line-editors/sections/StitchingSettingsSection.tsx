@@ -1,5 +1,7 @@
 import { useCallback, type ReactNode } from 'react'
 
+import { grayScaleColors } from '../../../data/colors'
+import { useColors } from '../../../hooks/useColors'
 import type { EditableSchema } from '../../../schemas/editable'
 import type { StitchLineCommonConfigSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
@@ -90,6 +92,8 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
     onReset?.('stitchLineThickness')
   }, [onReset])
 
+  const grayScalePopoverColors = useColors(grayScaleColors)
+
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.stitchLine.editor.stitching.title}</SectionGroup.SectionHeader>
@@ -102,6 +106,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchHoleColorChange}
           onReset={isDefined(onReset) ? handleStitchHoleColorReset : undefined}
           value={resolvedEditable.stitchHoleColor}
+          colors={grayScalePopoverColors}
         />
       </SectionGroup.SectionRowEditor>
 
@@ -113,6 +118,7 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           onChange={handleStitchLineColorChange}
           onReset={isDefined(onReset) ? handleStitchLineColorReset : undefined}
           value={resolvedEditable.stitchLineColor}
+          colors={grayScalePopoverColors}
         />
       </SectionGroup.SectionRowEditor>
 

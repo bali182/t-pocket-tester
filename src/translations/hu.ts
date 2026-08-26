@@ -1,4 +1,4 @@
-import { leatherColors } from '../data/leatherColors'
+import type { ColorKey } from '../data/colors'
 
 export const HU = {
   common: {
@@ -371,7 +371,7 @@ export const HU = {
     rootComponentName: 'Modul',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },
-  leatherColors: {
+  colors: {
     black: 'Fekete',
     darkGray: 'Sötétszürke',
     mediumGray: 'Középszürke',
@@ -397,5 +397,5 @@ export const HU = {
     mediumGreen: 'Középzöld',
     lightGreen: 'Világoszöld',
     cyan: 'Ciánkék',
-  } satisfies Record<keyof typeof leatherColors, string>,
+  } satisfies Record<ColorKey, string>,
 }

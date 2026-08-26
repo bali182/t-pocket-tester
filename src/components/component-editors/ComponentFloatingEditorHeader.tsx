@@ -2,11 +2,13 @@ import { Button, ColorSwatch, HStack, Input, type PopoverRootProps } from '@chak
 import { useCallback, useMemo, useRef, type ReactElement } from 'react'
 import type { IconType } from 'react-icons'
 
+import { leatherColors } from '../../data/colors'
+import { useColors } from '../../hooks/useColors'
 import type { BaseComponentSchema } from '../../schemas/components'
 import type { EditableSchema } from '../../schemas/editable'
 import type { IssueSchema, ValidationIssuesSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
-import { ColorPopover } from '../common/ColorPopover'
+import { ColorSwatchPicker } from '../common/ColorSwatchPicker'
 import { IdentityFloatingEditorHeader } from '../common/IdentityFloatingEditorHeader'
 
 type ComponentFloatingEditorHeaderProps<T extends BaseComponentSchema> = {
@@ -84,13 +86,15 @@ const HeaderColorInput = ({ isResetEnabled, issue, onChange, onReset, value }: H
     },
     [onChange, onReset],
   )
+  const popoverLeatherColors = useColors(leatherColors)
   const isInvalid = isDefined(issue) && issue.severity === 'error'
 
   return (
     <HStack gap="1" ref={inputRef}>
-      <ColorPopover
+      <ColorSwatchPicker
         canReset={isResetEnabled}
-        color={value}
+        value={value}
+        colors={popoverLeatherColors}
         onChange={handlePopoverChange}
         positioning={positioning}
         trigger={
