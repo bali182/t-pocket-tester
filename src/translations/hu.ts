@@ -183,12 +183,17 @@ export const HU = {
     },
     settingsDialog: {
       title: 'Projekt beállításai',
-      components: {
-        title: 'Komponensek',
-        baseColor: 'Alapszín',
+      colorSettings: {
+        title: 'Színek',
+        leatherColor: 'Bőr színe',
+        stitchHoleColor: 'Öltéslyuk színe',
+        stitchLineColor: 'Öltésvonal színe',
+        strokeColor: 'Körvonal színe',
+        selectionColor: 'Kijelölés színe',
+        cardColor: 'Kártya színe',
       },
       tabs: {
-        basic: 'Alapbeállítások',
+        colors: 'Színek',
         stitching: 'Varrás',
       },
     },
@@ -367,7 +372,7 @@ export const HU = {
     },
   },
   defaults: {
-    projectName: 'Új projekt',
+    projectName: 'Projekt',
     rootComponentName: 'Modul',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },
@@ -397,5 +402,10 @@ export const HU = {
     mediumGreen: 'Középzöld',
     lightGreen: 'Világoszöld',
     cyan: 'Ciánkék',
+    selectionBlue: 'Kék',
+    selectionGreen: 'Zöld',
+    selectionOrange: 'Narancs',
+    selectionYellow: 'Sárga',
+    selectionWhite: 'Fehér',
   } satisfies Record<ColorKey, string>,
 }

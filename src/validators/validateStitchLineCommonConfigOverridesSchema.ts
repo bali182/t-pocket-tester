@@ -28,21 +28,13 @@ export const validateStitchLineCommonConfigOverridesSchema = (
   }
   const resolvedResult = validateStitchLineCommonConfigSchema(resolvedEditable, resolvedCurrentValue, context)
   const issues: ValidationIssuesSchema<StitchLineCommonConfigOverridesSchema> = {
-    stitchHoleColor: getOverrideIssue(input.stitchHoleColor, resolvedResult.issues.stitchHoleColor),
     stitchHoleDistance: getOverrideIssue(input.stitchHoleDistance, resolvedResult.issues.stitchHoleDistance),
     stitchHoleLength: getOverrideIssue(input.stitchHoleLength, resolvedResult.issues.stitchHoleLength),
     stitchHoleThickness: getOverrideIssue(input.stitchHoleThickness, resolvedResult.issues.stitchHoleThickness),
-    stitchLineColor: getOverrideIssue(input.stitchLineColor, resolvedResult.issues.stitchLineColor),
     stitchLineThickness: getOverrideIssue(input.stitchLineThickness, resolvedResult.issues.stitchLineThickness),
     stitchMargin: getOverrideIssue(input.stitchMargin, resolvedResult.issues.stitchMargin),
   }
   const committedValue: StitchLineCommonConfigOverridesSchema = {}
-  const stitchHoleColor = getCommittedOverride(
-    input.stitchHoleColor,
-    currentValue.stitchHoleColor,
-    resolvedResult.committedValue.stitchHoleColor,
-    issues.stitchHoleColor,
-  )
   const stitchHoleDistance = getCommittedOverride(
     input.stitchHoleDistance,
     currentValue.stitchHoleDistance,
@@ -61,12 +53,6 @@ export const validateStitchLineCommonConfigOverridesSchema = (
     resolvedResult.committedValue.stitchHoleThickness,
     issues.stitchHoleThickness,
   )
-  const stitchLineColor = getCommittedOverride(
-    input.stitchLineColor,
-    currentValue.stitchLineColor,
-    resolvedResult.committedValue.stitchLineColor,
-    issues.stitchLineColor,
-  )
   const stitchLineThickness = getCommittedOverride(
     input.stitchLineThickness,
     currentValue.stitchLineThickness,
@@ -80,9 +66,6 @@ export const validateStitchLineCommonConfigOverridesSchema = (
     issues.stitchMargin,
   )
 
-  if (isDefined(stitchHoleColor)) {
-    committedValue.stitchHoleColor = stitchHoleColor
-  }
   if (isDefined(stitchHoleDistance)) {
     committedValue.stitchHoleDistance = stitchHoleDistance
   }
@@ -91,9 +74,6 @@ export const validateStitchLineCommonConfigOverridesSchema = (
   }
   if (isDefined(stitchHoleThickness)) {
     committedValue.stitchHoleThickness = stitchHoleThickness
-  }
-  if (isDefined(stitchLineColor)) {
-    committedValue.stitchLineColor = stitchLineColor
   }
   if (isDefined(stitchLineThickness)) {
     committedValue.stitchLineThickness = stitchLineThickness
@@ -107,9 +87,7 @@ export const validateStitchLineCommonConfigOverridesSchema = (
     isDefined(issues.stitchHoleLength) ||
     isDefined(issues.stitchHoleDistance) ||
     isDefined(issues.stitchHoleThickness) ||
-    isDefined(issues.stitchLineThickness) ||
-    isDefined(issues.stitchHoleColor) ||
-    isDefined(issues.stitchLineColor)
+    isDefined(issues.stitchLineThickness)
 
   if (hasValidationError) {
     return createInvalidValidationResult(issues, committedValue)

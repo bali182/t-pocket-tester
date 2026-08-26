@@ -1,39 +1,107 @@
-export const grayScaleColors = {
-  black: '#000000',
-  darkGray: '#4c5156',
-  mediumGray: '#7d8489',
-  lightGray: '#bdc4c9',
-  white: '#fdfdfc',
+const black = '#000000'
+const darkGray = '#4c5156'
+const mediumGray = '#7d8489'
+const lightGray = '#bdc4c9'
+const white = '#fdfdfc'
+
+const darkBrown = '#633116'
+const mediumBrown = '#9a5328'
+const lightBrown = '#cb8146'
+const natural = '#dea673'
+const bone = '#efe0cd'
+
+const burgundy = '#8a1e29'
+const red = '#ce353d'
+const pink = '#e98c95'
+const orange = '#e6622e'
+const yellow = '#eeae38'
+
+const navy = '#163a5e'
+const indigo = '#344c87'
+const mediumBlue = '#3b80b5'
+const lightBlue = '#7cb2d6'
+const purple = '#8a4c8a'
+
+const darkGreen = '#1d5528'
+const olive = '#6a7029'
+const mediumGreen = '#428c42'
+const lightGreen = '#89c382'
+const cyan = '#4aaab0'
+
+const selectionBlue = '#2A84FF'
+const selectionGreen = '#0AA661'
+const selectionOrange = '#FC621A'
+const selectionYellow = '#EBA500'
+const selectionWhite = '#ffffff'
+
+export const stitchHoleColors = {
+  black,
+  white,
 } as const
 
-export const leatherColors = {
-  ...grayScaleColors,
-  darkBrown: '#633116',
-  mediumBrown: '#9a5328',
-  lightBrown: '#cb8146',
-  natural: '#dea673',
-  bone: '#efe0cd',
-
-  burgundy: '#8a1e29',
-  red: '#ce353d',
-  pink: '#e98c95',
-  orange: '#e6622e',
-  yellow: '#eeae38',
-
-  navy: '#163a5e',
-  indigo: '#344c87',
-  mediumBlue: '#3b80b5',
-  lightBlue: '#7cb2d6',
-  purple: '#8a4c8a',
-
-  darkGreen: '#1d5528',
-  olive: '#6a7029',
-  mediumGreen: '#428c42',
-  lightGreen: '#89c382',
-  cyan: '#4aaab0',
+export const stitchLineColors = {
+  black,
+  white,
 } as const
 
-export type GrayScaleColorKey = keyof typeof grayScaleColors
-export type LeatherColorKey = keyof typeof leatherColors
+export const strokeColors = {
+  black,
+  white,
+} as const
 
-export type ColorKey = GrayScaleColorKey | LeatherColorKey
+export const selectionColors = {
+  selectionBlue,
+  selectionGreen,
+  selectionOrange,
+  selectionYellow,
+  selectionWhite,
+} as const
+
+export const cardColors = {
+  mediumBlue,
+  mediumGreen,
+  red,
+  orange,
+  yellow,
+} as const
+
+export const modelColors = {
+  // Grayscale
+  black,
+  darkGray,
+  mediumGray,
+  lightGray,
+  white,
+
+  // Browns
+  darkBrown,
+  mediumBrown,
+  lightBrown,
+  natural,
+  bone,
+
+  // Reds
+  burgundy,
+  red,
+  pink,
+  orange,
+  yellow,
+
+  // Blues
+  navy,
+  indigo,
+  mediumBlue,
+  lightBlue,
+  purple,
+
+  //Greens
+  darkGreen,
+  olive,
+  mediumGreen,
+  lightGreen,
+  cyan,
+} as const
+
+export type ModelColorKey = keyof typeof modelColors
+export type SelectionColorKey = keyof typeof selectionColors
+export type ColorKey = ModelColorKey | SelectionColorKey

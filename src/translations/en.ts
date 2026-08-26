@@ -184,12 +184,17 @@ export const EN: typeof HU = {
     },
     settingsDialog: {
       title: 'Project settings',
-      components: {
-        title: 'Components',
-        baseColor: 'Base color',
+      colorSettings: {
+        title: 'Colors',
+        leatherColor: 'Leather color',
+        stitchHoleColor: 'Stitch hole color',
+        stitchLineColor: 'Stitch line color',
+        strokeColor: 'Stroke color',
+        selectionColor: 'Selection color',
+        cardColor: 'Card color',
       },
       tabs: {
-        basic: 'Basic settings',
+        colors: 'Colors',
         stitching: 'Stitching',
       },
     },
@@ -368,7 +373,7 @@ export const EN: typeof HU = {
     },
   },
   defaults: {
-    projectName: 'New project',
+    projectName: 'Project',
     rootComponentName: 'Module',
     stitchLineName: (number: number) => `Stitch line ${number}`,
   },
@@ -398,5 +403,10 @@ export const EN: typeof HU = {
     mediumGreen: 'Medium green',
     lightGreen: 'Light green',
     cyan: 'Cyan',
+    selectionBlue: 'Blue',
+    selectionGreen: 'Green',
+    selectionOrange: 'Orange',
+    selectionYellow: 'Yellow',
+    selectionWhite: 'White',
   } satisfies Record<ColorKey, string>,
 }

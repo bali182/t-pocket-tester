@@ -75,7 +75,7 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
         const [project, subProject] = ensureProject(get, reference)
         const component = createComponent({
           type,
-          color: project.editingSettings.addBaseColorByDefault ? project.componentSettings.baseColor : undefined,
+          color: project.editingSettings.addBaseColorByDefault ? project.colorSettings.leatherColor : undefined,
           id: id(),
           name: getUnusedComponentName(type, subProject, t),
         })

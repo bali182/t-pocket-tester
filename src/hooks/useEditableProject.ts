@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { LANGUAGE } from '../constants/language'
 import type { EditableSchema } from '../schemas/editable'
 import type { ProjectSchema } from '../schemas/project'
-import type { ComponentBaseSettings, ProjectEditingSettingSchema } from '../schemas/settings'
+import type { ColorSettingsSchema, ProjectEditingSettingSchema } from '../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { ProjectBasedValidationContextSchema, ValidationIssuesSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
@@ -52,7 +52,7 @@ const isProjectEqual = (a: ProjectSchema | undefined, b: ProjectSchema | undefin
     a.name === b.name &&
     areProjectEditingSettingsEqual(a.editingSettings, b.editingSettings) &&
     areStitchingSettingsEqual(a.stitchingSettings, b.stitchingSettings) &&
-    areComponentSettingsEqual(a.componentSettings, b.componentSettings)
+    areColorSettingsEqual(a.colorSettings, b.colorSettings)
   )
 }
 
@@ -70,12 +70,17 @@ const areStitchingSettingsEqual = (a: StitchLineCommonConfigSchema, b: StitchLin
     a.stitchHoleLength === b.stitchHoleLength &&
     a.stitchHoleDistance === b.stitchHoleDistance &&
     a.stitchHoleThickness === b.stitchHoleThickness &&
-    a.stitchLineThickness === b.stitchLineThickness &&
-    a.stitchHoleColor === b.stitchHoleColor &&
-    a.stitchLineColor === b.stitchLineColor
+    a.stitchLineThickness === b.stitchLineThickness
   )
 }
 
-const areComponentSettingsEqual = (a: ComponentBaseSettings, b: ComponentBaseSettings): boolean => {
-  return a.baseColor === b.baseColor
+const areColorSettingsEqual = (a: ColorSettingsSchema, b: ColorSettingsSchema): boolean => {
+  return (
+    a.leatherColor === b.leatherColor &&
+    a.stitchHoleColor === b.stitchHoleColor &&
+    a.stitchLineColor === b.stitchLineColor &&
+    a.strokeColor === b.strokeColor &&
+    a.selectionColor === b.selectionColor &&
+    a.cardColor === b.cardColor
+  )
 }

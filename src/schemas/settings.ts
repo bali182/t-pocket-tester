@@ -9,8 +9,13 @@ export type ProjectEditingSettingSchema = {
   numberEditorStep: NumberEditorStepSchema
 }
 
-export type ComponentBaseSettings = {
-  baseColor: string
+export type ColorSettingsSchema = {
+  leatherColor: string
+  stitchHoleColor: string
+  stitchLineColor: string
+  strokeColor: string
+  selectionColor: string
+  cardColor: string
 }
 
 export type ExportStitchLineModeSchema = 'own-stitch-lines' | 'all-stitch-lines'

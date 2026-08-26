@@ -1,14 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import {
-  CARD_COLOR,
-  SELECTED_HOLE_FILL_COLOR,
-  SELECTED_HOLE_STROKE_COLOR,
-  SELECTED_STITCH_LINE_HOLE_COLOR,
-  SELECTED_STITCH_LINE_STROKE_COLOR,
-  SELECTED_STROKE_COLOR,
-  STROKE_COLOR,
-  STROKE_THICKNESS,
-} from '../constants/drawing'
+import { STROKE_THICKNESS } from '../constants/drawing'
 import {
   DrawAreaCardStyles,
   DrawAreaComponentStyles,
@@ -72,6 +63,11 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     isComponentSelected,
   } = drawAreaSelection
 
+  const {
+    colorSettings: { cardColor, leatherColor, selectionColor, stitchHoleColor, stitchLineColor, strokeColor },
+    stitchingSettings: { stitchHoleThickness, stitchLineThickness },
+  } = project
+
   const selectionObstructingComponentIds = useMemo<ReadonlySet<string>>(
     () => getSelectionObstructingComponentIds(hoveredTreeSelection ?? selection, subProject),
     [hoveredTreeSelection, subProject, selection],
@@ -97,7 +93,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
       getBackgroundColor: ({ component, isHovered, nestingLevel }) => {
-        const color = component.color ?? getComponentColor(project.componentSettings.baseColor, nestingLevel)
+        const color = component.color ?? getComponentColor(leatherColor, nestingLevel)
 
         if (component.type === 'pocket-cluster' && (isComponentSelected(component.id) || isHovered)) {
           return addAlpha(color)
@@ -107,23 +103,25 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       },
       getBorderColor: ({ component, isHovered }) => {
         if (isComponentSelected(component.id) || isComponentTreeHovered(component.id) || isHovered) {
-          return SELECTED_STROKE_COLOR
+          return selectionColor
         }
-        return selectionObstructingComponentIds.has(component.id) ? addAlpha(STROKE_COLOR) : STROKE_COLOR
+        return selectionObstructingComponentIds.has(component.id) ? addAlpha(strokeColor) : strokeColor
       },
       getBorderThickness: () => {
         return STROKE_THICKNESS
       },
       getFilter: ({ component, isHovered }) => {
         return isComponentSelected(component.id) || isComponentTreeHovered(component.id) || isHovered
-          ? `drop-shadow(0px 0px 2px ${SELECTED_STROKE_COLOR})`
+          ? `drop-shadow(0px 0px 2px ${selectionColor})`
           : undefined
       },
     }),
     [
       isComponentSelected,
       isComponentTreeHovered,
-      project.componentSettings.baseColor,
+      leatherColor,
+      selectionColor,
+      strokeColor,
       selectionObstructingComponentIds,
     ],
   )
@@ -132,38 +130,36 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     () => ({
       getBackgroundColor: ({ owner, isParentHovered }) => {
         if (isComponentSelected(owner.id) || isParentHovered) {
-          return addAlpha(CARD_COLOR)
+          return addAlpha(cardColor)
         }
 
-        return selectionObstructingComponentIds.has(owner.id) ? addAlpha(CARD_COLOR) : CARD_COLOR
+        return selectionObstructingComponentIds.has(owner.id) ? addAlpha(cardColor) : cardColor
       },
       getStrokeColor: ({ owner }) => {
-        return selectionObstructingComponentIds.has(owner.id) ? addAlpha(STROKE_COLOR) : STROKE_COLOR
+        return selectionObstructingComponentIds.has(owner.id) ? addAlpha(strokeColor) : strokeColor
       },
       getStrokeThickness: () => {
         return STROKE_THICKNESS
       },
     }),
-    [isComponentSelected, selectionObstructingComponentIds],
+    [isComponentSelected, cardColor, strokeColor, selectionObstructingComponentIds],
   )
 
   const holeStyles = useMemo<DrawAreaHoleStyles>(
     () => ({
       getFillColor: ({ hole, isHovered }) => {
         return selectedHole?.id === hole.id || isHoleTreeHovered(hole.id) || isHovered
-          ? SELECTED_HOLE_FILL_COLOR
+          ? addAlpha(selectionColor)
           : 'transparent'
       },
       getStrokeColor: ({ hole, isHovered }) => {
-        return selectedHole?.id === hole.id || isHoleTreeHovered(hole.id) || isHovered
-          ? SELECTED_HOLE_STROKE_COLOR
-          : 'transparent'
+        return selectedHole?.id === hole.id || isHoleTreeHovered(hole.id) || isHovered ? selectionColor : 'transparent'
       },
       getStrokeThickness: () => {
         return STROKE_THICKNESS
       },
     }),
-    [isHoleTreeHovered, selectedHole?.id],
+    [isHoleTreeHovered, selectionColor, selectedHole?.id],
   )
 
   const stitchLineStyles = useMemo<DrawAreaStitchLineStyles>(
@@ -174,13 +170,13 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
           hoveredStitchLineId === stitchLine.id ||
           isStitchLineTreeHovered(stitchLine.id)
         ) {
-          return SELECTED_STITCH_LINE_STROKE_COLOR
+          return selectionColor
         }
 
-        return stitchLine.stitchLineColor ?? project.stitchingSettings.stitchLineColor
+        return stitchLineColor
       },
       getLineThickness: (stitchLine) => {
-        return stitchLine.stitchLineThickness ?? project.stitchingSettings.stitchLineThickness
+        return stitchLine.stitchLineThickness ?? stitchLineThickness
       },
       getStitchHoleColor: (stitchLine) => {
         if (
@@ -188,23 +184,24 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
           hoveredStitchLineId === stitchLine.id ||
           isStitchLineTreeHovered(stitchLine.id)
         ) {
-          return SELECTED_STITCH_LINE_HOLE_COLOR
+          return selectionColor
         }
 
-        return stitchLine.stitchHoleColor ?? project.stitchingSettings.stitchHoleColor
+        return stitchHoleColor
       },
       getStitchHoleThickness: (stitchLine) => {
-        return stitchLine.stitchHoleThickness ?? project.stitchingSettings.stitchHoleThickness
+        return stitchLine.stitchHoleThickness ?? stitchHoleThickness
       },
     }),
     [
-      project.stitchingSettings.stitchHoleColor,
-      project.stitchingSettings.stitchHoleThickness,
-      project.stitchingSettings.stitchLineColor,
-      project.stitchingSettings.stitchLineThickness,
+      selectedStitchLine?.id,
       hoveredStitchLineId,
       isStitchLineTreeHovered,
-      selectedStitchLine?.id,
+      stitchLineColor,
+      selectionColor,
+      stitchLineThickness,
+      stitchHoleColor,
+      stitchHoleThickness,
     ],
   )
 

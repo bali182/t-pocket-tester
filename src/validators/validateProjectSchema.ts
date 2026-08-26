@@ -6,7 +6,7 @@ import type {
   ValidationResultSchema,
 } from '../schemas/validation'
 import { createInvalidValidationResult, createValidValidationResult } from './createValidationResult'
-import { validateHexColor } from './validateHexColor'
+import { validateColorSettings } from './validateColorSettings'
 import { validateName } from './validateName'
 import { validateStitchLineCommonConfigSchema } from './validateStitchLineCommonConfigSchema'
 
@@ -21,11 +21,7 @@ export const validateProjectSchema = (
     currentValue.stitchingSettings,
     context,
   )
-  const componentSettingsResult = validateHexColor(
-    input.componentSettings.baseColor,
-    currentValue.componentSettings.baseColor,
-    context,
-  )
+  const colorSettingsResult = validateColorSettings(input.colorSettings, currentValue.colorSettings, context)
   const issues: ValidationIssuesSchema<ProjectSchema> = {
     editingSettings: {
       addComputedSizesToAutoSized: undefined,
@@ -36,9 +32,7 @@ export const validateProjectSchema = (
     id: undefined,
     name: nameResult.issues,
     subProjects: [],
-    componentSettings: {
-      baseColor: componentSettingsResult.issues,
-    },
+    colorSettings: colorSettingsResult.issues,
     stitchingSettings: stitchingSettingsResult.issues,
   }
   const committedValue: ProjectSchema = {
@@ -47,19 +41,12 @@ export const validateProjectSchema = (
     name: nameResult.committedValue,
     subProjects: currentValue.subProjects,
     stitchingSettings: stitchingSettingsResult.committedValue,
-    componentSettings: {
-      baseColor: componentSettingsResult.committedValue,
-    },
+    colorSettings: colorSettingsResult.committedValue,
   }
 
-  if (!nameResult.isValid || !stitchingSettingsResult.isValid || !componentSettingsResult.isValid) {
+  if (!nameResult.isValid || !stitchingSettingsResult.isValid || !colorSettingsResult.isValid) {
     return createInvalidValidationResult(issues, committedValue)
   }
 
-  return createValidValidationResult(issues, {
-    ...committedValue,
-    componentSettings: {
-      baseColor: componentSettingsResult.value,
-    },
-  })
+  return createValidValidationResult(issues, committedValue)
 }
