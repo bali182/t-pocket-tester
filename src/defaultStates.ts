@@ -1,7 +1,15 @@
-import { STITCH_HOLE_COLOR, STITCH_LINE_STORKE_COLOR, STROKE_THICKNESS } from './constants/drawing'
+import { STROKE_THICKNESS } from './constants/drawing'
+import {
+  cardColors,
+  modelColors,
+  selectionColors,
+  stitchHoleColors,
+  stitchLineColors,
+  strokeColors,
+} from './data/colors'
 import { MagicFixSettingsSchema } from './schemas/magic-fix-3/magicFixSettings3'
 import { PdfExportSettingsSchema } from './schemas/pdfExport'
-import { BaseExportSettingsSchema } from './schemas/settings'
+import { BaseExportSettingsSchema, ColorSettingsSchema } from './schemas/settings'
 import { StitchLineCommonConfigSchema } from './schemas/stitching'
 
 export const defaultStitchingSettings: StitchLineCommonConfigSchema = {
@@ -9,8 +17,6 @@ export const defaultStitchingSettings: StitchLineCommonConfigSchema = {
   stitchHoleLength: 1.7,
   stitchHoleDistance: 3.38,
   stitchHoleThickness: 0.3,
-  stitchHoleColor: STITCH_HOLE_COLOR,
-  stitchLineColor: STITCH_LINE_STORKE_COLOR,
   stitchLineThickness: STROKE_THICKNESS,
 }
 
@@ -37,4 +43,13 @@ export const defaultMagicFix3Settings: MagicFixSettingsSchema = {
   minimumEdgeCrossingMultiplier: 0.5,
   dimensionModifyRange: { maxDecreaseMultiplier: 0.5, maxIncreaseMultiplier: 0.5 },
   stitchLineOffsetModifyRange: { maxDecreaseMultiplier: 0.5, maxIncreaseMultiplier: 0.5 },
+}
+
+export const defaultColorSettings: ColorSettingsSchema = {
+  leatherColor: modelColors.natural,
+  stitchHoleColor: stitchHoleColors.black,
+  stitchLineColor: stitchLineColors.black,
+  strokeColor: strokeColors.black,
+  selectionColor: selectionColors.selectionBlue,
+  cardColor: cardColors.mediumGreen,
 }

@@ -11,52 +11,61 @@ import {
 } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
 import { PiArrowCounterClockwise, PiCheck } from 'react-icons/pi'
-
-import { leatherColors } from '../../data/leatherColors'
+import type { ColorValue } from '../../hooks/useColors'
 import { useTranslation } from '../../translations/translation'
 
-type ColorPopoverProps = {
-  canReset: boolean
-  color: string | undefined
+type ColorSwatchPickerProps = {
+  value: string | undefined
+  colors: ColorValue[]
   onChange: (color: string | undefined) => void
+  canReset: boolean
   positioning?: PopoverRootProps['positioning']
   trigger?: ReactElement
 }
 
-type LeatherColorEntry = [keyof typeof leatherColors, string]
-
-const leatherColorEntries = Object.entries(leatherColors) as LeatherColorEntry[]
-
-export const ColorPopover = ({ canReset, color, onChange, positioning, trigger }: ColorPopoverProps) => {
+export const ColorSwatchPicker = ({
+  canReset,
+  value: v,
+  colors,
+  onChange,
+  positioning,
+  trigger,
+}: ColorSwatchPickerProps) => {
   const t = useTranslation()
-  const defaultTrigger = (
-    <IconButton aria-label={t.common.labels.color} size="xs" variant="outline">
-      <ColorSwatch size="md" value={color ?? 'transparent'} />
-    </IconButton>
-  )
+  const value = v?.toLowerCase()
 
   return (
     <Popover.Root positioning={positioning}>
-      <Popover.Trigger asChild>{trigger ?? defaultTrigger}</Popover.Trigger>
+      <Popover.Trigger asChild>
+        {trigger ?? (
+          <IconButton size="xs" variant="outline">
+            <ColorSwatch size="md" value={value ?? 'transparent'} />
+          </IconButton>
+        )}
+      </Popover.Trigger>
       <Portal>
         <Popover.Positioner>
           <Popover.Content p="3" width="fit-content">
             <Grid gap="2" gridTemplateColumns="repeat(5, minmax(0, 1fr))">
-              {leatherColorEntries.map(([key, value]) => {
-                const isSelected = color === value
-
+              {colors.map(({ color, key, name }) => {
+                const isSelected = value === color
                 return (
                   <Button
-                    aria-label={t.leatherColors[key]}
                     flexDirection="column"
                     height="auto"
                     key={key}
-                    onClick={() => onChange(value)}
+                    onClick={() => {
+                      if (isSelected && canReset) {
+                        onChange(undefined)
+                      } else {
+                        onChange(color)
+                      }
+                    }}
                     p="1"
-                    variant={isSelected ? 'subtle' : 'ghost'}
+                    variant="ghost"
                     _icon={{ boxSize: '3' }}
                   >
-                    <ColorSwatch size="xl" value={value}>
+                    <ColorSwatch size="xl" value={color}>
                       {isSelected && (
                         <Box
                           alignItems="center"
@@ -71,7 +80,7 @@ export const ColorPopover = ({ canReset, color, onChange, positioning, trigger }
                         </Box>
                       )}
                     </ColorSwatch>
-                    <Text textStyle="2xs">{t.leatherColors[key]}</Text>
+                    <Text textStyle="2xs">{name}</Text>
                   </Button>
                 )
               })}

@@ -25,8 +25,6 @@ export type StitchLineCommonConfigSchema = {
   stitchHoleDistance: number
   stitchHoleThickness: number
   stitchLineThickness: number
-  stitchHoleColor: string
-  stitchLineColor: string
 }
 
 export type HasDirectionalOffsetsSchema = {

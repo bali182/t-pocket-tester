@@ -41,7 +41,7 @@ export const ComponentFloatingEditor: FC<ComponentFloatingEditorProps> = ({ anch
   return (
     <FloatingEditor anchorElement={anchorElement} onClose={onClose}>
       <ComponentFloatingEditorHeader
-        baseColor={project.componentSettings.baseColor}
+        baseColor={project.colorSettings.leatherColor}
         editable={editableComponent}
         icon={Icon}
         issues={validationIssues}

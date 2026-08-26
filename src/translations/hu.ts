@@ -1,4 +1,4 @@
-import { leatherColors } from '../data/leatherColors'
+import type { ColorKey } from '../data/colors'
 
 export const HU = {
   common: {
@@ -183,12 +183,23 @@ export const HU = {
     },
     settingsDialog: {
       title: 'Projekt beállításai',
-      components: {
-        title: 'Komponensek',
-        baseColor: 'Alapszín',
+      colorSettings: {
+        leatherTitle: 'Komponens színek',
+        stitchingTitle: 'Varrás színek',
+        selectionTitle: 'Kijelölés színek',
+
+        leatherColor: 'Bőr színe',
+        strokeColor: 'Körvonal színe',
+        cardColor: 'Kártya színe',
+
+        stitchHoleColor: 'Öltéslyuk színe',
+        stitchLineColor: 'Öltésvonal színe',
+
+        selectionColor: 'Kijelölés színe',
       },
       tabs: {
-        basic: 'Alapbeállítások',
+        basics: 'Alapok',
+        colors: 'Színek',
         stitching: 'Varrás',
       },
     },
@@ -367,11 +378,11 @@ export const HU = {
     },
   },
   defaults: {
-    projectName: 'Új projekt',
+    projectName: 'Projekt',
     rootComponentName: 'Modul',
     stitchLineName: (number: number) => `Varrás ${number}`,
   },
-  leatherColors: {
+  colors: {
     black: 'Fekete',
     darkGray: 'Sötétszürke',
     mediumGray: 'Középszürke',
@@ -397,5 +408,10 @@ export const HU = {
     mediumGreen: 'Középzöld',
     lightGreen: 'Világoszöld',
     cyan: 'Ciánkék',
-  } satisfies Record<keyof typeof leatherColors, string>,
+    selectionBlue: 'Kék',
+    selectionGreen: 'Zöld',
+    selectionOrange: 'Narancs',
+    selectionYellow: 'Sárga',
+    selectionWhite: 'Fehér',
+  } satisfies Record<ColorKey, string>,
 }

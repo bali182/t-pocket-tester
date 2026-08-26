@@ -7,6 +7,7 @@ import { LANGUAGE } from '../constants/language'
 import { useEditableModel } from '../hooks/useEditableModel'
 import { useProjects } from '../hooks/useProjects'
 import { addSubProject } from '../operations/project/addSubProject'
+import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
 import type { ProjectSchema } from '../schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
 import { useTranslation } from '../translations/translation'
@@ -25,15 +26,20 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
   const { addProject, projects } = useProjects()
   const navigate = useNavigate()
   const t = useTranslation()
-  const [project, setProject] = useState<ProjectSchema>(() => createProject(t.defaults.projectName))
+
+  const createEmptyProject = useCallback(() => {
+    return createProject(getUnusedName(t.defaults.projectName, new Set(projects.map((p) => p.name))))
+  }, [projects, t.defaults.projectName])
+
+  const [project, setProject] = useState<ProjectSchema>(() => createEmptyProject())
 
   useEffect(() => {
     if (!isOpen) {
       return
     }
 
-    setProject(createProject(t.defaults.projectName))
-  }, [isOpen, t])
+    setProject(createEmptyProject())
+  }, [createEmptyProject, isOpen, t])
 
   const context = useMemo<ProjectBasedValidationContextSchema>(
     () => ({ language: LANGUAGE, projects, t }),
@@ -90,7 +96,12 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
               <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body px="0">
-              <ProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
+              <ProjectSettingsEditor
+                mode="create"
+                editable={editableValue}
+                issues={validationIssues}
+                onChange={setValue}
+              />
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>

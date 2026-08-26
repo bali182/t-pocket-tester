@@ -1,7 +1,10 @@
 import { Popover } from '@chakra-ui/react'
 import { useMemo, type FC, type ReactElement, type RefObject } from 'react'
 
+import { PiWalletDuotone } from 'react-icons/pi'
 import { useEditableProject } from '../hooks/useEditableProject'
+import { ProjectSchema } from '../schemas/project'
+import { IdentityFloatingEditorHeader } from './common/IdentityFloatingEditorHeader'
 import { ProjectSettingsEditor } from './project-settings-editors/ProjectSettingsEditor'
 import { ProjectActionsMenu } from './ProjectActionsMenu'
 
@@ -27,10 +30,17 @@ export const ProjectSettingsPopover: FC<ProjectSettingsPopoverProps> = ({ anchor
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Positioner>
         <Popover.Content width="450px">
-          <ProjectSettingsEditor
+          <IdentityFloatingEditorHeader<ProjectSchema>
             editable={editableProject}
+            icon={PiWalletDuotone}
             issues={validationIssues}
             menu={<ProjectActionsMenu projectId={project.id} size="xs" />}
+            onChange={setProject}
+          />
+          <ProjectSettingsEditor
+            mode="edit"
+            editable={editableProject}
+            issues={validationIssues}
             onChange={setProject}
           />
         </Popover.Content>

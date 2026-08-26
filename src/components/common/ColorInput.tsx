@@ -2,9 +2,10 @@ import { ColorSwatch, IconButton, Input, InputGroup, type PopoverRootProps } fro
 import { useCallback, useMemo, useRef, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
+import type { ColorValue } from '../../hooks/useColors'
 import type { IssueSchema } from '../../schemas/validation'
 import { isDefined } from '../../utils/isDefined'
-import { ColorPopover } from './ColorPopover'
+import { ColorSwatchPicker } from './ColorSwatchPicker'
 
 type ColorInputProps = {
   isResetEnabled?: boolean
@@ -12,9 +13,10 @@ type ColorInputProps = {
   onChange: (value: string) => void
   onReset?: () => void
   value: string
+  colors: ColorValue[]
 }
 
-export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
+export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChange, onReset, value, colors }) => {
   const inputGroupRef = useRef<HTMLDivElement>(null)
   const positioning = useMemo<PopoverRootProps['positioning']>(
     () => ({
@@ -53,11 +55,12 @@ export const ColorInput: FC<ColorInputProps> = ({ isResetEnabled, issue, onChang
       }
       endAddonProps={{ px: 0, size: 'xs' }}
       startAddon={
-        <ColorPopover
+        <ColorSwatchPicker
           canReset={false}
-          color={value}
+          value={value}
           onChange={handlePopoverChange}
           positioning={positioning}
+          colors={colors}
           trigger={
             <IconButton
               alignItems="center"

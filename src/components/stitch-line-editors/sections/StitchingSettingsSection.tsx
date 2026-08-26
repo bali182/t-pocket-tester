@@ -5,7 +5,6 @@ import type { StitchLineCommonConfigSchema } from '../../../schemas/stitching'
 import type { ValidationIssuesSchema } from '../../../schemas/validation'
 import { useTranslation } from '../../../translations/translation'
 import { isDefined } from '../../../utils/isDefined'
-import { ColorInput } from '../../common/ColorInput'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 import { StitchHoleDistanceEditor } from '../StitchHoleDistanceEditor'
@@ -26,18 +25,6 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
   resolvedEditable,
 }: StitchingSettingsSectionProps<T>): ReactNode => {
   const t = useTranslation()
-  const handleStitchHoleColorChange = useCallback(
-    (nextStitchHoleColor: string): void => {
-      onChange({ ...editable, stitchHoleColor: nextStitchHoleColor })
-    },
-    [editable, onChange],
-  )
-  const handleStitchLineColorChange = useCallback(
-    (nextStitchLineColor: string): void => {
-      onChange({ ...editable, stitchLineColor: nextStitchLineColor })
-    },
-    [editable, onChange],
-  )
   const handleStitchMarginChange = useCallback(
     (nextStitchMargin: string): void => {
       onChange({ ...editable, stitchMargin: nextStitchMargin })
@@ -68,12 +55,6 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
     },
     [editable, onChange],
   )
-  const handleStitchHoleColorReset = useCallback((): void => {
-    onReset?.('stitchHoleColor')
-  }, [onReset])
-  const handleStitchLineColorReset = useCallback((): void => {
-    onReset?.('stitchLineColor')
-  }, [onReset])
   const handleStitchMarginReset = useCallback((): void => {
     onReset?.('stitchMargin')
   }, [onReset])
@@ -93,28 +74,6 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
   return (
     <SectionGroup.Section>
       <SectionGroup.SectionHeader>{t.stitchLine.editor.stitching.title}</SectionGroup.SectionHeader>
-
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holeColor}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor issue={issues.stitchHoleColor}>
-        <ColorInput
-          isResetEnabled={isDefined(editable.stitchHoleColor)}
-          issue={issues.stitchHoleColor}
-          onChange={handleStitchHoleColorChange}
-          onReset={isDefined(onReset) ? handleStitchHoleColorReset : undefined}
-          value={resolvedEditable.stitchHoleColor}
-        />
-      </SectionGroup.SectionRowEditor>
-
-      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.lineColor}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor issue={issues.stitchLineColor}>
-        <ColorInput
-          isResetEnabled={isDefined(editable.stitchLineColor)}
-          issue={issues.stitchLineColor}
-          onChange={handleStitchLineColorChange}
-          onReset={isDefined(onReset) ? handleStitchLineColorReset : undefined}
-          value={resolvedEditable.stitchLineColor}
-        />
-      </SectionGroup.SectionRowEditor>
 
       <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.margin}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.stitchMargin}>
