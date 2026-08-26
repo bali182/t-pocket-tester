@@ -64,7 +64,15 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
   } = drawAreaSelection
 
   const {
-    colorSettings: { cardColor, leatherColor, selectionColor, stitchHoleColor, stitchLineColor, strokeColor },
+    colorSettings: {
+      cardColor,
+      leatherColor,
+      selectionColor,
+      stitchHoleColor,
+      stitchLineColor,
+      strokeColor,
+      threadColor,
+    },
     stitchingSettings: { stitchHoleThickness, stitchLineThickness },
   } = project
 
@@ -192,6 +200,12 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       getStitchHoleThickness: (stitchLine) => {
         return stitchLine.stitchHoleThickness ?? stitchHoleThickness
       },
+      getThreadColor: () => {
+        return threadColor
+      },
+      getThreadThickness: () => {
+        return 0.5
+      },
     }),
     [
       selectedStitchLine?.id,
@@ -202,6 +216,7 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       stitchLineThickness,
       stitchHoleColor,
       stitchHoleThickness,
+      threadColor,
     ],
   )
 

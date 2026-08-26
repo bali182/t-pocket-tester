@@ -264,7 +264,7 @@ const normalizeAngle = (angle: number): number => {
 
 const getRotationFromVector = (x: BigNumber, y: BigNumber): number => {
   const lineAngle = (Math.atan2(y.toNumber(), x.toNumber()) * 180) / Math.PI
-  return (((lineAngle - 90) % 180) + 180) % 180
+  return (((lineAngle - 90) % 360) + 360) % 360
 }
 
 const areNumberPointsEqual = (first: { x: number; y: number }, second: { x: number; y: number }): boolean => {

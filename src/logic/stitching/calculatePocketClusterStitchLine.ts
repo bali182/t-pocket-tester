@@ -24,6 +24,7 @@ export const calculatePocketClusterStitchLine = (
       return {
         path: calculatedStitchLine.path,
         holes: calculateTPocketStitchHoles(stitchLine, calculatedStitchLine.line),
+        isClosed: false,
       }
     }),
   }

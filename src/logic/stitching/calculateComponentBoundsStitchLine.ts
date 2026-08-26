@@ -20,6 +20,7 @@ export const calculateComponentBoundsStitchLine = (
     routes: calculatedPaths.map((calculatedPath) => ({
       path: calculatedPath.path,
       holes: calculateStitchLineHoles(stitchLine, calculatedPath),
+      isClosed: calculatedPath.isClosed,
     })),
   }
 }

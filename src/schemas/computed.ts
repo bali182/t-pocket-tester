@@ -95,6 +95,7 @@ export type ComputedHoleSchema = BaseComputedSchema &
 export type ComputedStitchRouteSchema = {
   path: PathSchema
   holes: StitchHoleSchema[]
+  isClosed: boolean
 }
 
 export type ComputedStitchLineSchema = HasTargetSchema & {
