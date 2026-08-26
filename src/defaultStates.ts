@@ -52,4 +52,5 @@ export const defaultColorSettings: ColorSettingsSchema = {
   strokeColor: strokeColors.black,
   selectionColor: selectionColors.selectionBlue,
   cardColor: cardColors.mediumGreen,
+  threadColor: modelColors.white,
 }

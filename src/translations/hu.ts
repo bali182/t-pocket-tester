@@ -194,6 +194,7 @@ export const HU = {
 
         stitchHoleColor: 'Öltéslyuk színe',
         stitchLineColor: 'Öltésvonal színe',
+        threadColor: 'Cérna színe',
 
         selectionColor: 'Kijelölés színe',
       },

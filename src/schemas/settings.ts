@@ -16,6 +16,7 @@ export type ColorSettingsSchema = {
   strokeColor: string
   selectionColor: string
   cardColor: string
+  threadColor: string
 }
 
 export type ExportStitchLineModeSchema = 'own-stitch-lines' | 'all-stitch-lines'
