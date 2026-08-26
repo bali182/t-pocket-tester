@@ -51,6 +51,7 @@ export function IdentityFloatingEditorHeader<T extends HasIdentitySchema>({
             size="sm"
             value={editable.name}
             w="auto"
+            autoFocus
           />
         </HStack>
         <HStack gap="2">

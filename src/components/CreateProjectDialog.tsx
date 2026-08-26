@@ -96,7 +96,12 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
               <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body px="0">
-              <ProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
+              <ProjectSettingsEditor
+                mode="create"
+                editable={editableValue}
+                issues={validationIssues}
+                onChange={setValue}
+              />
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>

@@ -184,15 +184,21 @@ export const HU = {
     settingsDialog: {
       title: 'Projekt beállításai',
       colorSettings: {
-        title: 'Színek',
+        leatherTitle: 'Komponens színek',
+        stitchingTitle: 'Varrás színek',
+        selectionTitle: 'Kijelölés színek',
+
         leatherColor: 'Bőr színe',
+        strokeColor: 'Körvonal színe',
+        cardColor: 'Kártya színe',
+
         stitchHoleColor: 'Öltéslyuk színe',
         stitchLineColor: 'Öltésvonal színe',
-        strokeColor: 'Körvonal színe',
+
         selectionColor: 'Kijelölés színe',
-        cardColor: 'Kártya színe',
       },
       tabs: {
+        basics: 'Alapok',
         colors: 'Színek',
         stitching: 'Varrás',
       },

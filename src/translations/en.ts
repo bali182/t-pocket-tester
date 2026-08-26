@@ -185,7 +185,9 @@ export const EN: typeof HU = {
     settingsDialog: {
       title: 'Project settings',
       colorSettings: {
-        title: 'Colors',
+        leatherTitle: 'Component colors',
+        stitchingTitle: 'Stitching colors',
+        selectionTitle: 'Selection colors',
         leatherColor: 'Leather color',
         stitchHoleColor: 'Stitch hole color',
         stitchLineColor: 'Stitch line color',
@@ -194,6 +196,7 @@ export const EN: typeof HU = {
         cardColor: 'Card color',
       },
       tabs: {
+        basics: 'Basics',
         colors: 'Colors',
         stitching: 'Stitching',
       },
