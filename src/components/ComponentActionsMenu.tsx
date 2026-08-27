@@ -12,6 +12,7 @@ import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { SubProjectSchema } from '../schemas/subProject'
 import { pendingSubProjectDeletionAtom } from '../state/pendigDeletionAtoms'
+import { portalRef } from '../portalRef'
 import { useTranslation } from '../translations/translation'
 import { getModelIcon } from '../utils/getModelIcon'
 import { isDefined } from '../utils/isDefined'
@@ -146,7 +147,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
             <PiDotsThreeVertical />
           </IconButton>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               {!subProjectOnly && (

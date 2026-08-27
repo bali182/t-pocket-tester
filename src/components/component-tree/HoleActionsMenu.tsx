@@ -3,6 +3,7 @@ import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
 import { useSubProjectOperations } from '../../hooks/useSubProjectOperations'
 import type { HoleSchema } from '../../schemas/hole'
+import { portalRef } from '../../portalRef'
 import { useTranslation } from '../../translations/translation'
 import { getModelIcon } from '../../utils/getModelIcon'
 import { noop } from '../../utils/noop'
@@ -44,7 +45,7 @@ export const HoleActionsMenu: FC<HoleActionsMenuProps> = ({ hole, size, onDelete
             <PiDotsThreeVertical />
           </IconButton>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               <Menu.Item onSelect={handleAddStitchLine} value="stitch-line">

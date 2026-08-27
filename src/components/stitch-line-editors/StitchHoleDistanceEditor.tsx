@@ -13,6 +13,7 @@ import { useCallback, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
+import { portalRef } from '../../portalRef'
 import { useTranslation } from '../../translations/translation'
 import { isDefined } from '../../utils/isDefined'
 
@@ -111,7 +112,7 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
           </Combobox.IndicatorGroup>
         </Combobox.Control>
       </InputGroup>
-      <Portal>
+      <Portal container={portalRef}>
         <Combobox.Positioner>
           <Combobox.Content>
             <Combobox.List>

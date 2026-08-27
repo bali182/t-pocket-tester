@@ -5,6 +5,7 @@ import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { flipComponentBoundsStitchLine } from '../logic/flipComponentBoundsStitchLine'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
+import { portalRef } from '../portalRef'
 import { useTranslation } from '../translations/translation'
 import { noop } from '../utils/noop'
 
@@ -57,7 +58,7 @@ export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLi
             <PiDotsThreeVertical />
           </IconButton>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               {stitchLine.type === 'component-bounds-stitch-line' && (
