@@ -2,17 +2,16 @@ import type { FC } from 'react'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { getStitchHoleLine } from '../../logic/stitching/getStitchHoleLine'
-import { StitchHoleSchema, StitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
 
 type StitchHoleProps = {
   hole: StitchHoleSchema
-  stitchHoleLength: number
-  stitchLine: StitchLineSchema
+  stitchLine: ResolvedStitchLineSchema
 }
 
-export const StitchHole: FC<StitchHoleProps> = ({ hole, stitchHoleLength, stitchLine }) => {
+export const StitchHole: FC<StitchHoleProps> = ({ hole, stitchLine }) => {
   const { stitchLineStyles } = useDrawAreaContext()
-  const line = getStitchHoleLine(hole, stitchHoleLength)
+  const line = getStitchHoleLine(hole, stitchLine.stitchHoleLength)
 
   return (
     <line

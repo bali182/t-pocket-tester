@@ -18,6 +18,9 @@ export const defaultStitchingSettings: StitchLineCommonConfigSchema = {
   stitchHoleDistance: 3.38,
   stitchHoleThickness: 0.3,
   stitchLineThickness: STROKE_THICKNESS,
+  stitchLinesVisible: true,
+  stitchHolesVisible: true,
+  stitchesVisible: true,
 }
 
 export const defaultSvgExportParams: BaseExportSettingsSchema = {

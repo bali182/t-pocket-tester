@@ -97,6 +97,9 @@ export const validateComponentBoundsStitchLineSchema = (
     stitchHoleThickness: commonConfigResult.issues.stitchHoleThickness,
     stitchLineThickness: commonConfigResult.issues.stitchLineThickness,
     stitchMargin: commonConfigResult.issues.stitchMargin,
+    stitchLinesVisible: commonConfigResult.issues.stitchLinesVisible,
+    stitchHolesVisible: commonConfigResult.issues.stitchHolesVisible,
+    stitchesVisible: commonConfigResult.issues.stitchesVisible,
     type: undefined,
     top: undefined,
     topEndOffset: topEndOffsetResult.issues,
@@ -113,7 +116,6 @@ export const validateComponentBoundsStitchLineSchema = (
   }
 
   const committedValue: ComponentBoundsStitchLineSchema = {
-    ...currentValue,
     ...commonConfigResult.committedValue,
     bottom: input.bottom,
     bottomEndOffset: bottomEndOffsetResult.committedValue,
@@ -121,6 +123,7 @@ export const validateComponentBoundsStitchLineSchema = (
     bottomRightCorner: input.bottomRightCorner,
     bottomStartOffset: bottomStartOffsetResult.committedValue,
     bottomStitchDirection: bottomStitchDirectionResult.committedValue,
+    targetType: currentValue.targetType,
     targetId: input.targetId,
     id: currentValue.id,
     left: input.left,

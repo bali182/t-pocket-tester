@@ -344,6 +344,11 @@ export const EN: typeof HU = {
         holeDistance: 'Hole spacing',
         holeThickness: 'Hole thickness',
         lineThickness: 'Line thickness',
+        linesVisible: 'Line visibility',
+        holesVisible: 'Hole visibility',
+        stitchesVisible: 'Thread visibility',
+        visible: 'Visible',
+        hidden: 'Hidden',
         reset: 'Use project value',
       },
       autoCornerRadius: {

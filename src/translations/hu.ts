@@ -346,6 +346,11 @@ export const HU = {
         holeDistance: 'Lyuktávolság',
         holeThickness: 'Lyuk vastagsága',
         lineThickness: 'Vonal vastagsága',
+        linesVisible: 'Vonalak láthatósága',
+        holesVisible: 'Lyukak láthatósága',
+        stitchesVisible: 'Cérna láthatósága',
+        visible: 'Látszik',
+        hidden: 'Rejtett',
         reset: 'Projektérték használata',
       },
       autoCornerRadius: {

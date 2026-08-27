@@ -33,6 +33,9 @@ export const validateStitchLineCommonConfigOverridesSchema = (
     stitchHoleThickness: getOverrideIssue(input.stitchHoleThickness, resolvedResult.issues.stitchHoleThickness),
     stitchLineThickness: getOverrideIssue(input.stitchLineThickness, resolvedResult.issues.stitchLineThickness),
     stitchMargin: getOverrideIssue(input.stitchMargin, resolvedResult.issues.stitchMargin),
+    stitchLinesVisible: undefined,
+    stitchHolesVisible: undefined,
+    stitchesVisible: undefined,
   }
   const committedValue: StitchLineCommonConfigOverridesSchema = {}
   const stitchHoleDistance = getCommittedOverride(
@@ -65,6 +68,24 @@ export const validateStitchLineCommonConfigOverridesSchema = (
     resolvedResult.committedValue.stitchMargin,
     issues.stitchMargin,
   )
+  const stitchLinesVisible = getCommittedOverride(
+    input.stitchLinesVisible,
+    currentValue.stitchLinesVisible,
+    resolvedResult.committedValue.stitchLinesVisible,
+    issues.stitchLinesVisible,
+  )
+  const stitchHolesVisible = getCommittedOverride(
+    input.stitchHolesVisible,
+    currentValue.stitchHolesVisible,
+    resolvedResult.committedValue.stitchHolesVisible,
+    issues.stitchHolesVisible,
+  )
+  const stitchesVisible = getCommittedOverride(
+    input.stitchesVisible,
+    currentValue.stitchesVisible,
+    resolvedResult.committedValue.stitchesVisible,
+    issues.stitchesVisible,
+  )
 
   if (isDefined(stitchHoleDistance)) {
     committedValue.stitchHoleDistance = stitchHoleDistance
@@ -81,13 +102,25 @@ export const validateStitchLineCommonConfigOverridesSchema = (
   if (isDefined(stitchMargin)) {
     committedValue.stitchMargin = stitchMargin
   }
+  if (isDefined(stitchLinesVisible)) {
+    committedValue.stitchLinesVisible = stitchLinesVisible
+  }
+  if (isDefined(stitchHolesVisible)) {
+    committedValue.stitchHolesVisible = stitchHolesVisible
+  }
+  if (isDefined(stitchesVisible)) {
+    committedValue.stitchesVisible = stitchesVisible
+  }
 
   const hasValidationError =
     isDefined(issues.stitchMargin) ||
     isDefined(issues.stitchHoleLength) ||
     isDefined(issues.stitchHoleDistance) ||
     isDefined(issues.stitchHoleThickness) ||
-    isDefined(issues.stitchLineThickness)
+    isDefined(issues.stitchLineThickness) ||
+    isDefined(issues.stitchLinesVisible) ||
+    isDefined(issues.stitchHolesVisible) ||
+    isDefined(issues.stitchesVisible)
 
   if (hasValidationError) {
     return createInvalidValidationResult(issues, committedValue)
@@ -96,10 +129,7 @@ export const validateStitchLineCommonConfigOverridesSchema = (
   return createValidValidationResult(issues, committedValue)
 }
 
-const getOverrideIssue = (
-  editableValue: string | undefined,
-  issue: IssueSchema | undefined,
-): IssueSchema | undefined => {
+const getOverrideIssue = (editableValue: unknown, issue: IssueSchema | undefined): IssueSchema | undefined => {
   if (!isDefined(editableValue)) {
     return undefined
   }
@@ -107,8 +137,8 @@ const getOverrideIssue = (
   return issue
 }
 
-const getCommittedOverride = <T>(
-  editableValue: string | undefined,
+const getCommittedOverride = <TEditable, T>(
+  editableValue: TEditable | undefined,
   currentValue: T | undefined,
   resolvedCommittedValue: T,
   issue: IssueSchema | undefined,

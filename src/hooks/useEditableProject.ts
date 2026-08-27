@@ -70,7 +70,10 @@ const areStitchingSettingsEqual = (a: StitchLineCommonConfigSchema, b: StitchLin
     a.stitchHoleLength === b.stitchHoleLength &&
     a.stitchHoleDistance === b.stitchHoleDistance &&
     a.stitchHoleThickness === b.stitchHoleThickness &&
-    a.stitchLineThickness === b.stitchLineThickness
+    a.stitchLineThickness === b.stitchLineThickness &&
+    a.stitchLinesVisible === b.stitchLinesVisible &&
+    a.stitchHolesVisible === b.stitchHolesVisible &&
+    a.stitchesVisible === b.stitchesVisible
   )
 }
 
