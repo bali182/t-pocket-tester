@@ -1,5 +1,6 @@
 import { ComponentSchema } from './components'
 import { ComputedComponentSchema, ComputedHoleSchema, ComputedStitchLineSchema } from './computed'
+import { RectSchema } from './geometry'
 import { HoleSchema } from './hole'
 import { StitchLineSchema } from './stitching'
 
@@ -17,4 +18,5 @@ export type ComputedSubProjectSchema = {
   components: Record<string, ComputedComponentSchema>
   holes: ComputedHoleSchema[]
   stitchLines: ComputedStitchLineSchema[]
+  viewBox: RectSchema
 }

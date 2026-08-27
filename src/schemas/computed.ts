@@ -5,23 +5,23 @@ import { CornerRadiusSchema, PathSchema, RectSchema } from './geometry'
 import { StitchHoleSchema } from './stitching'
 import { CardSchema } from './valuables'
 
-type HasPathSchema = {
+export type HasPathSchema = {
   path: PathSchema
 }
 
-type HasBoundingRectSchema = {
+export type HasBoundingRectSchema = {
   boundingRect: RectSchema
 }
 
-type HasLayoutBoundingRectSchema = {
+export type HasLayoutBoundingRectSchema = {
   layoutBoundingRect: RectSchema
 }
 
-type HasComputedCornerRadiusSchema = {
+export type HasComputedCornerRadiusSchema = {
   cornerRadius: CornerRadiusSchema
 }
 
-type HasUncutPathSchema = {
+export type HasUncutPathSchema = {
   uncutPath: PathSchema
 }
 
@@ -33,11 +33,11 @@ export type HasComputedLayoutGapSchema = {
   computedLayoutGap: BigNumber
 }
 
-type HasComputedCardSchema = {
+export type HasComputedCardSchema = {
   card?: ComputedCardSchema
 }
 
-type BaseComputedSchema = HasComponentReferenceSchema & HasPathSchema & HasBoundingRectSchema
+export type BaseComputedSchema = HasComponentReferenceSchema & HasPathSchema & HasBoundingRectSchema
 
 export type ComputedRootPanelSchema = HasTypeSchema<'computed-root-panel'> &
   BaseComputedSchema &
@@ -98,9 +98,10 @@ export type ComputedStitchRouteSchema = {
   isClosed: boolean
 }
 
-export type ComputedStitchLineSchema = HasTargetSchema & {
-  stitchLineId: string
-  componentId: string
-  autoComputedCornerRadius: CornerRadiusSchema
-  routes: ComputedStitchRouteSchema[]
-}
+export type ComputedStitchLineSchema = HasTargetSchema &
+  HasBoundingRectSchema & {
+    stitchLineId: string
+    componentId: string
+    autoComputedCornerRadius: CornerRadiusSchema
+    routes: ComputedStitchRouteSchema[]
+  }

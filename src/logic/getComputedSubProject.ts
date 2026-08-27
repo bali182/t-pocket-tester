@@ -3,16 +3,22 @@ import BigNumber from 'bignumber.js'
 import { getComponentChildren } from '../operations/subProject/utils/getComponentChildren'
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type {
+  ComputedCardSchema,
   ComputedComponentSchema,
+  ComputedHoleSchema,
   ComputedPanelSchema,
   ComputedPocketClusterSchema,
   ComputedRootPanelSchema,
+  ComputedStitchLineSchema,
+  HasBoundingRectSchema,
+  HasComputedCardSchema,
 } from '../schemas/computed'
 import type { CornerRadiusSchema, RectSchema } from '../schemas/geometry'
 import type { ResolvedStitchLineSchema, StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { getResolvedStitchLine } from '../utils/getResolvedStitchLine'
 import { isDefined } from '../utils/isDefined'
+import { narrowers } from '../utils/narrowers'
 import { applyHolePathsToComputedComponents } from './applyHolePathsToComputedComponents'
 import { calculateGap } from './calculateGap'
 import { calculateHoles } from './calculateHoles'
@@ -61,6 +67,7 @@ export const getComputedSubProject = (
     components: computedComponents,
     holes,
     stitchLines,
+    viewBox: getSubProjectViewBox(Object.values(computedComponents), stitchLines, holes),
   }
 }
 
@@ -265,4 +272,41 @@ const assertLayoutChildren = (children: ComponentSchema[]): (PanelSchema | Pocke
 
     return child
   })
+}
+
+const getSubProjectViewBox = (
+  components: ComputedComponentSchema[],
+  stitchLines: ComputedStitchLineSchema[],
+  holes: ComputedHoleSchema[],
+): RectSchema => {
+  const cards = components
+    .filter(narrowers.is.computedPocketCluster)
+    .flatMap((c): HasComputedCardSchema[] => [c.frontPocket, ...c.tPockets])
+    .flatMap((p): ComputedCardSchema[] => (isDefined(p.card) ? [p.card] : []))
+  const withBoundingRects: HasBoundingRectSchema[] = [...components, ...stitchLines, ...holes, ...cards]
+  const boundingRects: RectSchema[] = withBoundingRects.map((e) => e.boundingRect)
+
+  const firstBoundingRect = boundingRects[0]
+
+  if (!isDefined(firstBoundingRect)) {
+    throw new Error('Expected at least one bounding rect')
+  }
+
+  let minX = firstBoundingRect.x
+  let minY = firstBoundingRect.y
+  let maxX = firstBoundingRect.x.plus(firstBoundingRect.width)
+  let maxY = firstBoundingRect.y.plus(firstBoundingRect.height)
+
+  for (const boundingRect of boundingRects) {
+    minX = BigNumber.minimum(minX, boundingRect.x)
+    minY = BigNumber.minimum(minY, boundingRect.y)
+    maxX = BigNumber.maximum(maxX, boundingRect.x.plus(boundingRect.width))
+    maxY = BigNumber.maximum(maxY, boundingRect.y.plus(boundingRect.height))
+  }
+  return {
+    x: minX,
+    y: minY,
+    width: maxX.minus(minX),
+    height: maxY.minus(minY),
+  }
 }
