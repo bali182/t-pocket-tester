@@ -35,7 +35,10 @@ export const saveScalingToStorage = (scaling: number): void => {
 }
 
 export const readThemeFromStorage = (): ThemeAppearanceSchema => {
-  return safeReadStorage<ThemeAppearanceSchema>('theme', 'light', (raw) => typia.assert<ThemeAppearanceSchema>(raw))
+  const isSysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  return safeReadStorage<ThemeAppearanceSchema>('theme', isSysDark ? 'dark' : 'light', (raw) =>
+    typia.assert<ThemeAppearanceSchema>(raw),
+  )
 }
 
 export const saveThemeToStorage = (theme: ThemeAppearanceSchema): void => {
