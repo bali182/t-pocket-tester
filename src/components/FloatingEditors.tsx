@@ -1,30 +1,28 @@
 import { FC, useMemo } from 'react'
 import { useDrawAreaContext } from '../contexts/DrawAreaContext'
+import { useSubProject } from '../hooks/useSubProject'
+import { getComponentAnchor, getHoleAnchor, getStitchLineAnchor } from '../utils/floatingEditorAnchorUtils'
 import { isDefined } from '../utils/isDefined'
-import {
-  getComponentFloatingAnchor,
-  getHoleFloatingAnchor,
-  getStitchLineFloatingAnchor,
-} from '../utils/svgElementUtils'
 import { ComponentFloatingEditor } from './component-editors/ComponentFloatingEditor'
 import { HoleFloatingEditor } from './hole-editors/HoleFloatingEditor'
 import { StitchLineFloatingEditor } from './stitch-line-editors/StitchLineFloatingEditor'
 
 export const FloatingEditors: FC = () => {
   const { selection } = useDrawAreaContext()
+  const { subProject } = useSubProject()
   const { selectedComponent, selectedHole, selectedStitchLine, clearSelection } = selection
 
   const componentAnchorElement = useMemo(() => {
-    return isDefined(selectedComponent) ? getComponentFloatingAnchor(selectedComponent.id) : undefined
-  }, [selectedComponent])
+    return isDefined(selectedComponent) ? getComponentAnchor(selectedComponent, subProject) : undefined
+  }, [selectedComponent, subProject])
 
   const stitchLineAnchorElement = useMemo(() => {
-    return isDefined(selectedStitchLine) ? getStitchLineFloatingAnchor(selectedStitchLine.id) : undefined
-  }, [selectedStitchLine])
+    return isDefined(selectedStitchLine) ? getStitchLineAnchor(selectedStitchLine, subProject) : undefined
+  }, [selectedStitchLine, subProject])
 
   const holeAnchorElement = useMemo(() => {
-    return isDefined(selectedHole) ? getHoleFloatingAnchor(selectedHole.id) : undefined
-  }, [selectedHole])
+    return isDefined(selectedHole) ? getHoleAnchor(selectedHole, subProject) : undefined
+  }, [selectedHole, subProject])
 
   return (
     <>

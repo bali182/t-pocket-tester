@@ -194,7 +194,7 @@ export const EN: typeof HU = {
         strokeColor: 'Stroke color',
         selectionColor: 'Selection color',
         cardColor: 'Card color',
-        threadColor: 'Thread color'
+        threadColor: 'Thread color',
       },
       tabs: {
         basics: 'Basics',

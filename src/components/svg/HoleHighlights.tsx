@@ -57,6 +57,10 @@ const HoleHighlight: FC<HoleHighlightProps> = ({ computedHole, hole }) => {
     [hole.id, selection],
   )
 
+  if (computedHole.highlightPath.commands.length === 0) {
+    return null
+  }
+
   return (
     <path
       cursor={isInteractive ? 'pointer' : undefined}
