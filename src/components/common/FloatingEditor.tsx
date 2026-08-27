@@ -1,8 +1,8 @@
 import { Popover, usePopover } from '@chakra-ui/react'
 import { FC, MouseEvent, ReactNode, useCallback, useEffect, useMemo } from 'react'
 
+import type { FloatingEditorAnchor } from '../../utils/floatingEditorAnchorUtils'
 import { isDefined } from '../../utils/isDefined'
-import type { FloatingEditorAnchor } from '../../utils/svgElementUtils'
 
 type FloatingEditorProps = {
   anchorElement: FloatingEditorAnchor
