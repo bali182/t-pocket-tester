@@ -1,20 +1,19 @@
 import type { FC } from 'react'
 
 import type { ComputedStitchLineSchema } from '../../schemas/computed'
-import type { StitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { StitchLineRoute } from './StitchLineRoute'
 
 type StitchLineProps = {
   computedStitchLine: ComputedStitchLineSchema
-  stitchHoleLength: number
-  stitchLine: StitchLineSchema
+  stitchLine: ResolvedStitchLineSchema
 }
 
-export const StitchLine: FC<StitchLineProps> = ({ computedStitchLine, stitchHoleLength, stitchLine }) => {
+export const StitchLine: FC<StitchLineProps> = ({ computedStitchLine, stitchLine }) => {
   return (
     <g>
       {computedStitchLine.routes.map((route, index) => (
-        <StitchLineRoute key={index} route={route} stitchHoleLength={stitchHoleLength} stitchLine={stitchLine} />
+        <StitchLineRoute key={index} route={route} stitchLine={stitchLine} />
       ))}
     </g>
   )

@@ -25,6 +25,7 @@ type ProjectComponentSettingsSectionProps = {
 export const ColorSettingsSections: FC<ProjectComponentSettingsSectionProps> = ({ editable, issues, onChange }) => {
   const t = useTranslation()
   const leatherColorValues = useColors(modelColors)
+  const threadColorValues = useColors(modelColors)
   const stitchHoleColorValues = useColors(stitchHoleColors)
   const stitchLineColorValues = useColors(stitchLineColors)
   const strokeColorValues = useColors(strokeColors)
@@ -64,6 +65,19 @@ export const ColorSettingsSections: FC<ProjectComponentSettingsSectionProps> = (
         colorSettings: {
           ...editable.colorSettings,
           stitchLineColor,
+        },
+      })
+    },
+    [editable, onChange],
+  )
+
+  const handleThreadColorChange = useCallback(
+    (threadColor: string): void => {
+      onChange({
+        ...editable,
+        colorSettings: {
+          ...editable.colorSettings,
+          threadColor,
         },
       })
     },
@@ -111,6 +125,7 @@ export const ColorSettingsSections: FC<ProjectComponentSettingsSectionProps> = (
 
   return (
     <>
+      {/* Components */}
       <SectionGroup.Section>
         <SectionGroup.SectionHeader>{t.projects.settingsDialog.colorSettings.leatherTitle}</SectionGroup.SectionHeader>
 
@@ -148,6 +163,8 @@ export const ColorSettingsSections: FC<ProjectComponentSettingsSectionProps> = (
           />
         </SectionGroup.SectionRowEditor>
       </SectionGroup.Section>
+
+      {/* Stitching */}
       <SectionGroup.Section>
         <SectionGroup.SectionHeader>
           {t.projects.settingsDialog.colorSettings.stitchingTitle}
@@ -175,7 +192,20 @@ export const ColorSettingsSections: FC<ProjectComponentSettingsSectionProps> = (
             value={editable.colorSettings.stitchLineColor}
           />
         </SectionGroup.SectionRowEditor>
+        <SectionGroup.SectionRowTitle>
+          {t.projects.settingsDialog.colorSettings.threadColor}
+        </SectionGroup.SectionRowTitle>
+        <SectionGroup.SectionRowEditor issue={issues.colorSettings.threadColor}>
+          <ColorInput
+            colors={threadColorValues}
+            issue={issues.colorSettings.threadColor}
+            onChange={handleThreadColorChange}
+            value={editable.colorSettings.threadColor}
+          />
+        </SectionGroup.SectionRowEditor>
       </SectionGroup.Section>
+
+      {/* Selection */}
       <SectionGroup.Section>
         <SectionGroup.SectionHeader>
           {t.projects.settingsDialog.colorSettings.selectionTitle}

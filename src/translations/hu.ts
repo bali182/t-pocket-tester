@@ -194,6 +194,7 @@ export const HU = {
 
         stitchHoleColor: 'Öltéslyuk színe',
         stitchLineColor: 'Öltésvonal színe',
+        threadColor: 'Cérna színe',
 
         selectionColor: 'Kijelölés színe',
       },
@@ -345,6 +346,11 @@ export const HU = {
         holeDistance: 'Lyuktávolság',
         holeThickness: 'Lyuk vastagsága',
         lineThickness: 'Vonal vastagsága',
+        linesVisible: 'Vonalak láthatósága',
+        holesVisible: 'Lyukak láthatósága',
+        stitchesVisible: 'Cérna láthatósága',
+        visible: 'Látszik',
+        hidden: 'Rejtett',
         reset: 'Projektérték használata',
       },
       autoCornerRadius: {

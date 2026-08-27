@@ -1,18 +1,17 @@
-import BigNumber from 'bignumber.js'
-import { useMemo, type FC } from 'react'
+import type { FC } from 'react'
+
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { NumberLineSchema } from '../../schemas/geometry'
-import { StitchHoleSchema, StitchLineSchema } from '../../schemas/stitching'
+import { getStitchHoleLine } from '../../logic/stitching/getStitchHoleLine'
+import type { ResolvedStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
 
 type StitchHoleProps = {
   hole: StitchHoleSchema
-  stitchHoleLength: number
-  stitchLine: StitchLineSchema
+  stitchLine: ResolvedStitchLineSchema
 }
 
-export const StitchHole: FC<StitchHoleProps> = ({ hole, stitchHoleLength, stitchLine }) => {
+export const StitchHole: FC<StitchHoleProps> = ({ hole, stitchLine }) => {
   const { stitchLineStyles } = useDrawAreaContext()
-  const line = useStitchHoleLine(hole, stitchHoleLength)
+  const line = getStitchHoleLine(hole, stitchLine.stitchHoleLength)
 
   return (
     <line
@@ -24,23 +23,4 @@ export const StitchHole: FC<StitchHoleProps> = ({ hole, stitchHoleLength, stitch
       strokeWidth={stitchLineStyles.getStitchHoleThickness(stitchLine)}
     />
   )
-}
-
-const useStitchHoleLine = (hole: StitchHoleSchema, stitchHoleLength: number): NumberLineSchema => {
-  return useMemo<NumberLineSchema>(() => {
-    const angleInRadians = new BigNumber(45).plus(hole.rotation).times(Math.PI).div(180)
-    const halfLength = new BigNumber(stitchHoleLength).div(2)
-
-    // TODO replace BigNumber lib to one that has sin/cos.
-    const dx = new BigNumber(Math.cos(angleInRadians.toNumber())).times(halfLength)
-    const dy = new BigNumber(Math.sin(angleInRadians.toNumber())).times(halfLength)
-
-    const centerX = new BigNumber(hole.center.x)
-    const centerY = new BigNumber(hole.center.y)
-
-    return {
-      start: { x: centerX.minus(dx).toNumber(), y: centerY.minus(dy).toNumber() },
-      end: { x: centerX.plus(dx).toNumber(), y: centerY.plus(dy).toNumber() },
-    }
-  }, [hole.center.x, hole.center.y, hole.rotation, stitchHoleLength])
 }

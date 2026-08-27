@@ -39,14 +39,7 @@ export const TPocketStitchLines: FC<TPocketStitchLinesProps> = ({ componentId, p
 
         const resolvedStitchLine = getResolvedStitchLine(stitchLine, project.stitchingSettings)
 
-        return (
-          <StitchLineRoute
-            key={stitchLine.id}
-            route={route}
-            stitchHoleLength={resolvedStitchLine.stitchHoleLength}
-            stitchLine={stitchLine}
-          />
-        )
+        return <StitchLineRoute key={stitchLine.id} route={route} stitchLine={resolvedStitchLine} />
       })}
     </>
   )

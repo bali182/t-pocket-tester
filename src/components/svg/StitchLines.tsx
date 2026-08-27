@@ -33,12 +33,7 @@ export const StitchLines: FC<StitchLinesProps> = ({ componentId }) => {
         const resolvedStitchLine = getResolvedStitchLine(stitchLine, project.stitchingSettings)
 
         return (
-          <StitchLine
-            computedStitchLine={computedStitchLine}
-            key={stitchLine.id}
-            stitchHoleLength={resolvedStitchLine.stitchHoleLength}
-            stitchLine={stitchLine}
-          />
+          <StitchLine computedStitchLine={computedStitchLine} key={stitchLine.id} stitchLine={resolvedStitchLine} />
         )
       })}
     </>

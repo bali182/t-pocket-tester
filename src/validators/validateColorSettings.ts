@@ -15,6 +15,8 @@ export const validateColorSettings = (
   const strokeColorResult = validateHexColor(input.strokeColor, currentValue.strokeColor, context)
   const selectionColorResult = validateHexColor(input.selectionColor, currentValue.selectionColor, context)
   const cardColorResult = validateHexColor(input.cardColor, currentValue.cardColor, context)
+  const threadColorResult = validateHexColor(input.threadColor, currentValue.threadColor, context)
+
   const issues: ValidationIssuesSchema<ColorSettingsSchema> = {
     cardColor: cardColorResult.issues,
     leatherColor: leatherColorResult.issues,
@@ -22,6 +24,7 @@ export const validateColorSettings = (
     stitchHoleColor: stitchHoleColorResult.issues,
     stitchLineColor: stitchLineColorResult.issues,
     strokeColor: strokeColorResult.issues,
+    threadColor: threadColorResult.issues,
   }
   const committedValue: ColorSettingsSchema = {
     cardColor: cardColorResult.committedValue,
@@ -30,6 +33,7 @@ export const validateColorSettings = (
     stitchHoleColor: stitchHoleColorResult.committedValue,
     stitchLineColor: stitchLineColorResult.committedValue,
     strokeColor: strokeColorResult.committedValue,
+    threadColor: threadColorResult.committedValue,
   }
 
   if (
@@ -38,7 +42,8 @@ export const validateColorSettings = (
     !stitchLineColorResult.isValid ||
     !strokeColorResult.isValid ||
     !selectionColorResult.isValid ||
-    !cardColorResult.isValid
+    !cardColorResult.isValid ||
+    !threadColorResult.isValid
   ) {
     return createInvalidValidationResult(issues, committedValue)
   }

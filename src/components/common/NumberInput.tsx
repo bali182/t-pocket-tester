@@ -83,9 +83,9 @@ export const NumberInput: FC<NumberInputProps> = ({
       <HStack alignSelf="stretch" gap="0" height="100%">
         {isDefined(resetButtonEl) && isDefined(unitEl) ? (
           <>
-            {resetButtonEl}
-            <Separator alignSelf="stretch" orientation="vertical" size="sm" />
             {unitEl}
+            <Separator alignSelf="stretch" orientation="vertical" size="sm" />
+            {resetButtonEl}
           </>
         ) : (
           (resetButtonEl ?? unitEl)

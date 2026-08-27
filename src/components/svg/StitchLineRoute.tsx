@@ -3,22 +3,22 @@ import { useCallback, type FC, type MouseEventHandler, type PointerEventHandler 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { ComputedStitchRouteSchema } from '../../schemas/computed'
-import type { StitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { StitchHole } from './StitchHole'
+import { Stitches } from './Stitches'
 
 type StitchLineRouteProps = {
   route: ComputedStitchRouteSchema
-  stitchHoleLength: number
-  stitchLine: StitchLineSchema
+  stitchLine: ResolvedStitchLineSchema
 }
 
-export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchHoleLength, stitchLine }) => {
+export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine }) => {
   const { isInteractive, selection, stitchLineStyles } = useDrawAreaContext()
   const pathData = usePath(route.path)
   const stitchLineThickness = stitchLineStyles.getLineThickness(stitchLine)
   const stitchHoleThickness = stitchLineStyles.getStitchHoleThickness(stitchLine)
   const hitAreaThickness =
-    1 + Math.max(stitchLineThickness ?? 0, stitchHoleLength / Math.SQRT2 + (stitchHoleThickness ?? 0))
+    1 + Math.max(stitchLineThickness ?? 0, stitchLine.stitchHoleLength / Math.SQRT2 + (stitchHoleThickness ?? 0))
 
   const handlePointerEnter = useCallback<PointerEventHandler<SVGGElement>>(() => {
     selection.setHoveredStitchLine(stitchLine.id)
@@ -49,15 +49,19 @@ export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchHoleLen
       onPointerEnter={isInteractive ? handlePointerEnter : undefined}
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
-      <path
-        d={pathData}
-        fill="none"
-        stroke={stitchLineStyles.getLineColor(stitchLine)}
-        strokeWidth={stitchLineThickness}
-      />
-      {route.holes.map((hole, index) => (
-        <StitchHole key={index} hole={hole} stitchHoleLength={stitchHoleLength} stitchLine={stitchLine} />
-      ))}
+      {(!isInteractive || stitchLine.stitchLinesVisible) && (
+        <path
+          d={pathData}
+          fill="none"
+          stroke={stitchLineStyles.getLineColor(stitchLine)}
+          strokeWidth={stitchLineThickness}
+        />
+      )}
+      {(!isInteractive || stitchLine.stitchHolesVisible) &&
+        route.holes.map((hole, index) => <StitchHole key={index} hole={hole} stitchLine={stitchLine} />)}
+      {isInteractive && stitchLine.stitchesVisible && (
+        <Stitches holes={route.holes} isClosed={route.isClosed} stitchLine={stitchLine} />
+      )}
       {isInteractive && (
         <path d={pathData} fill="none" pointerEvents="stroke" stroke="transparent" strokeWidth={hitAreaThickness} />
       )}

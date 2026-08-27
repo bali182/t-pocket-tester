@@ -23,12 +23,7 @@ export const PdfStitchLine: FC<PdfStitchLineProps> = ({ stitchLine }) => {
         <PdfStitchPath key={index} path={path} stitchLine={stitchLine} />
       ))}
       {stitchLine.holes.map((hole, index) => (
-        <PdfStitchHole
-          hole={hole}
-          key={index}
-          stitchHoleLength={stitchLine.stitchLine.stitchHoleLength}
-          stitchLine={stitchLine.stitchLine}
-        />
+        <PdfStitchHole hole={hole} key={index} stitchLine={stitchLine.stitchLine} />
       ))}
     </G>
   )

@@ -23,12 +23,7 @@ export const ExportStitchLine: FC<ExportStitchLineProps> = ({ stitchLine }) => {
       ))}
 
       {stitchLine.holes.map((hole, index) => (
-        <StitchHole
-          hole={hole}
-          key={index}
-          stitchHoleLength={stitchLine.stitchLine.stitchHoleLength}
-          stitchLine={stitchLine.stitchLine}
-        />
+        <StitchHole hole={hole} key={index} stitchLine={stitchLine.stitchLine} />
       ))}
     </g>
   )

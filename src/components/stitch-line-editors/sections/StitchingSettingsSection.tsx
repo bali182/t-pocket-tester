@@ -8,6 +8,7 @@ import { isDefined } from '../../../utils/isDefined'
 import { NumberInput } from '../../common/NumberInput'
 import { SectionGroup } from '../../common/SectionGroup'
 import { StitchHoleDistanceEditor } from '../StitchHoleDistanceEditor'
+import { StitchVisibilitySelect } from '../StitchVisibilitySelect'
 
 type StitchingSettingsSectionProps<T extends Partial<StitchLineCommonConfigSchema>> = {
   editable: EditableSchema<T>
@@ -55,6 +56,24 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
     },
     [editable, onChange],
   )
+  const handleStitchLinesVisibleChange = useCallback(
+    (stitchLinesVisible: boolean): void => {
+      onChange({ ...editable, stitchLinesVisible })
+    },
+    [editable, onChange],
+  )
+  const handleStitchHolesVisibleChange = useCallback(
+    (stitchHolesVisible: boolean): void => {
+      onChange({ ...editable, stitchHolesVisible })
+    },
+    [editable, onChange],
+  )
+  const handleStitchesVisibleChange = useCallback(
+    (stitchesVisible: boolean): void => {
+      onChange({ ...editable, stitchesVisible })
+    },
+    [editable, onChange],
+  )
   const handleStitchMarginReset = useCallback((): void => {
     onReset?.('stitchMargin')
   }, [onReset])
@@ -69,6 +88,15 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
   }, [onReset])
   const handleStitchLineThicknessReset = useCallback((): void => {
     onReset?.('stitchLineThickness')
+  }, [onReset])
+  const handleStitchLinesVisibleReset = useCallback((): void => {
+    onReset?.('stitchLinesVisible')
+  }, [onReset])
+  const handleStitchHolesVisibleReset = useCallback((): void => {
+    onReset?.('stitchHolesVisible')
+  }, [onReset])
+  const handleStitchesVisibleReset = useCallback((): void => {
+    onReset?.('stitchesVisible')
   }, [onReset])
 
   return (
@@ -131,6 +159,36 @@ export const StitchingSettingsSection = <T extends Partial<StitchLineCommonConfi
           isResetEnabled={isDefined(editable.stitchLineThickness)}
           unit="mm"
           value={resolvedEditable.stitchLineThickness}
+        />
+      </SectionGroup.SectionRowEditor>
+
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.linesVisible}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor issue={issues.stitchLinesVisible}>
+        <StitchVisibilitySelect
+          isResetEnabled={isDefined(editable.stitchLinesVisible)}
+          onChange={handleStitchLinesVisibleChange}
+          onReset={isDefined(onReset) ? handleStitchLinesVisibleReset : undefined}
+          value={resolvedEditable.stitchLinesVisible}
+        />
+      </SectionGroup.SectionRowEditor>
+
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.holesVisible}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor issue={issues.stitchHolesVisible}>
+        <StitchVisibilitySelect
+          isResetEnabled={isDefined(editable.stitchHolesVisible)}
+          onChange={handleStitchHolesVisibleChange}
+          onReset={isDefined(onReset) ? handleStitchHolesVisibleReset : undefined}
+          value={resolvedEditable.stitchHolesVisible}
+        />
+      </SectionGroup.SectionRowEditor>
+
+      <SectionGroup.SectionRowTitle>{t.stitchLine.editor.stitching.stitchesVisible}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor issue={issues.stitchesVisible}>
+        <StitchVisibilitySelect
+          isResetEnabled={isDefined(editable.stitchesVisible)}
+          onChange={handleStitchesVisibleChange}
+          onReset={isDefined(onReset) ? handleStitchesVisibleReset : undefined}
+          value={resolvedEditable.stitchesVisible}
         />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>

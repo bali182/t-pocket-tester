@@ -92,13 +92,13 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
       <InputGroup
         endAddon={
           <HStack alignSelf="stretch" gap="0" height="100%">
+            <Box px="1.5">mm</Box>
             {isDefined(resetButtonEl) && (
               <>
-                {resetButtonEl}
                 <Separator alignSelf="stretch" orientation="vertical" size="sm" />
+                {resetButtonEl}
               </>
             )}
-            <Box px="1.5">mm</Box>
           </HStack>
         }
         endAddonProps={{ px: 0, size: 'xs' }}
