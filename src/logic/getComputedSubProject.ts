@@ -5,7 +5,6 @@ import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema
 import type {
   ComputedCardSchema,
   ComputedComponentSchema,
-  ComputedHoleSchema,
   ComputedPanelSchema,
   ComputedPocketClusterSchema,
   ComputedRootPanelSchema,
@@ -67,7 +66,7 @@ export const getComputedSubProject = (
     components: computedComponents,
     holes,
     stitchLines,
-    viewBox: getSubProjectViewBox(Object.values(computedComponents), stitchLines, holes),
+    viewBox: getSubProjectViewBox(Object.values(computedComponents), stitchLines),
   }
 }
 
@@ -277,13 +276,12 @@ const assertLayoutChildren = (children: ComponentSchema[]): (PanelSchema | Pocke
 const getSubProjectViewBox = (
   components: ComputedComponentSchema[],
   stitchLines: ComputedStitchLineSchema[],
-  holes: ComputedHoleSchema[],
 ): RectSchema => {
   const cards = components
     .filter(narrowers.is.computedPocketCluster)
     .flatMap((c): HasComputedCardSchema[] => [c.frontPocket, ...c.tPockets])
     .flatMap((p): ComputedCardSchema[] => (isDefined(p.card) ? [p.card] : []))
-  const withBoundingRects: HasBoundingRectSchema[] = [...components, ...stitchLines, ...holes, ...cards]
+  const withBoundingRects: HasBoundingRectSchema[] = [...components, ...stitchLines, ...cards]
   const boundingRects: RectSchema[] = withBoundingRects.map((e) => e.boundingRect)
 
   const firstBoundingRect = boundingRects[0]
