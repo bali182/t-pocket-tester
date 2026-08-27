@@ -107,7 +107,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
               <Dialog.ActionTrigger asChild>
                 <Button variant="outline">{t.common.actions.cancel}</Button>
               </Dialog.ActionTrigger>
-              <Button disabled={hasErrors} type="submit">
+              <Button disabled={hasErrors} type="submit" variant="solid">
                 {t.projects.createDialog.actions.create}
               </Button>
             </Dialog.Footer>

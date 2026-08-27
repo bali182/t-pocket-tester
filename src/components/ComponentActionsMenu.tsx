@@ -8,6 +8,7 @@ import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
 import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { hasComponentChildren } from '../operations/subProject/utils/hasComponentChildren'
+import { portalRef } from '../portalRef'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { SubProjectSchema } from '../schemas/subProject'
@@ -146,7 +147,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
             <PiDotsThreeVertical />
           </IconButton>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               {!subProjectOnly && (

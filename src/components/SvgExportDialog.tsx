@@ -118,7 +118,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
               <Dialog.ActionTrigger asChild>
                 <Button variant="outline">{t.common.actions.cancel}</Button>
               </Dialog.ActionTrigger>
-              <Button disabled={hasErrors} type="submit">
+              <Button disabled={hasErrors} type="submit" variant="solid">
                 {t.svgExport.dialog.actions.export}
               </Button>
             </Dialog.Footer>

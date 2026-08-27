@@ -3,6 +3,7 @@ import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiSquareSplitHorizontal, PiSquareSplitVertical, PiTrash } from 'react-icons/pi'
 import { useSubProjectOperations } from '../hooks/useSubProjectOperations'
 import { flipComponentBoundsStitchLine } from '../logic/flipComponentBoundsStitchLine'
+import { portalRef } from '../portalRef'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
@@ -57,7 +58,7 @@ export const StitchLineActionsMenu: FC<StitchLineActionsMenuProps> = ({ stitchLi
             <PiDotsThreeVertical />
           </IconButton>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               {stitchLine.type === 'component-bounds-stitch-line' && (

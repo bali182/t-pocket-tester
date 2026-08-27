@@ -4,8 +4,9 @@ import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
 import type { ProjectSchema } from '../schemas/project'
 import type { RecentProjectSchema } from '../schemas/recentProject'
 import type { BaseExportSettingsSchema } from '../schemas/settings'
+import type { ThemeAppearanceSchema } from '../schemas/theme'
 
-type StorageKey = 'pdf-export-params' | 'projects' | 'recent-projects' | 'scaling' | 'svg-export-params'
+type StorageKey = 'pdf-export-params' | 'projects' | 'recent-projects' | 'scaling' | 'svg-export-params' | 'theme'
 
 export const readProjectsFromStorage = (): ProjectSchema[] => {
   return safeReadStorage<ProjectSchema[]>('projects', [], (raw) => typia.assert<ProjectSchema[]>(raw))
@@ -31,6 +32,17 @@ export const readScalingFromStorage = (): number => {
 
 export const saveScalingToStorage = (scaling: number): void => {
   safeWriteStorage('scaling', scaling)
+}
+
+export const readThemeFromStorage = (): ThemeAppearanceSchema => {
+  const isSysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  return safeReadStorage<ThemeAppearanceSchema>('theme', isSysDark ? 'dark' : 'light', (raw) =>
+    typia.assert<ThemeAppearanceSchema>(raw),
+  )
+}
+
+export const saveThemeToStorage = (theme: ThemeAppearanceSchema): void => {
+  safeWriteStorage('theme', theme)
 }
 
 export const readSvgExportParamsFromStorage = (defaultValue: BaseExportSettingsSchema): BaseExportSettingsSchema => {

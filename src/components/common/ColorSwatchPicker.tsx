@@ -12,6 +12,7 @@ import {
 import type { ReactElement } from 'react'
 import { PiArrowCounterClockwise, PiCheck } from 'react-icons/pi'
 import type { ColorValue } from '../../hooks/useColors'
+import { portalRef } from '../../portalRef'
 import { useTranslation } from '../../translations/translation'
 
 type ColorSwatchPickerProps = {
@@ -43,7 +44,7 @@ export const ColorSwatchPicker = ({
           </IconButton>
         )}
       </Popover.Trigger>
-      <Portal>
+      <Portal container={portalRef}>
         <Popover.Positioner>
           <Popover.Content p="3" width="fit-content">
             <Grid gap="2" gridTemplateColumns="repeat(5, minmax(0, 1fr))">

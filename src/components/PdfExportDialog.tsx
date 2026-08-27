@@ -160,7 +160,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
                   {t.common.actions.cancel}
                 </Button>
               </Dialog.ActionTrigger>
-              <Button disabled={hasErrors || isExporting} loading={isExporting} type="submit">
+              <Button disabled={hasErrors || isExporting} loading={isExporting} type="submit" variant="solid">
                 {t.pdfExport.dialog.actions.export}
               </Button>
             </Dialog.Footer>

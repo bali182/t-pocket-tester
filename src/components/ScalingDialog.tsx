@@ -78,7 +78,9 @@ export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) 
             <Dialog.ActionTrigger asChild>
               <Button variant="outline">{t.common.actions.cancel}</Button>
             </Dialog.ActionTrigger>
-            <Button onClick={handleApply}>{t.common.actions.apply}</Button>
+            <Button onClick={handleApply} variant="solid">
+              {t.common.actions.apply}
+            </Button>
           </Dialog.Footer>
         </Dialog.Content>
       </Dialog.Positioner>

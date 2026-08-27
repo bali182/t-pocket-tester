@@ -1,10 +1,13 @@
-import { Button, Card, HStack, IconButton, Menu, Portal, Separator, Text } from '@chakra-ui/react'
+import { Button, Card, HStack, IconButton, Menu, Portal, Separator, Switch, Text } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
 import { FC, useCallback, useMemo, useRef, useState } from 'react'
-import { PiCaretDown, PiCaretLeft, PiExport, PiRuler, PiWalletDuotone } from 'react-icons/pi'
+import { PiCaretDown, PiCaretLeft, PiExport, PiMoon, PiRuler, PiSun, PiWalletDuotone } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
+import { portalRef } from '../portalRef'
+import { themeAtom } from '../state/themeAtom'
 import { useTranslation } from '../translations/translation'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
@@ -13,7 +16,13 @@ import { SvgExportDialog } from './SvgExportDialog'
 
 export const EditorMenu = () => {
   const { project } = useProject()
+  const [theme, setTheme] = useAtom(themeAtom)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  const handleThemeChange = useCallback(
+    (details: Switch.CheckedChangeDetails): void => setTheme(details.checked ? 'dark' : 'light'),
+    [setTheme],
+  )
 
   return (
     <>
@@ -41,6 +50,16 @@ export const EditorMenu = () => {
             <EditMenu />
             <ViewMenu />
           </HStack>
+          <Separator orientation="vertical" height="5" ml="3" mr="7" />
+          <Switch.Root checked={theme === 'dark'} onCheckedChange={handleThemeChange} size="lg">
+            <Switch.HiddenInput />
+            <Switch.Control bg="bg.emphasized" _checked={{ bg: 'bg.emphasized' }}>
+              <Switch.Thumb bg="bg.panel" _checked={{ bg: 'bg.panel' }} />
+              <Switch.Indicator fallback={<PiSun />}>
+                <PiMoon />
+              </Switch.Indicator>
+            </Switch.Control>
+          </Switch.Root>
         </Card.Body>
       </Card.Root>
     </>
@@ -66,7 +85,7 @@ const FileMenu: FC = () => {
             {t.editor.menus.file.name}
           </Button>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               <Menu.ItemGroup>
@@ -153,7 +172,7 @@ const EditMenu: FC = () => {
             {t.editor.menus.edit.name}
           </Button>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               <Menu.ItemGroup>
@@ -193,7 +212,7 @@ const ViewMenu: FC = () => {
             {t.editor.menus.view.name}
           </Button>
         </Menu.Trigger>
-        <Portal>
+        <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
               <Menu.Item value="scaling" onSelect={handleScalingButtonClick}>

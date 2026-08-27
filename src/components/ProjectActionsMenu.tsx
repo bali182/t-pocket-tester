@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 
 import { appRoutes } from '../appRoutes'
 import { useProjects } from '../hooks/useProjects'
+import { portalRef } from '../portalRef'
 import { useTranslation } from '../translations/translation'
 
 type ProjectActionsMenuProps = {
@@ -35,7 +36,7 @@ export const ProjectActionsMenu: FC<ProjectActionsMenuProps> = ({ size, projectI
               <PiDotsThreeVertical />
             </IconButton>
           </Menu.Trigger>
-          <Portal>
+          <Portal container={portalRef}>
             <Menu.Positioner>
               <Menu.Content>
                 <Menu.Item
