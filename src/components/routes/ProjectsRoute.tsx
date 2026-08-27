@@ -131,7 +131,7 @@ export const ProjectsRoute: FC = () => {
                 )}
               </Listbox.Empty>
             </Listbox.Content>
-            <Button onClick={openCreateDialog} width="100%" mt="2">
+            <Button onClick={openCreateDialog} width="100%" mt="2" variant="solid">
               <PiPlus />
               {t.projects.actions.create}
             </Button>

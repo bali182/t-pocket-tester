@@ -94,7 +94,7 @@ const EmptyProjectState: FC = () => {
   return (
     <CommonEmptyState
       content={
-        <Button onClick={handleCreateSubProject}>
+        <Button onClick={handleCreateSubProject} variant="solid">
           <PiPlus />
           {t.projects.actions.createModule}
         </Button>
