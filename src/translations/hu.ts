@@ -1,4 +1,5 @@
 import type { ColorKey } from '../data/colors'
+import type { CardSchemaId } from '../schemas/valuables'
 
 export const HU = {
   common: {
@@ -36,6 +37,7 @@ export const HU = {
     emptyStates: {
       noMatchingValues: 'Nincs egyező érték.',
     },
+    dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
     directions: {
       top: 'Felső oldal',
       right: 'Jobb oldal',
@@ -118,7 +120,6 @@ export const HU = {
   svgExport: {
     frontPocketName: (ownerName: string) => `${ownerName} - első zseb`,
     tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. zseb`,
-    dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
     dialog: {
       title: 'SVG exportálása',
       actions: {
@@ -268,6 +269,8 @@ export const HU = {
         fromBottom: 'Alulról',
         fromLeft: 'Balról',
         fromRight: 'Jobbról',
+        landscape: 'Fekvő kártyák',
+        portrait: 'Álló kártyák',
       },
       tPocket: {
         title: 'T-zsebek',
@@ -420,4 +423,20 @@ export const HU = {
     selectionYellow: 'Sárga',
     selectionWhite: 'Fehér',
   } satisfies Record<ColorKey, string>,
+  cards: {
+    'ID-1-landscape': 'ID-1 (fekvő)',
+    'ID-2-landscape': 'ID-2 (fekvő)',
+    'ID-3-landscape': 'ID-3 (fekvő)',
+    'ID-1-portrait': 'ID-1 (álló)',
+    'ID-2-portrait': 'ID-2 (álló)',
+    'ID-3-portrait': 'ID-3 (álló)',
+  } satisfies Record<CardSchemaId, string>,
+  cardsSimple: {
+    'ID-1-landscape': 'ID-1',
+    'ID-2-landscape': 'ID-2',
+    'ID-3-landscape': 'ID-3',
+    'ID-1-portrait': 'ID-1',
+    'ID-2-portrait': 'ID-2',
+    'ID-3-portrait': 'ID-3',
+  } satisfies Record<CardSchemaId, string>,
 }

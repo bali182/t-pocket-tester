@@ -1,4 +1,5 @@
 import type { ColorKey } from '../data/colors'
+import type { CardSchemaId } from '../schemas/valuables'
 import type { HU } from './hu'
 
 export const EN: typeof HU = {
@@ -37,6 +38,7 @@ export const EN: typeof HU = {
     emptyStates: {
       noMatchingValues: 'No matching values.',
     },
+    dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
     directions: {
       top: 'Top edge',
       right: 'Right edge',
@@ -119,7 +121,6 @@ export const EN: typeof HU = {
   svgExport: {
     frontPocketName: (ownerName: string) => `${ownerName} - front pocket`,
     tPocketName: (ownerName: string, index: number) => `${ownerName} - ${index}. pocket`,
-    dimensions: (width: string, height: string) => `${width}mm × ${height}mm`,
     dialog: {
       title: 'Export SVG',
       actions: {
@@ -266,6 +267,8 @@ export const EN: typeof HU = {
         fromBottom: 'Bottom',
         fromLeft: 'Left',
         fromRight: 'Right',
+        landscape: 'Landscape cards',
+        portrait: 'Portrait cards',
       },
       tPocket: {
         title: 'T-pockets',
@@ -418,4 +421,20 @@ export const EN: typeof HU = {
     selectionYellow: 'Yellow',
     selectionWhite: 'White',
   } satisfies Record<ColorKey, string>,
+  cards: {
+    'ID-1-landscape': 'ID-1 (landscape)',
+    'ID-2-landscape': 'ID-2 (landscape)',
+    'ID-3-landscape': 'ID-3 (landscape)',
+    'ID-1-portrait': 'ID-1 (portrait)',
+    'ID-2-portrait': 'ID-2 (portrait)',
+    'ID-3-portrait': 'ID-3 (portrait)',
+  } satisfies Record<CardSchemaId, string>,
+  cardsSimple: {
+    'ID-1-landscape': 'ID-1',
+    'ID-2-landscape': 'ID-2',
+    'ID-3-landscape': 'ID-3',
+    'ID-1-portrait': 'ID-1',
+    'ID-2-portrait': 'ID-2',
+    'ID-3-portrait': 'ID-3',
+  } satisfies Record<CardSchemaId, string>,
 }

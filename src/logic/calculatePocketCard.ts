@@ -45,9 +45,9 @@ const getCardBoundingRect = (
   pocketCluster: PocketClusterSchema,
   pocketBoundingRect: RectSchema,
 ): RectSchema => {
-  const isLandscape = shouldUseLandscapeCard(card, pocketCluster, pocketBoundingRect)
-  const cardWidth = new BigNumber(isLandscape ? card.width : card.height)
-  const cardHeight = new BigNumber(isLandscape ? card.height : card.width)
+  const isOpeningVertical = pocketCluster.orientation === 'up' || pocketCluster.orientation === 'down'
+  const cardWidth = new BigNumber(isOpeningVertical ? card.width : card.height)
+  const cardHeight = new BigNumber(isOpeningVertical ? card.height : card.width)
   const cardThickness = new BigNumber(card.thickness)
   const horizontallyCenteredX = pocketBoundingRect.x.plus(pocketBoundingRect.width.minus(cardWidth).dividedBy(2))
   const verticallyCenteredY = pocketBoundingRect.y.plus(pocketBoundingRect.height.minus(cardHeight).dividedBy(2))
@@ -82,28 +82,4 @@ const getCardBoundingRect = (
         height: cardHeight,
       }
   }
-}
-
-const shouldUseLandscapeCard = (
-  card: CardSchema,
-  pocketCluster: PocketClusterSchema,
-  pocketBoundingRect: RectSchema,
-): boolean => {
-  const isOpeningVertical = pocketCluster.orientation === 'up' || pocketCluster.orientation === 'down'
-  const landscapeCrossAxisSize = isOpeningVertical ? card.width : card.height
-  const portraitCrossAxisSize = isOpeningVertical ? card.height : card.width
-  const availableCrossAxisSize = isOpeningVertical ? pocketBoundingRect.width : pocketBoundingRect.height
-  const landscapeCrossAxisSizeValue = new BigNumber(landscapeCrossAxisSize)
-  const portraitCrossAxisSizeValue = new BigNumber(portraitCrossAxisSize)
-  const isLandscapeFitting = landscapeCrossAxisSizeValue.isLessThanOrEqualTo(availableCrossAxisSize)
-  const isPortraitFitting = portraitCrossAxisSizeValue.isLessThanOrEqualTo(availableCrossAxisSize)
-
-  if (isLandscapeFitting !== isPortraitFitting) {
-    return isLandscapeFitting
-  }
-
-  const landscapeEdgeDistance = landscapeCrossAxisSizeValue.minus(availableCrossAxisSize).absoluteValue()
-  const portraitEdgeDistance = portraitCrossAxisSizeValue.minus(availableCrossAxisSize).absoluteValue()
-
-  return landscapeEdgeDistance.isLessThanOrEqualTo(portraitEdgeDistance)
 }
