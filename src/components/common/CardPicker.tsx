@@ -3,13 +3,14 @@ import {
   IconButton,
   InputGroup,
   Select,
+  Text,
   createListCollection,
   type SelectValueChangeDetails,
 } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import { PiArrowCounterClockwise, PiCreditCard } from 'react-icons/pi'
 
-import { cards } from '../../data/cards'
+import { cards, landscapeCards, portraitCards } from '../../data/cards'
 import type { IssueSchema } from '../../schemas/validation'
 import type { CardSchema, CardSchemaId } from '../../schemas/valuables'
 import { useTranslation } from '../../translations/translation'
@@ -29,12 +30,10 @@ type CardPickerProps = {
   isResetEnabled: boolean
 }
 
-const landscapeCards: CardSchemaId[] = ['ID-1-landscape', 'ID-2-landscape', 'ID-3-landscape']
-const portraitCards: CardSchemaId[] = ['ID-1-portrait', 'ID-2-portrait', 'ID-3-portrait']
-
 export const CardPicker: FC<CardPickerProps> = ({ isResetEnabled, issue, onChange, onReset, value }) => {
   const t = useTranslation()
   const isInvalid = isDefined(issue) && issue.severity === 'error'
+  const isValuePortrait = portraitCards.some((c) => c.id === value)
 
   const handleValueChange = useCallback(
     (details: SelectValueChangeDetails<CardSchema>): void => {
@@ -77,7 +76,7 @@ export const CardPicker: FC<CardPickerProps> = ({ isResetEnabled, issue, onChang
             {isDefined(value) ? (
               <Select.ValueText asChild>
                 <HStack>
-                  <PiCreditCard style={portraitCards.includes(value) ? { transform: `rotate(90deg)` } : undefined} />
+                  <PiCreditCard style={isValuePortrait ? { transform: `rotate(90deg)` } : undefined} />
                   <span>{t.cards[value]}</span>
                 </HStack>
               </Select.ValueText>
@@ -94,11 +93,11 @@ export const CardPicker: FC<CardPickerProps> = ({ isResetEnabled, issue, onChang
         <Select.Content>
           <Select.ItemGroup key="landscape">
             <Select.ItemGroupLabel>{t.component.editor.pocketCluster.landscape}</Select.ItemGroupLabel>
-            <CardItems cardIds={landscapeCards} />
+            <CardItems cards={landscapeCards} />
           </Select.ItemGroup>
           <Select.ItemGroup key="portrait">
             <Select.ItemGroupLabel>{t.component.editor.pocketCluster.portrait}</Select.ItemGroupLabel>
-            <CardItems cardIds={portraitCards} transform="rotate(90deg)" />
+            <CardItems cards={portraitCards} transform="rotate(90deg)" />
           </Select.ItemGroup>
         </Select.Content>
       </Select.Positioner>
@@ -107,24 +106,22 @@ export const CardPicker: FC<CardPickerProps> = ({ isResetEnabled, issue, onChang
 }
 
 type CardItemsProps = {
-  cardIds: CardSchemaId[]
+  cards: CardSchema[]
   transform?: string
 }
 
-const CardItems: FC<CardItemsProps> = ({ cardIds, transform }) => {
+const CardItems: FC<CardItemsProps> = ({ cards, transform }) => {
   const t = useTranslation()
 
   return (
     <>
-      {cardIds.map((cardId) => {
-        const card = cards.find((c) => c.id === cardId)!
+      {cards.map((card) => {
         return (
-          <Select.Item item={card} key={cardId}>
+          <Select.Item item={card} key={card.id}>
             <HStack>
               <PiCreditCard style={{ transform }} />
-              <Select.ItemText>
-                {t.cardsSimple[cardId]} ({t.common.dimensions(card.width.toString(), card.height.toString())})
-              </Select.ItemText>
+              <Text>{t.cardsSimple[card.id]}</Text>
+              <Text color="fg.muted">({t.common.dimensions(card.width.toString(), card.height.toString())})</Text>
             </HStack>
             <Select.ItemIndicator />
           </Select.Item>
