@@ -105,7 +105,7 @@ export const useSvgDrawArea = (
         }
 
         const boundingRect = getSvgExportElementBoundingRect(element)
-        return t.svgExport.dimensions(boundingRect.width.toFixed(1), boundingRect.height.toFixed(1))
+        return t.common.dimensions(boundingRect.width.toFixed(1), boundingRect.height.toFixed(1))
       },
       getDimensionsTextColor: produce(COMPONENT_DIMENSIONS_COLOR),
       getDimensionsTextFontFamily: produce('sans-serif'),

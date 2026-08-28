@@ -22,9 +22,12 @@ const pocketOrientationValues: Record<PocketOrientationSchema, boolean> = {
 }
 
 const cardIdValues: Record<CardSchemaId, boolean> = {
-  'ID-1': true,
-  'ID-2': true,
-  'ID-3': true,
+  'ID-1-landscape': true,
+  'ID-2-landscape': true,
+  'ID-3-landscape': true,
+  'ID-1-portrait': true,
+  'ID-2-portrait': true,
+  'ID-3-portrait': true,
 }
 
 const anchorValues: Record<AnchorSchema, boolean> = { start: true, middle: true, end: true }
