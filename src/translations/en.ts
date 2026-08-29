@@ -69,8 +69,8 @@ export const EN: typeof HU = {
       },
       edit: {
         name: 'Edit',
-        step: {
-          name: 'Step',
+        increment: {
+          name: 'Adjustment increment',
           tiny: 'Tiny',
           small: 'Small',
           default: 'Default',

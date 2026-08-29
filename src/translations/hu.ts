@@ -68,8 +68,8 @@ export const HU = {
       },
       edit: {
         name: 'Szerkesztés',
-        step: {
-          name: 'Lépésköz',
+        increment: {
+          name: 'Módosítás lépésköze',
           tiny: 'Apró',
           small: 'Kicsi',
           default: 'Alapértelmezett',
