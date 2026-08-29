@@ -1,19 +1,10 @@
-import {
-  Box,
-  Button,
-  ColorSwatch,
-  Grid,
-  IconButton,
-  Popover,
-  Portal,
-  Text,
-  type PopoverRootProps,
-} from '@chakra-ui/react'
+import { Button, ColorSwatch, IconButton, Popover, Portal, type PopoverRootProps } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
-import { PiArrowCounterClockwise, PiCheck } from 'react-icons/pi'
+import { PiArrowCounterClockwise } from 'react-icons/pi'
 import type { ColorValue } from '../../hooks/useColors'
 import { portalRef } from '../../portalRef'
 import { useTranslation } from '../../translations/translation'
+import { ButtonSwatchItem, SelectableColorSwatch } from './SelectableColorSwatch'
 
 type ColorSwatchPickerProps = {
   value: string | undefined
@@ -47,45 +38,13 @@ export const ColorSwatchPicker = ({
       <Portal container={portalRef}>
         <Popover.Positioner>
           <Popover.Content p="3" width="fit-content">
-            <Grid gap="2" gridTemplateColumns="repeat(5, minmax(0, 1fr))">
-              {colors.map(({ color, key, name }) => {
-                const isSelected = value === color
-                return (
-                  <Button
-                    flexDirection="column"
-                    height="auto"
-                    key={key}
-                    onClick={() => {
-                      if (isSelected && canReset) {
-                        onChange(undefined)
-                      } else {
-                        onChange(color)
-                      }
-                    }}
-                    p="1"
-                    variant="ghost"
-                    _icon={{ boxSize: '3' }}
-                  >
-                    <ColorSwatch size="xl" value={color}>
-                      {isSelected && (
-                        <Box
-                          alignItems="center"
-                          background="bg.inverted"
-                          borderRadius="full"
-                          boxSize="5"
-                          color="fg.inverted"
-                          display="flex"
-                          justifyContent="center"
-                        >
-                          <PiCheck size={8} />
-                        </Box>
-                      )}
-                    </ColorSwatch>
-                    <Text textStyle="2xs">{name}</Text>
-                  </Button>
-                )
-              })}
-            </Grid>
+            <SelectableColorSwatch
+              colors={colors}
+              onChange={onChange}
+              value={value}
+              canReset={canReset}
+              Item={ButtonSwatchItem}
+            />
             {canReset && (
               <Button marginTop="3" onClick={() => onChange(undefined)} size="xs" width="full" variant="outline">
                 <PiArrowCounterClockwise />

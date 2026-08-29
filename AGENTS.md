@@ -1,7 +1,7 @@
 # Basic instructions
 
 - The package manager is npm.
-- Testing framework is vitest. Explicitly ask, if tests are necessary when writing code. Don't assume they are, and start writing tests. Don't try to sneak them into plans either. Check with the user, if tests are wanted for a given task, if it's related to business logic - UI is not currently testable.
+- Testing framework is vitest. Only for business-logic changes, explicitly ask whether tests are wanted. For UI changes, never ask about, propose, plan, or add tests; UI is currently not testable.
 - Never perform any mutating git operations (commit, push, etc)
 
 ## Editing code.

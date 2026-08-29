@@ -6,7 +6,8 @@ import { addSubProject as addSubProjectPure } from '../operations/project/addSub
 import { cloneSubProject as cloneSubProjectPure } from '../operations/project/cloneSubProject'
 import { deleteSubProject as deleteSubProjectPure } from '../operations/project/deleteSubProject'
 import type { ProjectSchema } from '../schemas/project'
-import { ProjectEditingSettingSchema } from '../schemas/settings'
+import type { ColorSettingsSchema, ProjectEditingSettingSchema } from '../schemas/settings'
+import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
 import { projectAtomFamily } from '../state/projectAtoms'
 import { useTranslation } from '../translations/translation'
@@ -28,6 +29,32 @@ export const useProjectOperations = () => {
         set(projectAtomFamily(projectId), {
           ...project,
           editingSettings: { ...project.editingSettings, ...update },
+        })
+      },
+      [projectId],
+    ),
+  )
+
+  const updateStitchingSettings = useAtomCallback(
+    useCallback(
+      (get, set, update: Partial<StitchLineCommonConfigSchema>): void => {
+        const project = ensureProject(get, projectId)
+        set(projectAtomFamily(projectId), {
+          ...project,
+          stitchingSettings: { ...project.stitchingSettings, ...update },
+        })
+      },
+      [projectId],
+    ),
+  )
+
+  const updateColorSettings = useAtomCallback(
+    useCallback(
+      (get, set, update: Partial<ColorSettingsSchema>): void => {
+        const project = ensureProject(get, projectId)
+        set(projectAtomFamily(projectId), {
+          ...project,
+          colorSettings: { ...project.colorSettings, ...update },
         })
       },
       [projectId],
@@ -74,8 +101,22 @@ export const useProjectOperations = () => {
   )
 
   return useMemo(
-    () => ({ createSubProject, cloneSubProject, deleteSubProject, updateEditingSettings }),
-    [cloneSubProject, createSubProject, deleteSubProject, updateEditingSettings],
+    () => ({
+      createSubProject,
+      cloneSubProject,
+      deleteSubProject,
+      updateEditingSettings,
+      updateStitchingSettings,
+      updateColorSettings,
+    }),
+    [
+      cloneSubProject,
+      createSubProject,
+      deleteSubProject,
+      updateColorSettings,
+      updateEditingSettings,
+      updateStitchingSettings,
+    ],
   )
 }
 

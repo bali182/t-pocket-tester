@@ -68,18 +68,45 @@ export const HU = {
       },
       edit: {
         name: 'Szerkesztés',
-        step: {
-          name: 'Lépésköz',
+        increment: {
+          name: 'Módosítás lépésköze',
           tiny: 'Apró',
           small: 'Kicsi',
           default: 'Alapértelmezett',
           stitch: `Öltés`,
           size: (size: number) => `${size}mm`,
         },
+        stitching: {
+          name: 'Varrás',
+          margin: 'Margó',
+          holeLength: 'Lyuk hossza',
+          holeDistance: 'Lyuktávolság',
+          holeThickness: 'Lyuk vastagsága',
+          lineThickness: 'Vonal vastagsága',
+        },
       },
       view: {
         name: 'Nézet',
-        scaling: 'Skálázás',
+        scaling: {
+          name: 'Skálázás',
+          scaling: 'Skálázás beállítása',
+        },
+        stitching: {
+          name: 'Varrás',
+          stitchLinesVisible: 'Vonalak láthatósága',
+          stitchHolesVisible: 'Lyukak láthatósága',
+          stitchesVisible: 'Cérna láthatósága',
+        },
+        colors: {
+          name: 'Színek',
+          leatherColor: 'Bőr színe',
+          stitchHoleColor: 'Öltéslyuk színe',
+          stitchLineColor: 'Öltésvonal színe',
+          strokeColor: 'Körvonal színe',
+          selectionColor: 'Kijelölés színe',
+          cardColor: 'Kártya színe',
+          threadColor: 'Cérna színe',
+        },
       },
     },
     scalingDialog: {
@@ -349,12 +376,6 @@ export const HU = {
         holeDistance: 'Lyuktávolság',
         holeThickness: 'Lyuk vastagsága',
         lineThickness: 'Vonal vastagsága',
-        linesVisible: 'Vonalak láthatósága',
-        holesVisible: 'Lyukak láthatósága',
-        stitchesVisible: 'Cérna láthatósága',
-        visible: 'Látszik',
-        hidden: 'Rejtett',
-        reset: 'Projektérték használata',
       },
       autoCornerRadius: {
         auto: 'Automatikus',

@@ -69,18 +69,45 @@ export const EN: typeof HU = {
       },
       edit: {
         name: 'Edit',
-        step: {
-          name: 'Step',
+        increment: {
+          name: 'Adjustment increment',
           tiny: 'Tiny',
           small: 'Small',
           default: 'Default',
           stitch: 'Stitch-size',
           size: (size: number) => `${size} mm`,
         },
+        stitching: {
+          name: 'Stitching',
+          margin: 'Margin',
+          holeLength: 'Hole length',
+          holeDistance: 'Hole spacing',
+          holeThickness: 'Hole thickness',
+          lineThickness: 'Line thickness',
+        },
       },
       view: {
         name: 'View',
-        scaling: 'Scaling',
+        scaling: {
+          name: 'Scaling',
+          scaling: 'Set scaling',
+        },
+        stitching: {
+          name: 'Stitching',
+          stitchLinesVisible: 'Line visibility',
+          stitchHolesVisible: 'Hole visibility',
+          stitchesVisible: 'Thread visibility',
+        },
+        colors: {
+          name: 'Colors',
+          leatherColor: 'Leather color',
+          stitchHoleColor: 'Stitch hole color',
+          stitchLineColor: 'Stitch line color',
+          strokeColor: 'Stroke color',
+          selectionColor: 'Selection color',
+          cardColor: 'Card color',
+          threadColor: 'Thread color',
+        },
       },
     },
     scalingDialog: {
@@ -347,12 +374,6 @@ export const EN: typeof HU = {
         holeDistance: 'Hole spacing',
         holeThickness: 'Hole thickness',
         lineThickness: 'Line thickness',
-        linesVisible: 'Line visibility',
-        holesVisible: 'Hole visibility',
-        stitchesVisible: 'Thread visibility',
-        visible: 'Visible',
-        hidden: 'Hidden',
-        reset: 'Use project value',
       },
       autoCornerRadius: {
         auto: 'Automatic',
