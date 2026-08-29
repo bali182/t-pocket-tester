@@ -1,43 +1,60 @@
-import { HasCornerRadiusSchema, HasOffAxisAnchor, HasSqueezeSchema } from '../../../schemas/common'
+import { HasCornerRadiusSchema, HasIdentitySchema, HasOffAxisAnchor, HasSqueezeSchema } from '../../../schemas/common'
 import {
+  ComponentSchema,
   HasAutoDimensionsSchema,
+  HasColorSchema,
   HasLayoutSchema,
   PanelSchema,
   PocketClusterSchema,
   RootPanelSchema,
 } from '../../../schemas/components'
+import { StitchLineCommonConfigSchema } from '../../../schemas/stitching'
 import { isDefined } from '../../../utils/isDefined'
+import { getClosestPocketStepSize, getClosestRootDimensions } from './dimensionUtils'
 
-type ComponentByType = {
-  'root-panel': RootPanelSchema
-  panel: PanelSchema
-  'pocket-cluster': PocketClusterSchema
-}
-
-type CreateComponentParams<T extends keyof ComponentByType> = {
-  type: T
+type CreateComponentParams<T extends ComponentSchema> = {
+  type: T['type']
   id: string
-  color?: string
   name: string
+  color?: string
+  stitchingSettings: StitchLineCommonConfigSchema
 }
 
-export const createComponent = <T extends keyof ComponentByType>({
+export const createComponent = <T extends ComponentSchema>(params: CreateComponentParams<T>): T => {
+  return createComponentRaw(params) as T
+}
+
+const createComponentRaw = ({
   type,
   color,
   id,
   name,
-}: CreateComponentParams<T>): ComponentByType[T] => {
-  const component: ComponentByType[T] = {
-    ...DEFAULT_COMPONENT_BY_TYPE[type],
-    id,
-    name,
-  }
+  stitchingSettings,
+}: CreateComponentParams<ComponentSchema>): ComponentSchema => {
+  const common: HasColorSchema & HasIdentitySchema = { id, name, ...(isDefined(color) ? { color } : {}) }
 
-  if (isDefined(color)) {
-    component.color = color
+  switch (type) {
+    case 'panel': {
+      return {
+        ...DEFAULT_PANEL,
+        ...common,
+      }
+    }
+    case 'root-panel': {
+      return {
+        ...DEFAULT_ROOT_PANEL,
+        ...common,
+        ...getClosestRootDimensions(DEFAULT_ROOT_PANEL, stitchingSettings),
+      }
+    }
+    case 'pocket-cluster': {
+      return {
+        ...DEFAULT_POCKET_CLUSTER,
+        ...common,
+        pocketStep: getClosestPocketStepSize(DEFAULT_POCKET_CLUSTER.pocketStep, stitchingSettings),
+      }
+    }
   }
-
-  return component
 }
 
 const defaultHasCornerRadius: HasCornerRadiusSchema = {
@@ -80,8 +97,8 @@ const DEFAULT_ROOT_PANEL: RootPanelSchema = {
   id: '',
   name: '',
   children: [],
-  width: 170,
-  height: 100,
+  width: 160,
+  height: 110,
 }
 
 const DEFAULT_PANEL: PanelSchema = {
@@ -106,13 +123,7 @@ const DEFAULT_POCKET_CLUSTER: PocketClusterSchema = {
   name: '',
   orientation: 'up',
   pocketCount: 3,
-  pocketStep: 12,
+  pocketStep: 10,
   tPocketTabWidth: 8,
   tPocketTaper: 20,
-}
-
-const DEFAULT_COMPONENT_BY_TYPE: ComponentByType = {
-  'root-panel': DEFAULT_ROOT_PANEL,
-  panel: DEFAULT_PANEL,
-  'pocket-cluster': DEFAULT_POCKET_CLUSTER,
 }

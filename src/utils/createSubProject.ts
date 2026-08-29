@@ -1,14 +1,19 @@
 import { createComponent } from '../operations/subProject/utils/createComponent'
-import type { RootPanelSchema } from '../schemas/components'
+import { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
 import { id } from './id'
 
-export const createSubProject = (rootName: string): SubProjectSchema => {
-  const root: RootPanelSchema = createComponent({
+export const createSubProject = (
+  rootName: string,
+  stitchingSettings: StitchLineCommonConfigSchema,
+): SubProjectSchema => {
+  const root = createComponent({
     id: id(),
     name: rootName,
     type: 'root-panel',
+    stitchingSettings,
   })
+
   return {
     id: id(),
     root: root.id,

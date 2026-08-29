@@ -23,7 +23,7 @@ export const addSubProject = (
       .filter(isDefined)
       .map((rootPanel) => rootPanel.name),
   )
-  const subProject = createSubProject(getUnusedName(baseRootComponentName, usedRootNames))
+  const subProject = createSubProject(getUnusedName(baseRootComponentName, usedRootNames), project.stitchingSettings)
 
   return {
     project: {
