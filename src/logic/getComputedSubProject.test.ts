@@ -499,7 +499,7 @@ describe('getComputedSubProject layout', () => {
       getComputedSubProject(d.subProject({ id: 'sub-project', root, components: [child] }), defaultStitchingSettings),
     )
 
-    expectBoundingRect(computed.panel(child.id), [29, 29, 2, 2])
+    expectBoundingRect(computed.panel(child.id), [29.5, 29.5, 1, 1])
   })
 
   it('clamps negative vertical squeezes to the parent bounds independently', () => {

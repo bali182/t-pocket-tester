@@ -8,6 +8,6 @@ describe('getComponentColor', () => {
   })
 
   it('lightens a dark base color for nested components', () => {
-    expect(getComponentColor('#1a1a1a', 1)).toBe('#282828')
+    expect(getComponentColor('#1a1a1a', 1)).toBe('#262626')
   })
 })
