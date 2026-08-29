@@ -78,6 +78,7 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
           color: project.editingSettings.addBaseColorByDefault ? project.colorSettings.leatherColor : undefined,
           id: id(),
           name: getUnusedComponentName(type, subProject, t),
+          stitchingSettings: project.stitchingSettings,
         })
         set(subProjectAtomFamily(reference), addComponentPure(subProject, { parentId, component }))
         return component

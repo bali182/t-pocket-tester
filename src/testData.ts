@@ -1,3 +1,4 @@
+import { defaultStitchingSettings } from './defaultStates'
 import { createComponent } from './operations/subProject/utils/createComponent'
 import { createHole } from './operations/subProject/utils/createHole'
 import { createStitchLine } from './operations/subProject/utils/createStitchLine'
@@ -16,21 +17,26 @@ import { createProject } from './utils/createProject'
 import { createSubProject } from './utils/createSubProject'
 import { isDefined } from './utils/isDefined'
 
-type CreateTestProjectConfig = HasId & {
-  subProjects: SubProjectSchema[]
+type HasStitchingSettings = {
   stitchingSettings?: StitchLineCommonConfigSchema
 }
 
-type CreateSubProjectConfig = HasId & {
-  root: RootPanelSchema
-  components?: (PanelSchema | PocketClusterSchema)[]
-  stitchLines?: StitchLineSchema[]
-  holes?: HoleSchema[]
-}
+type CreateTestProjectConfig = HasId &
+  HasStitchingSettings & {
+    subProjects: SubProjectSchema[]
+  }
 
-type CreateRootPanelConfig = Partial<RootPanelSchema> & HasId
-type CreatePanelConfig = Partial<PanelSchema> & HasId
-type CreatePocketClusterConfig = Partial<PocketClusterSchema> & HasId
+type CreateSubProjectConfig = HasId &
+  HasStitchingSettings & {
+    root: RootPanelSchema
+    components?: (PanelSchema | PocketClusterSchema)[]
+    stitchLines?: StitchLineSchema[]
+    holes?: HoleSchema[]
+  }
+
+type CreateRootPanelConfig = Partial<RootPanelSchema> & HasId & HasStitchingSettings
+type CreatePanelConfig = Partial<PanelSchema> & HasId & HasStitchingSettings
+type CreatePocketClusterConfig = Partial<PocketClusterSchema> & HasId & HasStitchingSettings
 
 type CreateHoleConfig = Partial<HoleSchema> & HasId & HasComponentReferenceSchema
 
@@ -54,8 +60,9 @@ export const d = {
     components = [],
     stitchLines = [],
     holes = [],
+    stitchingSettings = defaultStitchingSettings,
   }: CreateSubProjectConfig): SubProjectSchema => {
-    const subProject = createSubProject(id)
+    const subProject = createSubProject(id, stitchingSettings)
     subProject.root = root.id
     subProject.components = {
       [root.id]: root,
@@ -68,16 +75,27 @@ export const d = {
     return subProject
   },
 
-  rootPanel: ({ id, ...rest }: CreateRootPanelConfig): RootPanelSchema => {
-    return { ...createComponent({ type: 'root-panel', id, name: id }), ...rest }
+  rootPanel: ({
+    id,
+    stitchingSettings = defaultStitchingSettings,
+    ...rest
+  }: CreateRootPanelConfig): RootPanelSchema => {
+    return { ...createComponent({ type: 'root-panel', id, name: id, stitchingSettings }), ...rest }
   },
 
-  panel: ({ id, ...rest }: CreatePanelConfig): PanelSchema => {
-    return { ...createComponent({ type: 'panel', id, name: id }), ...rest }
+  panel: ({ id, stitchingSettings = defaultStitchingSettings, ...rest }: CreatePanelConfig): PanelSchema => {
+    return { ...createComponent({ type: 'panel', id, name: id, stitchingSettings }), ...rest }
   },
 
-  pocketCluster: ({ id, ...rest }: CreatePocketClusterConfig): PocketClusterSchema => {
-    return { ...createComponent({ type: 'pocket-cluster', id, name: id }), ...rest }
+  pocketCluster: ({
+    id,
+    stitchingSettings = defaultStitchingSettings,
+    ...rest
+  }: CreatePocketClusterConfig): PocketClusterSchema => {
+    return {
+      ...createComponent({ type: 'pocket-cluster', id, name: id, stitchingSettings }),
+      ...rest,
+    }
   },
 
   hole: ({ id, componentId, ...rest }: CreateHoleConfig): HoleSchema => {
