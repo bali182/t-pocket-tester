@@ -1,6 +1,6 @@
 import { Button, Menu, Portal } from '@chakra-ui/react'
 import { FC, useCallback } from 'react'
-import { PiCaretDown } from 'react-icons/pi'
+import { PiCaretDown, PiLineSegmentFill, PiNeedle } from 'react-icons/pi'
 import { useProject } from '../../hooks/useProject'
 import { useProjectOperations } from '../../hooks/useProjectOperations'
 import { portalRef } from '../../portalRef'
@@ -37,6 +37,8 @@ export const EditMenu: FC = () => {
                   selectedValue={project.editingSettings.numberEditorStep}
                   subTitle={t.editor.menus.edit.increment.size(0.01)}
                   title={t.editor.menus.edit.increment.tiny}
+                  icon={PiLineSegmentFill}
+                  iconScale={0.6}
                   value={0.01}
                 />
                 <StepMenuItem
@@ -44,6 +46,8 @@ export const EditMenu: FC = () => {
                   selectedValue={project.editingSettings.numberEditorStep}
                   subTitle={t.editor.menus.edit.increment.size(0.1)}
                   title={t.editor.menus.edit.increment.small}
+                  icon={PiLineSegmentFill}
+                  iconScale={0.8}
                   value={0.1}
                 />
                 <StepMenuItem
@@ -51,6 +55,7 @@ export const EditMenu: FC = () => {
                   selectedValue={project.editingSettings.numberEditorStep}
                   subTitle={t.editor.menus.edit.increment.size(1)}
                   title={t.editor.menus.edit.increment.default}
+                  icon={PiLineSegmentFill}
                   value={1}
                 />
                 <StepMenuItem
@@ -58,6 +63,7 @@ export const EditMenu: FC = () => {
                   selectedValue={project.editingSettings.numberEditorStep}
                   subTitle={t.editor.menus.edit.increment.size(project.stitchingSettings.stitchHoleDistance)}
                   title={t.editor.menus.edit.increment.stitch}
+                  icon={PiNeedle}
                   value="stitch-hole-distance"
                 />
               </Menu.ItemGroup>
