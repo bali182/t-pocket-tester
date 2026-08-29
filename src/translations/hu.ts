@@ -122,7 +122,6 @@ export const HU = {
         },
         title: 'Elemek',
       },
-      stitching: 'Varrás',
     },
   },
   exportSettings: {
@@ -323,8 +322,8 @@ export const HU = {
   },
   stitchLine: {
     types: {
-      componentBounds: 'Körvonal varrás',
-      pocketCluster: 'Zseb-alj varrás',
+      componentBounds: 'Varrás',
+      pocketCluster: 'Zseb varrás',
     },
     add: {
       title: 'Varrás hozzáadása',
@@ -410,7 +409,6 @@ export const HU = {
   defaults: {
     projectName: 'Projekt',
     rootComponentName: 'Modul',
-    stitchLineName: (number: number) => `Varrás ${number}`,
   },
   colors: {
     black: 'Fekete',

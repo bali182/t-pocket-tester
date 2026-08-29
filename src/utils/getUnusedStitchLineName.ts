@@ -1,15 +1,15 @@
+import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
+import { StitchLineSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
 import type { TranslationSchema } from '../translations/translationSchema'
+import { getStitchLineNameByType } from './getStitchLineNameByType'
 
-export const getUnusedStitchLineName = (subProject: SubProjectSchema, t: TranslationSchema): string => {
+export const getUnusedStitchLineName = (
+  type: StitchLineSchema['type'],
+  subProject: SubProjectSchema,
+  t: TranslationSchema,
+): string => {
+  const baseName = getStitchLineNameByType(type, t)
   const usedNames = new Set(subProject.stitchLines.map((stitchLine) => stitchLine.name))
-  let counter = 1
-  let name = t.defaults.stitchLineName(counter)
-
-  while (usedNames.has(name)) {
-    counter += 1
-    name = t.defaults.stitchLineName(counter)
-  }
-
-  return name
+  return getUnusedName(baseName, usedNames)
 }

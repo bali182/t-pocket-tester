@@ -26,7 +26,7 @@ import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
 import type { ComponentSchema } from '../schemas/components'
 import type { HoleSchema } from '../schemas/hole'
 import type { ProjectSchema } from '../schemas/project'
-import type { StitchLineSchema } from '../schemas/stitching'
+import type { ComponentBoundsStitchLineSchema, StitchLineSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
 import { projectAtomFamily, subProjectAtomFamily, type SubProjectAtomReferenceSchema } from '../state/projectAtoms'
 import { useTranslation } from '../translations/translation'
@@ -95,7 +95,7 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
           type,
           { targetId: componentId, targetType: 'component' },
           id(),
-          getUnusedStitchLineName(subProject, t),
+          getUnusedStitchLineName(type, subProject, t),
         )
         set(subProjectAtomFamily(reference), addStitchLinePure(subProject, { stitchLine }))
         return stitchLine
@@ -108,11 +108,12 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
     useCallback(
       (get, set, holeId: string): StitchLineSchema => {
         const [, subProject] = ensureProject(get, reference)
+        const type: ComponentBoundsStitchLineSchema['type'] = 'component-bounds-stitch-line'
         const stitchLine = createStitchLine(
-          'component-bounds-stitch-line',
+          type,
           { targetId: holeId, targetType: 'hole' },
           id(),
-          getUnusedStitchLineName(subProject, t),
+          getUnusedStitchLineName(type, subProject, t),
         )
         set(subProjectAtomFamily(reference), addStitchLinePure(subProject, { stitchLine }))
         return stitchLine

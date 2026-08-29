@@ -123,7 +123,6 @@ export const EN: typeof HU = {
         },
         title: 'Components',
       },
-      stitching: 'Stitching',
     },
   },
   exportSettings: {
@@ -321,8 +320,8 @@ export const EN: typeof HU = {
   },
   stitchLine: {
     types: {
-      componentBounds: 'Outline stitching',
-      pocketCluster: 'Pocket-bottom stitching',
+      componentBounds: 'Stitching',
+      pocketCluster: 'Pocket stitching',
     },
     add: {
       title: 'Add stitch line',
@@ -408,7 +407,6 @@ export const EN: typeof HU = {
   defaults: {
     projectName: 'Project',
     rootComponentName: 'Module',
-    stitchLineName: (number: number) => `Stitch line ${number}`,
   },
   colors: {
     black: 'Black',
