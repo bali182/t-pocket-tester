@@ -80,7 +80,16 @@ export const EN: typeof HU = {
       },
       view: {
         name: 'View',
-        scaling: 'Scaling',
+        scaling: {
+          name: 'Scaling',
+          scaling: 'Set scaling',
+        },
+        stitching: {
+          name: 'Stitching',
+          stitchLinesVisible: 'Line visibility',
+          stitchHolesVisible: 'Hole visibility',
+          stitchesVisible: 'Thread visibility',
+        },
       },
     },
     scalingDialog: {
@@ -347,12 +356,6 @@ export const EN: typeof HU = {
         holeDistance: 'Hole spacing',
         holeThickness: 'Hole thickness',
         lineThickness: 'Line thickness',
-        linesVisible: 'Line visibility',
-        holesVisible: 'Hole visibility',
-        stitchesVisible: 'Thread visibility',
-        visible: 'Visible',
-        hidden: 'Hidden',
-        reset: 'Use project value',
       },
       autoCornerRadius: {
         auto: 'Automatic',

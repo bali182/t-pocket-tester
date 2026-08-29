@@ -79,7 +79,16 @@ export const HU = {
       },
       view: {
         name: 'Nézet',
-        scaling: 'Skálázás',
+        scaling: {
+          name: 'Skálázás',
+          scaling: 'Skálázás beállítása',
+        },
+        stitching: {
+          name: 'Varrás',
+          stitchLinesVisible: 'Vonalak láthatósága',
+          stitchHolesVisible: 'Lyukak láthatósága',
+          stitchesVisible: 'Cérna láthatósága',
+        },
       },
     },
     scalingDialog: {
@@ -349,12 +358,6 @@ export const HU = {
         holeDistance: 'Lyuktávolság',
         holeThickness: 'Lyuk vastagsága',
         lineThickness: 'Vonal vastagsága',
-        linesVisible: 'Vonalak láthatósága',
-        holesVisible: 'Lyukak láthatósága',
-        stitchesVisible: 'Cérna láthatósága',
-        visible: 'Látszik',
-        hidden: 'Rejtett',
-        reset: 'Projektérték használata',
       },
       autoCornerRadius: {
         auto: 'Automatikus',

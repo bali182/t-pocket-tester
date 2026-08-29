@@ -1,12 +1,24 @@
-import { Button, Card, HStack, IconButton, Menu, Portal, Separator, Switch, Text } from '@chakra-ui/react'
+import { Button, Card, HStack, Icon, IconButton, Menu, Portal, Separator, Switch, Text } from '@chakra-ui/react'
 import { FC, useCallback, useMemo, useRef, useState } from 'react'
-import { PiCaretDown, PiCaretLeft, PiExport, PiMoon, PiRuler, PiSun, PiWalletDuotone } from 'react-icons/pi'
+import {
+  PiCaretDown,
+  PiCaretLeft,
+  PiExport,
+  PiEye,
+  PiEyeSlash,
+  PiMoon,
+  PiNeedle,
+  PiRuler,
+  PiSun,
+  PiWalletDuotone,
+} from 'react-icons/pi'
 import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
 import { useTheme } from '../hooks/useTheme'
 import { portalRef } from '../portalRef'
+import type { StitchingVisibilityConfigSchema, StitchLineCommonConfigSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
@@ -198,6 +210,8 @@ const EditMenu: FC = () => {
 
 const ViewMenu: FC = () => {
   const t = useTranslation()
+  const { project } = useProject()
+  const { updateStitchingSettings } = useProjectOperations()
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
@@ -214,15 +228,59 @@ const ViewMenu: FC = () => {
         <Portal container={portalRef}>
           <Menu.Positioner>
             <Menu.Content>
-              <Menu.Item value="scaling" onSelect={handleScalingButtonClick}>
-                <PiRuler />
-                <Menu.ItemText>{t.editor.menus.view.scaling}</Menu.ItemText>
-              </Menu.Item>
+              <Menu.ItemGroup>
+                <Menu.ItemGroupLabel>{t.editor.menus.view.stitching.name}</Menu.ItemGroupLabel>
+                <StitchVisibilityMenuItem
+                  field="stitchLinesVisible"
+                  label={t.editor.menus.view.stitching.stitchLinesVisible}
+                  onChange={updateStitchingSettings}
+                  value={project.stitchingSettings.stitchLinesVisible}
+                />
+                <StitchVisibilityMenuItem
+                  field="stitchHolesVisible"
+                  label={t.editor.menus.view.stitching.stitchHolesVisible}
+                  onChange={updateStitchingSettings}
+                  value={project.stitchingSettings.stitchHolesVisible}
+                />
+                <StitchVisibilityMenuItem
+                  field="stitchesVisible"
+                  label={t.editor.menus.view.stitching.stitchesVisible}
+                  onChange={updateStitchingSettings}
+                  value={project.stitchingSettings.stitchesVisible}
+                />
+              </Menu.ItemGroup>
+              <Menu.Separator />
+              <Menu.ItemGroup>
+                <Menu.ItemGroupLabel>{t.editor.menus.view.scaling.name}</Menu.ItemGroupLabel>
+                <Menu.Item value="scaling" onSelect={handleScalingButtonClick}>
+                  <PiRuler />
+                  <Menu.ItemText>{t.editor.menus.view.scaling.scaling}</Menu.ItemText>
+                </Menu.Item>
+              </Menu.ItemGroup>
             </Menu.Content>
           </Menu.Positioner>
         </Portal>
       </Menu.Root>
       <ScalingDialog isOpen={isScalingDialogOpen} onOpenChange={setScalingDialogOpen} />
     </>
+  )
+}
+
+type StitchVisibilityMenuItemProps = {
+  value: boolean
+  label: string
+  field: keyof StitchingVisibilityConfigSchema
+  onChange: (update: Partial<StitchLineCommonConfigSchema>) => void
+}
+
+const StitchVisibilityMenuItem: FC<StitchVisibilityMenuItemProps> = ({ onChange, field, value, label }) => {
+  const toggle = useCallback(() => onChange({ [field]: !value }), [field, onChange, value])
+
+  return (
+    <Menu.Item onSelect={toggle} value={field} closeOnSelect={false}>
+      <PiNeedle />
+      <Menu.ItemText mr="2">{label}</Menu.ItemText>
+      {value ? <PiEye /> : <Icon as={PiEyeSlash} color="fg.muted" />}
+    </Menu.Item>
   )
 }

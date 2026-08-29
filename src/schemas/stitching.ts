@@ -19,16 +19,18 @@ export type StitchHoleSchema = {
   rotation: number
 }
 
-export type StitchLineCommonConfigSchema = {
+export type StitchingVisibilityConfigSchema = {
+  stitchLinesVisible: boolean
+  stitchHolesVisible: boolean
+  stitchesVisible: boolean
+}
+
+export type StitchLineCommonConfigSchema = StitchingVisibilityConfigSchema & {
   stitchMargin: number
   stitchHoleLength: number
   stitchHoleDistance: number
   stitchHoleThickness: number
   stitchLineThickness: number
-
-  stitchLinesVisible: boolean
-  stitchHolesVisible: boolean
-  stitchesVisible: boolean
 }
 
 export type HasDirectionalOffsetsSchema = {
