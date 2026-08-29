@@ -1,4 +1,16 @@
-import { Button, Card, HStack, Icon, IconButton, Menu, Portal, Separator, Switch, Text } from '@chakra-ui/react'
+import {
+  Button,
+  Card,
+  ColorSwatch,
+  HStack,
+  Icon,
+  IconButton,
+  Menu,
+  Portal,
+  Separator,
+  Switch,
+  Text,
+} from '@chakra-ui/react'
 import { FC, useCallback, useMemo, useRef, useState } from 'react'
 import {
   PiCaretDown,
@@ -8,18 +20,31 @@ import {
   PiEyeSlash,
   PiMoon,
   PiNeedle,
+  PiPalette,
   PiRuler,
   PiSun,
   PiWalletDuotone,
 } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
+import {
+  cardColors,
+  modelColors,
+  selectionColors,
+  stitchHoleColors,
+  stitchLineColors,
+  strokeColors,
+} from '../data/colors'
+import { useColors, type ColorValue } from '../hooks/useColors'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
 import { useTheme } from '../hooks/useTheme'
 import { portalRef } from '../portalRef'
+import type { ColorSettingsSchema } from '../schemas/settings'
 import type { StitchingVisibilityConfigSchema, StitchLineCommonConfigSchema } from '../schemas/stitching'
 import { useTranslation } from '../translations/translation'
+import { isDefined } from '../utils/isDefined'
+import { MenuColorSwatchItem, SelectableColorSwatch } from './common/SelectableColorSwatch'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
 import { ScalingDialog } from './ScalingDialog'
@@ -211,7 +236,14 @@ const EditMenu: FC = () => {
 const ViewMenu: FC = () => {
   const t = useTranslation()
   const { project } = useProject()
-  const { updateStitchingSettings } = useProjectOperations()
+  const { updateColorSettings, updateStitchingSettings } = useProjectOperations()
+  const leatherColorValues = useColors(modelColors)
+  const threadColorValues = useColors(modelColors)
+  const stitchHoleColorValues = useColors(stitchHoleColors)
+  const stitchLineColorValues = useColors(stitchLineColors)
+  const strokeColorValues = useColors(strokeColors)
+  const selectionColorValues = useColors(selectionColors)
+  const cardColorValues = useColors(cardColors)
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
 
   const handleScalingButtonClick = useCallback(() => setScalingDialogOpen(true), [])
@@ -251,6 +283,59 @@ const ViewMenu: FC = () => {
               </Menu.ItemGroup>
               <Menu.Separator />
               <Menu.ItemGroup>
+                <Menu.ItemGroupLabel>{t.editor.menus.view.colors.name}</Menu.ItemGroupLabel>
+                <ColorPickerMenuItem
+                  colors={leatherColorValues}
+                  field="leatherColor"
+                  label={t.editor.menus.view.colors.leatherColor}
+                  onChange={updateColorSettings}
+                  value={project.colorSettings.leatherColor}
+                />
+                <ColorPickerMenuItem
+                  colors={strokeColorValues}
+                  field="strokeColor"
+                  label={t.editor.menus.view.colors.strokeColor}
+                  onChange={updateColorSettings}
+                  value={project.colorSettings.strokeColor}
+                />
+                <ColorPickerMenuItem
+                  colors={cardColorValues}
+                  field="cardColor"
+                  label={t.editor.menus.view.colors.cardColor}
+                  onChange={updateColorSettings}
+                  value={project.colorSettings.cardColor}
+                />
+                <ColorPickerMenuItem
+                  colors={stitchHoleColorValues}
+                  field="stitchHoleColor"
+                  label={t.editor.menus.view.colors.stitchHoleColor}
+                  onChange={updateColorSettings}
+                  value={project.colorSettings.stitchHoleColor}
+                />
+                <ColorPickerMenuItem
+                  colors={stitchLineColorValues}
+                  field="stitchLineColor"
+                  label={t.editor.menus.view.colors.stitchLineColor}
+                  onChange={updateColorSettings}
+                  value={project.colorSettings.stitchLineColor}
+                />
+                <ColorPickerMenuItem
+                  colors={threadColorValues}
+                  field="threadColor"
+                  label={t.editor.menus.view.colors.threadColor}
+                  onChange={updateColorSettings}
+                  value={project.colorSettings.threadColor}
+                />
+                <ColorPickerMenuItem
+                  colors={selectionColorValues}
+                  field="selectionColor"
+                  label={t.editor.menus.view.colors.selectionColor}
+                  onChange={updateColorSettings}
+                  value={project.colorSettings.selectionColor}
+                />
+              </Menu.ItemGroup>
+              <Menu.Separator />
+              <Menu.ItemGroup>
                 <Menu.ItemGroupLabel>{t.editor.menus.view.scaling.name}</Menu.ItemGroupLabel>
                 <Menu.Item value="scaling" onSelect={handleScalingButtonClick}>
                   <PiRuler />
@@ -282,5 +367,48 @@ const StitchVisibilityMenuItem: FC<StitchVisibilityMenuItemProps> = ({ onChange,
       <Menu.ItemText mr="2">{label}</Menu.ItemText>
       {value ? <PiEye /> : <Icon as={PiEyeSlash} color="fg.muted" />}
     </Menu.Item>
+  )
+}
+
+type ColorPickerMenuItemProps = {
+  colors: ColorValue[]
+  field: keyof ColorSettingsSchema
+  label: string
+  onChange: (update: Partial<ColorSettingsSchema>) => void
+  value: string
+}
+
+const ColorPickerMenuItem: FC<ColorPickerMenuItemProps> = ({ colors, field, label, onChange, value }) => {
+  const handleColorChange = useCallback(
+    (color: string | undefined): void => {
+      if (!isDefined(color)) {
+        return
+      }
+      onChange({ [field]: color })
+    },
+    [field, onChange],
+  )
+
+  return (
+    <Menu.Root positioning={{ placement: 'right-start' }}>
+      <Menu.TriggerItem>
+        <PiPalette />
+        <Menu.ItemText mr="2">{label}</Menu.ItemText>
+        <ColorSwatch size="sm" value={value} />
+      </Menu.TriggerItem>
+      <Portal container={portalRef}>
+        <Menu.Positioner>
+          <Menu.Content p="3" width="fit-content">
+            <SelectableColorSwatch
+              Item={MenuColorSwatchItem}
+              canReset={false}
+              colors={colors}
+              onChange={handleColorChange}
+              value={value}
+            />
+          </Menu.Content>
+        </Menu.Positioner>
+      </Portal>
+    </Menu.Root>
   )
 }

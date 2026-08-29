@@ -89,6 +89,16 @@ export const HU = {
           stitchHolesVisible: 'Lyukak láthatósága',
           stitchesVisible: 'Cérna láthatósága',
         },
+        colors: {
+          name: 'Színek',
+          leatherColor: 'Bőr színe',
+          stitchHoleColor: 'Öltéslyuk színe',
+          stitchLineColor: 'Öltésvonal színe',
+          strokeColor: 'Körvonal színe',
+          selectionColor: 'Kijelölés színe',
+          cardColor: 'Kártya színe',
+          threadColor: 'Cérna színe',
+        },
       },
     },
     scalingDialog: {

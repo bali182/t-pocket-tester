@@ -21,19 +21,19 @@ export const ProjectSettingsEditor: FC<ProjectSettingsEditorProps> = ({ mode, ed
   const t = useTranslation()
 
   return (
-    <Tabs.Root defaultValue="basic">
+    <Tabs.Root defaultValue={mode === 'create' ? 'basic' : 'stitching'}>
       <Tabs.List alignItems="center" pr="2">
-        <Tabs.Trigger value="basic">
-          {mode === 'edit' ? t.projects.settingsDialog.tabs.colors : t.projects.settingsDialog.tabs.basics}
-        </Tabs.Trigger>
+        {mode === 'create' && <Tabs.Trigger value="basic">{t.projects.settingsDialog.tabs.basics}</Tabs.Trigger>}
         <Tabs.Trigger value="stitching">{t.projects.settingsDialog.tabs.stitching}</Tabs.Trigger>
       </Tabs.List>
-      <Tabs.Content value="basic" pt={0}>
-        <SectionGroup.Root>
-          {mode === 'create' && <ProjectBasicSection editable={editable} issues={issues} onChange={onChange} />}
-          <ColorSettingsSections editable={editable} issues={issues} onChange={onChange} />
-        </SectionGroup.Root>
-      </Tabs.Content>
+      {mode === 'create' && (
+        <Tabs.Content value="basic" pt={0}>
+          <SectionGroup.Root>
+            <ProjectBasicSection editable={editable} issues={issues} onChange={onChange} />
+            <ColorSettingsSections editable={editable} issues={issues} onChange={onChange} />
+          </SectionGroup.Root>
+        </Tabs.Content>
+      )}
       <Tabs.Content value="stitching" pt={0}>
         <ProjectStitchingSection editable={editable} issues={issues} onChange={onChange} />
       </Tabs.Content>

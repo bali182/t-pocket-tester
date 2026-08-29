@@ -1,4 +1,4 @@
-import { Box, Button, ColorSwatch, Grid, Text } from '@chakra-ui/react'
+import { Box, Button, ColorSwatch, Grid, Menu, Text } from '@chakra-ui/react'
 import { ComponentType, FC, useCallback } from 'react'
 import { PiCheck } from 'react-icons/pi'
 import type { ColorValue } from '../../hooks/useColors'
@@ -72,5 +72,37 @@ export const ButtonSwatchItem: FC<SwatchItemProps> = ({ color, isSelected, onSel
       </ColorSwatch>
       <Text textStyle="2xs">{color.name}</Text>
     </Button>
+  )
+}
+
+export const MenuColorSwatchItem: FC<SwatchItemProps> = ({ color, isSelected, onSelect }) => {
+  const handleSelect = useCallback(() => onSelect(color), [color, onSelect])
+
+  return (
+    <Menu.Item
+      closeOnSelect={false}
+      flexDirection="column"
+      height="auto"
+      onSelect={handleSelect}
+      p="1"
+      value={color.key}
+    >
+      <ColorSwatch size="xl" value={color.color}>
+        {isSelected && (
+          <Box
+            alignItems="center"
+            background="bg.inverted"
+            borderRadius="full"
+            boxSize="5"
+            color="fg.inverted"
+            display="flex"
+            justifyContent="center"
+          >
+            <PiCheck size={8} />
+          </Box>
+        )}
+      </ColorSwatch>
+      <Text textStyle="2xs">{color.name}</Text>
+    </Menu.Item>
   )
 }

@@ -90,6 +90,16 @@ export const EN: typeof HU = {
           stitchHolesVisible: 'Hole visibility',
           stitchesVisible: 'Thread visibility',
         },
+        colors: {
+          name: 'Colors',
+          leatherColor: 'Leather color',
+          stitchHoleColor: 'Stitch hole color',
+          stitchLineColor: 'Stitch line color',
+          strokeColor: 'Stroke color',
+          selectionColor: 'Selection color',
+          cardColor: 'Card color',
+          threadColor: 'Thread color',
+        },
       },
     },
     scalingDialog: {
