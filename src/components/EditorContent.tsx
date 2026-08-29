@@ -7,12 +7,12 @@ import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
+import { CommonEmptyState } from './common/CommonEmptyState'
+import { EditorComponentTree } from './component-tree/EditorComponentTree'
 import { DrawArea } from './DrawArea'
 import { EditorMenu } from './editor-menu/EditorMenu'
 import { EditorSubProjectTabs } from './EditorSubProjectTabs'
 import { FloatingEditors } from './FloatingEditors'
-import { CommonEmptyState } from './common/CommonEmptyState'
-import { EditorComponentTree } from './component-tree/EditorComponentTree'
 
 const panels: SplitterPanelData[] = [{ id: 'draw-area' }, { id: 'tree' }]
 const defaultPanelSizes: string[] = ['auto', '350px']

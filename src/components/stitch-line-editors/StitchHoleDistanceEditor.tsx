@@ -1,6 +1,7 @@
 import {
   Box,
   Combobox,
+  ComboboxRootProps,
   HStack,
   IconButton,
   InputGroup,
@@ -9,7 +10,7 @@ import {
   createListCollection,
   type ComboboxValueChangeDetails,
 } from '@chakra-ui/react'
-import { useCallback, type FC } from 'react'
+import { useCallback, useMemo, type FC } from 'react'
 import { PiArrowCounterClockwise } from 'react-icons/pi'
 
 import { portalRef } from '../../portalRef'
@@ -31,6 +32,7 @@ type StitchHoleDistanceEditorProps = {
   onChange: (value: string) => void
   onReset?: () => void
   isResetEnabled: boolean
+  size?: ComboboxRootProps['size'] | '2xs'
 }
 
 export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
@@ -39,13 +41,23 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
   onChange,
   onReset,
   value,
+  size = 'xs',
 }) => {
-  const isInvalid = isDefined(issue) && issue.severity === 'error'
-  const selectedValue = stitchHoleDistanceValues.includes(value) ? [value] : []
   const t = useTranslation()
+  const isCompact = size === '2xs'
+  const isInvalid = isDefined(issue) && issue.severity === 'error'
+
+  const selectedValue = useMemo(() => {
+    const numValue = Number(value)
+    const selectedItem = stitchHoleDistanceValues.find((item) => Number(item) === numValue)
+    return isDefined(selectedItem) ? [selectedItem] : []
+  }, [value])
 
   const handleInputValueChange = useCallback(
     (details: Combobox.InputValueChangeDetails): void => {
+      if (details.reason !== 'input-change') {
+        return
+      }
       onChange(details.inputValue)
     },
     [onChange],
@@ -54,11 +66,9 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
   const handleValueChange = useCallback(
     (details: ComboboxValueChangeDetails<string>): void => {
       const nextValue = details.value[0]
-
       if (!isDefined(nextValue)) {
         return
       }
-
       onChange(nextValue)
     },
     [onChange],
@@ -71,7 +81,7 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
       disabled={!isResetEnabled}
       height="auto"
       onClick={onReset}
-      size="xs"
+      size={size}
       variant="plain"
     >
       <PiArrowCounterClockwise />
@@ -86,7 +96,8 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
       onInputValueChange={handleInputValueChange}
       onValueChange={handleValueChange}
       openOnClick
-      size="xs"
+      selectionBehavior="preserve"
+      size={isCompact ? 'xs' : size}
       value={selectedValue}
       width="full"
     >
@@ -102,11 +113,16 @@ export const StitchHoleDistanceEditor: FC<StitchHoleDistanceEditorProps> = ({
             )}
           </HStack>
         }
-        endAddonProps={{ px: 0, size: 'xs' }}
+        endAddonProps={{ px: 0, size }}
         width="full"
       >
         <Combobox.Control width="full">
-          <Combobox.Input aria-invalid={isInvalid} borderRightRadius="0" />
+          <Combobox.Input
+            aria-invalid={isInvalid}
+            borderRightRadius="0"
+            height={isCompact ? '7' : undefined}
+            minH={isCompact ? '7' : undefined}
+          />
           <Combobox.IndicatorGroup>
             <Combobox.Trigger />
           </Combobox.IndicatorGroup>

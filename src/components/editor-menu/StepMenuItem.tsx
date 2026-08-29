@@ -25,7 +25,12 @@ export const StepMenuItem: FC<StepMenuItemProps> = ({
   const handleSelect = useCallback(() => onSelect(value), [onSelect, value])
   const isSelected = selectedValue === value
   return (
-    <Menu.Item value={value.toString()} onSelect={handleSelect} background={isSelected ? 'bg.emphasized' : undefined}>
+    <Menu.Item
+      background={isSelected ? 'bg.emphasized' : undefined}
+      onSelect={handleSelect}
+      value={value.toString()}
+      closeOnSelect={false}
+    >
       <Icon as={icon} transform={`scale(${iconScale})`} transformOrigin="center" />
       <Menu.ItemText fontWeight={isSelected ? 'semibold' : undefined} mr="2">
         {title}

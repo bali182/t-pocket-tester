@@ -77,6 +77,14 @@ export const EN: typeof HU = {
           stitch: 'Stitch-size',
           size: (size: number) => `${size} mm`,
         },
+        stitching: {
+          name: 'Stitching',
+          margin: 'Margin',
+          holeLength: 'Hole length',
+          holeDistance: 'Hole spacing',
+          holeThickness: 'Hole thickness',
+          lineThickness: 'Line thickness',
+        },
       },
       view: {
         name: 'View',
