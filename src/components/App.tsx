@@ -1,16 +1,15 @@
 import { Box, Theme } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
+import { useTheme } from '../hooks/useTheme'
 import { portalRef } from '../portalRef'
-import { themeAtom } from '../state/themeAtom'
 import { ProjectIndexRoute } from './routes/ProjectIndexRoute'
 import { ProjectRoute } from './routes/ProjectRoute'
 import { ProjectsRoute } from './routes/ProjectsRoute'
 import { SubProjectRoute } from './routes/SubProjectRoute'
 
 export const App: FC = () => {
-  const theme = useAtomValue(themeAtom)
+  const { theme } = useTheme()
 
   return (
     <Theme appearance={theme}>

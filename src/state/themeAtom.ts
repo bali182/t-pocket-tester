@@ -1,13 +1,13 @@
 import { atom } from 'jotai'
 
-import type { ThemeAppearanceSchema } from '../schemas/theme'
+import type { ThemeSchema } from '../schemas/theme'
 import { readThemeFromStorage, saveThemeToStorage } from './storage'
 
-const themeStorageAtom = atom<ThemeAppearanceSchema>(readThemeFromStorage())
+const themeStorageAtom = atom<ThemeSchema>(readThemeFromStorage())
 
 export const themeAtom = atom(
-  (get): ThemeAppearanceSchema => get(themeStorageAtom),
-  (_get, set, nextTheme: ThemeAppearanceSchema): void => {
+  (get): ThemeSchema => get(themeStorageAtom),
+  (_get, set, nextTheme: ThemeSchema): void => {
     set(themeStorageAtom, nextTheme)
     saveThemeToStorage(nextTheme)
   },

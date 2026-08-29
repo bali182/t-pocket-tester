@@ -1,13 +1,12 @@
 import { Button, Card, HStack, IconButton, Menu, Portal, Separator, Switch, Text } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
 import { FC, useCallback, useMemo, useRef, useState } from 'react'
 import { PiCaretDown, PiCaretLeft, PiExport, PiMoon, PiRuler, PiSun, PiWalletDuotone } from 'react-icons/pi'
 import { Link } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
+import { useTheme } from '../hooks/useTheme'
 import { portalRef } from '../portalRef'
-import { themeAtom } from '../state/themeAtom'
 import { useTranslation } from '../translations/translation'
 import { PdfExportDialog } from './PdfExportDialog'
 import { ProjectSettingsPopover } from './ProjectSettingsPopover'
@@ -16,7 +15,7 @@ import { SvgExportDialog } from './SvgExportDialog'
 
 export const EditorMenu = () => {
   const { project } = useProject()
-  const [theme, setTheme] = useAtom(themeAtom)
+  const { theme, setTheme } = useTheme()
   const menuRef = useRef<HTMLDivElement>(null)
 
   const handleThemeChange = useCallback(
