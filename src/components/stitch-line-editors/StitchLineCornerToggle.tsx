@@ -2,6 +2,12 @@ import { Box, Button, type CssProperties, type SystemStyleObject, type Tokens } 
 import { useMemo, type FC } from 'react'
 
 import type { StitchCornerSchema } from '../../schemas/stitching'
+import {
+  SELECTED_BORDER_COLOR,
+  SELECTED_HOVER_BORDER_COLOR,
+  UNSELECTED_BORDER_COLOR,
+  UNSELECTED_HOVER_BORDER_COLOR,
+} from './colors'
 
 type StitchLineSegmentLayout = {
   button: SystemStyleObject
@@ -27,11 +33,11 @@ export const StitchLineCornerToggle: FC<StitchLineCornerToggleProps> = ({
   const layout = useMemo<StitchLineSegmentLayout>(() => getCornerLayout(corner), [corner])
 
   const borderColor = useMemo<CssProperties['borderColor']>(
-    () => (selected ? CORNER_SELECTED_BORDER_COLOR : CORNER_UNSELECTED_BORDER_COLOR),
+    () => (selected ? SELECTED_BORDER_COLOR : UNSELECTED_BORDER_COLOR),
     [selected],
   )
   const hoverBorderColor = useMemo<CssProperties['borderColor']>(
-    () => (selected ? CORNER_SELECTED_HOVER_BORDER_COLOR : CORNER_UNSELECTED_HOVER_BORDER_COLOR),
+    () => (selected ? SELECTED_HOVER_BORDER_COLOR : UNSELECTED_HOVER_BORDER_COLOR),
     [selected],
   )
   const hover = useMemo<SystemStyleObject | undefined>(
@@ -64,10 +70,6 @@ const CORNER_HIT_SLOP: Tokens['spacing'] = '4'
 const NEGATIVE_CORNER_HIT_SLOP: Tokens['spacing'] = `-${CORNER_HIT_SLOP}` as Tokens['spacing']
 const CORNER_INSET: Tokens['sizes'] = 'md'
 const CORNER_RADIUS: Tokens['radii'] = 'md'
-const CORNER_SELECTED_BORDER_COLOR: CssProperties['borderColor'] = 'border.info/80'
-const CORNER_SELECTED_HOVER_BORDER_COLOR: CssProperties['borderColor'] = 'border.info'
-const CORNER_UNSELECTED_BORDER_COLOR: CssProperties['borderColor'] = 'border.emphasized'
-const CORNER_UNSELECTED_HOVER_BORDER_COLOR: CssProperties['borderColor'] = 'border.info/80'
 
 const getCornerLayout = (corner: StitchCornerSchema): StitchLineSegmentLayout => {
   const layouts: Record<StitchCornerSchema, StitchLineSegmentLayout> = {

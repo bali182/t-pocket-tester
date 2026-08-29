@@ -2,6 +2,12 @@ import { Box, Button, type CssProperties, type SystemStyleObject, type Tokens } 
 import { useMemo, type FC } from 'react'
 
 import type { StitchSideSchema } from '../../schemas/stitching'
+import {
+  SELECTED_BORDER_COLOR,
+  SELECTED_HOVER_BORDER_COLOR,
+  UNSELECTED_BORDER_COLOR,
+  UNSELECTED_HOVER_BORDER_COLOR,
+} from './colors'
 
 type StitchLineSegmentLayout = {
   button: SystemStyleObject
@@ -20,11 +26,11 @@ export const StitchLineEdgeToggle: FC<StitchLineEdgeToggleProps> = ({ label, onC
   const layout = useMemo<StitchLineSegmentLayout>(() => getSideLayout(side), [side])
 
   const borderColor = useMemo<CssProperties['borderColor']>(
-    () => (selected ? EDGE_SELECTED_BORDER_COLOR : EDGE_UNSELECTED_BORDER_COLOR),
+    () => (selected ? SELECTED_BORDER_COLOR : UNSELECTED_BORDER_COLOR),
     [selected],
   )
   const hoverBorderColor = useMemo<CssProperties['borderColor']>(
-    () => (selected ? EDGE_SELECTED_HOVER_BORDER_COLOR : EDGE_UNSELECTED_HOVER_BORDER_COLOR),
+    () => (selected ? SELECTED_HOVER_BORDER_COLOR : UNSELECTED_HOVER_BORDER_COLOR),
     [selected],
   )
   const hover = useMemo<SystemStyleObject>(
@@ -54,10 +60,6 @@ const EDGE_SEGMENT_SIZE: Tokens['sizes'] = '10'
 const EDGE_HIT_SLOP: Tokens['spacing'] = '4'
 const NEGATIVE_EDGE_HIT_SLOP: Tokens['spacing'] = `-${EDGE_HIT_SLOP}` as Tokens['spacing']
 const EDGE_INSET: Tokens['sizes'] = 'md'
-const EDGE_SELECTED_BORDER_COLOR: CssProperties['borderColor'] = 'border.info/80'
-const EDGE_SELECTED_HOVER_BORDER_COLOR: CssProperties['borderColor'] = 'border.info'
-const EDGE_UNSELECTED_BORDER_COLOR: CssProperties['borderColor'] = 'border.emphasized'
-const EDGE_UNSELECTED_HOVER_BORDER_COLOR: CssProperties['borderColor'] = 'border.info/80'
 
 const getSideLayout = (side: StitchSideSchema): StitchLineSegmentLayout => {
   const layouts: Record<StitchSideSchema, StitchLineSegmentLayout> = {
