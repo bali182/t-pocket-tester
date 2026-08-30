@@ -1,5 +1,6 @@
 import type { ComputedStitchLineSchema, ComputedStitchRouteSchema } from '../../schemas/computed'
 import type { ResolvedComponentBoundsStitchLineSchema } from '../../schemas/stitching'
+import { calculateRouteConnectingStitches } from './calculateRouteConnectingStitches'
 import { calculateRouteDisconnectedCorners } from './calculateRouteDisconnectedCorners'
 import { calculateRouteStitches } from './calculateRouteStitches'
 import { calculateStitchLineBoundingRect } from './calculateStitchLineBoundingRect'
@@ -36,6 +37,6 @@ export const calculateComponentBoundsStitchLine = (
     autoComputedCornerRadius: getStitchLineAutoCornerRadius(stitchLine, target),
     boundingRect: calculateStitchLineBoundingRect(points),
     routes,
-    connectingStitches: [],
+    connectingStitches: calculateRouteConnectingStitches(stitchLine, routes),
   }
 }
