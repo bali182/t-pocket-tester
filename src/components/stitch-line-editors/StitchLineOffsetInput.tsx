@@ -1,12 +1,13 @@
 import { Box } from '@chakra-ui/react'
 import type { FC } from 'react'
 import type { IconType } from 'react-icons'
-import { PiArrowLineDown, PiArrowLineLeft, PiArrowLineRight, PiArrowLineUp } from 'react-icons/pi'
+import { PiArrowLineDown, PiArrowLineLeft, PiArrowLineRight, PiArrowLineUp, PiProhibit } from 'react-icons/pi'
 
 import type { IssueSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { TranslationSchema } from '../../translations/translationSchema'
 import { NumberInput } from '../common/NumberInput'
+import { HIDDEN_INPUT_OPACITY } from './colors'
 
 export type StitchLineOffsetField =
   | 'leftStartOffset'
@@ -80,13 +81,14 @@ const OFFSET_INPUT_CONFIGURATIONS: Record<StitchLineOffsetField, StitchLineOffse
 export const StitchLineOffsetInput: FC<StitchLineOffsetInputProps> = ({ disabled, field, issue, onChange, value }) => {
   const t = useTranslation()
   const configuration = OFFSET_INPUT_CONFIGURATIONS[field]
-  const Icon = configuration.icon
+  const Icon = disabled ? PiProhibit : configuration.icon
 
   return (
     <Box aria-label={getOffsetInputLabel(field, t)} gridArea={configuration.gridArea} role="group" width="20">
       <NumberInput
         disabled={disabled}
         issue={issue}
+        opacity={disabled ? HIDDEN_INPUT_OPACITY : undefined}
         size="2xs"
         startAddon={<Icon />}
         value={value}

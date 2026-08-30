@@ -18,6 +18,7 @@ type NumberInputProps = {
   unit?: string
   step?: number
   size?: InputProps['size']
+  opacity?: number
 }
 
 // TODO do we need this as a component?
@@ -33,6 +34,7 @@ export const NumberInput: FC<NumberInputProps> = ({
   value,
   placeholder,
   isResetEnabled,
+  opacity,
 }) => {
   const isInvalid = isDefined(issue) && issue.severity === 'error'
   const { step } = useNumberEditorStepContext()
@@ -59,6 +61,7 @@ export const NumberInput: FC<NumberInputProps> = ({
       value={value}
       placeholder={placeholder}
       size={size}
+      opacity={opacity}
     />
   )
 
@@ -103,6 +106,7 @@ export const NumberInput: FC<NumberInputProps> = ({
       endAddonProps={{ size, px: 0 }}
       startAddon={startAddon}
       startAddonProps={{ size, px: '1.5' }}
+      opacity={opacity}
     >
       {input}
     </InputGroup>
