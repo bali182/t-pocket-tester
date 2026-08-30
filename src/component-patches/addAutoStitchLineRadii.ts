@@ -33,7 +33,7 @@ export const addAutoStitchLineRadii = (
       radius.topRightRadius,
     ])
 
-    const individualRadii = radiusValues.size > 0
+    const individualRadii = radiusValues.size > 1
 
     if (
       radius.bottomLeftRadius !== stitchLine.bottomLeftRadius ||
