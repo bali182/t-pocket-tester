@@ -1,25 +1,20 @@
 import type { FC } from 'react'
 
-import type { ResolvedStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
+import type { ComputedStitchSchema } from '../../schemas/computed'
+import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { Stitch } from './Stitch'
 
 type StitchesProps = {
-  holes: StitchHoleSchema[]
-  isClosed: boolean
+  stitches: ComputedStitchSchema[]
   stitchLine: ResolvedStitchLineSchema
 }
 
-export const Stitches: FC<StitchesProps> = ({ holes, isClosed, stitchLine }) => {
-  if (holes.length < 2) {
-    return null
-  }
-
+export const Stitches: FC<StitchesProps> = ({ stitches, stitchLine }) => {
   return (
     <>
-      {holes.slice(1).map((toHole, index) => (
-        <Stitch fromHole={holes[index]} key={index} stitchLine={stitchLine} toHole={toHole} />
+      {stitches.map((stitch, index) => (
+        <Stitch key={index} stitch={stitch} stitchLine={stitchLine} />
       ))}
-      {isClosed && <Stitch fromHole={holes[holes.length - 1]} stitchLine={stitchLine} toHole={holes[0]} />}
     </>
   )
 }

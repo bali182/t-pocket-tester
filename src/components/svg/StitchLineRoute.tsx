@@ -5,7 +5,6 @@ import { usePath } from '../../hooks/usePath'
 import type { ComputedStitchRouteSchema } from '../../schemas/computed'
 import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { StitchHole } from './StitchHole'
-import { Stitches } from './Stitches'
 
 type StitchLineRouteProps = {
   route: ComputedStitchRouteSchema
@@ -59,9 +58,6 @@ export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine })
       )}
       {(!isInteractive || stitchLine.stitchHolesVisible) &&
         route.holes.map((hole, index) => <StitchHole key={index} hole={hole} stitchLine={stitchLine} />)}
-      {isInteractive && stitchLine.stitchesVisible && (
-        <Stitches holes={route.holes} isClosed={route.isClosed} stitchLine={stitchLine} />
-      )}
       {isInteractive && (
         <path d={pathData} fill="none" pointerEvents="stroke" stroke="transparent" strokeWidth={hitAreaThickness} />
       )}

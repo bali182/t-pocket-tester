@@ -1,26 +1,23 @@
 import type { FC } from 'react'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
-import { getStitchHoleLine } from '../../logic/stitching/getStitchHoleLine'
-import type { ResolvedStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
+import type { ComputedStitchSchema } from '../../schemas/computed'
+import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 
 type StitchProps = {
-  fromHole: StitchHoleSchema
-  toHole: StitchHoleSchema
+  stitch: ComputedStitchSchema
   stitchLine: ResolvedStitchLineSchema
 }
 
-export const Stitch: FC<StitchProps> = ({ fromHole, toHole, stitchLine }) => {
+export const Stitch: FC<StitchProps> = ({ stitch, stitchLine }) => {
   const { stitchLineStyles } = useDrawAreaContext()
-  const fromLine = getStitchHoleLine(fromHole, stitchLine.stitchHoleLength)
-  const toLine = getStitchHoleLine(toHole, stitchLine.stitchHoleLength)
 
   return (
     <line
-      x1={fromLine.end.x}
-      y1={fromLine.end.y}
-      x2={toLine.start.x}
-      y2={toLine.start.y}
+      x1={stitch.line.start.x.toNumber()}
+      y1={stitch.line.start.y.toNumber()}
+      x2={stitch.line.end.x.toNumber()}
+      y2={stitch.line.end.y.toNumber()}
       stroke={stitchLineStyles.getThreadColor(stitchLine)}
       strokeLinecap="round"
       strokeWidth={stitchLineStyles.getThreadThickness(stitchLine)}

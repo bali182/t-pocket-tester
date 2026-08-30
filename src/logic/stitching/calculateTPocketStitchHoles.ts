@@ -1,8 +1,10 @@
 import BigNumber from 'bignumber.js'
 
+import { ComputedStitchHoleSchema } from '../../schemas/computed'
 import type { LineSchema } from '../../schemas/geometry'
-import type { ResolvedPocketClusterStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
+import type { ResolvedPocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { isDefined } from '../../utils/isDefined'
+import { getStitchHoleLine } from './getStitchHoleLine'
 import {
   findNextStitchHole,
   getSegmentTangentRotation,
@@ -13,7 +15,7 @@ import {
 export const calculateTPocketStitchHoles = (
   stitchLine: ResolvedPocketClusterStitchLineSchema,
   line: LineSchema,
-): StitchHoleSchema[] => {
+): ComputedStitchHoleSchema[] => {
   const stitchHoleDistance = new BigNumber(stitchLine.stitchHoleDistance)
 
   if (!stitchHoleDistance.isGreaterThan(0)) {
@@ -22,10 +24,12 @@ export const calculateTPocketStitchHoles = (
 
   const directedLine = stitchLine.stitchDirection === 'start-to-end' ? line : { start: line.end, end: line.start }
   const segment: StitchHoleLineSegment = { type: 'line', start: directedLine.start, end: directedLine.end }
-  const holes: StitchHoleSchema[] = [
+  const firstRotation = getSegmentTangentRotation(segment, segment.start)
+  const holes: ComputedStitchHoleSchema[] = [
     {
       center: segment.start,
-      rotation: getSegmentTangentRotation(segment, segment.start),
+      rotation: firstRotation,
+      line: getStitchHoleLine(segment.start, firstRotation, stitchLine.stitchHoleLength),
     },
   ]
   let previousHole = holes[0]
@@ -33,9 +37,11 @@ export const calculateTPocketStitchHoles = (
   let nextHole = findNextStitchHole(previousHole.center, stitchHoleDistance, [segment], cursor)
 
   while (isDefined(nextHole)) {
-    const hole: StitchHoleSchema = {
+    const rotation = getStitchHoleRotation(previousHole.center, nextHole.center)
+    const hole: ComputedStitchHoleSchema = {
       center: nextHole.center,
-      rotation: getStitchHoleRotation(previousHole.center, nextHole.center),
+      rotation,
+      line: getStitchHoleLine(nextHole.center, rotation, stitchLine.stitchHoleLength),
     }
     holes.push(hole)
     previousHole = hole

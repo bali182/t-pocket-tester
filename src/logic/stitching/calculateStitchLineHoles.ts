@@ -1,10 +1,12 @@
 import BigNumber from 'bignumber.js'
 
+import { ComputedStitchHoleSchema } from '../../schemas/computed'
 import { PointSchema } from '../../schemas/geometry'
-import type { ResolvedComponentBoundsStitchLineSchema, StitchHoleSchema } from '../../schemas/stitching'
+import type { ResolvedComponentBoundsStitchLineSchema } from '../../schemas/stitching'
 import { isDefined } from '../../utils/isDefined'
 import { getPointDistance } from '../geometryUtils'
 import type { CalculatedStitchLinePath, StitchPathFragment, StitchSidePathFragment } from './calculateStitchLinePaths'
+import { getStitchHoleLine } from './getStitchHoleLine'
 import {
   createStitchHoleSegments,
   findNextStitchHole,
@@ -25,7 +27,7 @@ type StitchHoleTraversal = {
 export const calculateStitchLineHoles = (
   stitchLine: ResolvedComponentBoundsStitchLineSchema,
   calculatedPath: CalculatedStitchLinePath,
-): StitchHoleSchema[] => {
+): ComputedStitchHoleSchema[] => {
   const stitchHoleDistance = new BigNumber(stitchLine.stitchHoleDistance)
 
   if (!stitchHoleDistance.isGreaterThan(0)) {
@@ -34,7 +36,7 @@ export const calculateStitchLineHoles = (
 
   const traversals = calculateStitchHoleTraversals(stitchLine, calculatedPath.fragments)
   const holes = traversals.flatMap((traversal) => {
-    const traversalHoles = calculateTraversalHoles(traversal, stitchHoleDistance)
+    const traversalHoles = calculateTraversalHoles(traversal, stitchHoleDistance, stitchLine.stitchHoleLength)
 
     return traversal.endsAtSharpCorner
       ? removeHoleTooCloseToEndpoint(traversalHoles, traversal.endsAt, stitchHoleDistance)
@@ -130,16 +132,22 @@ const appendTraversal = (
   })
 }
 
-const calculateTraversalHoles = (traversal: StitchHoleTraversal, stitchHoleDistance: BigNumber): StitchHoleSchema[] => {
+const calculateTraversalHoles = (
+  traversal: StitchHoleTraversal,
+  stitchHoleDistance: BigNumber,
+  stitchHoleLength: number,
+): ComputedStitchHoleSchema[] => {
   const firstSegment = traversal.segments[0]
   if (!isDefined(firstSegment)) {
     return []
   }
 
-  const holes: StitchHoleSchema[] = [
+  const firstRotation = getSegmentTangentRotation(firstSegment, traversal.startsAt)
+  const holes: ComputedStitchHoleSchema[] = [
     {
       center: traversal.startsAt,
-      rotation: getSegmentTangentRotation(firstSegment, traversal.startsAt),
+      rotation: firstRotation,
+      line: getStitchHoleLine(traversal.startsAt, firstRotation, stitchHoleLength),
     },
   ]
   let previousHole = holes[0]
@@ -147,9 +155,11 @@ const calculateTraversalHoles = (traversal: StitchHoleTraversal, stitchHoleDista
   let nextHole = findNextStitchHole(previousHole.center, stitchHoleDistance, traversal.segments, cursor)
 
   while (isDefined(nextHole)) {
-    const hole: StitchHoleSchema = {
+    const rotation = getStitchHoleRotation(previousHole.center, nextHole.center)
+    const hole: ComputedStitchHoleSchema = {
       center: nextHole.center,
-      rotation: getStitchHoleRotation(previousHole.center, nextHole.center),
+      rotation,
+      line: getStitchHoleLine(nextHole.center, rotation, stitchHoleLength),
     }
     holes.push(hole)
     previousHole = hole
@@ -161,10 +171,10 @@ const calculateTraversalHoles = (traversal: StitchHoleTraversal, stitchHoleDista
 }
 
 const removeHoleTooCloseToEndpoint = (
-  holes: StitchHoleSchema[],
+  holes: ComputedStitchHoleSchema[],
   endpoint: PointSchema,
   stitchHoleDistance: BigNumber,
-): StitchHoleSchema[] => {
+): ComputedStitchHoleSchema[] => {
   const lastHole = holes[holes.length - 1]
 
   if (!isDefined(lastHole) || !isHoleTooCloseToEndpoint(lastHole.center, endpoint, stitchHoleDistance)) {
@@ -175,10 +185,10 @@ const removeHoleTooCloseToEndpoint = (
 }
 
 const removeHoleTooCloseToRouteStart = (
-  holes: StitchHoleSchema[],
+  holes: ComputedStitchHoleSchema[],
   routeStart: PointSchema,
   stitchHoleDistance: BigNumber,
-): StitchHoleSchema[] => {
+): ComputedStitchHoleSchema[] => {
   let result = holes
   let lastHole = result[result.length - 1]
 

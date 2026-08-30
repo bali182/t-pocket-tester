@@ -6,18 +6,12 @@ import {
   HasTargetSchema,
   HasTypeSchema,
 } from './common'
-import { PointSchema } from './geometry'
 
 export type StitchDirectionSchema = 'start-to-end' | 'end-to-start'
 export type HorizontalStitchDirectionSchema = 'left-to-right' | 'right-to-left'
 export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
 export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
 export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
-
-export type StitchHoleSchema = {
-  center: PointSchema
-  rotation: number
-}
 
 export type StitchingVisibilityConfigSchema = {
   stitchLinesVisible: boolean

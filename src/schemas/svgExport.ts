@@ -2,16 +2,16 @@ import type BigNumber from 'bignumber.js'
 
 import { HasTypeSchema } from './common'
 import type { ComponentSchema, PocketClusterSchema } from './components'
-import type { ComputedTPocketSchema, ComputedTopPocketSchema } from './computed'
+import type { ComputedStitchHoleSchema, ComputedTPocketSchema, ComputedTopPocketSchema } from './computed'
 import type { PathSchema, RectSchema } from './geometry'
 import { BaseExportSettingsSchema } from './settings'
-import type { ResolvedStitchLineSchema, StitchHoleSchema } from './stitching'
+import type { ResolvedStitchLineSchema } from './stitching'
 import type { SubProjectSchema } from './subProject'
 
 export type SvgExportStitchLineSchema = {
   stitchLine: ResolvedStitchLineSchema
   paths: PathSchema[]
-  holes: StitchHoleSchema[]
+  holes: ComputedStitchHoleSchema[]
 }
 
 export type SvgExportPanelSchema = HasTypeSchema<'svg-export-panel'> & {
