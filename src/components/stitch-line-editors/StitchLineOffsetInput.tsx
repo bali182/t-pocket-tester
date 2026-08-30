@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, type BoxProps } from '@chakra-ui/react'
 import type { FC } from 'react'
 import type { IconType } from 'react-icons'
 import { PiArrowLineDown, PiArrowLineLeft, PiArrowLineRight, PiArrowLineUp, PiProhibit } from 'react-icons/pi'
@@ -38,6 +38,7 @@ type StitchLineOffsetGridArea =
   | 'left-end-offset'
 
 type StitchLineOffsetInputConfiguration = {
+  alignSelf?: BoxProps['alignSelf']
   gridArea: StitchLineOffsetGridArea
   icon: IconType
 }
@@ -45,10 +46,12 @@ type StitchLineOffsetInputConfiguration = {
 // First 4 have start/end swapped because rendering logic is going cannonical, so start and end are different on bottom and left.,
 const OFFSET_INPUT_CONFIGURATIONS: Record<StitchLineOffsetField, StitchLineOffsetInputConfiguration> = {
   bottomEndOffset: {
+    alignSelf: 'end',
     gridArea: 'bottom-start-offset',
     icon: PiArrowLineLeft,
   },
   bottomStartOffset: {
+    alignSelf: 'end',
     gridArea: 'bottom-end-offset',
     icon: PiArrowLineRight,
   },
@@ -84,7 +87,13 @@ export const StitchLineOffsetInput: FC<StitchLineOffsetInputProps> = ({ disabled
   const Icon = disabled ? PiProhibit : configuration.icon
 
   return (
-    <Box aria-label={getOffsetInputLabel(field, t)} gridArea={configuration.gridArea} role="group" width="20">
+    <Box
+      alignSelf={configuration.alignSelf}
+      aria-label={getOffsetInputLabel(field, t)}
+      gridArea={configuration.gridArea}
+      role="group"
+      width="20"
+    >
       <NumberInput
         disabled={disabled}
         issue={issue}

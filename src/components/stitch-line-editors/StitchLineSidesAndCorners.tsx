@@ -7,6 +7,7 @@ import type { ValidationIssuesSchema } from '../../schemas/validation'
 import { useTranslation } from '../../translations/translation'
 import { StitchLineCornerToggle } from './StitchLineCornerToggle'
 import { StitchLineDirectionSwitch } from './StitchLineDirectionSwitch'
+import { StitchLineDisconnectedCornerSwitch } from './StitchLineDisconnectedCornerSwitch'
 import { StitchLineEdgeToggle } from './StitchLineEdgeToggle'
 import { StitchLineOffsetInput, type StitchLineOffsetField } from './StitchLineOffsetInput'
 
@@ -18,6 +19,11 @@ type StitchLineSidesAndCornersProps = {
 
 type StitchLineSideFields = 'top' | 'right' | 'bottom' | 'left'
 type StitchLineCornerFields = 'topLeftCorner' | 'topRightCorner' | 'bottomRightCorner' | 'bottomLeftCorner'
+type StitchLineDisconnectedCornerFields =
+  | 'stitchDisconnectedTopLeftCorner'
+  | 'stitchDisconnectedTopRightCorner'
+  | 'stitchDisconnectedBottomRightCorner'
+  | 'stitchDisconnectedBottomLeftCorner'
 type StitchLineSideOrCornerFields = StitchLineCornerFields | StitchLineSideFields
 
 type StitchLineSideCornersSchema = {
@@ -40,6 +46,13 @@ const cornerSides: Record<StitchLineCornerFields, CornerSidesSchema> = {
   bottomRightCorner: { first: 'bottom', second: 'right' },
   topLeftCorner: { first: 'top', second: 'left' },
   topRightCorner: { first: 'top', second: 'right' },
+}
+
+const disconnectedCornerFields: Record<StitchLineCornerFields, StitchLineDisconnectedCornerFields> = {
+  bottomLeftCorner: 'stitchDisconnectedBottomLeftCorner',
+  bottomRightCorner: 'stitchDisconnectedBottomRightCorner',
+  topLeftCorner: 'stitchDisconnectedTopLeftCorner',
+  topRightCorner: 'stitchDisconnectedTopRightCorner',
 }
 
 const sideCorners: Record<StitchLineSideFields, StitchLineSideCornersSchema> = {
@@ -87,6 +100,15 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
     [editable],
   )
 
+  const isDisconnectedCornerDisabled = useCallback(
+    (corner: StitchLineCornerFields): boolean => {
+      const sides = cornerSides[corner]
+
+      return editable[corner] || !editable[sides.first] || !editable[sides.second]
+    },
+    [editable],
+  )
+
   const isOffsetDisabled = useCallback(
     (field: StitchLineOffsetField): boolean => {
       const connection = offsetConnections[field]
@@ -99,6 +121,13 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
   const handleOffsetChange = useCallback(
     (field: StitchLineOffsetField, value: string): void => {
       onChange({ ...editable, [field]: value })
+    },
+    [editable, onChange],
+  )
+
+  const handleDisconnectedCornerChange = useCallback(
+    (field: StitchLineDisconnectedCornerFields, checked: boolean): void => {
+      onChange({ ...editable, [field]: checked })
     },
     [editable, onChange],
   )
@@ -127,6 +156,7 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
         `}
         gridTemplateColumns="auto minmax(0, 1fr) auto"
         gridTemplateRows="auto minmax(0, 1fr) auto"
+        position="relative"
       >
         <StitchLineCornerToggle
           label={t.common.directions.topLeft}
@@ -180,6 +210,36 @@ export const StitchLineSidesAndCorners: FC<StitchLineSidesAndCornersProps> = ({ 
           disabled={isCornerDisabled('bottomRightCorner')}
           selected={editable.bottomRightCorner}
           onClick={() => toggle('bottomRightCorner')}
+        />
+        <StitchLineDisconnectedCornerSwitch
+          checked={editable[disconnectedCornerFields.topLeftCorner]}
+          corner="top-left"
+          disabled={isDisconnectedCornerDisabled('topLeftCorner')}
+          onCheckedChange={(checked) => handleDisconnectedCornerChange(disconnectedCornerFields.topLeftCorner, checked)}
+        />
+        <StitchLineDisconnectedCornerSwitch
+          checked={editable[disconnectedCornerFields.topRightCorner]}
+          corner="top-right"
+          disabled={isDisconnectedCornerDisabled('topRightCorner')}
+          onCheckedChange={(checked) =>
+            handleDisconnectedCornerChange(disconnectedCornerFields.topRightCorner, checked)
+          }
+        />
+        <StitchLineDisconnectedCornerSwitch
+          checked={editable[disconnectedCornerFields.bottomLeftCorner]}
+          corner="bottom-left"
+          disabled={isDisconnectedCornerDisabled('bottomLeftCorner')}
+          onCheckedChange={(checked) =>
+            handleDisconnectedCornerChange(disconnectedCornerFields.bottomLeftCorner, checked)
+          }
+        />
+        <StitchLineDisconnectedCornerSwitch
+          checked={editable[disconnectedCornerFields.bottomRightCorner]}
+          corner="bottom-right"
+          disabled={isDisconnectedCornerDisabled('bottomRightCorner')}
+          onCheckedChange={(checked) =>
+            handleDisconnectedCornerChange(disconnectedCornerFields.bottomRightCorner, checked)
+          }
         />
       </Grid>
       <StitchLineDirectionSwitch

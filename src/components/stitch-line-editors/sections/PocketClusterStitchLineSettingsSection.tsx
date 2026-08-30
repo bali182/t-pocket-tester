@@ -63,7 +63,7 @@ export const PocketClusterStitchLineSettingsSection = ({
         <Switch.Root
           checked={editable.stitchDirection === 'start-to-end'}
           onCheckedChange={handleStitchDirectionChange}
-          size="sm"
+          size="md"
         >
           <Switch.HiddenInput />
           <Switch.Control bg="bg.emphasized" _checked={{ bg: 'bg.emphasized' }}>

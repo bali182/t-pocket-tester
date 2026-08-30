@@ -64,8 +64,13 @@ export const StitchLineDirectionSwitch: FC<StitchLineDirectionSwitchProps> = ({
   )
 
   return (
-    <Box gridArea={configuration.gridArea} justifySelf="center" opacity={disabled ? HIDDEN_INPUT_OPACITY : undefined}>
-      <Switch.Root checked={checked} disabled={disabled} onCheckedChange={handleCheckedChange} size="sm">
+    <Box
+      alignSelf="center"
+      gridArea={configuration.gridArea}
+      justifySelf="center"
+      opacity={disabled ? HIDDEN_INPUT_OPACITY : undefined}
+    >
+      <Switch.Root checked={checked} disabled={disabled} onCheckedChange={handleCheckedChange} size="md">
         <Switch.HiddenInput aria-label={label} />
         <Switch.Control bg="bg.emphasized" _checked={{ bg: 'bg.emphasized' }}>
           <Switch.Thumb bg="bg.panel" _checked={{ bg: 'bg.panel' }}>
