@@ -20,7 +20,7 @@ export const StitchLine: FC<StitchLineProps> = ({ computedStitchLine, stitchLine
         <StitchLineRoute key={index} route={route} stitchLine={stitchLine} />
       ))}
       {isInteractive && stitchLine.stitchesVisible && (
-        <Stitches stitches={computedStitchLine.stitches} stitchLine={stitchLine} />
+        <Stitches stitches={computedStitchLine.connectingStitches} stitchLine={stitchLine} />
       )}
     </g>
   )
