@@ -50,6 +50,30 @@ export type HasDirectionalOffsetsSchema = {
   leftEndOffset: number
 }
 
+// Are we stitching the given side?
+export type HasStitchedSidesSchema = {
+  top: boolean
+  right: boolean
+  bottom: boolean
+  left: boolean
+}
+
+// Are we stitching the given corner (which may or may not have a radius)?
+export type HasStitchedCornersSchema = {
+  topLeftCorner: boolean
+  topRightCorner: boolean
+  bottomRightCorner: boolean
+  bottomLeftCorner: boolean
+}
+
+// Even if the corners are turned off (HasStitchedCornersSchema) stitches are drawn between the unconnected points of stitch holes
+export type HasStitchedUnconnectedCornersSchema = {
+  stitchDisconnectedTopLeftCorner: boolean
+  stitchDisconnectedTopRightCorner: boolean
+  stitchDisconnectedBottomLeftCorner: boolean
+  stitchDisconnectedBottomRightCorner: boolean
+}
+
 export type HasHorizontalDirectionsSchema = {
   // Stitching direction for sides. Can only be changed if the sides are not connected by a corner.
   topStitchDirection: HorizontalStitchDirectionSchema
@@ -66,19 +90,10 @@ export type ComponentBoundsStitchLineOwnSchema = HasDirectionalOffsetsSchema &
   HasAutoCornerRadiusSchema &
   HasCornerRadiusSchema &
   HasVerticalDirectionsSchema &
-  HasHorizontalDirectionsSchema & {
-    // Are we stitching the given side?
-    top: boolean
-    right: boolean
-    bottom: boolean
-    left: boolean
-
-    // Are we stitching the given corner (which may or may not have a radius)?
-    topLeftCorner: boolean
-    topRightCorner: boolean
-    bottomRightCorner: boolean
-    bottomLeftCorner: boolean
-  }
+  HasHorizontalDirectionsSchema &
+  HasStitchedCornersSchema &
+  HasStitchedSidesSchema &
+  HasStitchedUnconnectedCornersSchema
 
 export type ComponentBoundsStitchLineSchema = HasTypeSchema<'component-bounds-stitch-line'> &
   HasIdentitySchema &
