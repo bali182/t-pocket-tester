@@ -1,6 +1,6 @@
 import { Box, Switch, type SystemStyleObject, type Tokens } from '@chakra-ui/react'
 import type { FC } from 'react'
-import { PiLinkBreak, PiNeedle } from 'react-icons/pi'
+import { PiLineSegment, PiProhibit, PiScissors } from 'react-icons/pi'
 
 import type { StitchCornerSchema } from '../../schemas/stitching'
 import { HIDDEN_INPUT_OPACITY } from './colors'
@@ -27,6 +27,9 @@ export const StitchLineDisconnectedCornerSwitch: FC<StitchLineDisconnectedCorner
   disabled,
   onCheckedChange,
 }) => {
+  const OnIcon = disabled ? PiProhibit : PiLineSegment
+  const OffIcon = disabled ? PiProhibit : PiScissors
+
   return (
     <Box
       {...DISCONNECTED_CORNER_SWITCH_LAYOUTS[corner]}
@@ -43,8 +46,8 @@ export const StitchLineDisconnectedCornerSwitch: FC<StitchLineDisconnectedCorner
         <Switch.HiddenInput />
         <Switch.Control bg="bg.emphasized" _checked={{ bg: 'bg.emphasized' }}>
           <Switch.Thumb bg="bg.panel" _checked={{ bg: 'bg.panel' }}>
-            <Switch.ThumbIndicator fallback={<PiLinkBreak />}>
-              <PiNeedle />
+            <Switch.ThumbIndicator fallback={<OffIcon />}>
+              <OnIcon />
             </Switch.ThumbIndicator>
           </Switch.Thumb>
         </Switch.Control>
