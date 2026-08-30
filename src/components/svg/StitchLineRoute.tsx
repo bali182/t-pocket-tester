@@ -59,9 +59,7 @@ export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine })
       )}
       {(!isInteractive || stitchLine.stitchHolesVisible) &&
         route.holes.map((hole, index) => <StitchHole key={index} hole={hole} stitchLine={stitchLine} />)}
-      {isInteractive && stitchLine.stitchesVisible && (
-        <Stitches holes={route.holes} isClosed={route.isClosed} stitchLine={stitchLine} />
-      )}
+      {isInteractive && stitchLine.stitchesVisible && <Stitches stitches={route.stitches} stitchLine={stitchLine} />}
       {isInteractive && (
         <path d={pathData} fill="none" pointerEvents="stroke" stroke="transparent" strokeWidth={hitAreaThickness} />
       )}

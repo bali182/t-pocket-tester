@@ -36,6 +36,15 @@ const adjustComponentBoundsStitchLine = (
   const bottomRightCorner = stitchLine.bottomRightCorner && (stitchLine.bottom || stitchLine.right)
   const bottomLeftCorner = stitchLine.bottomLeftCorner && (stitchLine.bottom || stitchLine.left)
 
+  const stitchDisconnectedTopLeftCorner =
+    stitchLine.stitchDisconnectedTopLeftCorner && !topLeftCorner && stitchLine.top && stitchLine.left
+  const stitchDisconnectedTopRightCorner =
+    stitchLine.stitchDisconnectedTopRightCorner && !topRightCorner && stitchLine.top && stitchLine.right
+  const stitchDisconnectedBottomRightCorner =
+    stitchLine.stitchDisconnectedBottomRightCorner && !bottomRightCorner && stitchLine.bottom && stitchLine.right
+  const stitchDisconnectedBottomLeftCorner =
+    stitchLine.stitchDisconnectedBottomLeftCorner && !bottomLeftCorner && stitchLine.bottom && stitchLine.left
+
   const topStitchDirection = topLeftCorner || topRightCorner ? 'left-to-right' : stitchLine.topStitchDirection
   const rightStitchDirection = topRightCorner || bottomRightCorner ? 'top-to-bottom' : stitchLine.rightStitchDirection
   const bottomStitchDirection =
@@ -56,6 +65,10 @@ const adjustComponentBoundsStitchLine = (
     topRightCorner === stitchLine.topRightCorner &&
     bottomRightCorner === stitchLine.bottomRightCorner &&
     bottomLeftCorner === stitchLine.bottomLeftCorner &&
+    stitchDisconnectedTopLeftCorner === stitchLine.stitchDisconnectedTopLeftCorner &&
+    stitchDisconnectedTopRightCorner === stitchLine.stitchDisconnectedTopRightCorner &&
+    stitchDisconnectedBottomRightCorner === stitchLine.stitchDisconnectedBottomRightCorner &&
+    stitchDisconnectedBottomLeftCorner === stitchLine.stitchDisconnectedBottomLeftCorner &&
     topStitchDirection === stitchLine.topStitchDirection &&
     rightStitchDirection === stitchLine.rightStitchDirection &&
     bottomStitchDirection === stitchLine.bottomStitchDirection &&
@@ -79,6 +92,10 @@ const adjustComponentBoundsStitchLine = (
     topRightCorner,
     bottomRightCorner,
     bottomLeftCorner,
+    stitchDisconnectedTopLeftCorner,
+    stitchDisconnectedTopRightCorner,
+    stitchDisconnectedBottomRightCorner,
+    stitchDisconnectedBottomLeftCorner,
     topStitchDirection,
     rightStitchDirection,
     bottomStitchDirection,

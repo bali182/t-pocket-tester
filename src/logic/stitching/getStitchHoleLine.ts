@@ -1,21 +1,17 @@
 import BigNumber from 'bignumber.js'
 
-import type { NumberLineSchema } from '../../schemas/geometry'
-import type { StitchHoleSchema } from '../../schemas/stitching'
+import type { LineSchema, PointSchema } from '../../schemas/geometry'
 
-export const getStitchHoleLine = (hole: StitchHoleSchema, stitchHoleLength: number): NumberLineSchema => {
-  const angleInRadians = new BigNumber(45).plus(hole.rotation).times(Math.PI).div(180)
+export const getStitchHoleLine = (center: PointSchema, rotation: number, stitchHoleLength: number): LineSchema => {
+  const angleInRadians = new BigNumber(45).plus(rotation).times(Math.PI).div(180)
   const halfLength = new BigNumber(stitchHoleLength).div(2)
 
   // TODO replace BigNumber lib to one that has sin/cos.
   const dx = new BigNumber(Math.cos(angleInRadians.toNumber())).times(halfLength)
   const dy = new BigNumber(Math.sin(angleInRadians.toNumber())).times(halfLength)
 
-  const centerX = new BigNumber(hole.center.x)
-  const centerY = new BigNumber(hole.center.y)
-
   return {
-    start: { x: centerX.minus(dx).toNumber(), y: centerY.minus(dy).toNumber() },
-    end: { x: centerX.plus(dx).toNumber(), y: centerY.plus(dy).toNumber() },
+    start: { x: center.x.minus(dx), y: center.y.minus(dy) },
+    end: { x: center.x.plus(dx), y: center.y.plus(dy) },
   }
 }

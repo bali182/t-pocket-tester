@@ -3,6 +3,7 @@ import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedPocketClusterSchema, ComputedStitchLineSchema } from '../../schemas/computed'
 import type { ResolvedPocketClusterStitchLineSchema } from '../../schemas/stitching'
 import { normalizePocketCluster } from '../normalizePocketCluster'
+import { calculateRouteStitches } from './calculateRouteStitches'
 import { calculateStitchLineBoundingRect } from './calculateStitchLineBoundingRect'
 import { calculateTPocketStitchHoles } from './calculateTPocketStitchHoles'
 import { calculateTPocketStitchLine } from './calculateTPocketStitchLine'
@@ -20,6 +21,22 @@ export const calculatePocketClusterStitchLine = (
     calculatedStitchLine.line.start,
     calculatedStitchLine.line.end,
   ])
+  const routes = calculatedStitchLines.map((calculatedStitchLine) => {
+    const holes = calculateTPocketStitchHoles(stitchLine, calculatedStitchLine.line)
+
+    return {
+      path: calculatedStitchLine.path,
+      holes,
+      isClosed: false,
+      stitches: calculateRouteStitches(holes, false),
+      disconnectedCorners: {
+        'top-left': undefined,
+        'top-right': undefined,
+        'bottom-right': undefined,
+        'bottom-left': undefined,
+      },
+    }
+  })
 
   return {
     stitchLineId: stitchLine.id,
@@ -28,12 +45,7 @@ export const calculatePocketClusterStitchLine = (
     componentId: stitchLine.targetId,
     autoComputedCornerRadius: ZERO_CORNER_RADIUS,
     boundingRect: calculateStitchLineBoundingRect(points),
-    routes: calculatedStitchLines.map((calculatedStitchLine) => {
-      return {
-        path: calculatedStitchLine.path,
-        holes: calculateTPocketStitchHoles(stitchLine, calculatedStitchLine.line),
-        isClosed: false,
-      }
-    }),
+    routes,
+    connectingStitches: [],
   }
 }

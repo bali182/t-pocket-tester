@@ -1,9 +1,10 @@
 import { Box, Switch } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
 import type { IconType } from 'react-icons'
-import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp } from 'react-icons/pi'
+import { PiArrowDown, PiArrowLeft, PiArrowRight, PiArrowUp, PiProhibit } from 'react-icons/pi'
 
 import type { StitchSideSchema } from '../../schemas/stitching'
+import { HIDDEN_INPUT_OPACITY } from './colors'
 
 type StitchLineDirectionSwitchProps = {
   checked: boolean
@@ -52,8 +53,8 @@ export const StitchLineDirectionSwitch: FC<StitchLineDirectionSwitchProps> = ({
   side,
 }) => {
   const configuration = DIRECTION_SWITCH_CONFIGURATIONS[side]
-  const CheckedIcon = configuration.checkedIcon
-  const UncheckedIcon = configuration.uncheckedIcon
+  const CheckedIcon = disabled ? PiProhibit : configuration.checkedIcon
+  const UncheckedIcon = disabled ? PiProhibit : configuration.uncheckedIcon
 
   const handleCheckedChange = useCallback(
     (details: Switch.CheckedChangeDetails): void => {
@@ -63,8 +64,13 @@ export const StitchLineDirectionSwitch: FC<StitchLineDirectionSwitchProps> = ({
   )
 
   return (
-    <Box gridArea={configuration.gridArea} justifySelf="center">
-      <Switch.Root checked={checked} disabled={disabled} onCheckedChange={handleCheckedChange} size="sm">
+    <Box
+      alignSelf="center"
+      gridArea={configuration.gridArea}
+      justifySelf="center"
+      opacity={disabled ? HIDDEN_INPUT_OPACITY : undefined}
+    >
+      <Switch.Root checked={checked} disabled={disabled} onCheckedChange={handleCheckedChange} size="md">
         <Switch.HiddenInput aria-label={label} />
         <Switch.Control bg="bg.emphasized" _checked={{ bg: 'bg.emphasized' }}>
           <Switch.Thumb bg="bg.panel" _checked={{ bg: 'bg.panel' }}>
