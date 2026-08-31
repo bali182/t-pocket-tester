@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -6,6 +6,7 @@ const currentDirectory = dirname(fileURLToPath(import.meta.url))
 
 const createMainWindow = async (): Promise<void> => {
   const mainWindow = new BrowserWindow({
+    titleBarStyle: 'default',
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -25,16 +26,10 @@ const createMainWindow = async (): Promise<void> => {
   }
 }
 
+Menu.setApplicationMenu(null)
+
 void app.whenReady().then(createMainWindow)
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    void createMainWindow()
-  }
+  app.quit()
 })
