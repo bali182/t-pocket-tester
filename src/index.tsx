@@ -1,8 +1,8 @@
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { Provider as JotaiProvider } from 'jotai'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router'
 import { App } from './components/App'
+import { AppRouter } from './components/AppRouter'
 import { appStore } from './state/store'
 
 const rootElement = document.getElementById('root')
@@ -14,9 +14,9 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <JotaiProvider store={appStore}>
     <ChakraProvider value={defaultSystem}>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <AppRouter>
         <App />
-      </BrowserRouter>
+      </AppRouter>
     </ChakraProvider>
   </JotaiProvider>,
 )

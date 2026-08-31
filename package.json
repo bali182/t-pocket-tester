@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "./out/main/index.js",
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "lint": "eslint src",
-    "typecheck": "tsc --noEmit",
-    "pretty": "npx prettier --write src",
+    "electron:dev": "electron-vite dev --",
+    "electron:build": "electron-vite build",
+    "package:mac": "npm run electron:build && electron-builder --config electron-builder.config.ts --mac --arm64",
+    "package:win": "npm run electron:build && electron-builder --config electron-builder.config.ts --win --x64",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit && tsc --project tsconfig.node.json --noEmit",
+    "pretty": "npx prettier --write .",
     "test": "vitest run"
   },
   "dependencies": {
@@ -29,9 +34,9 @@
     "react-dom": "19.2.8",
     "react-icons": "5.7.0",
     "react-router": "8.3.0",
+    "timeago.js": "4.0.2",
     "typia": "12.1.1",
-    "validator": "13.15.35",
-    "timeago.js": "4.0.2"
+    "validator": "13.15.35"
   },
   "devDependencies": {
     "@types/culori": "4.0.1",
@@ -41,6 +46,9 @@
     "@types/validator": "13.15.10",
     "@typia/unplugin": "12.1.1",
     "@vitejs/plugin-react": "4.5.2",
+    "electron": "44.1.0",
+    "electron-builder": "26.15.3",
+    "electron-vite": "5.0.0",
     "eslint": "10.6.0",
     "eslint-import-resolver-vite": "^2.2.0",
     "eslint-plugin-import-x": "^4.17.1",

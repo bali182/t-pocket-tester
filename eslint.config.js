@@ -9,6 +9,10 @@ const typeScriptFiles = ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts']
 
 export default [
   {
+    name: 'generated-output-ignores',
+    ignores: ['dist/**', 'out/**', 'release/**'],
+  },
+  {
     name: tsBase.name,
     files: typeScriptFiles,
     languageOptions: tsBase.languageOptions,

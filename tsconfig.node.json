@@ -8,8 +8,14 @@
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
-    "types": ["node"],
+    "types": ["node", "electron-vite/node"],
     "noEmit": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "vite.common.ts",
+    "electron.vite.config.ts",
+    "electron-builder.config.ts",
+    "electron/**/*.ts"
+  ]
 }
