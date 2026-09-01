@@ -1,9 +1,11 @@
+import typia from '@typia/unplugin/vite'
 import { defineConfig } from 'electron-vite'
 import { resolve } from 'node:path'
 import { createViteConfig } from './vite.common'
 
 export default defineConfig({
   main: {
+    plugins: [typia()],
     build: {
       rollupOptions: {
         input: resolve('electron/main.ts'),

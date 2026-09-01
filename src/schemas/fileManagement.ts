@@ -1,69 +1,113 @@
 import type { HasTypeSchema } from './common'
 
-export type FileDialogOpenRequestSchema = HasTypeSchema<'dialog-open'> & {
-  fileFilterLabel: string
-}
+export type FileCancelledResponseSchema = HasTypeSchema<'cancelled'>
 
-export type FilePathOpenRequestSchema = HasTypeSchema<'path-open'> & {
+export type FileErrorResponseSchema = HasTypeSchema<'error'>
+
+export type FileReadRequestSchema = HasTypeSchema<'read'> & {
   filePath: string
 }
 
-export type FileOpenRequestSchema = FileDialogOpenRequestSchema | FilePathOpenRequestSchema
+export type FileReadSucceededResponseSchema = HasTypeSchema<'read-succeeded'> & {
+  contents: string
+}
 
-export type FileOpenCancelledResponseSchema = HasTypeSchema<'open-cancelled'>
+export type FileReadResponseSchema = FileReadSucceededResponseSchema | FileErrorResponseSchema
 
-export type FileOpenSucceededResponseSchema = HasTypeSchema<'open-succeeded'> & {
+export type FileWriteRequestSchema = HasTypeSchema<'write'> & {
   contents: string
   filePath: string
 }
 
-export type FileOpenFailedResponseSchema = HasTypeSchema<'open-failed'>
+export type FileWriteSucceededResponseSchema = HasTypeSchema<'write-succeeded'>
 
-export type FileOpenResponseSchema =
-  | FileOpenCancelledResponseSchema
-  | FileOpenSucceededResponseSchema
-  | FileOpenFailedResponseSchema
+export type FileWriteResponseSchema = FileWriteSucceededResponseSchema | FileErrorResponseSchema
 
-export type FileDialogSaveRequestSchema = HasTypeSchema<'dialog-save'> & {
-  contents: string
-  fileFilterLabel: string
-  suggestedFileName: string
+export type FileDialogPresentationSchema = {
+  buttonLabel?: string
+  defaultPath?: string
+  message?: string
+  title?: string
 }
 
-export type FilePathSaveRequestSchema = HasTypeSchema<'path-save'> & {
-  contents: string
+export type FileDialogFileFilterSchema = {
+  extension: string
+  name: string
+}
+
+export type FileDialogFileReadRequestSchema = HasTypeSchema<'read'> &
+  FileDialogPresentationSchema & {
+    fileFilter?: FileDialogFileFilterSchema
+    target: 'file'
+  }
+
+export type FileDialogDirectoryReadRequestSchema = HasTypeSchema<'read'> &
+  FileDialogPresentationSchema & {
+    target: 'directory'
+  }
+
+export type FileDialogReadRequestSchema = FileDialogFileReadRequestSchema | FileDialogDirectoryReadRequestSchema
+
+export type FileDialogWriteRequestSchema = HasTypeSchema<'write'> &
+  FileDialogPresentationSchema & {
+    fileFilter?: FileDialogFileFilterSchema
+  }
+
+export type FileDialogRequestSchema = FileDialogReadRequestSchema | FileDialogWriteRequestSchema
+
+export type FileDialogSelectedResponseSchema = HasTypeSchema<'selected'> & {
   filePath: string
 }
 
-export type FileSaveRequestSchema = FileDialogSaveRequestSchema | FilePathSaveRequestSchema
+export type FileDialogResponseSchema =
+  | FileDialogSelectedResponseSchema
+  | FileCancelledResponseSchema
+  | FileErrorResponseSchema
 
-export type FileSaveCancelledResponseSchema = HasTypeSchema<'save-cancelled'>
-
-export type FileSaveSucceededResponseSchema = HasTypeSchema<'save-succeeded'> & {
-  filePath: string
-}
-
-export type FileSaveFailedResponseSchema = HasTypeSchema<'save-failed'>
-
-export type FileSaveResponseSchema =
-  | FileSaveCancelledResponseSchema
-  | FileSaveSucceededResponseSchema
-  | FileSaveFailedResponseSchema
-
-export type FileExistRequestSchema = HasTypeSchema<'exists'> & {
+export type FileFindExistingFilePathsRequestSchema = HasTypeSchema<'find-existing-file-paths'> & {
   filePaths: string[]
 }
 
-export type FileExistSucceededResponseSchema = HasTypeSchema<'exists-succeeded'> & {
-  existingFilePaths: string[]
+export type FileExistingFilePathsResponseSchema = HasTypeSchema<'existing-file-paths'> & {
+  filePaths: string[]
 }
 
-export type FileExistFailedResponseSchema = HasTypeSchema<'exists-failed'>
+export type FileFindExistingFilePathsResponseSchema = FileExistingFilePathsResponseSchema | FileErrorResponseSchema
 
-export type FileExistResponseSchema = FileExistSucceededResponseSchema | FileExistFailedResponseSchema
+export type FileSuggestPathRequestSchema = HasTypeSchema<'suggest-path'> & {
+  extension: string
+  fileName: string
+}
+
+export type FileSuggestedPathResponseSchema = HasTypeSchema<'suggested-path'> & {
+  filePath: string
+}
+
+export type FileSuggestPathResponseSchema = FileSuggestedPathResponseSchema | FileErrorResponseSchema
+
+export type FileValidateCreatePathRequestSchema = HasTypeSchema<'validate-create-path'> & {
+  filePath: string
+}
+
+export type FileCreatePathAvailableResponseSchema = HasTypeSchema<'create-path-available'>
+
+export type FileCreatePathExistingResponseSchema = HasTypeSchema<'create-path-existing'>
+
+export type FileCreatePathInvalidResponseSchema = HasTypeSchema<'create-path-invalid'>
+
+export type FileValidateCreatePathResponseSchema =
+  | FileCreatePathAvailableResponseSchema
+  | FileCreatePathExistingResponseSchema
+  | FileCreatePathInvalidResponseSchema
+  | FileErrorResponseSchema
 
 export type FileApiSchema = {
-  exists: (request: FileExistRequestSchema) => Promise<FileExistResponseSchema>
-  open: (request: FileOpenRequestSchema) => Promise<FileOpenResponseSchema>
-  save: (request: FileSaveRequestSchema) => Promise<FileSaveResponseSchema>
+  dialog: (request: FileDialogRequestSchema) => Promise<FileDialogResponseSchema>
+  findExistingFilePaths: (
+    request: FileFindExistingFilePathsRequestSchema,
+  ) => Promise<FileFindExistingFilePathsResponseSchema>
+  read: (request: FileReadRequestSchema) => Promise<FileReadResponseSchema>
+  suggestPath: (request: FileSuggestPathRequestSchema) => Promise<FileSuggestPathResponseSchema>
+  validateCreatePath: (request: FileValidateCreatePathRequestSchema) => Promise<FileValidateCreatePathResponseSchema>
+  write: (request: FileWriteRequestSchema) => Promise<FileWriteResponseSchema>
 }

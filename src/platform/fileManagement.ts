@@ -15,7 +15,10 @@ const getFileManagementApi = (): FileApiSchema => {
 }
 
 export const fileManagement: FileApiSchema = {
-  exists: (request) => getFileManagementApi().exists(request),
-  open: (request) => getFileManagementApi().open(request),
-  save: (request) => getFileManagementApi().save(request),
+  dialog: (request) => getFileManagementApi().dialog(request),
+  findExistingFilePaths: (request) => getFileManagementApi().findExistingFilePaths(request),
+  read: (request) => getFileManagementApi().read(request),
+  suggestPath: (request) => getFileManagementApi().suggestPath(request),
+  validateCreatePath: (request) => getFileManagementApi().validateCreatePath(request),
+  write: (request) => getFileManagementApi().write(request),
 }

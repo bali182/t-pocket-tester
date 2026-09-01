@@ -1,8 +1,16 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import typia from 'typia'
+import type {
+  FileDialogRequestSchema,
+  FileFindExistingFilePathsRequestSchema,
+  FileReadRequestSchema,
+  FileSuggestPathRequestSchema,
+  FileValidateCreatePathRequestSchema,
+  FileWriteRequestSchema,
+} from '../src/schemas/fileManagement'
 import { fileManagementApi, fileManagementIpcChannels } from './fileManagementApi'
-import { isFileExistRequestSchema, isFileOpenRequestSchema, isFileSaveRequestSchema } from './typeGuards'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url))
 
@@ -29,25 +37,46 @@ const createMainWindow = async (): Promise<void> => {
   }
 }
 
-ipcMain.handle(fileManagementIpcChannels.exists, (_event, request: unknown) => {
-  if (!isFileExistRequestSchema(request)) {
-    return { type: 'exists-failed' }
+ipcMain.handle(fileManagementIpcChannels.dialog, (_event, request: unknown) => {
+  if (!typia.is<FileDialogRequestSchema>(request)) {
+    return { type: 'error' }
   }
-  return fileManagementApi.exists(request)
+  return fileManagementApi.dialog(request)
 })
 
-ipcMain.handle(fileManagementIpcChannels.open, (_event, request: unknown) => {
-  if (!isFileOpenRequestSchema(request)) {
-    return { type: 'open-failed' }
+ipcMain.handle(fileManagementIpcChannels.findExistingFilePaths, (_event, request: unknown) => {
+  if (!typia.is<FileFindExistingFilePathsRequestSchema>(request)) {
+    return { type: 'error' }
   }
-  return fileManagementApi.open(request)
+  return fileManagementApi.findExistingFilePaths(request)
 })
 
-ipcMain.handle(fileManagementIpcChannels.save, (_event, request: unknown) => {
-  if (!isFileSaveRequestSchema(request)) {
-    return { type: 'save-failed' }
+ipcMain.handle(fileManagementIpcChannels.read, (_event, request: unknown) => {
+  if (!typia.is<FileReadRequestSchema>(request)) {
+    return { type: 'error' }
   }
-  return fileManagementApi.save(request)
+  return fileManagementApi.read(request)
+})
+
+ipcMain.handle(fileManagementIpcChannels.suggestPath, (_event, request: unknown) => {
+  if (!typia.is<FileSuggestPathRequestSchema>(request)) {
+    return { type: 'error' }
+  }
+  return fileManagementApi.suggestPath(request)
+})
+
+ipcMain.handle(fileManagementIpcChannels.validateCreatePath, (_event, request: unknown) => {
+  if (!typia.is<FileValidateCreatePathRequestSchema>(request)) {
+    return { type: 'error' }
+  }
+  return fileManagementApi.validateCreatePath(request)
+})
+
+ipcMain.handle(fileManagementIpcChannels.write, (_event, request: unknown) => {
+  if (!typia.is<FileWriteRequestSchema>(request)) {
+    return { type: 'error' }
+  }
+  return fileManagementApi.write(request)
 })
 
 Menu.setApplicationMenu(null)

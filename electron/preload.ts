@@ -3,9 +3,12 @@ import type { FileApiSchema } from '../src/schemas/fileManagement'
 import { fileManagementIpcChannels } from './fileManagementApi'
 
 const fileManagementApi: FileApiSchema = {
-  exists: (request) => ipcRenderer.invoke(fileManagementIpcChannels.exists, request),
-  open: (request) => ipcRenderer.invoke(fileManagementIpcChannels.open, request),
-  save: (request) => ipcRenderer.invoke(fileManagementIpcChannels.save, request),
+  dialog: (request) => ipcRenderer.invoke(fileManagementIpcChannels.dialog, request),
+  findExistingFilePaths: (request) => ipcRenderer.invoke(fileManagementIpcChannels.findExistingFilePaths, request),
+  read: (request) => ipcRenderer.invoke(fileManagementIpcChannels.read, request),
+  suggestPath: (request) => ipcRenderer.invoke(fileManagementIpcChannels.suggestPath, request),
+  validateCreatePath: (request) => ipcRenderer.invoke(fileManagementIpcChannels.validateCreatePath, request),
+  write: (request) => ipcRenderer.invoke(fileManagementIpcChannels.write, request),
 }
 
 contextBridge.exposeInMainWorld('fileManagement', fileManagementApi)

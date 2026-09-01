@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { readFile, showOpenDialog, showSaveDialog, stat, writeFile } = vi.hoisted(() => ({
+const { access, getPath, readFile, showOpenDialog, showSaveDialog, stat, writeFile } = vi.hoisted(() => ({
+  access: vi.fn(),
+  getPath: vi.fn(),
   readFile: vi.fn(),
   showOpenDialog: vi.fn(),
   showSaveDialog: vi.fn(),
@@ -9,13 +11,19 @@ const { readFile, showOpenDialog, showSaveDialog, stat, writeFile } = vi.hoisted
 }))
 
 vi.mock('electron', () => ({
+  app: { getPath },
   dialog: {
     showOpenDialog,
     showSaveDialog,
   },
 }))
 
+vi.mock('node:fs', () => ({
+  constants: { W_OK: 2 },
+}))
+
 vi.mock('node:fs/promises', () => ({
+  access,
   readFile,
   stat,
   writeFile,
@@ -28,86 +36,115 @@ describe('fileManagementApi', () => {
     vi.resetAllMocks()
   })
 
-  it('opens a file selected in the native dialog', async () => {
-    showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/projects/example.json'] })
+  it('reads a known file path', async () => {
     readFile.mockResolvedValue('{"name":"Example"}')
 
-    await expect(fileManagementApi.open({ type: 'dialog-open', fileFilterLabel: 'JSON files' })).resolves.toEqual({
-      type: 'open-succeeded',
+    await expect(fileManagementApi.read({ type: 'read', filePath: '/projects/example.json' })).resolves.toEqual({
+      type: 'read-succeeded',
       contents: '{"name":"Example"}',
-      filePath: '/projects/example.json',
     })
+  })
+
+  it('returns a generic error when reading fails', async () => {
+    readFile.mockRejectedValue(new Error('Cannot read file'))
+
+    await expect(fileManagementApi.read({ type: 'read', filePath: '/projects/example.json' })).resolves.toEqual({
+      type: 'error',
+    })
+  })
+
+  it('writes to a known file path', async () => {
+    await expect(
+      fileManagementApi.write({
+        type: 'write',
+        contents: '{"name":"Example"}',
+        filePath: '/projects/example.json',
+      }),
+    ).resolves.toEqual({ type: 'write-succeeded' })
+
+    expect(writeFile).toHaveBeenCalledWith('/projects/example.json', '{"name":"Example"}', 'utf8')
+  })
+
+  it('maps a file-read dialog configuration to Electron options', async () => {
+    showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/projects/example.json'] })
+
+    await expect(
+      fileManagementApi.dialog({
+        type: 'read',
+        target: 'file',
+        title: 'Open project',
+        message: 'Choose a project file',
+        buttonLabel: 'Open',
+        defaultPath: '/projects',
+        fileFilter: { name: 'Project files', extension: 'project' },
+      }),
+    ).resolves.toEqual({ type: 'selected', filePath: '/projects/example.json' })
 
     expect(showOpenDialog).toHaveBeenCalledWith({
-      filters: [{ name: 'JSON files', extensions: ['json'] }],
+      title: 'Open project',
+      message: 'Choose a project file',
+      buttonLabel: 'Open',
+      defaultPath: '/projects',
+      filters: [{ name: 'Project files', extensions: ['project'] }],
       properties: ['openFile'],
     })
   })
 
-  it('returns cancelled when the open dialog is cancelled', async () => {
+  it('maps a directory-read dialog configuration to Electron options', async () => {
+    showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/projects'] })
+
+    await expect(
+      fileManagementApi.dialog({
+        type: 'read',
+        target: 'directory',
+        title: 'Choose folder',
+      }),
+    ).resolves.toEqual({ type: 'selected', filePath: '/projects' })
+
+    expect(showOpenDialog).toHaveBeenCalledWith({
+      title: 'Choose folder',
+      properties: ['openDirectory'],
+    })
+  })
+
+  it('returns cancelled when a dialog is cancelled', async () => {
     showOpenDialog.mockResolvedValue({ canceled: true, filePaths: [] })
 
-    await expect(fileManagementApi.open({ type: 'dialog-open', fileFilterLabel: 'JSON files' })).resolves.toEqual({
-      type: 'open-cancelled',
+    await expect(fileManagementApi.dialog({ type: 'read', target: 'file' })).resolves.toEqual({ type: 'cancelled' })
+  })
+
+  it('maps a write dialog configuration to Electron options', async () => {
+    showSaveDialog.mockResolvedValue({ canceled: false, filePath: '/projects/example.project' })
+
+    await expect(
+      fileManagementApi.dialog({
+        type: 'write',
+        title: 'Save project',
+        message: 'Choose a destination',
+        buttonLabel: 'Save',
+        defaultPath: '/projects/example.project',
+        fileFilter: { name: 'Project files', extension: 'project' },
+      }),
+    ).resolves.toEqual({ type: 'selected', filePath: '/projects/example.project' })
+
+    expect(showSaveDialog).toHaveBeenCalledWith({
+      title: 'Save project',
+      message: 'Choose a destination',
+      buttonLabel: 'Save',
+      defaultPath: '/projects/example.project',
+      filters: [{ name: 'Project files', extensions: ['project'] }],
     })
   })
 
-  it('opens a known path without showing a dialog', async () => {
-    readFile.mockResolvedValue('{"name":"Example"}')
+  it('returns a generic error when a dialog fails', async () => {
+    showSaveDialog.mockRejectedValue(new Error('Dialog failed'))
 
-    await expect(fileManagementApi.open({ type: 'path-open', filePath: '/projects/example.json' })).resolves.toEqual({
-      type: 'open-succeeded',
-      contents: '{"name":"Example"}',
-      filePath: '/projects/example.json',
-    })
-
-    expect(showOpenDialog).not.toHaveBeenCalled()
+    await expect(fileManagementApi.dialog({ type: 'write' })).resolves.toEqual({ type: 'error' })
   })
 
-  it('saves a file selected in the native dialog', async () => {
-    showSaveDialog.mockResolvedValue({ canceled: false, filePath: '/projects/example.json' })
-
-    await expect(
-      fileManagementApi.save({
-        type: 'dialog-save',
-        contents: '{"name":"Example"}',
-        fileFilterLabel: 'JSON files',
-        suggestedFileName: 'example.json',
-      }),
-    ).resolves.toEqual({ type: 'save-succeeded', filePath: '/projects/example.json' })
-
-    expect(writeFile).toHaveBeenCalledWith('/projects/example.json', '{"name":"Example"}', 'utf8')
-  })
-
-  it('returns cancelled when the save dialog is cancelled', async () => {
-    showSaveDialog.mockResolvedValue({ canceled: true, filePath: undefined })
-
-    await expect(
-      fileManagementApi.save({
-        type: 'dialog-save',
-        contents: '{"name":"Example"}',
-        fileFilterLabel: 'JSON files',
-        suggestedFileName: 'example.json',
-      }),
-    ).resolves.toEqual({ type: 'save-cancelled' })
-  })
-
-  it('saves to a known path without showing a dialog', async () => {
-    await expect(
-      fileManagementApi.save({
-        type: 'path-save',
-        contents: '{"name":"Example"}',
-        filePath: '/projects/example.json',
-      }),
-    ).resolves.toEqual({ type: 'save-succeeded', filePath: '/projects/example.json' })
-
-    expect(showSaveDialog).not.toHaveBeenCalled()
-    expect(writeFile).toHaveBeenCalledWith('/projects/example.json', '{"name":"Example"}', 'utf8')
-  })
-
-  it('returns only existing files', async () => {
+  it('finds existing file paths', async () => {
     stat.mockImplementation(async (filePath: string) => {
-      if (filePath === '/projects/existing.json') {
+      if (filePath === '/projects/existing.project') {
         return { isFile: () => true }
       }
 
@@ -117,13 +154,56 @@ describe('fileManagementApi', () => {
     })
 
     await expect(
-      fileManagementApi.exists({
-        type: 'exists',
-        filePaths: ['/projects/existing.json', '/projects/missing.json'],
+      fileManagementApi.findExistingFilePaths({
+        type: 'find-existing-file-paths',
+        filePaths: ['/projects/existing.project', '/projects/missing.project'],
       }),
     ).resolves.toEqual({
-      type: 'exists-succeeded',
-      existingFilePaths: ['/projects/existing.json'],
+      type: 'existing-file-paths',
+      filePaths: ['/projects/existing.project'],
     })
   })
+
+  it('suggests a valid file path in the Documents directory', async () => {
+    getPath.mockReturnValue('/Users/example/Documents')
+
+    await expect(
+      fileManagementApi.suggestPath({ type: 'suggest-path', fileName: 'A / project?', extension: 'project' }),
+    ).resolves.toEqual({
+      type: 'suggested-path',
+      filePath: '/Users/example/Documents/A - project-.project',
+    })
+  })
+
+  it('validates an available create path', async () => {
+    stat.mockResolvedValueOnce({ isDirectory: () => true })
+    stat.mockRejectedValueOnce(createError('ENOENT'))
+
+    await expect(
+      fileManagementApi.validateCreatePath({ type: 'validate-create-path', filePath: '/projects/example.project' }),
+    ).resolves.toEqual({ type: 'create-path-available' })
+
+    expect(access).toHaveBeenCalledWith('/projects', 2)
+  })
+
+  it('returns existing when the create path already contains a file', async () => {
+    stat.mockResolvedValueOnce({ isDirectory: () => true })
+    stat.mockResolvedValueOnce({ isFile: () => true })
+
+    await expect(
+      fileManagementApi.validateCreatePath({ type: 'validate-create-path', filePath: '/projects/example.project' }),
+    ).resolves.toEqual({ type: 'create-path-existing' })
+  })
+
+  it('returns invalid when the create path is not absolute', async () => {
+    await expect(
+      fileManagementApi.validateCreatePath({ type: 'validate-create-path', filePath: 'example.project' }),
+    ).resolves.toEqual({ type: 'create-path-invalid' })
+  })
 })
+
+const createError = (code: string): Error & { code: string } => {
+  const error = new Error(code) as Error & { code: string }
+  error.code = code
+  return error
+}
