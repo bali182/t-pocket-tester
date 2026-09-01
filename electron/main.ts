@@ -1,6 +1,8 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { fileManagementApi, fileManagementIpcChannels } from './fileManagementApi'
+import { isFileExistRequestSchema, isFileOpenRequestSchema, isFileSaveRequestSchema } from './typeGuards'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url))
 
@@ -10,6 +12,7 @@ const createMainWindow = async (): Promise<void> => {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
+      preload: join(currentDirectory, '../preload/preload.mjs'),
       sandbox: true,
     },
   })
@@ -25,6 +28,27 @@ const createMainWindow = async (): Promise<void> => {
     mainWindow.webContents.openDevTools()
   }
 }
+
+ipcMain.handle(fileManagementIpcChannels.exists, (_event, request: unknown) => {
+  if (!isFileExistRequestSchema(request)) {
+    return { type: 'exists-failed' }
+  }
+  return fileManagementApi.exists(request)
+})
+
+ipcMain.handle(fileManagementIpcChannels.open, (_event, request: unknown) => {
+  if (!isFileOpenRequestSchema(request)) {
+    return { type: 'open-failed' }
+  }
+  return fileManagementApi.open(request)
+})
+
+ipcMain.handle(fileManagementIpcChannels.save, (_event, request: unknown) => {
+  if (!isFileSaveRequestSchema(request)) {
+    return { type: 'save-failed' }
+  }
+  return fileManagementApi.save(request)
+})
 
 Menu.setApplicationMenu(null)
 

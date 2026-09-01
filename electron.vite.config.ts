@@ -13,6 +13,16 @@ export default defineConfig({
       },
     },
   },
+  preload: {
+    build: {
+      rollupOptions: {
+        input: resolve('electron/preload.ts'),
+        output: {
+          entryFileNames: 'index.js',
+        },
+      },
+    },
+  },
   renderer: {
     ...createViteConfig({ base: './', isElectron: true }),
     root: '.',
