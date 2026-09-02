@@ -7,6 +7,7 @@ import { ProjectIndexRoute } from './routes/ProjectIndexRoute'
 import { ProjectRoute } from './routes/ProjectRoute'
 import { ProjectsRoute } from './routes/ProjectsRoute'
 import { SubProjectRoute } from './routes/SubProjectRoute'
+import { Toaster } from './Toaster'
 
 export const App: FC = () => {
   const { theme } = useTheme()
@@ -26,6 +27,7 @@ export const App: FC = () => {
           </Routes>
         </Box>
       </Box>
+      <Toaster />
       <div ref={portalRef} />
     </Theme>
   )

@@ -185,6 +185,7 @@ export const HU = {
   projects: {
     title: 'Projektek',
     actions: {
+      open: 'Megnyitás',
       create: 'Új projekt',
       createModule: 'Új modul',
     },
@@ -206,6 +207,13 @@ export const HU = {
       title: 'Új projekt létrehozása',
       actions: {
         create: 'Létrehozás',
+      },
+    },
+    openDialog: {
+      title: 'Projekt megnyitása',
+      fileFilterLabel: 'Projektfájlok',
+      errors: {
+        openFailed: 'A projekt megnyitása nem sikerült.',
       },
     },
     settingsDialog: {

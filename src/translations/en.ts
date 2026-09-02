@@ -186,6 +186,7 @@ export const EN: typeof HU = {
   projects: {
     title: 'Projects',
     actions: {
+      open: 'Open',
       create: 'New project',
       createModule: 'New module',
     },
@@ -207,6 +208,13 @@ export const EN: typeof HU = {
       title: 'Create new project',
       actions: {
         create: 'Create',
+      },
+    },
+    openDialog: {
+      title: 'Open project',
+      fileFilterLabel: 'Project files',
+      errors: {
+        openFailed: 'The project could not be opened.',
       },
     },
     settingsDialog: {

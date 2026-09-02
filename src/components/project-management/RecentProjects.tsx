@@ -111,12 +111,12 @@ type ProjectItemProps = {
 }
 
 const ProjectItem: FC<ProjectItemProps> = ({ project, onOpen, mode }) => {
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async (): Promise<void> => {
     onOpen?.(project)
   }, [onOpen, project])
 
   const itemContent = (
-    <HStack gap="3" onClick={mode === 'action' ? handleClick : undefined}>
+    <HStack gap="3">
       <PiWalletDuotone size={18} />
       <Listbox.ItemText>
         {project.projectName}
@@ -128,7 +128,7 @@ const ProjectItem: FC<ProjectItemProps> = ({ project, onOpen, mode }) => {
   )
 
   return (
-    <Listbox.Item flex="none" item={project}>
+    <Listbox.Item flex="none" item={project} onClick={mode === 'action' ? handleClick : undefined}>
       <HStack gap="3" width="100%">
         {mode === 'link' ? (
           <Link style={{ flex: 1 }} to={project.link}>
@@ -137,7 +137,7 @@ const ProjectItem: FC<ProjectItemProps> = ({ project, onOpen, mode }) => {
         ) : (
           itemContent
         )}
-        <ProjectActionsMenu projectId={project.projectId} size="xs" />
+        {mode === 'link' && <ProjectActionsMenu projectId={project.projectId} size="xs" />}
       </HStack>
     </Listbox.Item>
   )
