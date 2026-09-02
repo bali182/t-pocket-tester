@@ -1,6 +1,7 @@
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
 
+import { projectAdapter } from '../platform/adapter/projectAdapter'
 import type { RecentProjectSchema } from '../schemas/recentProject'
 import { recentProjectsAtom } from '../state/recentProjectsAtom'
 import { isDefined } from '../utils/isDefined'
@@ -8,8 +9,17 @@ import { isDefined } from '../utils/isDefined'
 export const useRecentProjectOperations = () => {
   const markProjectOpened = useAtomCallback(
     useCallback((get, set, projectId: string, subProjectId?: string): void => {
+      const projectName = projectAdapter.getProjectName(get, projectId)
+
+      if (!isDefined(projectName)) {
+        return
+      }
+
+      const filePath = projectAdapter.getFilePath(get, projectId)
       const recentProject: RecentProjectSchema = {
         lastOpenedAt: Date.now(),
+        path: isDefined(filePath) ? filePath : '',
+        projectName,
         ...(isDefined(subProjectId) ? { lastSubProjectId: subProjectId } : {}),
       }
 

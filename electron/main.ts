@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
-import { dirname, join } from 'node:path'
+import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import typia from 'typia'
 import type {
@@ -10,6 +10,7 @@ import type {
   FileValidateCreatePathRequestSchema,
   FileWriteRequestSchema,
 } from '../src/schemas/fileManagement'
+import { getPreloadPath, getRendererPath } from './buildPaths'
 import { fileManagementApi, fileManagementIpcChannels } from './fileManagementApi'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url))
@@ -20,16 +21,24 @@ const createMainWindow = async (): Promise<void> => {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: join(currentDirectory, '../preload/preload.mjs'),
+      preload: getPreloadPath(currentDirectory),
       sandbox: true,
     },
   })
+
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.type === 'keyDown' && input.code === 'KeyI' && input.meta && input.alt) {
+      event.preventDefault()
+      mainWindow.webContents.toggleDevTools()
+    }
+  })
+
   const devServerUrl = process.env.ELECTRON_RENDERER_URL
 
   if (devServerUrl !== undefined) {
     await mainWindow.loadURL(devServerUrl)
   } else {
-    await mainWindow.loadFile(join(currentDirectory, '../renderer/index.html'))
+    await mainWindow.loadFile(getRendererPath(currentDirectory))
   }
 
   if (process.argv.includes('--devtools')) {

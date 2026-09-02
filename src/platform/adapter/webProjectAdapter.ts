@@ -8,15 +8,25 @@ const getProject = (get: Getter, projectId: string | undefined): ProjectSchema |
   return get(projectsAtom).find((project) => project.id === projectId)
 }
 
+const getProjectName = (get: Getter, projectId: string): string | undefined => {
+  return getProject(get, projectId)?.name
+}
+
+const getFilePath = (): string | undefined => {
+  return undefined
+}
+
 const setProject = (get: Getter, set: Setter, project: ProjectSchema): void => {
   const projects = get(projectsAtom)
   set(
     projectsAtom,
-    projects.map((candidate) => (candidate.id === project.id ? project : candidate)),
+    projects.map((candidate): ProjectSchema => (candidate.id === project.id ? project : candidate)),
   )
 }
 
 export const webProjectAdapter: ProjectAdapterSchema = {
+  getFilePath,
+  getProjectName,
   getProject,
   setProject,
 }

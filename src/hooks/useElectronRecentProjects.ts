@@ -30,23 +30,18 @@ export const useElectronRecentProjects = (): LoadableSchema<RecentProjectVisuali
 
   const candidates = useMemo((): RecentProjectVisualisationSchema[] => {
     return Object.entries(recents)
-      .flatMap(([projectId, recentProject]): RecentProjectVisualisationSchema[] => {
-        if (!isDefined(recentProject.path) || !isDefined(recentProject.projectName)) {
-          return []
+      .map(([projectId, recentProject]): RecentProjectVisualisationSchema => {
+        return {
+          lastOpenedAt: recentProject.lastOpenedAt,
+          formattedLastOpenedAt: formatDate(recentProject.lastOpenedAt),
+          link: isDefined(recentProject.lastSubProjectId)
+            ? appRoutes.subProject(projectId, recentProject.lastSubProjectId)
+            : appRoutes.project(projectId),
+          path: recentProject.path,
+          projectId,
+          projectName: recentProject.projectName,
+          ...(isDefined(recentProject.lastSubProjectId) ? { subProjectId: recentProject.lastSubProjectId } : {}),
         }
-        return [
-          {
-            lastOpenedAt: recentProject.lastOpenedAt,
-            formattedLastOpenedAt: formatDate(recentProject.lastOpenedAt),
-            link: isDefined(recentProject.lastSubProjectId)
-              ? appRoutes.subProject(projectId, recentProject.lastSubProjectId)
-              : appRoutes.project(projectId),
-            path: recentProject.path,
-            projectId,
-            projectName: recentProject.projectName,
-            ...(isDefined(recentProject.lastSubProjectId) ? { subProjectId: recentProject.lastSubProjectId } : {}),
-          },
-        ]
       })
       .sort((a, b) => a.lastOpenedAt - b.lastOpenedAt)
   }, [formatDate, recents])

@@ -1,26 +1,33 @@
 import typia from '@typia/unplugin/vite'
 import { defineConfig } from 'electron-vite'
 import { resolve } from 'node:path'
+import { electronBuildTargets } from './electron/buildPaths'
 import { createViteConfig } from './vite.common'
 
 export default defineConfig({
   main: {
     plugins: [typia()],
     build: {
+      outDir: resolve(electronBuildTargets.main.outputDirectory),
       rollupOptions: {
-        input: resolve('electron/main.ts'),
+        input: resolve(electronBuildTargets.main.sourcePath),
         output: {
-          entryFileNames: 'index.js',
+          entryFileNames: electronBuildTargets.main.entryFileName,
         },
       },
     },
   },
   preload: {
     build: {
+      outDir: resolve(electronBuildTargets.preload.outputDirectory),
       rollupOptions: {
-        input: resolve('electron/preload.ts'),
+        input: resolve(electronBuildTargets.preload.sourcePath),
         output: {
-          entryFileNames: 'index.js',
+          entryFileNames: electronBuildTargets.preload.entryFileName,
+          format: 'cjs',
+        },
+        treeshake: {
+          moduleSideEffects: (moduleId: string): boolean => !moduleId.startsWith('node:'),
         },
       },
     },
@@ -29,8 +36,9 @@ export default defineConfig({
     ...createViteConfig({ base: './', isElectron: true }),
     root: '.',
     build: {
+      outDir: resolve(electronBuildTargets.renderer.outputDirectory),
       rollupOptions: {
-        input: resolve('index.html'),
+        input: resolve(electronBuildTargets.renderer.sourcePath),
       },
     },
   },

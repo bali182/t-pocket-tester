@@ -16,6 +16,7 @@ export const useRecentProjects = (): RecentProjectVisualisationSchema[] => {
   return useMemo(() => {
     return [...projects]
       .sort((left, right) => (recents[right.id]?.lastOpenedAt ?? 0) - (recents[left.id]?.lastOpenedAt ?? 0))
+      .filter((project) => isDefined(recents[project.id]))
       .map((project): RecentProjectVisualisationSchema => {
         const recentProject = recents[project.id]
         const lastOpenedSubProject = isDefined(recentProject?.lastSubProjectId)
@@ -27,7 +28,7 @@ export const useRecentProjects = (): RecentProjectVisualisationSchema[] => {
           lastOpenedAt: recentProject.lastOpenedAt,
           formattedLastOpenedAt: isDefined(recentProject) ? formatDate(recentProject.lastOpenedAt) : '-',
           link: isDefined(subProject) ? appRoutes.subProject(project.id, subProject.id) : appRoutes.project(project.id),
-          path: isDefined(recentProject?.path) ? recentProject.path : '',
+          path: recentProject.path,
           projectId: project.id,
           projectName: project.name,
           ...(isDefined(subProject) ? { subProjectId: subProject.id } : {}),
