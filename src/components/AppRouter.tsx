@@ -1,12 +1,12 @@
 import type { FC, PropsWithChildren } from 'react'
 import { BrowserRouter, HashRouter } from 'react-router'
 
+import { isElectron } from '../platform/isElectron'
+
 type AppRouterProps = PropsWithChildren
 
-const isElectron = import.meta.env.VITE_IS_ELECTRON === 'true'
-
 export const AppRouter: FC<AppRouterProps> = ({ children }) => {
-  if (isElectron) {
+  if (isElectron()) {
     return <HashRouter>{children}</HashRouter>
   }
 

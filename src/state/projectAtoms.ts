@@ -4,10 +4,10 @@ import type { SetStateAction } from 'react'
 
 import { getPatchedSubProject } from '../component-patches/getPatchedSubProject'
 import { getComputedSubProject } from '../logic/getComputedSubProject'
+import { projectAdapter } from '../platform/adapter/projectAdapter'
 import type { ComputedProjectSchema, ProjectSchema } from '../schemas/project'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { isDefined } from '../utils/isDefined'
-import { projectsAtom } from './projectsAtom'
 
 export type SubProjectAtomReferenceSchema = {
   projectId: string | undefined
@@ -38,7 +38,7 @@ export const projectAtomFamily = atomFamily((projectId: string | undefined) => {
         return undefined
       }
 
-      return get(projectsAtom).find((project) => project.id === projectId)
+      return projectAdapter.getProject(get, projectId)
     },
     (get, set, update: SetStateAction<ProjectSchema>): void => {
       const currentProject = get(projectAtomFamily(projectId))
@@ -50,9 +50,7 @@ export const projectAtomFamily = atomFamily((projectId: string | undefined) => {
       const updatedProject = typeof update === 'function' ? update(currentProject) : update
       const patchedProject = getPatchedProject(updatedProject)
 
-      set(projectsAtom, (projects) =>
-        projects.map((project) => (project.id === patchedProject.id ? patchedProject : project)),
-      )
+      projectAdapter.setProject(get, set, patchedProject)
     },
   )
 })
@@ -80,20 +78,12 @@ export const subProjectAtomFamily = atomFamily((reference: SubProjectAtomReferen
       const computedSubProject = getComputedSubProject(updatedSubProject, project.stitchingSettings)
       const patchedSubProject = getPatchedSubProject(updatedSubProject, computedSubProject, project.editingSettings)
 
-      set(projectsAtom, (projects) =>
-        projects.map((candidate) => {
-          if (candidate.id !== project.id) {
-            return candidate
-          }
-
-          return {
-            ...candidate,
-            subProjects: candidate.subProjects.map((subProject) =>
-              subProject.id === patchedSubProject.id ? patchedSubProject : subProject,
-            ),
-          }
-        }),
-      )
+      projectAdapter.setProject(get, set, {
+        ...project,
+        subProjects: project.subProjects.map((subProject) =>
+          subProject.id === patchedSubProject.id ? patchedSubProject : subProject,
+        ),
+      })
     },
   )
 }, isSameSubProjectAtomReference)
