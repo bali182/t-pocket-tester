@@ -24,8 +24,10 @@ export const useRecentProjects = (): RecentProjectVisualisationSchema[] => {
         const subProject = isDefined(lastOpenedSubProject) ? lastOpenedSubProject : project.subProjects[0]
 
         return {
+          lastOpenedAt: recentProject.lastOpenedAt,
           formattedLastOpenedAt: isDefined(recentProject) ? formatDate(recentProject.lastOpenedAt) : '-',
           link: isDefined(subProject) ? appRoutes.subProject(project.id, subProject.id) : appRoutes.project(project.id),
+          path: isDefined(recentProject?.path) ? recentProject.path : '',
           projectId: project.id,
           projectName: project.name,
           ...(isDefined(subProject) ? { subProjectId: subProject.id } : {}),
