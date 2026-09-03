@@ -7,7 +7,6 @@ import { webProjectAdapter } from './webProjectAdapter'
 
 export type ProjectAdapterSchema = {
   getFilePath: (get: Getter, projectId: string) => string | undefined
-  getProjectName: (get: Getter, projectId: string) => string | undefined
   getProject: (get: Getter, projectId: string | undefined) => ProjectSchema | undefined
   setProject: (get: Getter, set: Setter, project: ProjectSchema) => void
 }

@@ -9,6 +9,7 @@ const fileManagementApi: FileApiSchema = {
   suggestPath: (request) => ipcRenderer.invoke(fileManagementIpcChannels.suggestPath, request),
   validateCreatePath: (request) => ipcRenderer.invoke(fileManagementIpcChannels.validateCreatePath, request),
   write: (request) => ipcRenderer.invoke(fileManagementIpcChannels.write, request),
+  platform: process.platform,
 }
 
 contextBridge.exposeInMainWorld('fileManagement', fileManagementApi)

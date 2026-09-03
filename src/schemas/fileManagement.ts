@@ -1,5 +1,18 @@
 import type { HasTypeSchema } from './common'
 
+export type NativePlatformSchema =
+  | 'aix'
+  | 'android'
+  | 'darwin'
+  | 'freebsd'
+  | 'haiku'
+  | 'linux'
+  | 'openbsd'
+  | 'sunos'
+  | 'win32'
+  | 'cygwin'
+  | 'netbsd'
+
 export type FileCancelledResponseSchema = HasTypeSchema<'cancelled'>
 
 export type FileErrorResponseSchema = HasTypeSchema<'error'>
@@ -110,4 +123,5 @@ export type FileApiSchema = {
   suggestPath: (request: FileSuggestPathRequestSchema) => Promise<FileSuggestPathResponseSchema>
   validateCreatePath: (request: FileValidateCreatePathRequestSchema) => Promise<FileValidateCreatePathResponseSchema>
   write: (request: FileWriteRequestSchema) => Promise<FileWriteResponseSchema>
+  platform: NativePlatformSchema
 }

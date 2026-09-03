@@ -60,6 +60,12 @@ export const HU = {
     menus: {
       file: {
         name: 'Fájl',
+        file: {
+          name: 'Fájl',
+          open: 'Megnyitása',
+          save: 'Mentés',
+          saveAs: 'Mentés másként',
+        },
         export: {
           name: 'Projekt exportálása',
           svg: 'SVG Exportálás',
@@ -70,7 +76,6 @@ export const HU = {
         name: 'Szerkesztés',
         increment: {
           name: 'Módosítás lépésköze',
-          tiny: 'Apró',
           small: 'Kicsi',
           default: 'Alapértelmezett',
           stitch: `Öltés`,
@@ -214,6 +219,12 @@ export const HU = {
       fileFilterLabel: 'Projektfájlok',
       errors: {
         openFailed: 'A projekt megnyitása nem sikerült.',
+      },
+    },
+    saveDialog: {
+      title: 'Projekt mentése',
+      errors: {
+        saveFailed: 'A projekt mentése nem sikerült.',
       },
     },
     settingsDialog: {

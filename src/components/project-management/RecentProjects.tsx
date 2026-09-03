@@ -16,11 +16,11 @@ import { RecentProjectVisualisationSchema } from '../../schemas/recentProject'
 import { useTranslation } from '../../translations/translation'
 import { ProjectActionsMenu } from '../ProjectActionsMenu'
 
-type ProjectItemMode = 'action' | 'link'
+type PlatformMode = 'electron' | 'web'
 
 type RecentProjectsProps = PropsWithChildren & {
   projects: RecentProjectVisualisationSchema[]
-  mode: ProjectItemMode
+  mode: PlatformMode
   onOpen?: (project: RecentProjectVisualisationSchema) => void
 }
 
@@ -33,7 +33,7 @@ export const RecentProjects: FC<RecentProjectsProps> = ({ projects, onOpen, mode
   const { collection, filter, set } = useListCollection({
     filter: contains,
     initialItems: projects,
-    itemToString: (project) => project.projectName,
+    itemToString: (project) => (mode === 'web' ? project.projectName : project.path),
     itemToValue: (project) => project.projectId,
   })
 
@@ -107,7 +107,7 @@ export const RecentProjects: FC<RecentProjectsProps> = ({ projects, onOpen, mode
 type ProjectItemProps = {
   project: RecentProjectVisualisationSchema
   onOpen?: (project: RecentProjectVisualisationSchema) => void
-  mode: ProjectItemMode
+  mode: PlatformMode
 }
 
 const ProjectItem: FC<ProjectItemProps> = ({ project, onOpen, mode }) => {
@@ -119,7 +119,7 @@ const ProjectItem: FC<ProjectItemProps> = ({ project, onOpen, mode }) => {
     <HStack gap="3">
       <PiWalletDuotone size={18} />
       <Listbox.ItemText>
-        {project.projectName}
+        {mode === 'web' ? project.projectName : project.path}
         <Text color="fg.muted" fontSize="xs" mt="1">
           {project.formattedLastOpenedAt}
         </Text>
@@ -128,16 +128,16 @@ const ProjectItem: FC<ProjectItemProps> = ({ project, onOpen, mode }) => {
   )
 
   return (
-    <Listbox.Item flex="none" item={project} onClick={mode === 'action' ? handleClick : undefined}>
+    <Listbox.Item flex="none" item={project} onClick={mode === 'electron' ? handleClick : undefined}>
       <HStack gap="3" width="100%">
-        {mode === 'link' ? (
+        {mode === 'web' ? (
           <Link style={{ flex: 1 }} to={project.link}>
             {itemContent}
           </Link>
         ) : (
           itemContent
         )}
-        {mode === 'link' && <ProjectActionsMenu projectId={project.projectId} size="xs" />}
+        {mode === 'web' && <ProjectActionsMenu projectId={project.projectId} size="xs" />}
       </HStack>
     </Listbox.Item>
   )

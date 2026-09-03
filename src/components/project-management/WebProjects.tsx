@@ -22,7 +22,7 @@ export const WebProjects: FC = () => {
       <Stack align="center" height="100%" justify="center">
         <Stack gap="4" maxWidth="lg" width="100%">
           <ProjectManagementHeader />
-          <RecentProjects projects={recentProjects} mode="link">
+          <RecentProjects projects={recentProjects} mode="web">
             <Button onClick={openCreateDialog} width="100%" mt="2" variant="solid">
               <PiPlus />
               {t.projects.actions.create}

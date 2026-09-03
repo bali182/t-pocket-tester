@@ -21,4 +21,5 @@ export const fileManagement: FileApiSchema = {
   suggestPath: (request) => getFileManagementApi().suggestPath(request),
   validateCreatePath: (request) => getFileManagementApi().validateCreatePath(request),
   write: (request) => getFileManagementApi().write(request),
+  platform: getFileManagementApi().platform,
 }

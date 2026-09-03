@@ -49,15 +49,6 @@ export const EditMenu: FC = () => {
                 <StepMenuItem
                   onSelect={handleStepSelect}
                   selectedValue={project.editingSettings.numberEditorStep}
-                  subTitle={t.editor.menus.edit.increment.size(0.01)}
-                  title={t.editor.menus.edit.increment.tiny}
-                  icon={PiLineSegmentFill}
-                  iconScale={0.6}
-                  value={0.01}
-                />
-                <StepMenuItem
-                  onSelect={handleStepSelect}
-                  selectedValue={project.editingSettings.numberEditorStep}
                   subTitle={t.editor.menus.edit.increment.size(0.1)}
                   title={t.editor.menus.edit.increment.small}
                   icon={PiLineSegmentFill}

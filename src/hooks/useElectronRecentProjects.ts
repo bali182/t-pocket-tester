@@ -39,11 +39,11 @@ export const useElectronRecentProjects = (): LoadableSchema<RecentProjectVisuali
             : appRoutes.project(projectId),
           path: recentProject.path,
           projectId,
-          projectName: recentProject.projectName,
+          projectName: '',
           ...(isDefined(recentProject.lastSubProjectId) ? { subProjectId: recentProject.lastSubProjectId } : {}),
         }
       })
-      .sort((a, b) => a.lastOpenedAt - b.lastOpenedAt)
+      .sort((a, b) => b.lastOpenedAt - a.lastOpenedAt)
   }, [formatDate, recents])
 
   const loadRecentProjects = useEffectEvent(async (): Promise<void> => {

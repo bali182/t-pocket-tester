@@ -28,7 +28,7 @@ export const ElectronProjects: FC = () => {
         <Stack gap="4" maxWidth="lg" width="100%">
           <ProjectManagementHeader />
           {Loadable.hasValue(recentProjects) ? (
-            <RecentProjects onOpen={handleRecentProjectOpen} projects={recentProjects.data} mode="action">
+            <RecentProjects onOpen={handleRecentProjectOpen} projects={recentProjects.data} mode="electron">
               <HStack gap="2" mt="2">
                 <Button disabled width="100%" variant="solid" display="flex" flex="1">
                   <PiPlus />

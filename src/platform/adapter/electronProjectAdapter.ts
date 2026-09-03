@@ -15,10 +15,6 @@ const getProject = (get: Getter, projectId: string | undefined): ProjectSchema |
   return electronProject.project
 }
 
-const getProjectName = (get: Getter, projectId: string): string | undefined => {
-  return getProject(get, projectId)?.name
-}
-
 const getFilePath = (get: Getter, projectId: string): string | undefined => {
   const electronProject = get(electronProjectAtom)
 
@@ -45,7 +41,6 @@ const setProject = (get: Getter, set: Setter, project: ProjectSchema): void => {
 
 export const electronProjectAdapter: ProjectAdapterSchema = {
   getFilePath,
-  getProjectName,
   getProject,
   setProject,
 }

@@ -61,6 +61,12 @@ export const EN: typeof HU = {
     menus: {
       file: {
         name: 'File',
+        file: {
+          name: 'File',
+          open: 'Open',
+          save: 'Save',
+          saveAs: 'Save as',
+        },
         export: {
           name: 'Export project',
           svg: 'Export SVG',
@@ -71,7 +77,6 @@ export const EN: typeof HU = {
         name: 'Edit',
         increment: {
           name: 'Adjustment increment',
-          tiny: 'Tiny',
           small: 'Small',
           default: 'Default',
           stitch: 'Stitch-size',
@@ -215,6 +220,12 @@ export const EN: typeof HU = {
       fileFilterLabel: 'Project files',
       errors: {
         openFailed: 'The project could not be opened.',
+      },
+    },
+    saveDialog: {
+      title: 'Save project',
+      errors: {
+        saveFailed: 'The project could not be saved.',
       },
     },
     settingsDialog: {

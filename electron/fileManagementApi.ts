@@ -22,4 +22,5 @@ export const fileManagementApi: FileApiSchema = {
   suggestPath,
   validateCreatePath,
   write,
+  platform: process.platform,
 }

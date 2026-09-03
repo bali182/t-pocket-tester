@@ -1,7 +1,6 @@
 export type RecentProjectSchema = {
   lastOpenedAt: number
   path: string
-  projectName: string
   lastSubProjectId?: string
 }
 
