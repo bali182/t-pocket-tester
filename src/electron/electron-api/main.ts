@@ -9,7 +9,7 @@ import type {
   FileSuggestPathRequestSchema,
   FileValidateCreatePathRequestSchema,
   FileWriteRequestSchema,
-} from '../src/schemas/fileManagement'
+} from '../../common/schemas/fileManagement'
 import { getPreloadPath, getRendererPath } from './buildPaths'
 import { fileManagementApi, fileManagementIpcChannels } from './fileManagementApi'
 

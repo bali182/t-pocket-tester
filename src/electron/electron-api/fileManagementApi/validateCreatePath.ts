@@ -7,7 +7,7 @@ import type {
   FileCreatePathInvalidResponseSchema,
   FileValidateCreatePathRequestSchema,
   FileValidateCreatePathResponseSchema,
-} from '../../src/schemas/fileManagement'
+} from '../../../common/schemas/fileManagement'
 import { hasErrorCode } from './utils'
 
 export const validateCreatePath = async (

@@ -1,7 +1,7 @@
 import typia from '@typia/unplugin/vite'
 import { defineConfig } from 'electron-vite'
 import { resolve } from 'node:path'
-import { electronBuildTargets } from './electron/buildPaths'
+import { electronBuildTargets } from './src/electron/electron-api/buildPaths'
 import { createViteConfig } from './vite.common'
 
 export default defineConfig({
@@ -33,8 +33,8 @@ export default defineConfig({
     },
   },
   renderer: {
-    ...createViteConfig({ base: './', isElectron: true }),
-    root: '.',
+    ...createViteConfig({ appEntry: '/index.tsx', base: './', isElectron: true, port: 4000 }),
+    root: resolve('src/electron'),
     build: {
       outDir: resolve(electronBuildTargets.renderer.outputDirectory),
       rollupOptions: {

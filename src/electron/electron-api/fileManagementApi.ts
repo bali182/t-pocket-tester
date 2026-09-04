@@ -1,4 +1,4 @@
-import type { FileApiSchema } from '../src/schemas/fileManagement'
+import { FileApiSchema } from '../../common/schemas/fileManagement'
 import { dialog } from './fileManagementApi/dialog'
 import { findExistingFilePaths } from './fileManagementApi/findExistingFilePaths'
 import { read } from './fileManagementApi/read'

@@ -2,11 +2,11 @@ import typia from '@typia/unplugin/vite'
 import react from '@vitejs/plugin-react'
 import type { Plugin, UserConfig } from 'vite'
 
-const appEntry = '/src/index.tsx'
-
 export type ViteConfigOptions = {
+  appEntry: string
   base: string
   isElectron: boolean
+  port: number
 }
 
 const entry = (entryPath: string): Plugin => {
@@ -21,12 +21,21 @@ const entry = (entryPath: string): Plugin => {
   }
 }
 
-export const createViteConfig = ({ base, isElectron }: ViteConfigOptions): Omit<UserConfig, 'build'> => {
+export const createViteConfig = ({
+  appEntry,
+  base,
+  isElectron,
+  port,
+}: ViteConfigOptions): Omit<UserConfig, 'build'> => {
   return {
     base,
     define: {
       'import.meta.env.VITE_IS_ELECTRON': JSON.stringify(isElectron ? 'true' : 'false'),
     },
     plugins: [entry(appEntry), typia(), react()],
+    server: {
+      port,
+      strictPort: true,
+    },
   }
 }

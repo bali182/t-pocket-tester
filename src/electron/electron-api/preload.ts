@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { FileApiSchema } from '../src/schemas/fileManagement'
+import { FileApiSchema } from '../../common/schemas/fileManagement'
 import { fileManagementIpcChannels } from './fileManagementApi'
 
 const fileManagementApi: FileApiSchema = {

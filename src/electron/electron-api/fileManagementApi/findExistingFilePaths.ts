@@ -1,8 +1,8 @@
 import { stat } from 'node:fs/promises'
-import type {
+import {
   FileFindExistingFilePathsRequestSchema,
   FileFindExistingFilePathsResponseSchema,
-} from '../../src/schemas/fileManagement'
+} from '../../../common/schemas/fileManagement'
 import { hasErrorCode } from './utils'
 
 export const findExistingFilePaths = async (

@@ -1,9 +1,9 @@
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { Provider as JotaiProvider } from 'jotai'
 import { createRoot } from 'react-dom/client'
-import { App } from './components/App'
-import { AppRouter } from './components/AppRouter'
-import { appStore } from './state/store'
+import { AppRouter } from '../common/components/AppRouter'
+import { appStore } from '../common/state/store'
+import { App } from './App'
 
 const rootElement = document.getElementById('root')
 

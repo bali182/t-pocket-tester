@@ -5,7 +5,7 @@ import type {
   FileDialogRequestSchema,
   FileDialogResponseSchema,
   FileDialogWriteRequestSchema,
-} from '../../src/schemas/fileManagement'
+} from '../../../common/schemas/fileManagement'
 
 export const dialog = async (request: FileDialogRequestSchema): Promise<FileDialogResponseSchema> => {
   if (request.type === 'write') {

@@ -9,19 +9,19 @@ type ElectronBuildTargetSchema = {
 const mainBuildTarget: ElectronBuildTargetSchema = {
   entryFileName: 'index.js',
   outputDirectory: 'out/main',
-  sourcePath: 'electron/main.ts',
+  sourcePath: 'src/electron/electron-api/main.ts',
 }
 
 const preloadBuildTarget: ElectronBuildTargetSchema = {
   entryFileName: 'preload.cjs',
   outputDirectory: 'out/preload',
-  sourcePath: 'electron/preload.ts',
+  sourcePath: 'src/electron/electron-api/preload.ts',
 }
 
 const rendererBuildTarget: ElectronBuildTargetSchema = {
   entryFileName: 'index.html',
   outputDirectory: 'out/renderer',
-  sourcePath: 'index.html',
+  sourcePath: 'src/electron/index.html',
 }
 
 export const electronBuildTargets = {

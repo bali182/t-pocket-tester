@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises'
-import type { FileWriteRequestSchema, FileWriteResponseSchema } from '../../src/schemas/fileManagement'
+import type { FileWriteRequestSchema, FileWriteResponseSchema } from '../../../common/schemas/fileManagement'
 
 export const write = async (request: FileWriteRequestSchema): Promise<FileWriteResponseSchema> => {
   try {
