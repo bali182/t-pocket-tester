@@ -1,7 +1,7 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
-import { useSetAtom } from 'jotai'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
+import { useNavigate } from 'react-router'
 import { appRoutes } from '../appRoutes'
 import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
@@ -12,7 +12,6 @@ import { portalRef } from '../portalRef'
 import type { ComponentSchema } from '../schemas/components'
 import type { StitchLineSchema } from '../schemas/stitching'
 import { SubProjectSchema } from '../schemas/subProject'
-import { pendingSubProjectDeletionAtom } from '../state/pendigDeletionAtoms'
 import { useTranslation } from '../translations/translation'
 import { getModelIcon } from '../utils/getModelIcon'
 import { isDefined } from '../utils/isDefined'
@@ -40,9 +39,9 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   const t = useTranslation()
   const { project } = useProject()
   const { subProject: selectedSubProject } = useOptionalSubProject()
-  const setPendingSubProjectDeletion = useSetAtom(pendingSubProjectDeletionAtom)
   const { cloneSubProject, deleteSubProject } = useProjectOperations()
   const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useSubProjectOperations()
+  const navigate = useNavigate()
   const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
 
   const nextSelectedSubProjectAfterDelete = useMemo((): SubProjectSchema | undefined => {
@@ -54,30 +53,30 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
     if (selectedSubProject.id !== subProject.id) {
       return selectedSubProject
     }
-    const subProjectIndex = project.subProjects.findIndex((candidate) => candidate.id === selectedSubProject?.id)
+    const subProjectIndex = project.subProjects.findIndex((candidate) => candidate.id === selectedSubProject.id)
     if (project.subProjects.length === 1 && project.subProjects[0] === selectedSubProject) {
       return undefined
     }
     return subProjectIndex === 0 ? project.subProjects[1] : project.subProjects[subProjectIndex - 1]
-  }, [selectedSubProject, subProject.id, project.subProjects])
+  }, [project.subProjects, selectedSubProject, subProject.id])
 
   const deleteRoot = useCallback((): void => {
-    if (isDefined(selectedSubProject) && selectedSubProject?.id !== nextSelectedSubProjectAfterDelete?.id) {
+    if (isDefined(selectedSubProject) && selectedSubProject.id !== nextSelectedSubProjectAfterDelete?.id) {
       const navigationTarget = isDefined(nextSelectedSubProjectAfterDelete)
         ? appRoutes.subProject(project.id, nextSelectedSubProjectAfterDelete.id)
         : appRoutes.project(project.id)
-      setPendingSubProjectDeletion({ redirectPath: navigationTarget, subProjectId: subProject.id })
+      navigate(navigationTarget, { replace: true })
     }
     deleteSubProject(subProject.id)
     onDelete(component.id)
   }, [
-    selectedSubProject,
-    nextSelectedSubProjectAfterDelete,
     deleteSubProject,
+    navigate,
+    nextSelectedSubProjectAfterDelete,
     onDelete,
     component.id,
     project.id,
-    setPendingSubProjectDeletion,
+    selectedSubProject,
     subProject.id,
   ])
 

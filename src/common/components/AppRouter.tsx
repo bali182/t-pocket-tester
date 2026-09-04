@@ -7,8 +7,12 @@ type AppRouterProps = PropsWithChildren
 
 export const AppRouter: FC<AppRouterProps> = ({ children }) => {
   if (isElectron()) {
-    return <HashRouter>{children}</HashRouter>
+    return <HashRouter useTransitions={false}>{children}</HashRouter>
   }
 
-  return <BrowserRouter basename={import.meta.env.BASE_URL}>{children}</BrowserRouter>
+  return (
+    <BrowserRouter basename={import.meta.env.BASE_URL} useTransitions={false}>
+      {children}
+    </BrowserRouter>
+  )
 }
