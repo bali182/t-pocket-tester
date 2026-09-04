@@ -1,4 +1,4 @@
-import type { FileApiSchema } from '../schemas/fileManagement'
+import type { FileApiSchema, NativePlatformSchema } from '../schemas/fileManagement'
 
 type FileManagementWindow = Window & {
   fileManagement?: FileApiSchema
@@ -21,5 +21,7 @@ export const fileManagement: FileApiSchema = {
   suggestPath: (request) => getFileManagementApi().suggestPath(request),
   validateCreatePath: (request) => getFileManagementApi().validateCreatePath(request),
   write: (request) => getFileManagementApi().write(request),
-  platform: getFileManagementApi().platform,
+  get platform(): NativePlatformSchema {
+    return getFileManagementApi().platform
+  },
 }
