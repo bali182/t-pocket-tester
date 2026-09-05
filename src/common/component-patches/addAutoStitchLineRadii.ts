@@ -1,5 +1,4 @@
 import { HasCornerRadiusValuesSchema } from '../schemas/common'
-import { ProjectEditingSettingSchema } from '../schemas/settings'
 import { ComponentBoundsStitchLineSchema, StitchLineSchema } from '../schemas/stitching'
 import { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { accessors } from '../utils/accessors'
@@ -7,7 +6,6 @@ import { accessors } from '../utils/accessors'
 export const addAutoStitchLineRadii = (
   subProject: SubProjectSchema,
   computedProject: ComputedSubProjectSchema,
-  _editingSettings: ProjectEditingSettingSchema,
 ): SubProjectSchema => {
   let modified = false
   const stitchLines: StitchLineSchema[] = []

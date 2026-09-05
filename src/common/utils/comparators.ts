@@ -23,12 +23,7 @@ export const comparators = {
     )
   },
   editingSettings: (a: ProjectEditingSettingSchema, b: ProjectEditingSettingSchema): boolean => {
-    return (
-      a.addComputedSizesToAutoSized === b.addComputedSizesToAutoSized &&
-      a.adjustCornerRadiiToParent === b.adjustCornerRadiiToParent &&
-      a.addBaseColorByDefault === b.addBaseColorByDefault &&
-      a.numberEditorStep === b.numberEditorStep
-    )
+    return a.addBaseColorByDefault === b.addBaseColorByDefault && a.numberEditorStep === b.numberEditorStep
   },
   stitchingSettings: (a: StitchLineCommonConfigSchema, b: StitchLineCommonConfigSchema): boolean => {
     return (

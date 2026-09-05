@@ -2,7 +2,7 @@ import { createContext, SetStateAction } from 'react'
 import { ProjectSchema } from '../schemas/project'
 import { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 
-type EditorContextType = {
+export type EditorContextType = {
   project?: ProjectSchema
   subProject?: SubProjectSchema
   computedSubProject?: ComputedSubProjectSchema

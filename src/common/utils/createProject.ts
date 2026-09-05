@@ -8,8 +8,6 @@ export const createProject = (name: string): ProjectSchema => {
     name,
     subProjects: [],
     editingSettings: {
-      addComputedSizesToAutoSized: true,
-      adjustCornerRadiiToParent: true,
       addBaseColorByDefault: false,
       numberEditorStep: 1,
     },

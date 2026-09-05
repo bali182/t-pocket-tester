@@ -3,8 +3,6 @@ export type AdjustCornerRadiiSchema = 'never' | 'increase' | 'sync'
 export type NumberEditorStepSchema = number | 'stitch-hole-distance'
 
 export type ProjectEditingSettingSchema = {
-  addComputedSizesToAutoSized: boolean
-  adjustCornerRadiiToParent: boolean
   addBaseColorByDefault: boolean
   numberEditorStep: NumberEditorStepSchema
 }

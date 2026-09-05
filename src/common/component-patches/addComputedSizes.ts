@@ -1,19 +1,13 @@
 import { updateProjectComponents } from '../operations/subProject/utils/updateProjectComponents'
 import { ComponentSchema, HasAutoDimensionsSchema, HasChildrenSchema, HasLayoutSchema } from '../schemas/components'
 import { ComputedPanelSchema, ComputedPocketClusterSchema, HasComputedLayoutGapSchema } from '../schemas/computed'
-import type { ProjectEditingSettingSchema } from '../schemas/settings'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 import { narrowers } from '../utils/narrowers'
 
 export const addComputedSizes = (
   subProject: SubProjectSchema,
   computedProject: ComputedSubProjectSchema,
-  editingSettings: ProjectEditingSettingSchema,
 ): SubProjectSchema => {
-  if (!editingSettings.addComputedSizesToAutoSized) {
-    return subProject
-  }
-
   return updateProjectComponents(subProject, computedProject, (_id, component, computedComponent) => {
     switch (component.type) {
       case 'root-panel': {

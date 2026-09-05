@@ -24,8 +24,6 @@ export const validateProjectSchema = (
   const colorSettingsResult = validateColorSettings(input.colorSettings, currentValue.colorSettings, context)
   const issues: ValidationIssuesSchema<ProjectSchema> = {
     editingSettings: {
-      addComputedSizesToAutoSized: undefined,
-      adjustCornerRadiiToParent: undefined,
       addBaseColorByDefault: undefined,
       numberEditorStep: undefined,
     },

@@ -26,7 +26,7 @@ const getPatchedProject = (project: ProjectSchema): ProjectSchema => {
     ...project,
     subProjects: project.subProjects.map((subProject) => {
       const computedSubProject = getComputedSubProject(subProject, project.stitchingSettings)
-      return getPatchedSubProject(subProject, computedSubProject, project.editingSettings)
+      return getPatchedSubProject(subProject, computedSubProject)
     }),
   }
 }
@@ -76,7 +76,7 @@ export const subProjectAtomFamily = atomFamily((reference: SubProjectAtomReferen
 
       const updatedSubProject = typeof update === 'function' ? update(currentSubProject) : update
       const computedSubProject = getComputedSubProject(updatedSubProject, project.stitchingSettings)
-      const patchedSubProject = getPatchedSubProject(updatedSubProject, computedSubProject, project.editingSettings)
+      const patchedSubProject = getPatchedSubProject(updatedSubProject, computedSubProject)
 
       projectAdapter.setProject(get, set, {
         ...project,
