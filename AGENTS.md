@@ -11,6 +11,8 @@
 - Coding is only permitted when the user explicitly exclaims something like "do it", "let's give this a try", or when the user choses the "Implement plan" option after a presenting a plan.
 - If the users last prompt ended with a question, it's a clear sign, that it's forbidden to code.
 - If the user answers your questions, but didn't give an explicit "go", it's still forbidden to write code.
+- Never type `useCallback` with a type extracted from another type, such as `useCallback<EditorContextType['setProject']>(...)`. Write the callback parameter and return types directly in the callback declaration instead.
+- Type `useMemo` directly with its result type, such as `useMemo<ProjectSchema | undefined>(...)`.
 
 ## Planning
 

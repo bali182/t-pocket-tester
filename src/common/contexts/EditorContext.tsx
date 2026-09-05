@@ -9,6 +9,8 @@ export type EditorContextType = {
 
   /** Overwrites the data model of the selected project. */
   setProject: (project: SetStateAction<ProjectSchema>) => void
+  /** Overwrites the data model of the selected sub-project. */
+  setSubProject: (update: SetStateAction<SubProjectSchema>) => void
 
   /** Goes to the landing page / recent projects list */
   navigateToProjects: () => void
@@ -28,6 +30,7 @@ export const EditorContext = createContext<EditorContextType>({
   computedSubProject: undefined,
 
   setProject: notImplemented,
+  setSubProject: notImplemented,
   navigateToProjects: notImplemented,
   navigateToProject: notImplemented,
   navigateToSubProject: notImplemented,
