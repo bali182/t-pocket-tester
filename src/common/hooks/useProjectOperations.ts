@@ -1,7 +1,6 @@
-import type { Getter } from 'jotai'
-import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback, useMemo } from 'react'
 
+import { useEditorContext } from '../contexts/EditorContext'
 import { addSubProject as addSubProjectPure } from '../operations/project/addSubProject'
 import { cloneSubProject as cloneSubProjectPure } from '../operations/project/cloneSubProject'
 import { deleteSubProject as deleteSubProjectPure } from '../operations/project/deleteSubProject'
@@ -9,105 +8,111 @@ import type { ProjectSchema } from '../schemas/project'
 import type { ColorSettingsSchema, ProjectEditingSettingSchema } from '../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
-import { projectAtomFamily } from '../state/projectAtoms'
 import { useTranslation } from '../translations/translation'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
-import { useOptionalProject } from './useOptionalProject'
 import { useRecentProjectOperations } from './useRecentProjectOperations'
 
-export const useProjectOperations = () => {
-  const { project } = useOptionalProject()
+export type UseProjectOperationsOutput = {
+  cloneSubProject: (sourceSubProject: SubProjectSchema) => void
+  createSubProject: () => SubProjectSchema
+  deleteSubProject: (subProjectId: string) => void
+  updateColorSettings: (update: Partial<ColorSettingsSchema>) => void
+  updateEditingSettings: (update: Partial<ProjectEditingSettingSchema>) => void
+  updateProject: (project: ProjectSchema) => void
+  updateStitchingSettings: (update: Partial<StitchLineCommonConfigSchema>) => void
+}
+
+export const useProjectOperations = (): UseProjectOperationsOutput => {
+  const { project, setProject } = useEditorContext()
   const { clearLastOpenedSubProject } = useRecentProjectOperations()
   const t = useTranslation()
-  const projectId = project?.id
 
-  const updateEditingSettings = useAtomCallback(
-    useCallback(
-      (get, set, update: Partial<ProjectEditingSettingSchema>): void => {
-        const project = ensureProject(get, projectId)
-        set(projectAtomFamily(projectId), {
-          ...project,
-          editingSettings: { ...project.editingSettings, ...update },
-        })
-      },
-      [projectId],
-    ),
+  const updateProject = useCallback(
+    (updatedProject: ProjectSchema): void => {
+      setProject(updatedProject)
+    },
+    [setProject],
   )
 
-  const updateStitchingSettings = useAtomCallback(
-    useCallback(
-      (get, set, update: Partial<StitchLineCommonConfigSchema>): void => {
-        const project = ensureProject(get, projectId)
-        set(projectAtomFamily(projectId), {
-          ...project,
-          stitchingSettings: { ...project.stitchingSettings, ...update },
-        })
-      },
-      [projectId],
-    ),
+  const updateEditingSettings = useCallback(
+    (update: Partial<ProjectEditingSettingSchema>): void => {
+      const currentProject = ensureProject(project)
+
+      setProject({
+        ...currentProject,
+        editingSettings: { ...currentProject.editingSettings, ...update },
+      })
+    },
+    [project, setProject],
   )
 
-  const updateColorSettings = useAtomCallback(
-    useCallback(
-      (get, set, update: Partial<ColorSettingsSchema>): void => {
-        const project = ensureProject(get, projectId)
-        set(projectAtomFamily(projectId), {
-          ...project,
-          colorSettings: { ...project.colorSettings, ...update },
-        })
-      },
-      [projectId],
-    ),
+  const updateStitchingSettings = useCallback(
+    (update: Partial<StitchLineCommonConfigSchema>): void => {
+      const currentProject = ensureProject(project)
+
+      setProject({
+        ...currentProject,
+        stitchingSettings: { ...currentProject.stitchingSettings, ...update },
+      })
+    },
+    [project, setProject],
   )
 
-  const createSubProject = useAtomCallback(
-    useCallback(
-      (get, set): SubProjectSchema => {
-        const project = ensureProject(get, projectId)
-        const result = addSubProjectPure(project, { baseRootComponentName: t.defaults.rootComponentName })
-        set(projectAtomFamily(projectId), result.project)
-        return result.subProject
-      },
-      [projectId, t],
-    ),
+  const updateColorSettings = useCallback(
+    (update: Partial<ColorSettingsSchema>): void => {
+      const currentProject = ensureProject(project)
+
+      setProject({
+        ...currentProject,
+        colorSettings: { ...currentProject.colorSettings, ...update },
+      })
+    },
+    [project, setProject],
   )
 
-  const cloneSubProject = useAtomCallback(
-    useCallback(
-      (get, set, sourceSubProject: SubProjectSchema): void => {
-        const project = ensureProject(get, projectId)
-        set(
-          projectAtomFamily(projectId),
-          cloneSubProjectPure(project, {
-            getUnusedId: id,
-            subProject: sourceSubProject,
-          }),
-        )
-      },
-      [projectId],
-    ),
+  const createSubProject = useCallback((): SubProjectSchema => {
+    const currentProject = ensureProject(project)
+    const result = addSubProjectPure(currentProject, { baseRootComponentName: t.defaults.rootComponentName })
+
+    setProject(result.project)
+
+    return result.subProject
+  }, [project, setProject, t.defaults.rootComponentName])
+
+  const cloneSubProject = useCallback(
+    (sourceSubProject: SubProjectSchema): void => {
+      const currentProject = ensureProject(project)
+
+      setProject(
+        cloneSubProjectPure(currentProject, {
+          getUnusedId: id,
+          subProject: sourceSubProject,
+        }),
+      )
+    },
+    [project, setProject],
   )
 
-  const deleteSubProject = useAtomCallback(
-    useCallback(
-      (get, set, subProjectId: string): void => {
-        const project = ensureProject(get, projectId)
-        set(projectAtomFamily(projectId), deleteSubProjectPure(project, { subProjectId }))
-        clearLastOpenedSubProject(project.id, subProjectId)
-      },
-      [clearLastOpenedSubProject, projectId],
-    ),
+  const deleteSubProject = useCallback(
+    (subProjectId: string): void => {
+      const currentProject = ensureProject(project)
+
+      setProject(deleteSubProjectPure(currentProject, { subProjectId }))
+      clearLastOpenedSubProject(currentProject.id, subProjectId)
+    },
+    [clearLastOpenedSubProject, project, setProject],
   )
 
-  return useMemo(
+  return useMemo<UseProjectOperationsOutput>(
     () => ({
-      createSubProject,
       cloneSubProject,
+      createSubProject,
       deleteSubProject,
-      updateEditingSettings,
-      updateStitchingSettings,
       updateColorSettings,
+      updateEditingSettings,
+      updateProject,
+      updateStitchingSettings,
     }),
     [
       cloneSubProject,
@@ -115,14 +120,13 @@ export const useProjectOperations = () => {
       deleteSubProject,
       updateColorSettings,
       updateEditingSettings,
+      updateProject,
       updateStitchingSettings,
     ],
   )
 }
 
-const ensureProject = (get: Getter, projectId: string | undefined): ProjectSchema => {
-  const project = get(projectAtomFamily(projectId))
-
+const ensureProject = (project: ProjectSchema | undefined): ProjectSchema => {
   if (!isDefined(project)) {
     throw new Error('A valid project is required')
   }

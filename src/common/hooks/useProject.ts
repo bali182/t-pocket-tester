@@ -1,19 +1,17 @@
-import type { SetStateAction } from 'react'
 import type { ProjectSchema } from '../schemas/project'
 import { isDefined } from '../utils/isDefined'
 import { useOptionalProject } from './useOptionalProject'
 
 type UseProjectResult = {
   project: ProjectSchema
-  setProject: (project: SetStateAction<ProjectSchema>) => void
 }
 
 export const useProject = (): UseProjectResult => {
-  const { project, setProject } = useOptionalProject()
+  const { project } = useOptionalProject()
 
   if (!isDefined(project)) {
     throw new Error('useProject requires a valid project route')
   }
 
-  return { project, setProject }
+  return { project }
 }

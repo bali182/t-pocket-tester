@@ -9,6 +9,7 @@ import { optionalComparators } from '../utils/comparators'
 import { validateProjectSchema } from '../validators/validateProjectSchema'
 import { useEditableModel } from './useEditableModel'
 import { useProject } from './useProject'
+import { useProjectOperations } from './useProjectOperations'
 import { useProjects } from './useProjects'
 
 export type UseEditableProjectResult = {
@@ -19,7 +20,8 @@ export type UseEditableProjectResult = {
 }
 
 export const useEditableProject = (): UseEditableProjectResult => {
-  const { project, setProject } = useProject()
+  const { project } = useProject()
+  const { updateProject } = useProjectOperations()
   const { projects } = useProjects()
   const t = useTranslation()
   const context = useMemo<ProjectBasedValidationContextSchema>(
@@ -27,7 +29,7 @@ export const useEditableProject = (): UseEditableProjectResult => {
     [projects, t],
   )
   const { editableValue, setValue, validationIssues } = useEditableModel({
-    commit: setProject,
+    commit: updateProject,
     context,
     isEqual: optionalComparators.project,
     validate: validateProjectSchema,
