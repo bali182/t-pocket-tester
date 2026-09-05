@@ -1,30 +1,20 @@
-import {
-  EmptyState,
-  HStack,
-  IconButton,
-  Input,
-  InputGroup,
-  Listbox,
-  Text,
-  useFilter,
-  useListCollection,
-} from '@chakra-ui/react'
+import { EmptyState, IconButton, Input, InputGroup, Listbox, useFilter, useListCollection } from '@chakra-ui/react'
 import { ChangeEvent, FC, PropsWithChildren, useCallback, useEffect, useState } from 'react'
-import { PiFolderDuotone, PiMagnifyingGlass, PiWalletDuotone, PiX } from 'react-icons/pi'
-import { Link } from 'react-router'
-import { RecentProjectVisualisationSchema } from '../../schemas/recentProject'
+import { PiFolderDuotone, PiMagnifyingGlass, PiX } from 'react-icons/pi'
+import type { RecentProjectVisualisationSchema } from '../../schemas/recentProject'
 import { useTranslation } from '../../translations/translation'
-import { ProjectActionsMenu } from '../ProjectActionsMenu'
 
-type PlatformMode = 'electron' | 'web'
-
-type RecentProjectsProps = PropsWithChildren & {
-  projects: RecentProjectVisualisationSchema[]
-  mode: PlatformMode
-  onOpen?: (project: RecentProjectVisualisationSchema) => void
+export type RecentProjectItemProps = {
+  project: RecentProjectVisualisationSchema
 }
 
-export const RecentProjects: FC<RecentProjectsProps> = ({ projects, onOpen, mode, children }) => {
+type RecentProjectsProps = PropsWithChildren & {
+  ProjectItem: FC<RecentProjectItemProps>
+  getProjectSearchText: (project: RecentProjectVisualisationSchema) => string
+  projects: RecentProjectVisualisationSchema[]
+}
+
+export const RecentProjects: FC<RecentProjectsProps> = ({ ProjectItem, children, getProjectSearchText, projects }) => {
   const [search, setSearch] = useState('')
 
   const t = useTranslation()
@@ -33,7 +23,7 @@ export const RecentProjects: FC<RecentProjectsProps> = ({ projects, onOpen, mode
   const { collection, filter, set } = useListCollection({
     filter: contains,
     initialItems: projects,
-    itemToString: (project) => (mode === 'web' ? project.projectName : project.path),
+    itemToString: getProjectSearchText,
     itemToValue: (project) => project.projectId,
   })
 
@@ -72,7 +62,7 @@ export const RecentProjects: FC<RecentProjectsProps> = ({ projects, onOpen, mode
       </InputGroup>
       <Listbox.Content overflowY="auto">
         {collection.items.map((project) => (
-          <ProjectItem key={project.projectId} project={project} mode={mode} onOpen={onOpen} />
+          <ProjectItem key={project.projectId} project={project} />
         ))}
         <Listbox.Empty>
           {projects.length === 0 && (
@@ -101,44 +91,5 @@ export const RecentProjects: FC<RecentProjectsProps> = ({ projects, onOpen, mode
       </Listbox.Content>
       {children}
     </Listbox.Root>
-  )
-}
-
-type ProjectItemProps = {
-  project: RecentProjectVisualisationSchema
-  onOpen?: (project: RecentProjectVisualisationSchema) => void
-  mode: PlatformMode
-}
-
-const ProjectItem: FC<ProjectItemProps> = ({ project, onOpen, mode }) => {
-  const handleClick = useCallback(async (): Promise<void> => {
-    onOpen?.(project)
-  }, [onOpen, project])
-
-  const itemContent = (
-    <HStack gap="3">
-      <PiWalletDuotone size={18} />
-      <Listbox.ItemText>
-        {mode === 'web' ? project.projectName : project.path}
-        <Text color="fg.muted" fontSize="xs" mt="1">
-          {project.formattedLastOpenedAt}
-        </Text>
-      </Listbox.ItemText>
-    </HStack>
-  )
-
-  return (
-    <Listbox.Item flex="none" item={project} onClick={mode === 'electron' ? handleClick : undefined}>
-      <HStack gap="3" width="100%">
-        {mode === 'web' ? (
-          <Link style={{ flex: 1 }} to={project.link}>
-            {itemContent}
-          </Link>
-        ) : (
-          itemContent
-        )}
-        {mode === 'web' && <ProjectActionsMenu projectId={project.projectId} size="xs" />}
-      </HStack>
-    </Listbox.Item>
   )
 }

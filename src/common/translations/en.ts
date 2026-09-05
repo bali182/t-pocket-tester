@@ -8,6 +8,7 @@ export const EN: typeof HU = {
       add: 'Add',
       reset: 'Reset',
       cancel: 'Cancel',
+      back: 'Back',
       next: 'Next',
       remove: 'Delete',
       apply: 'Apply',

@@ -1,8 +1,7 @@
 import { Box, Button, Card, Heading, Splitter, SplitterPanelData } from '@chakra-ui/react'
 import { FC, useCallback, useMemo } from 'react'
 import { PiPlus, PiWarningCircle } from 'react-icons/pi'
-import { useNavigate } from 'react-router'
-import { appRoutes } from '../appRoutes'
+import { useEditorContext } from '../contexts/EditorContext'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
 import { useTranslation } from '../translations/translation'
@@ -82,14 +81,13 @@ export const EditorContent: FC<EditorContentProps> = ({ subProjectId }) => {
 
 const EmptyProjectState: FC = () => {
   const t = useTranslation()
-  const { project } = useProject()
   const { createSubProject } = useProjectOperations()
-  const navigate = useNavigate()
+  const { navigateToSubProject } = useEditorContext()
 
   const handleCreateSubProject = useCallback((): void => {
     const subProject = createSubProject()
-    navigate(appRoutes.subProject(project.id, subProject.id))
-  }, [createSubProject, navigate, project.id])
+    navigateToSubProject(subProject.id)
+  }, [createSubProject, navigateToSubProject])
 
   return (
     <CommonEmptyState

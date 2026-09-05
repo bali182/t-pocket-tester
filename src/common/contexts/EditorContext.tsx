@@ -1,4 +1,4 @@
-import { createContext, SetStateAction } from 'react'
+import { createContext, SetStateAction, useContext } from 'react'
 import { ProjectSchema } from '../schemas/project'
 import { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
 
@@ -35,3 +35,7 @@ export const EditorContext = createContext<EditorContextType>({
   navigateToProject: notImplemented,
   navigateToSubProject: notImplemented,
 })
+
+export const useEditorContext = () => {
+  return useContext(EditorContext)
+}

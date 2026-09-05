@@ -2,24 +2,27 @@ import { useAtom } from 'jotai'
 import { useCallback, useMemo, type SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
-import { appRoutes } from '../appRoutes'
-import { getPatchedProject } from '../component-patches/getPatchedProject'
-import { getPatchedSubProject } from '../component-patches/getPatchedSubProject'
-import { needsFullProjectPatch } from '../component-patches/needsFullProjectPatch'
-import type { EditorContextType } from '../contexts/EditorContext'
-import { getComputedSubProject } from '../logic/getComputedSubProject'
-import type { ElectronProjectSchema } from '../schemas/electronProject'
-import type { ProjectSchema } from '../schemas/project'
-import type { SubProjectRouteParams } from '../schemas/routeParams'
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
-import { electronProjectAtom } from '../state/electronProjectAtom'
-import { isDefined } from '../utils/isDefined'
+import { getPatchedProject } from '../../common/component-patches/getPatchedProject'
+import { getPatchedSubProject } from '../../common/component-patches/getPatchedSubProject'
+import { needsFullProjectPatch } from '../../common/component-patches/needsFullProjectPatch'
+import type { EditorContextType } from '../../common/contexts/EditorContext'
+import { Loadable } from '../../common/loadable'
+import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
+import type { ElectronProjectSchema } from '../../common/schemas/electronProject'
+import type { LoadableSchema } from '../../common/schemas/loadable'
+import type { ProjectSchema } from '../../common/schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../../common/schemas/subProject'
+import { electronProjectAtom } from '../../common/state/electronProjectAtom'
+import { isDefined } from '../../common/utils/isDefined'
+import { electronAppRoutes } from '../electronAppRoutes'
+import type { ElectronSubProjectRouteParamsSchema } from '../schemas/electronRouteParams'
 
 export const useElectronEditorContextValue = (): EditorContextType => {
-  const { subProjectId } = useParams<SubProjectRouteParams>()
+  const { subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
   const navigate = useNavigate()
   const [electronProject, setElectronProject] = useAtom(electronProjectAtom)
-  const project = electronProject?.project
+  const loadedElectronProject = Loadable.get(electronProject)
+  const project = loadedElectronProject?.project
 
   const subProject = useMemo<SubProjectSchema | undefined>(() => {
     if (!isDefined(project) || !isDefined(subProjectId)) {
@@ -39,22 +42,21 @@ export const useElectronEditorContextValue = (): EditorContextType => {
 
   const setProject = useCallback(
     (update: SetStateAction<ProjectSchema>): void => {
-      setElectronProject((currentElectronProject: ElectronProjectSchema | undefined): ElectronProjectSchema => {
-        if (!isDefined(currentElectronProject)) {
-          throw new Error('Cannot update the project because no project file is open.')
-        }
+      setElectronProject(
+        (currentElectronProject: LoadableSchema<ElectronProjectSchema>): LoadableSchema<ElectronProjectSchema> =>
+          Loadable.map(currentElectronProject, (loadedProject: ElectronProjectSchema): ElectronProjectSchema => {
+            const updatedProject = typeof update === 'function' ? update(loadedProject.project) : update
+            const projectToStore = needsFullProjectPatch(loadedProject.project, updatedProject)
+              ? getPatchedProject(updatedProject)
+              : updatedProject
 
-        const updatedProject = typeof update === 'function' ? update(currentElectronProject.project) : update
-        const projectToStore = needsFullProjectPatch(currentElectronProject.project, updatedProject)
-          ? getPatchedProject(updatedProject)
-          : updatedProject
-
-        return {
-          filePath: currentElectronProject.filePath,
-          isDirty: true,
-          project: projectToStore,
-        }
-      })
+            return {
+              filePath: loadedProject.filePath,
+              isDirty: true,
+              project: projectToStore,
+            }
+          }),
+      )
     },
     [setElectronProject],
   )
@@ -99,26 +101,26 @@ export const useElectronEditorContextValue = (): EditorContextType => {
   )
 
   const navigateToProjects = useCallback((): void => {
-    navigate(appRoutes.projects)
+    navigate(electronAppRoutes.projects)
   }, [navigate])
 
   const navigateToProject = useCallback((): void => {
-    if (!isDefined(electronProject)) {
+    if (!isDefined(loadedElectronProject)) {
       throw new Error('Cannot navigate to the current project because no project file is open.')
     }
 
-    navigate(appRoutes.project(electronProject.project.id))
-  }, [electronProject, navigate])
+    navigate(electronAppRoutes.project(loadedElectronProject.filePath))
+  }, [loadedElectronProject, navigate])
 
   const navigateToSubProject = useCallback(
     (targetSubProjectId: string): void => {
-      if (!isDefined(electronProject)) {
+      if (!isDefined(loadedElectronProject)) {
         throw new Error('Cannot navigate to a sub-project because no project file is open.')
       }
 
-      navigate(appRoutes.subProject(electronProject.project.id, targetSubProjectId))
+      navigate(electronAppRoutes.subProject(loadedElectronProject.filePath, targetSubProjectId))
     },
-    [electronProject, navigate],
+    [loadedElectronProject, navigate],
   )
 
   return useMemo<EditorContextType>(

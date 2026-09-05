@@ -1,32 +1,35 @@
 import { useAtom } from 'jotai'
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import typia from 'typia'
 
-import { appRoutes } from '../appRoutes'
+import { electronAppRoutes } from '../../electron/electronAppRoutes'
+import type { ElectronSubProjectRouteParamsSchema } from '../../electron/schemas/electronRouteParams'
 import { toaster } from '../components/Toaster'
 import { FILE_EXTENSION } from '../extension'
+import { Loadable } from '../loadable'
 import { fileManagement } from '../platform/fileManagement'
 import type { ElectronProjectSchema } from '../schemas/electronProject'
+import type { LoadableSchema } from '../schemas/loadable'
 import type { ProjectSchema } from '../schemas/project'
-import type { SubProjectRouteParams } from '../schemas/routeParams'
 import { electronProjectAtom } from '../state/electronProjectAtom'
 import { useTranslation } from '../translations/translation'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
 
 type UseElectronProjectSchema = {
-  electronProject: ElectronProjectSchema | undefined
-  loadProject: (filePath: string, subProjectId?: string) => Promise<void>
+  electronProject: LoadableSchema<ElectronProjectSchema>
+  loadProject: () => Promise<void>
   openProject: () => Promise<void>
   saveProject: () => Promise<void>
   saveProjectAs: () => Promise<void>
 }
 
-export const useElectronProject = (): UseElectronProjectSchema => {
+export const useElectronProject = (filePath?: string): UseElectronProjectSchema => {
   const [electronProject, setElectronProject] = useAtom(electronProjectAtom)
+  const requestIdRef = useRef(0)
   const navigate = useNavigate()
-  const { subProjectId } = useParams<SubProjectRouteParams>()
+  const { subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
   const t = useTranslation()
 
   const showOpenFailedToast = useCallback((): void => {
@@ -56,15 +59,63 @@ export const useElectronProject = (): UseElectronProjectSchema => {
         return false
       }
 
-      setElectronProject(target)
+      setElectronProject(Loadable.loaded(target))
 
       return true
     },
     [setElectronProject, showSaveFailedToast],
   )
 
+  const loadProject = useCallback(async (): Promise<void> => {
+    if (!isDefined(filePath)) {
+      return
+    }
+
+    const requestId = ++requestIdRef.current
+
+    setElectronProject((currentElectronProject): LoadableSchema<ElectronProjectSchema> => {
+      if (currentElectronProject.type === 'loaded' && currentElectronProject.data.filePath === filePath) {
+        return Loadable.loadingWith(currentElectronProject.data)
+      }
+      return Loadable.loading()
+    })
+
+    const response = await fileManagement.read({ filePath, type: 'read' })
+
+    if (requestId !== requestIdRef.current) {
+      return
+    }
+
+    if (response.type === 'error') {
+      setElectronProject(Loadable.failed(response))
+      return
+    }
+
+    let input: unknown
+
+    try {
+      input = JSON.parse(response.contents)
+    } catch {
+      setElectronProject(Loadable.failed())
+      return
+    }
+
+    if (!typia.is<ProjectSchema>(input)) {
+      setElectronProject(Loadable.failed())
+      return
+    }
+
+    setElectronProject(
+      Loadable.loaded({
+        filePath,
+        isDirty: false,
+        project: input,
+      }),
+    )
+  }, [filePath, setElectronProject])
+
   const navigateToProject = useCallback(
-    (project: ProjectSchema, preferredSubProjectId?: string): void => {
+    (filePath: string, project: ProjectSchema, preferredSubProjectId?: string): void => {
       const selectedSubProject = isDefined(preferredSubProjectId)
         ? project.subProjects.find((candidate) => candidate.id === preferredSubProjectId)
         : undefined
@@ -72,47 +123,13 @@ export const useElectronProject = (): UseElectronProjectSchema => {
       const targetSubProject = isDefined(selectedSubProject) ? selectedSubProject : fallbackSubProject
 
       if (!isDefined(targetSubProject)) {
-        navigate(appRoutes.project(project.id))
+        navigate(electronAppRoutes.project(filePath))
         return
       }
 
-      navigate(appRoutes.subProject(project.id, targetSubProject.id))
+      navigate(electronAppRoutes.subProject(filePath, targetSubProject.id))
     },
     [navigate],
-  )
-
-  const loadProject = useCallback(
-    async (filePath: string, subProjectId?: string): Promise<void> => {
-      const response = await fileManagement.read({ filePath, type: 'read' })
-
-      if (response.type === 'error') {
-        showOpenFailedToast()
-        return
-      }
-
-      let input: unknown
-
-      try {
-        input = JSON.parse(response.contents)
-      } catch {
-        showOpenFailedToast()
-        return
-      }
-
-      if (!typia.is<ProjectSchema>(input)) {
-        showOpenFailedToast()
-        return
-      }
-
-      setElectronProject({
-        filePath,
-        isDirty: false,
-        project: input,
-      })
-
-      navigateToProject(input, subProjectId)
-    },
-    [navigateToProject, setElectronProject, showOpenFailedToast],
   )
 
   const openProject = useCallback(async (): Promise<void> => {
@@ -136,9 +153,9 @@ export const useElectronProject = (): UseElectronProjectSchema => {
       return
     }
 
-    await loadProject(response.filePath)
+    navigate(electronAppRoutes.project(response.filePath))
   }, [
-    loadProject,
+    navigate,
     showOpenFailedToast,
     t.projects.actions.open,
     t.projects.openDialog.fileFilterLabel,
@@ -146,15 +163,19 @@ export const useElectronProject = (): UseElectronProjectSchema => {
   ])
 
   const saveProject = useCallback(async (): Promise<void> => {
-    if (!isDefined(electronProject)) {
+    const loadedElectronProject = Loadable.get(electronProject)
+
+    if (!isDefined(loadedElectronProject)) {
       return
     }
 
-    await writeProject({ ...electronProject, isDirty: false })
+    await writeProject({ ...loadedElectronProject, isDirty: false })
   }, [electronProject, writeProject])
 
   const saveProjectAs = useCallback(async (): Promise<void> => {
-    if (!isDefined(electronProject)) {
+    const loadedElectronProject = Loadable.get(electronProject)
+
+    if (!isDefined(loadedElectronProject)) {
       return
     }
 
@@ -181,7 +202,7 @@ export const useElectronProject = (): UseElectronProjectSchema => {
       filePath: response.filePath,
       isDirty: false,
       project: {
-        ...electronProject.project,
+        ...loadedElectronProject.project,
         id: id(),
       },
     }
@@ -192,7 +213,7 @@ export const useElectronProject = (): UseElectronProjectSchema => {
       return
     }
 
-    navigateToProject(target.project, subProjectId)
+    navigateToProject(target.filePath, target.project, subProjectId)
   }, [
     electronProject,
     navigateToProject,

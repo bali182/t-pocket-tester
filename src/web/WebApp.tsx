@@ -1,13 +1,13 @@
 import { Box, Theme } from '@chakra-ui/react'
 import type { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
-import { ProjectIndexRoute } from '../common/components/routes/ProjectIndexRoute'
-import { ProjectRoute } from '../common/components/routes/ProjectRoute'
-import { ProjectsRoute } from '../common/components/routes/ProjectsRoute'
-import { SubProjectRoute } from '../common/components/routes/SubProjectRoute'
 import { Toaster } from '../common/components/Toaster'
 import { useTheme } from '../common/hooks/useTheme'
 import { portalRef } from '../common/portalRef'
+import { WebProjectIndexRoute } from './components/routes/WebProjectIndexRoute'
+import { WebProjectRoute } from './components/routes/WebProjectRoute'
+import { WebProjectsRoute } from './components/routes/WebProjectsRoute'
+import { WebSubProjectRoute } from './components/routes/WebSubProjectRoute'
 
 export const WebApp: FC = () => {
   const { theme } = useTheme()
@@ -18,10 +18,10 @@ export const WebApp: FC = () => {
         <Box flex="1" minHeight="0" overflow="hidden">
           <Routes>
             <Route path="/" element={<Navigate to="/projects" replace />} />
-            <Route path="/projects" Component={ProjectsRoute} />
-            <Route path="/projects/:projectId" Component={ProjectRoute}>
-              <Route index Component={ProjectIndexRoute} />
-              <Route path=":subProjectId" Component={SubProjectRoute} />
+            <Route path="/projects" Component={WebProjectsRoute} />
+            <Route path="/projects/:projectId" Component={WebProjectRoute}>
+              <Route index Component={WebProjectIndexRoute} />
+              <Route path=":subProjectId" Component={WebSubProjectRoute} />
             </Route>
             <Route path="*" element={<Navigate to="/projects" replace />} />
           </Routes>

@@ -7,6 +7,7 @@ export const HU = {
       add: 'Hozzáadás',
       reset: 'Visszaállítás',
       cancel: 'Mégse',
+      back: 'Vissza',
       next: 'Tovább',
       apply: 'Alkalmaz',
       remove: 'Törlés',

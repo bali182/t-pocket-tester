@@ -1,21 +1,21 @@
 import { useAtom } from 'jotai'
-import { SetStateAction, useCallback, useMemo } from 'react'
+import { useCallback, useMemo, type SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
-import { appRoutes } from '../appRoutes'
-import { getPatchedProject } from '../component-patches/getPatchedProject'
-import { getPatchedSubProject } from '../component-patches/getPatchedSubProject'
-import { needsFullProjectPatch } from '../component-patches/needsFullProjectPatch'
-import type { EditorContextType } from '../contexts/EditorContext'
-import { getComputedSubProject } from '../logic/getComputedSubProject'
-import type { ProjectSchema } from '../schemas/project'
-import type { SubProjectRouteParams } from '../schemas/routeParams'
-import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
-import { projectsAtom } from '../state/projectsAtom'
-import { isDefined } from '../utils/isDefined'
+import { getPatchedProject } from '../../common/component-patches/getPatchedProject'
+import { getPatchedSubProject } from '../../common/component-patches/getPatchedSubProject'
+import { needsFullProjectPatch } from '../../common/component-patches/needsFullProjectPatch'
+import type { EditorContextType } from '../../common/contexts/EditorContext'
+import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
+import type { ProjectSchema } from '../../common/schemas/project'
+import type { ComputedSubProjectSchema, SubProjectSchema } from '../../common/schemas/subProject'
+import { projectsAtom } from '../../common/state/projectsAtom'
+import { isDefined } from '../../common/utils/isDefined'
+import type { WebSubProjectRouteParamsSchema } from '../schemas/webRouteParams'
+import { webAppRoutes } from '../webAppRoutes'
 
 export const useWebEditorContextValue = (): EditorContextType => {
-  const { projectId, subProjectId } = useParams<SubProjectRouteParams>()
+  const { projectId, subProjectId } = useParams<WebSubProjectRouteParamsSchema>()
   const navigate = useNavigate()
   const [projects, setProjects] = useAtom(projectsAtom)
 
@@ -63,7 +63,7 @@ export const useWebEditorContextValue = (): EditorContextType => {
     (update: SetStateAction<SubProjectSchema>): void => {
       const selectedSubProjectId = ensureSelectedSubProjectId(subProjectId)
 
-      setProject((currentProject) => {
+      setProject((currentProject: ProjectSchema): ProjectSchema => {
         const subProjectIndex = currentProject.subProjects.findIndex(
           (candidate) => candidate.id === selectedSubProjectId,
         )
@@ -99,21 +99,21 @@ export const useWebEditorContextValue = (): EditorContextType => {
   )
 
   const navigateToProjects = useCallback((): void => {
-    navigate(appRoutes.projects)
+    navigate(webAppRoutes.projects)
   }, [navigate])
 
   const navigateToProject = useCallback((): void => {
-    navigate(appRoutes.project(ensureSelectedProjectId(projectId)))
+    navigate(webAppRoutes.project(ensureSelectedProjectId(projectId)))
   }, [navigate, projectId])
 
   const navigateToSubProject = useCallback(
     (targetSubProjectId: string): void => {
-      navigate(appRoutes.subProject(ensureSelectedProjectId(projectId), targetSubProjectId))
+      navigate(webAppRoutes.subProject(ensureSelectedProjectId(projectId), targetSubProjectId))
     },
     [navigate, projectId],
   )
 
-  return useMemo(
+  return useMemo<EditorContextType>(
     () => ({
       computedSubProject,
       navigateToProject,
@@ -139,14 +139,14 @@ export const useWebEditorContextValue = (): EditorContextType => {
 
 const ensureSelectedProjectId = (projectId: string | undefined): string => {
   if (!isDefined(projectId)) {
-    throw new Error(`This operation can only run in the context of a valid project, derived from the route.`)
+    throw new Error('This operation can only run in the context of a valid project, derived from the route.')
   }
   return projectId
 }
 
 const ensureSelectedSubProjectId = (subProjectId: string | undefined): string => {
   if (!isDefined(subProjectId)) {
-    throw new Error(`This operation can only run in the context of a valid sub-project, derived from the route.`)
+    throw new Error('This operation can only run in the context of a valid sub-project, derived from the route.')
   }
   return subProjectId
 }

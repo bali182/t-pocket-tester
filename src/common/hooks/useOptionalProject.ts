@@ -1,10 +1,7 @@
-import { useAtom } from 'jotai'
 import type { SetStateAction } from 'react'
-import { useParams } from 'react-router'
 
+import { useEditorContext } from '../contexts/EditorContext'
 import type { ProjectSchema } from '../schemas/project'
-import type { ProjectRouteParams } from '../schemas/routeParams'
-import { projectAtomFamily } from '../state/projectAtoms'
 
 type UseOptionalProjectResult = {
   project: ProjectSchema | undefined
@@ -12,7 +9,6 @@ type UseOptionalProjectResult = {
 }
 
 export const useOptionalProject = (): UseOptionalProjectResult => {
-  const { projectId } = useParams<ProjectRouteParams>()
-  const [project, setProject] = useAtom(projectAtomFamily(projectId))
+  const { project, setProject } = useEditorContext()
   return { project, setProject }
 }

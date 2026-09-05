@@ -2,33 +2,34 @@ import { Button, Dialog } from '@chakra-ui/react'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 
-import { appRoutes } from '../appRoutes'
-import { LANGUAGE } from '../constants/language'
-import { useEditableModel } from '../hooks/useEditableModel'
-import { useProjects } from '../hooks/useProjects'
-import { addSubProject } from '../operations/project/addSubProject'
-import { getUnusedName } from '../operations/subProject/utils/getUnusedName'
-import type { ProjectSchema } from '../schemas/project'
-import type { ProjectBasedValidationContextSchema } from '../schemas/validation'
-import { useTranslation } from '../translations/translation'
-import { createProject } from '../utils/createProject'
-import { hasValidationErrors } from '../utils/hasValidationErrors'
-import { validateProjectSchema } from '../validators/validateProjectSchema'
-import { ProjectSettingsEditor } from './project-settings-editors/ProjectSettingsEditor'
+import { ProjectSettingsEditor } from '../../common/components/project-settings-editors/ProjectSettingsEditor'
+import { LANGUAGE } from '../../common/constants/language'
+import { useEditableModel } from '../../common/hooks/useEditableModel'
+import { useProjects } from '../../common/hooks/useProjects'
+import { addSubProject } from '../../common/operations/project/addSubProject'
+import { getUnusedName } from '../../common/operations/subProject/utils/getUnusedName'
+import type { ProjectSchema } from '../../common/schemas/project'
+import type { ProjectBasedValidationContextSchema } from '../../common/schemas/validation'
+import { useTranslation } from '../../common/translations/translation'
+import { createProject } from '../../common/utils/createProject'
+import { hasValidationErrors } from '../../common/utils/hasValidationErrors'
+import { validateProjectSchema } from '../../common/validators/validateProjectSchema'
+import { webAppRoutes } from '../webAppRoutes'
 
 type CreateProjectDialogProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
 
-// Should be for creating real Projects not SubProjects
 export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOpenChange }) => {
   const { addProject, projects } = useProjects()
   const navigate = useNavigate()
   const t = useTranslation()
 
-  const createEmptyProject = useCallback(() => {
-    return createProject(getUnusedName(t.defaults.projectName, new Set(projects.map((p) => p.name))))
+  const createEmptyProject = useCallback((): ProjectSchema => {
+    return createProject(
+      getUnusedName(t.defaults.projectName, new Set(projects.map((project): string => project.name))),
+    )
   }, [projects, t.defaults.projectName])
 
   const [project, setProject] = useState<ProjectSchema>(() => createEmptyProject())
@@ -57,7 +58,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
     value: project,
   })
 
-  const hasErrors = useMemo(() => hasValidationErrors<ProjectSchema>(validationIssues), [validationIssues])
+  const hasErrors = useMemo<boolean>(() => hasValidationErrors<ProjectSchema>(validationIssues), [validationIssues])
 
   const handleOpenChange = useCallback(
     (details: Dialog.OpenChangeDetails): void => {
@@ -81,7 +82,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
       })
       addProject(createdProject)
       onOpenChange(false)
-      navigate(appRoutes.subProject(createdProject.id, initialSubProject.id))
+      navigate(webAppRoutes.subProject(createdProject.id, initialSubProject.id))
     },
     [addProject, context, editableValue, navigate, onOpenChange, project, t],
   )

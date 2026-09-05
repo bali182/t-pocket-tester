@@ -1,13 +1,13 @@
 import { Box, Theme } from '@chakra-ui/react'
 import type { FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
-import { ProjectIndexRoute } from '../common/components/routes/ProjectIndexRoute'
-import { ProjectRoute } from '../common/components/routes/ProjectRoute'
-import { ProjectsRoute } from '../common/components/routes/ProjectsRoute'
-import { SubProjectRoute } from '../common/components/routes/SubProjectRoute'
 import { Toaster } from '../common/components/Toaster'
 import { useTheme } from '../common/hooks/useTheme'
 import { portalRef } from '../common/portalRef'
+import { ElectronProjectIndexRoute } from './components/routes/ElectronProjectIndexRoute'
+import { ElectronProjectRoute } from './components/routes/ElectronProjectRoute'
+import { ElectronProjectsRoute } from './components/routes/ElectronProjectsRoute'
+import { ElectronSubProjectRoute } from './components/routes/ElectronSubProjectRoute'
 
 export const ElectronApp: FC = () => {
   const { theme } = useTheme()
@@ -18,10 +18,10 @@ export const ElectronApp: FC = () => {
         <Box flex="1" minHeight="0" overflow="hidden">
           <Routes>
             <Route path="/" element={<Navigate to="/projects" replace />} />
-            <Route path="/projects" Component={ProjectsRoute} />
-            <Route path="/projects/:projectId" Component={ProjectRoute}>
-              <Route index Component={ProjectIndexRoute} />
-              <Route path=":subProjectId" Component={SubProjectRoute} />
+            <Route path="/projects" Component={ElectronProjectsRoute} />
+            <Route path="/project/:filePath" Component={ElectronProjectRoute}>
+              <Route index Component={ElectronProjectIndexRoute} />
+              <Route path=":subProjectId" Component={ElectronSubProjectRoute} />
             </Route>
             <Route path="*" element={<Navigate to="/projects" replace />} />
           </Routes>

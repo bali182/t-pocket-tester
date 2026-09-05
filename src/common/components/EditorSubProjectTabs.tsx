@@ -1,35 +1,32 @@
 import { HStack, IconButton, Tabs } from '@chakra-ui/react'
 import { useCallback, type FC } from 'react'
-import { useNavigate, useParams } from 'react-router'
 
 import { PiPlus, PiWalletDuotone } from 'react-icons/pi'
-import { appRoutes } from '../appRoutes'
+import { useEditorContext } from '../contexts/EditorContext'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
-import { SubProjectRouteParams } from '../schemas/routeParams'
 import { accessors } from '../utils/accessors'
 import { ComponentActionsMenu } from './ComponentActionsMenu'
 
 export const EditorSubProjectTabs: FC = () => {
   const { project } = useProject()
   const { createSubProject } = useProjectOperations()
-  const navigate = useNavigate()
-  const { subProjectId } = useParams<SubProjectRouteParams>()
+  const { navigateToSubProject, subProject } = useEditorContext()
 
   const handleSubProjectClick = useCallback(
     (subProjectId: string): void => {
-      navigate(appRoutes.subProject(project.id, subProjectId))
+      navigateToSubProject(subProjectId)
     },
-    [navigate, project.id],
+    [navigateToSubProject],
   )
 
   const handleCreateSubProject = useCallback((): void => {
     const subProject = createSubProject()
-    navigate(appRoutes.subProject(project.id, subProject.id))
-  }, [createSubProject, navigate, project.id])
+    navigateToSubProject(subProject.id)
+  }, [createSubProject, navigateToSubProject])
 
   return (
-    <Tabs.Root size="md" value={subProjectId} variant="outline" width="100%">
+    <Tabs.Root size="md" value={subProject?.id} variant="outline" width="100%">
       <Tabs.List _before={{ borderBottomColor: 'bg.panel' }} alignItems="center">
         {project.subProjects.map((subProject) => {
           const rootPanel = accessors.subProject(subProject).rootPanel()

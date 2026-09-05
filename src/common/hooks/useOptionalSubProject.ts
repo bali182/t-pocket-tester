@@ -1,10 +1,5 @@
-import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
-import { useParams } from 'react-router'
-
-import type { SubProjectRouteParams } from '../schemas/routeParams'
+import { useEditorContext } from '../contexts/EditorContext'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../schemas/subProject'
-import { computedSubProjectAtomFamily, subProjectAtomFamily } from '../state/projectAtoms'
 
 type UseOptionalSubProjectResult = {
   subProject: SubProjectSchema | undefined
@@ -12,10 +7,6 @@ type UseOptionalSubProjectResult = {
 }
 
 export const useOptionalSubProject = (): UseOptionalSubProjectResult => {
-  const { projectId, subProjectId } = useParams<SubProjectRouteParams>()
-  const reference = useMemo(() => ({ projectId, subProjectId }), [projectId, subProjectId])
-  const subProject = useAtomValue(subProjectAtomFamily(reference))
-  const computedSubProject = useAtomValue(computedSubProjectAtomFamily(reference))
-
+  const { computedSubProject, subProject } = useEditorContext()
   return { computedSubProject, subProject }
 }

@@ -8,6 +8,16 @@ import {
   UninitializedSchema,
 } from './schemas/loadable'
 
+function hasValue<T>(loadable: LoadableSchema<T>): loadable is LoadableWithValueSchema<T> {
+  return loadable.type === 'loaded' || loadable.type === 'loading-with-value'
+}
+
+function get<T>(loadable: LoadableSchema<T>): T | undefined
+function get<T, F>(loadable: LoadableSchema<T>, fallback: F): T | F
+function get<T, F>(loadable: LoadableSchema<T>, fallback?: F): T | F | undefined {
+  return hasValue(loadable) ? loadable.data : fallback
+}
+
 export const Loadable = {
   // Factories
   uninitialized: (): UninitializedSchema => {
@@ -27,8 +37,8 @@ export const Loadable = {
   },
 
   // Functional utilities
-  hasValue: <T>(loadable: LoadableSchema<T>): loadable is LoadableWithValueSchema<T> =>
-    loadable.type === 'loaded' || loadable.type === 'loading-with-value',
+  get,
+  hasValue,
   map: <I, O>(loadable: LoadableSchema<I>, transform: (data: I) => O): LoadableSchema<O> => {
     switch (loadable.type) {
       case 'uninitialized':

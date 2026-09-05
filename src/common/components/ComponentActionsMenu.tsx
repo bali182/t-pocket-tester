@@ -1,8 +1,7 @@
 import { Box, IconButton, IconButtonProps, Menu, Portal } from '@chakra-ui/react'
 import { useCallback, useMemo, type FC, type MouseEvent } from 'react'
 import { PiCopy, PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
-import { useNavigate } from 'react-router'
-import { appRoutes } from '../appRoutes'
+import { useEditorContext } from '../contexts/EditorContext'
 import { useOptionalSubProject } from '../hooks/useOptionalSubProject'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
@@ -41,7 +40,7 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
   const { subProject: selectedSubProject } = useOptionalSubProject()
   const { cloneSubProject, deleteSubProject } = useProjectOperations()
   const { addComponent, addHole, addStitchLineToComponent, cloneComponent, deleteComponent } = useSubProjectOperations()
-  const navigate = useNavigate()
+  const { navigateToProject, navigateToSubProject } = useEditorContext()
   const canAdd = useMemo((): boolean => hasComponentChildren(component), [component])
 
   const nextSelectedSubProjectAfterDelete = useMemo((): SubProjectSchema | undefined => {
@@ -62,20 +61,21 @@ export const ComponentActionsMenu: FC<ComponentActionsProps> = ({
 
   const deleteRoot = useCallback((): void => {
     if (isDefined(selectedSubProject) && selectedSubProject.id !== nextSelectedSubProjectAfterDelete?.id) {
-      const navigationTarget = isDefined(nextSelectedSubProjectAfterDelete)
-        ? appRoutes.subProject(project.id, nextSelectedSubProjectAfterDelete.id)
-        : appRoutes.project(project.id)
-      navigate(navigationTarget, { replace: true })
+      if (isDefined(nextSelectedSubProjectAfterDelete)) {
+        navigateToSubProject(nextSelectedSubProjectAfterDelete.id)
+      } else {
+        navigateToProject()
+      }
     }
     deleteSubProject(subProject.id)
     onDelete(component.id)
   }, [
     deleteSubProject,
-    navigate,
+    navigateToProject,
+    navigateToSubProject,
     nextSelectedSubProjectAfterDelete,
     onDelete,
     component.id,
-    project.id,
     selectedSubProject,
     subProject.id,
   ])

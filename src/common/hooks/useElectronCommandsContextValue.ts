@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useEffectEvent, useMemo } from 'react'
 
 import type { ElectronCommandsContextValue } from '../contexts/ElectronCommandsContext'
+import { Loadable } from '../loadable'
 import { fileManagement } from '../platform/fileManagement'
+import type { ElectronProjectSchema } from '../schemas/electronProject'
 import type { CommandNameSchema, CommandSchema } from '../schemas/shortcut'
 import { formatShortcut } from '../utils/formatShortcut'
 import { isDefined } from '../utils/isDefined'
@@ -11,6 +13,14 @@ import { useElectronProject } from './useElectronProject'
 export const useElectronCommandsContextValue = (): ElectronCommandsContextValue => {
   const { electronProject, openProject, saveProject, saveProjectAs } = useElectronProject()
   const platform = fileManagement.platform
+  const saveDisabled = Loadable.get(
+    Loadable.map(electronProject, (project: ElectronProjectSchema): boolean => project.isDirty === false),
+    true,
+  )
+  const saveAsDisabled = Loadable.get(
+    Loadable.map(electronProject, (): boolean => false),
+    true,
+  )
   const commands = useMemo<CommandSchema[]>(
     () => [
       {
@@ -19,16 +29,16 @@ export const useElectronCommandsContextValue = (): ElectronCommandsContextValue 
       },
       {
         combination: ['CommandOrControl', 'S'],
-        disabled: !isDefined(electronProject) || electronProject.isDirty === false,
+        disabled: saveDisabled,
         id: 'save',
       },
       {
         combination: ['CommandOrControl', 'Shift', 'S'],
-        disabled: !isDefined(electronProject),
+        disabled: saveAsDisabled,
         id: 'save-as',
       },
     ],
-    [electronProject],
+    [saveAsDisabled, saveDisabled],
   )
 
   const commandsMap = useMemo<Record<CommandNameSchema, CommandSchema>>(

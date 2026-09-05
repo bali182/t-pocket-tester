@@ -1,8 +1,7 @@
 import { Card, HStack, IconButton, Input, Separator, Switch } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent } from 'react'
 import { PiCaretLeft, PiMoon, PiSun, PiWalletDuotone } from 'react-icons/pi'
-import { Link } from 'react-router'
-import { appRoutes } from '../../appRoutes'
+import { useEditorContext } from '../../contexts/EditorContext'
 import { useEditableProject } from '../../hooks/useEditableProject'
 import { useTheme } from '../../hooks/useTheme'
 import { isDefined } from '../../utils/isDefined'
@@ -13,6 +12,7 @@ import { ViewMenu } from './ViewMenu'
 export const EditorMenu = () => {
   const { editableProject, setProject, validationIssues } = useEditableProject()
   const { theme, setTheme } = useTheme()
+  const { navigateToProjects } = useEditorContext()
   const hasNameError = isDefined(validationIssues.name) && validationIssues.name.severity === 'error'
 
   const handleThemeChange = useCallback(
@@ -25,16 +25,17 @@ export const EditorMenu = () => {
     },
     [editableProject, setProject],
   )
+  const handleNavigateToProjects = useCallback((): void => {
+    navigateToProjects()
+  }, [navigateToProjects])
 
   return (
     <>
       <Card.Root>
         <Card.Body padding="2" flexDirection="row" alignItems="center">
-          <Link to={appRoutes.projects}>
-            <IconButton size="sm" variant="ghost" mr="1" borderRadius="full">
-              <PiCaretLeft />
-            </IconButton>
-          </Link>
+          <IconButton onClick={handleNavigateToProjects} size="sm" variant="ghost" mr="1" borderRadius="full">
+            <PiCaretLeft />
+          </IconButton>
           <HStack gap="1">
             <PiWalletDuotone />
             <Input

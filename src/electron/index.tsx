@@ -1,7 +1,7 @@
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { Provider as JotaiProvider } from 'jotai'
 import { createRoot } from 'react-dom/client'
-import { AppRouter } from '../common/components/AppRouter'
+import { HashRouter } from 'react-router'
 import { appStore } from '../common/state/store'
 import { ElectronApp } from './ElectronApp'
 
@@ -14,9 +14,9 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <JotaiProvider store={appStore}>
     <ChakraProvider value={defaultSystem}>
-      <AppRouter>
+      <HashRouter useTransitions={false}>
         <ElectronApp />
-      </AppRouter>
+      </HashRouter>
     </ChakraProvider>
   </JotaiProvider>,
 )

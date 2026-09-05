@@ -1,13 +1,13 @@
 import { useEffect, type FC } from 'react'
 import { Navigate } from 'react-router'
 
-import { useProject } from '../../hooks/useProject'
-import { useRecentProjectOperations } from '../../hooks/useRecentProjectOperations'
+import { EditorContent } from '../../../common/components/EditorContent'
+import { useProject } from '../../../common/hooks/useProject'
+import { useRecentProjectOperations } from '../../../common/hooks/useRecentProjectOperations'
+import { isDefined } from '../../../common/utils/isDefined'
 import { useRecentProjects } from '../../hooks/useRecentProjects'
-import { isDefined } from '../../utils/isDefined'
-import { EditorContent } from '../EditorContent'
 
-export const ProjectIndexRoute: FC = () => {
+export const WebProjectIndexRoute: FC = () => {
   const { project } = useProject()
   const recentProjects = useRecentProjects()
   const { markProjectOpened } = useRecentProjectOperations()
