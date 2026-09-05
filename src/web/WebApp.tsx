@@ -9,7 +9,7 @@ import { Toaster } from '../common/components/Toaster'
 import { useTheme } from '../common/hooks/useTheme'
 import { portalRef } from '../common/portalRef'
 
-export const App: FC = () => {
+export const WebApp: FC = () => {
   const { theme } = useTheme()
 
   return (
