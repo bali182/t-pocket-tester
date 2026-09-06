@@ -1,23 +1,22 @@
-import type { KeySchema } from '../../common/schemas/shortcut'
+import type { KeySchema } from '../../common/schemas/command'
 import { isDefined } from '../../common/utils/isDefined'
-import type { NativePlatformSchema } from '../schemas/electronApi'
+import { platform } from './platform'
 
 const isAcceleratorKey = (key: KeySchema): boolean => {
   return key === 'Command' || key === 'Control' || key === 'CommandOrControl' || key === 'Alt' || key === 'Shift'
 }
 
-export const matchesShortcut = (
-  shortcut: KeySchema[],
-  event: KeyboardEvent,
-  platform: NativePlatformSchema,
-): boolean => {
+export const matchesShortcut = (shortcut: KeySchema[], event: KeyboardEvent): boolean => {
+  if (platform === 'mobile') {
+    return false
+  }
   const hasCommand = shortcut.includes('Command')
   const hasControl = shortcut.includes('Control')
   const hasCommandOrControl = shortcut.includes('CommandOrControl')
   const hasAlt = shortcut.includes('Alt')
   const hasShift = shortcut.includes('Shift')
-  const expectsMeta = hasCommand || (platform === 'darwin' && hasCommandOrControl)
-  const expectsControl = hasControl || (platform !== 'darwin' && hasCommandOrControl)
+  const expectsMeta = hasCommand || (platform === 'mac' && hasCommandOrControl)
+  const expectsControl = hasControl || (platform !== 'mac' && hasCommandOrControl)
 
   if (
     event.metaKey !== expectsMeta ||

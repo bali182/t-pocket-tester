@@ -1,7 +1,7 @@
 import { Icon, Menu, Text } from '@chakra-ui/react'
 import { FC, useCallback } from 'react'
 import { IconType } from 'react-icons'
-import { NumberEditorStepSchema } from '../../schemas/settings'
+import { NumberEditorStepSchema } from '../../../schemas/settings'
 
 export type StepMenuItemProps = {
   title: string

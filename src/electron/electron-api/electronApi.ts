@@ -22,5 +22,4 @@ export const _electronApi: ElectronApi = {
   suggestPath,
   validateCreatePath,
   write,
-  platform: process.platform,
 }

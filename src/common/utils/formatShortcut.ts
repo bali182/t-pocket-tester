@@ -1,5 +1,5 @@
-import type { KeySchema } from '../../common/schemas/shortcut'
-import type { NativePlatformSchema } from '../schemas/electronApi'
+import type { KeySchema } from '../../common/schemas/command'
+import { platform } from './platform'
 
 const formatWinKey = (key: KeySchema): string => {
   switch (key) {
@@ -33,9 +33,11 @@ const formatMacKey = (key: KeySchema): string => {
   }
 }
 
-export const formatShortcut = (shortcut: KeySchema[], platform: NativePlatformSchema): string => {
-  const separator = platform === 'darwin' ? '' : '+'
-  const keyFormatter = platform === 'darwin' ? formatMacKey : formatWinKey
-
+export const formatShortcut = (shortcut: KeySchema[]): string | undefined => {
+  if (platform === 'mobile') {
+    return undefined
+  }
+  const separator = platform === 'mac' ? '' : '+'
+  const keyFormatter = platform === 'mac' ? formatMacKey : formatWinKey
   return shortcut.map((key: KeySchema): string => keyFormatter(key)).join(separator)
 }

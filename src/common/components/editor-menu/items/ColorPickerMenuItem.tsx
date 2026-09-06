@@ -1,11 +1,11 @@
 import { ColorSwatch, Menu, Portal } from '@chakra-ui/react'
 import { FC, useCallback } from 'react'
 import { PiPalette } from 'react-icons/pi'
-import { type ColorValue } from '../../hooks/useColors'
-import { portalRef } from '../../portalRef'
-import type { ColorSettingsSchema } from '../../schemas/settings'
-import { isDefined } from '../../utils/isDefined'
-import { MenuColorSwatchItem, SelectableColorSwatch } from '../common/SelectableColorSwatch'
+import { type ColorValue } from '../../../hooks/useColors'
+import { portalRef } from '../../../portalRef'
+import type { ColorSettingsSchema } from '../../../schemas/settings'
+import { isDefined } from '../../../utils/isDefined'
+import { MenuColorSwatchItem, SelectableColorSwatch } from '../../common/SelectableColorSwatch'
 
 type ColorPickerMenuItemProps = {
   colors: ColorValue[]

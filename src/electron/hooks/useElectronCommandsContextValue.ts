@@ -1,113 +1,49 @@
-import { useCallback, useEffect, useEffectEvent, useMemo } from 'react'
+import { useCallback } from 'react'
 
-import { Loadable } from '../../common/loadable'
-import type { CommandNameSchema, CommandSchema } from '../../common/schemas/shortcut'
+import type { CommandsContextValue } from '../../common/contexts/CommandsContext'
+import { useCommonCommandEmitter } from '../../common/hooks/useCommonCommandEmitter'
 import { isDefined } from '../../common/utils/isDefined'
-import type { ElectronCommandsContextValue } from '../contexts/ElectronCommandsContext'
-import { electronApi } from '../electronApi'
-import type { ElectronProjectSchema } from '../schemas/electronProject'
-import { formatShortcut } from '../utils/formatShortcut'
-import { matchesShortcut } from '../utils/matchesShortcut'
+import type { ElectronCommand, ElectronCommandIdSchema } from '../schemas/electronCommands'
+import { useElectronCommands } from './useElectronCommands'
 import { useElectronProject } from './useElectronProject'
 
-export const useElectronCommandsContextValue = (): ElectronCommandsContextValue => {
-  const { electronProject, openProject, saveProject, saveProjectAs } = useElectronProject()
-  const platform = electronApi.platform
-  const saveDisabled = Loadable.get(
-    Loadable.map(electronProject, (project: ElectronProjectSchema): boolean => project.isDirty === false),
-    true,
-  )
-  const saveAsDisabled = Loadable.get(
-    Loadable.map(electronProject, (): boolean => false),
-    true,
-  )
-  const commands = useMemo<CommandSchema[]>(
-    () => [
-      {
-        combination: ['CommandOrControl', 'O'],
-        id: 'open',
-      },
-      {
-        combination: ['CommandOrControl', 'S'],
-        disabled: saveDisabled,
-        id: 'save',
-      },
-      {
-        combination: ['CommandOrControl', 'Shift', 'S'],
-        disabled: saveAsDisabled,
-        id: 'save-as',
-      },
-    ],
-    [saveAsDisabled, saveDisabled],
-  )
+export const useElectronCommandsContextValue = (): CommandsContextValue<ElectronCommandIdSchema> => {
+  const { openProject, saveProject, saveProjectAs } = useElectronProject()
 
-  const commandsMap = useMemo<Record<CommandNameSchema, CommandSchema>>(
-    () =>
-      commands.reduce(
-        (map, command) => ({ ...map, [command.id]: command }),
-        {} as Record<CommandNameSchema, CommandSchema>,
-      ),
-    [commands],
-  )
+  const commands = useElectronCommands()
 
   const getCommand = useCallback(
-    (commandName: CommandNameSchema): CommandSchema => {
-      const command = commandsMap[commandName]
+    (id: ElectronCommandIdSchema): ElectronCommand => {
+      const command = commands[id]
       if (!isDefined(command)) {
-        throw new Error(`Unknown Electron command: ${commandName}`)
+        throw new Error(`Unknown command: ${id}`)
       }
       return command
     },
-    [commandsMap],
+    [commands],
   )
 
   const emitCommand = useCallback(
-    async (commandName: CommandNameSchema): Promise<void> => {
-      const command = getCommand(commandName)
+    async (id: ElectronCommandIdSchema): Promise<void> => {
+      const command = getCommand(id)
 
       if (command.disabled === true) {
         return
       }
 
-      switch (commandName) {
+      switch (id) {
         case 'open':
-          await openProject()
-          return
+          return openProject()
         case 'save':
-          await saveProject()
-          return
+          return saveProject()
         case 'save-as':
-          await saveProjectAs()
+          return saveProjectAs()
       }
     },
     [getCommand, openProject, saveProject, saveProjectAs],
   )
 
-  const getCommandShortcut = useCallback(
-    (commandName: CommandNameSchema): string => {
-      const command = getCommand(commandName)
-      return formatShortcut(command.combination, platform)
-    },
-    [getCommand, platform],
-  )
+  useCommonCommandEmitter({ commands, execute: emitCommand })
 
-  const handleKeyDown = useEffectEvent(async (event: KeyboardEvent): Promise<void> => {
-    const command = commands.find((candidate: CommandSchema): boolean =>
-      matchesShortcut(candidate.combination, event, platform),
-    )
-
-    if (!isDefined(command)) {
-      return
-    }
-
-    event.preventDefault()
-    await emitCommand(command.id)
-  })
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
-
-  return { emitCommand, getCommand, getCommandShortcut }
+  return { emitCommand, getCommand }
 }

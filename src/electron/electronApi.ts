@@ -1,4 +1,4 @@
-import type { ElectronApi, NativePlatformSchema } from './schemas/electronApi'
+import type { ElectronApi } from './schemas/electronApi'
 
 type _ElectronWindow = Window & {
   electronApi?: ElectronApi
@@ -21,7 +21,4 @@ export const electronApi: ElectronApi = {
   suggestPath: (request) => api().suggestPath(request),
   validateCreatePath: (request) => api().validateCreatePath(request),
   write: (request) => api().write(request),
-  get platform(): NativePlatformSchema {
-    return api().platform
-  },
 }

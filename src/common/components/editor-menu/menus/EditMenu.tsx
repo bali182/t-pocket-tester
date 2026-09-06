@@ -1,13 +1,13 @@
 import { Menu } from '@chakra-ui/react'
 import { FC, useCallback } from 'react'
 import { PiLineSegmentFill, PiNeedle } from 'react-icons/pi'
-import { useProject } from '../../hooks/useProject'
-import { useProjectOperations } from '../../hooks/useProjectOperations'
-import { NumberEditorStepSchema } from '../../schemas/settings'
-import { useTranslation } from '../../translations/translation'
-import { BaseMenu } from './BaseMenu'
-import { StepMenuItem } from './StepMenuItem'
-import { StitchingSettingsMenuItems } from './StitchingSettingsMenuItems'
+import { useProject } from '../../../hooks/useProject'
+import { useProjectOperations } from '../../../hooks/useProjectOperations'
+import { NumberEditorStepSchema } from '../../../schemas/settings'
+import { useTranslation } from '../../../translations/translation'
+import { BaseMenu } from '../BaseMenu'
+import { StepMenuItem } from '../items/StepMenuItem'
+import { StitchingSettingsMenuItems } from '../groups/StitchingSettingsMenuItems'
 
 export const EditMenu: FC = () => {
   const t = useTranslation()

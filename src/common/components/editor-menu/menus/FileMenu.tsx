@@ -1,13 +1,14 @@
 import { Menu } from '@chakra-ui/react'
 import { FC, useCallback, useState } from 'react'
 import { PiExport, PiFloppyDisk, PiFolder } from 'react-icons/pi'
-import { useElectronCommandsContext } from '../../../electron/contexts/ElectronCommandsContext'
-import { useProject } from '../../hooks/useProject'
-import { isElectron } from '../../platform/isElectron'
-import { useTranslation } from '../../translations/translation'
-import { PdfExportDialog } from '../PdfExportDialog'
-import { SvgExportDialog } from '../SvgExportDialog'
-import { BaseMenu } from './BaseMenu'
+import { useCommandsContext } from '../../../contexts/CommandsContext'
+import { useProject } from '../../../hooks/useProject'
+import { isElectron } from '../../../platform/isElectron'
+import { useTranslation } from '../../../translations/translation'
+import { PdfExportDialog } from '../../PdfExportDialog'
+import { SvgExportDialog } from '../../SvgExportDialog'
+import { BaseMenu } from '../BaseMenu'
+import { MenuShortcut } from '../MenuShortcut'
 
 export const FileMenu: FC = () => {
   const t = useTranslation()
@@ -45,7 +46,7 @@ export const FileMenu: FC = () => {
 
 const ElectronFileManegementMenu: FC = () => {
   const t = useTranslation()
-  const { emitCommand, getCommand, getCommandShortcut } = useElectronCommandsContext()
+  const { emitCommand, getCommand } = useCommandsContext()
   const openCommand = getCommand('open')
   const saveCommand = getCommand('save')
   const saveAsCommand = getCommand('save-as')
@@ -69,17 +70,17 @@ const ElectronFileManegementMenu: FC = () => {
       <Menu.Item disabled={openCommand.disabled} value="open-project" onSelect={handleOpenProjectSelect}>
         <PiFolder />
         <Menu.ItemText>{t.editor.menus.file.file.open}</Menu.ItemText>
-        <Menu.ItemCommand>{getCommandShortcut(openCommand.id)}</Menu.ItemCommand>
+        <MenuShortcut command={openCommand} />
       </Menu.Item>
       <Menu.Item disabled={saveCommand.disabled} value="save-project" onSelect={handleSaveProjectSelect}>
         <PiFloppyDisk />
         <Menu.ItemText>{t.editor.menus.file.file.save}</Menu.ItemText>
-        <Menu.ItemCommand>{getCommandShortcut(saveCommand.id)}</Menu.ItemCommand>
+        <MenuShortcut command={saveCommand} />
       </Menu.Item>
       <Menu.Item disabled={saveAsCommand.disabled} value="save-project-as" onSelect={handleSaveProjectAsSelect}>
         <PiFloppyDisk />
         <Menu.ItemText>{t.editor.menus.file.file.saveAs}</Menu.ItemText>
-        <Menu.ItemCommand>{getCommandShortcut(saveAsCommand.id)}</Menu.ItemCommand>
+        <MenuShortcut command={saveAsCommand} />
       </Menu.Item>
     </Menu.ItemGroup>
   )

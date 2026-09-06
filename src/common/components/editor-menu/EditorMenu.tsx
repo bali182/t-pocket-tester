@@ -5,9 +5,9 @@ import { useEditorContext } from '../../contexts/EditorContext'
 import { useEditableProject } from '../../hooks/useEditableProject'
 import { useTheme } from '../../hooks/useTheme'
 import { isDefined } from '../../utils/isDefined'
-import { EditMenu } from './EditMenu'
-import { FileMenu } from './FileMenu'
-import { ViewMenu } from './ViewMenu'
+import { EditMenu } from './menus/EditMenu'
+import { FileMenu } from './menus/FileMenu'
+import { ViewMenu } from './menus/ViewMenu'
 
 export const EditorMenu = () => {
   const { editableProject, setProject, validationIssues } = useEditableProject()

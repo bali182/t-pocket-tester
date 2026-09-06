@@ -8,15 +8,15 @@ import {
   stitchHoleColors,
   stitchLineColors,
   strokeColors,
-} from '../../data/colors'
-import { useColors } from '../../hooks/useColors'
-import { useProject } from '../../hooks/useProject'
-import { useProjectOperations } from '../../hooks/useProjectOperations'
-import { useTranslation } from '../../translations/translation'
-import { ScalingDialog } from '../ScalingDialog'
-import { BaseMenu } from './BaseMenu'
-import { ColorPickerMenuItem } from './ColorPickerMenuItem'
-import { StitchVisibilityMenuItem } from './StitchVisibilityMenuItem'
+} from '../../../data/colors'
+import { useColors } from '../../../hooks/useColors'
+import { useProject } from '../../../hooks/useProject'
+import { useProjectOperations } from '../../../hooks/useProjectOperations'
+import { useTranslation } from '../../../translations/translation'
+import { ScalingDialog } from '../../ScalingDialog'
+import { BaseMenu } from '../BaseMenu'
+import { ColorPickerMenuItem } from '../items/ColorPickerMenuItem'
+import { StitchVisibilityMenuItem } from '../items/StitchVisibilityMenuItem'
 
 export const ViewMenu: FC = () => {
   const t = useTranslation()

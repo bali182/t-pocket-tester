@@ -25,6 +25,7 @@
     "@internationalized/number": "3.6.7",
     "@react-pdf/renderer": "4.5.1",
     "bignumber.js": "11.1.5",
+    "bowser": "^2.14.1",
     "comlink": "4.4.2",
     "culori": "4.0.2",
     "jotai": "2.20.1",

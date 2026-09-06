@@ -9,7 +9,6 @@ const electronApi: ElectronApi = {
   suggestPath: (request) => ipcRenderer.invoke(electronIpcChannels.suggestPath, request),
   validateCreatePath: (request) => ipcRenderer.invoke(electronIpcChannels.validateCreatePath, request),
   write: (request) => ipcRenderer.invoke(electronIpcChannels.write, request),
-  platform: process.platform,
 }
 
 contextBridge.exposeInMainWorld('electronApi', electronApi)

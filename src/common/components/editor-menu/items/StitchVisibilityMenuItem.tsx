@@ -1,7 +1,7 @@
 import { Icon, Menu } from '@chakra-ui/react'
 import { FC, useCallback } from 'react'
 import { PiEye, PiEyeSlash, PiNeedle } from 'react-icons/pi'
-import type { StitchingVisibilityConfigSchema, StitchLineCommonConfigSchema } from '../../schemas/stitching'
+import type { StitchingVisibilityConfigSchema, StitchLineCommonConfigSchema } from '../../../schemas/stitching'
 
 type StitchVisibilityMenuItemProps = {
   value: boolean
