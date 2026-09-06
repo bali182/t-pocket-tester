@@ -2,7 +2,7 @@ import typia from 'typia'
 
 import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
 import type { ProjectSchema } from '../schemas/project'
-import type { RecentProjectSchema } from '../schemas/recentProject'
+import type { RecentProjectsSchema } from '../schemas/recentProject'
 import type { BaseExportSettingsSchema } from '../schemas/settings'
 import type { ThemeSchema } from '../schemas/theme'
 
@@ -16,13 +16,11 @@ export const saveProjectsToStorage = (projects: ProjectSchema[]): void => {
   safeWriteStorage('projects', projects)
 }
 
-export const readRecentProjectsFromStorage = (): Record<string, RecentProjectSchema> => {
-  return safeReadStorage<Record<string, RecentProjectSchema>>('recent-projects', {}, (raw) =>
-    typia.assert<Record<string, RecentProjectSchema>>(raw),
-  )
+export const readRecentProjectsFromStorage = (): RecentProjectsSchema => {
+  return safeReadStorage<RecentProjectsSchema>('recent-projects', {}, (raw) => typia.assert<RecentProjectsSchema>(raw))
 }
 
-export const saveRecentProjectsToStorage = (recentProjects: Record<string, RecentProjectSchema>): void => {
+export const saveRecentProjectsToStorage = (recentProjects: RecentProjectsSchema): void => {
   safeWriteStorage('recent-projects', recentProjects)
 }
 

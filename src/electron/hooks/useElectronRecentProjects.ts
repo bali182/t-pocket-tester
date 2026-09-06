@@ -15,18 +15,17 @@ export const useElectronRecentProjects = (): LoadableSchema<RecentProjectVisuali
   const formatDate = useDateFormatter()
 
   const candidates = useMemo<RecentProjectVisualisationSchema[]>(() => {
-    return Object.entries(recents)
-      .map(([projectId, recentProject]: [string, RecentProjectSchema]): RecentProjectVisualisationSchema => {
+    const recentProjectEntries: Array<[string, RecentProjectSchema]> = Object.entries(recents)
+    return recentProjectEntries
+      .map(([filePath, recentProject]: [string, RecentProjectSchema]): RecentProjectVisualisationSchema => {
         return {
           formattedLastOpenedAt: formatDate(recentProject.lastOpenedAt),
-          lastOpenedAt: recentProject.lastOpenedAt,
+          id: filePath,
+          label: filePath,
           link: isDefined(recentProject.lastSubProjectId)
-            ? electronAppRoutes.subProject(recentProject.path, recentProject.lastSubProjectId)
-            : electronAppRoutes.project(recentProject.path),
-          path: recentProject.path,
-          projectId,
-          projectName: '',
-          ...(isDefined(recentProject.lastSubProjectId) ? { subProjectId: recentProject.lastSubProjectId } : {}),
+            ? electronAppRoutes.subProject(filePath, recentProject.lastSubProjectId)
+            : electronAppRoutes.project(filePath),
+          lastOpenedAt: recentProject.lastOpenedAt,
         }
       })
       .sort((left, right): number => right.lastOpenedAt - left.lastOpenedAt)
@@ -60,15 +59,15 @@ const useExistingElectronRecentProjects = (
       Loadable.hasValue(current) ? Loadable.loadingWith(current.data) : Loadable.loading(),
     )
 
-    const filePaths = candidates.map((candidate) => candidate.path)
-    const response = await fileManagement.findExistingFilePaths({ type: 'find-existing-file-paths', filePaths })
+    const filePaths = candidates.map((candidate): string => candidate.id)
+    const response = await fileManagement.findExistingFilePaths({ filePaths, type: 'find-existing-file-paths' })
 
     if (response.type === 'error') {
       return setRecentProjectsForRequest(requestId, Loadable.failed(response))
     }
 
     const existingFilePaths = new Set(response.filePaths)
-    const existingRecentProjects = candidates.filter((candidate) => existingFilePaths.has(candidate.path))
+    const existingRecentProjects = candidates.filter((candidate) => existingFilePaths.has(candidate.id))
 
     setRecentProjectsForRequest(requestId, Loadable.loaded(existingRecentProjects))
   })

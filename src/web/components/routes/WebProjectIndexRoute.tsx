@@ -5,21 +5,21 @@ import { EditorContent } from '../../../common/components/EditorContent'
 import { useProject } from '../../../common/hooks/useProject'
 import { useRecentProjectOperations } from '../../../common/hooks/useRecentProjectOperations'
 import { isDefined } from '../../../common/utils/isDefined'
-import { useRecentProjects } from '../../hooks/useRecentProjects'
+import { useWebRecentProjects } from '../../hooks/useWebRecentProjects'
 
 export const WebProjectIndexRoute: FC = () => {
   const { project } = useProject()
-  const recentProjects = useRecentProjects()
-  const { markProjectOpened } = useRecentProjectOperations()
-  const recentProject = recentProjects.find((candidate) => candidate.projectId === project.id)
+  const recentProjects = useWebRecentProjects()
+  const { markOpened } = useRecentProjectOperations()
+  const recentProject = recentProjects.find((candidate) => candidate.id === project.id)
 
   useEffect(() => {
     if (project.subProjects.length !== 0) {
       return
     }
 
-    markProjectOpened(project.id)
-  }, [markProjectOpened, project.id, project.subProjects.length])
+    markOpened(project.id)
+  }, [markOpened, project.id, project.subProjects.length])
 
   if (project.subProjects.length > 0) {
     if (isDefined(recentProject)) {

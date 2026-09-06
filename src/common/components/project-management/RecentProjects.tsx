@@ -10,11 +10,10 @@ export type RecentProjectItemProps = {
 
 type RecentProjectsProps = PropsWithChildren & {
   ProjectItem: FC<RecentProjectItemProps>
-  getProjectSearchText: (project: RecentProjectVisualisationSchema) => string
   projects: RecentProjectVisualisationSchema[]
 }
 
-export const RecentProjects: FC<RecentProjectsProps> = ({ ProjectItem, children, getProjectSearchText, projects }) => {
+export const RecentProjects: FC<RecentProjectsProps> = ({ ProjectItem, children, projects }) => {
   const [search, setSearch] = useState('')
 
   const t = useTranslation()
@@ -23,8 +22,8 @@ export const RecentProjects: FC<RecentProjectsProps> = ({ ProjectItem, children,
   const { collection, filter, set } = useListCollection({
     filter: contains,
     initialItems: projects,
-    itemToString: getProjectSearchText,
-    itemToValue: (project) => project.projectId,
+    itemToString: (project: RecentProjectVisualisationSchema): string => project.label,
+    itemToValue: (project: RecentProjectVisualisationSchema): string => project.id,
   })
 
   useEffect(() => {
@@ -62,7 +61,7 @@ export const RecentProjects: FC<RecentProjectsProps> = ({ ProjectItem, children,
       </InputGroup>
       <Listbox.Content overflowY="auto">
         {collection.items.map((project) => (
-          <ProjectItem key={project.projectId} project={project} />
+          <ProjectItem key={project.id} project={project} />
         ))}
         <Listbox.Empty>
           {projects.length === 0 && (

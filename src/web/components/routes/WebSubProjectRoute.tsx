@@ -12,7 +12,7 @@ import type { WebSubProjectRouteParamsSchema } from '../../schemas/webRouteParam
 export const WebSubProjectRoute: FC = () => {
   const { projectId, subProjectId } = useParams<WebSubProjectRouteParamsSchema>()
   const { subProject } = useOptionalSubProject()
-  const { markProjectOpened } = useRecentProjectOperations()
+  const { markOpened } = useRecentProjectOperations()
   const subProjectExists = isDefined(subProject)
 
   useEffect(() => {
@@ -20,8 +20,8 @@ export const WebSubProjectRoute: FC = () => {
       return
     }
 
-    markProjectOpened(projectId, subProjectId)
-  }, [subProjectExists, markProjectOpened, projectId, subProjectId])
+    markOpened(projectId, subProjectId)
+  }, [subProjectExists, markOpened, projectId, subProjectId])
 
   if (!subProjectExists) {
     return <EditorContent subProjectId={subProjectId} />

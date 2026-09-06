@@ -11,19 +11,19 @@ import { isDefined } from '../../../common/utils/isDefined'
 import type { ElectronSubProjectRouteParamsSchema } from '../../schemas/electronRouteParams'
 
 export const ElectronSubProjectRoute: FC = () => {
-  const { subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
+  const { filePath, subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
   const { project } = useOptionalProject()
   const { subProject } = useOptionalSubProject()
-  const { markProjectOpened } = useRecentProjectOperations()
+  const { markOpened } = useRecentProjectOperations()
   const subProjectExists = isDefined(subProject)
 
   useEffect(() => {
-    if (!subProjectExists || !isDefined(project) || !isDefined(subProjectId)) {
+    if (!subProjectExists || !isDefined(filePath) || !isDefined(project) || !isDefined(subProjectId)) {
       return
     }
 
-    markProjectOpened(project.id, subProjectId)
-  }, [markProjectOpened, project, subProjectExists, subProjectId])
+    markOpened(filePath, subProjectId)
+  }, [filePath, markOpened, project, subProjectExists, subProjectId])
 
   if (!subProjectExists) {
     return <EditorContent subProjectId={subProjectId} />

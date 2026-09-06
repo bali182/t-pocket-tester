@@ -12,7 +12,7 @@ export const ElectronProjectItem: FC<RecentProjectItemProps> = ({ project }) => 
         <HStack gap="3">
           <PiWalletDuotone size={18} />
           <Listbox.ItemText>
-            {project.path}
+            {project.label}
             <Text color="fg.muted" fontSize="xs" mt="1">
               {project.formattedLastOpenedAt}
             </Text>

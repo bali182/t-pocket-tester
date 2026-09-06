@@ -14,14 +14,14 @@ export const WebProjectItem: FC<RecentProjectItemProps> = ({ project }) => {
           <HStack gap="3">
             <PiWalletDuotone size={18} />
             <Listbox.ItemText>
-              {project.projectName}
+              {project.label}
               <Text color="fg.muted" fontSize="xs" mt="1">
                 {project.formattedLastOpenedAt}
               </Text>
             </Listbox.ItemText>
           </HStack>
         </Link>
-        <ProjectActionsMenu projectId={project.projectId} size="xs" />
+        <ProjectActionsMenu projectId={project.id} size="xs" />
       </HStack>
     </Listbox.Item>
   )

@@ -4,9 +4,9 @@ import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } fr
 import { PiX } from 'react-icons/pi'
 
 import { LANGUAGE } from '../constants/language'
-import { useComputedProject } from '../hooks/useComputedProject'
 import { useProject } from '../hooks/useProject'
 import { renderSvgToString } from '../logic/exports/renderSvgToString'
+import { getComputedProject } from '../logic/getComputedProject'
 import type { EditableSchema } from '../schemas/editable'
 import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema } from '../schemas/validation'
@@ -25,7 +25,6 @@ type SvgExportDialogProps = {
 
 export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange }) => {
   const { project } = useProject()
-  const computedProject = useComputedProject()
   const [storedParams, setStoredParams] = useAtom(svgExportParamsAtom)
   const t = useTranslation()
   const context = useMemo<BaseValidationContextSchema>(() => ({ language: LANGUAGE, t }), [t])
@@ -85,12 +84,13 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
         return
       }
 
+      const computedProject = getComputedProject(project)
       const svg = renderSvgToString(project, computedProject, submitValidationResult.value)
       downloadSvg(svg, `${project.name}.svg`)
       setStoredParams(submitValidationResult.value)
       onOpenChange(false)
     },
-    [computedProject, context, editableParams, exportParams, onOpenChange, project, setStoredParams],
+    [context, editableParams, exportParams, onOpenChange, project, setStoredParams],
   )
 
   return (

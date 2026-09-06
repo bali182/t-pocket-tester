@@ -1,15 +1,15 @@
 export type RecentProjectSchema = {
   lastOpenedAt: number
-  path: string
   lastSubProjectId?: string
 }
 
+// Key is either projectId (web) or file path (electron). Intentionall ambiguous, so both platform can use the same model.
+export type RecentProjectsSchema = Record<string, RecentProjectSchema>
+
 export type RecentProjectVisualisationSchema = {
   formattedLastOpenedAt: string
+  id: string
+  label: string
   link: string
-  path: string
-  projectId: string
-  projectName: string
-  subProjectId?: string
   lastOpenedAt: number
 }

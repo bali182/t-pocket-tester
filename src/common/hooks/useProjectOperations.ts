@@ -11,7 +11,6 @@ import type { SubProjectSchema } from '../schemas/subProject'
 import { useTranslation } from '../translations/translation'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
-import { useRecentProjectOperations } from './useRecentProjectOperations'
 
 export type UseProjectOperationsOutput = {
   cloneSubProject: (sourceSubProject: SubProjectSchema) => void
@@ -25,7 +24,6 @@ export type UseProjectOperationsOutput = {
 
 export const useProjectOperations = (): UseProjectOperationsOutput => {
   const { project, setProject } = useEditorContext()
-  const { clearLastOpenedSubProject } = useRecentProjectOperations()
   const t = useTranslation()
 
   const updateProject = useCallback(
@@ -99,9 +97,8 @@ export const useProjectOperations = (): UseProjectOperationsOutput => {
       const currentProject = ensureProject(project)
 
       setProject(deleteSubProjectPure(currentProject, { subProjectId }))
-      clearLastOpenedSubProject(currentProject.id, subProjectId)
     },
-    [clearLastOpenedSubProject, project, setProject],
+    [project, setProject],
   )
 
   return useMemo<UseProjectOperationsOutput>(

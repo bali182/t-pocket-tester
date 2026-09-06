@@ -4,10 +4,10 @@ import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } fr
 import { PiX } from 'react-icons/pi'
 
 import { LANGUAGE } from '../constants/language'
-import { useComputedProject } from '../hooks/useComputedProject'
 import { useProject } from '../hooks/useProject'
 import { exportPdf } from '../logic/exports/exportPdf'
 import { getComputedPdfExport } from '../logic/exports/getComputedPdfExport'
+import { getComputedProject } from '../logic/getComputedProject'
 import type { EditableSchema } from '../schemas/editable'
 import type { PdfExportSettingsSchema, PdfExportUnsuccessfulLayoutSchema } from '../schemas/pdfExport'
 import type { BaseValidationContextSchema } from '../schemas/validation'
@@ -37,7 +37,6 @@ type PdfExportFailure = PdfExportUnplaceableFailure | PdfExportRuntimeFailure
 
 export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange }) => {
   const { project } = useProject()
-  const computedProject = useComputedProject()
   const [storedParams, setStoredParams] = useAtom(pdfExportParamsAtom)
   const [exportParams, setExportParams] = useState<PdfExportSettingsSchema>(storedParams)
   const [editableParams, setEditableParams] = useState<EditableSchema<PdfExportSettingsSchema>>(() =>
@@ -107,6 +106,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
         return
       }
 
+      const computedProject = getComputedProject(project)
       const layout = getComputedPdfExport(project, computedProject, submitValidationResult.value)
 
       if (layout.type === 'unsuccessful-pdf-export') {
@@ -127,7 +127,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
         setIsExporting(false)
       }
     },
-    [computedProject, context, editableParams, exportParams, onOpenChange, project, setStoredParams],
+    [context, editableParams, exportParams, onOpenChange, project, setStoredParams],
   )
 
   return (
