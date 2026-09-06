@@ -3,7 +3,6 @@ import { useEffect, useEffectEvent, useMemo, type FC } from 'react'
 import { PiWarningCircle } from 'react-icons/pi'
 import { useNavigate, useParams } from 'react-router'
 
-import { Editor } from '../../../common/components/Editor'
 import { CommonEmptyState } from '../../../common/components/common/CommonEmptyState'
 import { EditorContext } from '../../../common/contexts/EditorContext'
 import { useElectronProject } from '../../../common/hooks/useElectronProject'
@@ -11,6 +10,7 @@ import { Loadable } from '../../../common/loadable'
 import type { ElectronProjectSchema } from '../../../common/schemas/electronProject'
 import { useTranslation } from '../../../common/translations/translation'
 import { isDefined } from '../../../common/utils/isDefined'
+import { ElectronEditor } from '../ElectronEditor'
 import { electronAppRoutes } from '../../electronAppRoutes'
 import { useElectronEditorContextValue } from '../../hooks/useElectronEditorContextValue'
 import type { ElectronSubProjectRouteParamsSchema } from '../../schemas/electronRouteParams'
@@ -66,7 +66,7 @@ export const ElectronProjectRoute: FC = () => {
 
   return (
     <EditorContext.Provider value={editorContextValue}>
-      <Editor />
+      <ElectronEditor />
     </EditorContext.Provider>
   )
 }
