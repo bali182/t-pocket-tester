@@ -3,19 +3,19 @@ import { useCallback, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import typia from 'typia'
 
-import { electronAppRoutes } from '../../electron/electronAppRoutes'
-import type { ElectronSubProjectRouteParamsSchema } from '../../electron/schemas/electronRouteParams'
-import { toaster } from '../components/Toaster'
-import { FILE_EXTENSION } from '../extension'
-import { Loadable } from '../loadable'
-import { fileManagement } from '../platform/fileManagement'
+import { toaster } from '../../common/components/Toaster'
+import { FILE_EXTENSION } from '../../common/extension'
+import { Loadable } from '../../common/loadable'
+import type { LoadableSchema } from '../../common/schemas/loadable'
+import type { ProjectSchema } from '../../common/schemas/project'
+import { useTranslation } from '../../common/translations/translation'
+import { id } from '../../common/utils/id'
+import { isDefined } from '../../common/utils/isDefined'
+import { electronApi } from '../electronApi'
+import { electronAppRoutes } from '../electronAppRoutes'
 import type { ElectronProjectSchema } from '../schemas/electronProject'
-import type { LoadableSchema } from '../schemas/loadable'
-import type { ProjectSchema } from '../schemas/project'
+import type { ElectronSubProjectRouteParamsSchema } from '../schemas/electronRouteParams'
 import { electronProjectAtom } from '../state/electronProjectAtom'
-import { useTranslation } from '../translations/translation'
-import { id } from '../utils/id'
-import { isDefined } from '../utils/isDefined'
 
 type UseElectronProjectSchema = {
   electronProject: LoadableSchema<ElectronProjectSchema>
@@ -48,7 +48,7 @@ export const useElectronProject = (filePath?: string): UseElectronProjectSchema 
 
   const writeProject = useCallback(
     async (target: ElectronProjectSchema): Promise<boolean> => {
-      const response = await fileManagement.write({
+      const response = await electronApi.write({
         contents: JSON.stringify(target.project, null, 2),
         filePath: target.filePath,
         type: 'write',
@@ -80,7 +80,7 @@ export const useElectronProject = (filePath?: string): UseElectronProjectSchema 
       return Loadable.loading()
     })
 
-    const response = await fileManagement.read({ filePath, type: 'read' })
+    const response = await electronApi.read({ filePath, type: 'read' })
 
     if (requestId !== requestIdRef.current) {
       return
@@ -133,7 +133,7 @@ export const useElectronProject = (filePath?: string): UseElectronProjectSchema 
   )
 
   const openProject = useCallback(async (): Promise<void> => {
-    const response = await fileManagement.dialog({
+    const response = await electronApi.dialog({
       buttonLabel: t.projects.actions.open,
       fileFilter: {
         extension: FILE_EXTENSION,
@@ -179,7 +179,7 @@ export const useElectronProject = (filePath?: string): UseElectronProjectSchema 
       return
     }
 
-    const response = await fileManagement.dialog({
+    const response = await electronApi.dialog({
       buttonLabel: t.editor.menus.file.file.save,
       fileFilter: {
         extension: FILE_EXTENSION,

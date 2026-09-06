@@ -1,8 +1,8 @@
 import { atom } from 'jotai'
 import type { SetStateAction } from 'react'
 
-import type { ProjectSchema } from '../schemas/project'
-import { readProjectsFromStorage, saveProjectsToStorage } from './storage'
+import type { ProjectSchema } from '../../common/schemas/project'
+import { readProjectsFromStorage, saveProjectsToStorage } from '../../common/state/storage'
 
 const projectsStorageAtom = atom<ProjectSchema[]>(readProjectsFromStorage())
 

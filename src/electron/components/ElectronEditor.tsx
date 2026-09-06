@@ -1,10 +1,10 @@
 import { Box } from '@chakra-ui/react'
 import { type FC } from 'react'
 import { Outlet } from 'react-router'
-import { ElectronCommandsContext } from '../../common/contexts/ElectronCommandsContext'
 import { NumberEditorStepContext } from '../../common/contexts/NumberEditorStepContext'
-import { useElectronCommandsContextValue } from '../../common/hooks/useElectronCommandsContextValue'
 import { useNumberEditorStep } from '../../common/hooks/useNumberEditorStep'
+import { ElectronCommandsContext } from '../contexts/ElectronCommandsContext'
+import { useElectronCommandsContextValue } from '../hooks/useElectronCommandsContextValue'
 
 export const ElectronEditor: FC = () => {
   const numberEditorStep = useNumberEditorStep()

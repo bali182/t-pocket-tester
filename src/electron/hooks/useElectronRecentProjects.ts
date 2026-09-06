@@ -2,12 +2,12 @@ import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, type SetStateAction } from 'react'
 
 import { Loadable } from '../../common/loadable'
-import { fileManagement } from '../../common/platform/fileManagement'
 import type { LoadableSchema } from '../../common/schemas/loadable'
 import type { RecentProjectSchema, RecentProjectVisualisationSchema } from '../../common/schemas/recentProject'
 import { recentProjectsAtom } from '../../common/state/recentProjectsAtom'
 import { useDateFormatter } from '../../common/translations/translation'
 import { isDefined } from '../../common/utils/isDefined'
+import { electronApi } from '../electronApi'
 import { electronAppRoutes } from '../electronAppRoutes'
 
 export const useElectronRecentProjects = (): LoadableSchema<RecentProjectVisualisationSchema[]> => {
@@ -60,7 +60,7 @@ const useExistingElectronRecentProjects = (
     )
 
     const filePaths = candidates.map((candidate): string => candidate.id)
-    const response = await fileManagement.findExistingFilePaths({ filePaths, type: 'find-existing-file-paths' })
+    const response = await electronApi.findExistingFilePaths({ filePaths, type: 'find-existing-file-paths' })
 
     if (response.type === 'error') {
       return setRecentProjectsForRequest(requestId, Loadable.failed(response))

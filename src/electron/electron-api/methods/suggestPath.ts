@@ -1,9 +1,6 @@
 import { app } from 'electron'
 import { join } from 'node:path'
-import type {
-  FileSuggestPathRequestSchema,
-  FileSuggestPathResponseSchema,
-} from '../../../common/schemas/fileManagement'
+import type { FileSuggestPathRequestSchema, FileSuggestPathResponseSchema } from '../../schemas/electronApi'
 
 export const suggestPath = async (request: FileSuggestPathRequestSchema): Promise<FileSuggestPathResponseSchema> => {
   try {

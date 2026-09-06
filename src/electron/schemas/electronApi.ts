@@ -1,4 +1,4 @@
-import type { HasTypeSchema } from './common'
+import type { HasTypeSchema } from '../../common/schemas/common'
 
 export type NativePlatformSchema =
   | 'aix'
@@ -114,7 +114,7 @@ export type FileValidateCreatePathResponseSchema =
   | FileCreatePathInvalidResponseSchema
   | FileErrorResponseSchema
 
-export type FileApiSchema = {
+export type ElectronApi = {
   dialog: (request: FileDialogRequestSchema) => Promise<FileDialogResponseSchema>
   findExistingFilePaths: (
     request: FileFindExistingFilePathsRequestSchema,

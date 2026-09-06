@@ -1,5 +1,5 @@
-import type { NativePlatformSchema } from '../schemas/fileManagement'
-import type { KeySchema } from '../schemas/shortcut'
+import type { KeySchema } from '../../common/schemas/shortcut'
+import type { NativePlatformSchema } from '../schemas/electronApi'
 
 const formatWinKey = (key: KeySchema): string => {
   switch (key) {

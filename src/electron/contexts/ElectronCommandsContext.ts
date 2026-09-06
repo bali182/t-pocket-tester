@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import type { CommandNameSchema, CommandSchema } from '../schemas/shortcut'
+import type { CommandNameSchema, CommandSchema } from '../../common/schemas/shortcut'
 
 export type ElectronCommandsContextValue = {
   emitCommand: (commandName: CommandNameSchema) => Promise<void>

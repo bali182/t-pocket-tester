@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 
-import { Loadable } from '../loadable'
+import { Loadable } from '../../common/loadable'
+import type { LoadableSchema } from '../../common/schemas/loadable'
 import type { ElectronProjectSchema } from '../schemas/electronProject'
-import type { LoadableSchema } from '../schemas/loadable'
 
 export const electronProjectAtom = atom<LoadableSchema<ElectronProjectSchema>>(Loadable.uninitialized())

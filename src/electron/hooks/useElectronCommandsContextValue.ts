@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useEffectEvent, useMemo } from 'react'
 
+import { Loadable } from '../../common/loadable'
+import type { CommandNameSchema, CommandSchema } from '../../common/schemas/shortcut'
+import { isDefined } from '../../common/utils/isDefined'
 import type { ElectronCommandsContextValue } from '../contexts/ElectronCommandsContext'
-import { Loadable } from '../loadable'
-import { fileManagement } from '../platform/fileManagement'
+import { electronApi } from '../electronApi'
 import type { ElectronProjectSchema } from '../schemas/electronProject'
-import type { CommandNameSchema, CommandSchema } from '../schemas/shortcut'
 import { formatShortcut } from '../utils/formatShortcut'
-import { isDefined } from '../utils/isDefined'
 import { matchesShortcut } from '../utils/matchesShortcut'
 import { useElectronProject } from './useElectronProject'
 
 export const useElectronCommandsContextValue = (): ElectronCommandsContextValue => {
   const { electronProject, openProject, saveProject, saveProjectAs } = useElectronProject()
-  const platform = fileManagement.platform
+  const platform = electronApi.platform
   const saveDisabled = Loadable.get(
     Loadable.map(electronProject, (project: ElectronProjectSchema): boolean => project.isDirty === false),
     true,

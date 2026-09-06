@@ -7,7 +7,7 @@ import type {
   FileCreatePathInvalidResponseSchema,
   FileValidateCreatePathRequestSchema,
   FileValidateCreatePathResponseSchema,
-} from '../../../common/schemas/fileManagement'
+} from '../../schemas/electronApi'
 import { hasErrorCode } from './utils'
 
 export const validateCreatePath = async (

@@ -2,10 +2,10 @@ import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 
 import type { RecentProjectVisualisationSchema } from '../../common/schemas/recentProject'
-import { projectsAtom } from '../../common/state/projectsAtom'
 import { recentProjectsAtom } from '../../common/state/recentProjectsAtom'
 import { useDateFormatter } from '../../common/translations/translation'
 import { isDefined } from '../../common/utils/isDefined'
+import { projectsAtom } from '../state/projectsAtom'
 import { webAppRoutes } from '../webAppRoutes'
 
 export const useWebRecentProjects = (): RecentProjectVisualisationSchema[] => {

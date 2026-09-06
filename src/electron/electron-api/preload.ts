@@ -1,15 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { FileApiSchema } from '../../common/schemas/fileManagement'
-import { fileManagementIpcChannels } from './fileManagementApi'
+import { ElectronApi } from '../schemas/electronApi'
+import { electronIpcChannels } from './electronApi'
 
-const fileManagementApi: FileApiSchema = {
-  dialog: (request) => ipcRenderer.invoke(fileManagementIpcChannels.dialog, request),
-  findExistingFilePaths: (request) => ipcRenderer.invoke(fileManagementIpcChannels.findExistingFilePaths, request),
-  read: (request) => ipcRenderer.invoke(fileManagementIpcChannels.read, request),
-  suggestPath: (request) => ipcRenderer.invoke(fileManagementIpcChannels.suggestPath, request),
-  validateCreatePath: (request) => ipcRenderer.invoke(fileManagementIpcChannels.validateCreatePath, request),
-  write: (request) => ipcRenderer.invoke(fileManagementIpcChannels.write, request),
+const electronApi: ElectronApi = {
+  dialog: (request) => ipcRenderer.invoke(electronIpcChannels.dialog, request),
+  findExistingFilePaths: (request) => ipcRenderer.invoke(electronIpcChannels.findExistingFilePaths, request),
+  read: (request) => ipcRenderer.invoke(electronIpcChannels.read, request),
+  suggestPath: (request) => ipcRenderer.invoke(electronIpcChannels.suggestPath, request),
+  validateCreatePath: (request) => ipcRenderer.invoke(electronIpcChannels.validateCreatePath, request),
+  write: (request) => ipcRenderer.invoke(electronIpcChannels.write, request),
   platform: process.platform,
 }
 
-contextBridge.exposeInMainWorld('fileManagement', fileManagementApi)
+contextBridge.exposeInMainWorld('electronApi', electronApi)

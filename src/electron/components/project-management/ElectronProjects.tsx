@@ -4,9 +4,9 @@ import { PiFolder, PiPlus } from 'react-icons/pi'
 
 import { ProjectManagementHeader } from '../../../common/components/project-management/ProjectManagementHeader'
 import { RecentProjects } from '../../../common/components/project-management/RecentProjects'
-import { useElectronProject } from '../../../common/hooks/useElectronProject'
 import { Loadable } from '../../../common/loadable'
 import { useTranslation } from '../../../common/translations/translation'
+import { useElectronProject } from '../../hooks/useElectronProject'
 import { useElectronRecentProjects } from '../../hooks/useElectronRecentProjects'
 import { ElectronProjectItem } from './ElectronProjectItem'
 

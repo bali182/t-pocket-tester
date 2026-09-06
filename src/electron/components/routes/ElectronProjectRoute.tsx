@@ -5,15 +5,15 @@ import { useNavigate, useParams } from 'react-router'
 
 import { CommonEmptyState } from '../../../common/components/common/CommonEmptyState'
 import { EditorContext } from '../../../common/contexts/EditorContext'
-import { useElectronProject } from '../../../common/hooks/useElectronProject'
 import { Loadable } from '../../../common/loadable'
-import type { ElectronProjectSchema } from '../../../common/schemas/electronProject'
 import { useTranslation } from '../../../common/translations/translation'
 import { isDefined } from '../../../common/utils/isDefined'
-import { ElectronEditor } from '../ElectronEditor'
 import { electronAppRoutes } from '../../electronAppRoutes'
 import { useElectronEditorContextValue } from '../../hooks/useElectronEditorContextValue'
+import { useElectronProject } from '../../hooks/useElectronProject'
+import type { ElectronProjectSchema } from '../../schemas/electronProject'
 import type { ElectronSubProjectRouteParamsSchema } from '../../schemas/electronRouteParams'
+import { ElectronEditor } from '../ElectronEditor'
 
 export const ElectronProjectRoute: FC = () => {
   const { filePath, subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()

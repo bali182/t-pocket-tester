@@ -1,6 +1,6 @@
-import type { NativePlatformSchema } from '../schemas/fileManagement'
-import type { KeySchema } from '../schemas/shortcut'
-import { isDefined } from './isDefined'
+import type { KeySchema } from '../../common/schemas/shortcut'
+import { isDefined } from '../../common/utils/isDefined'
+import type { NativePlatformSchema } from '../schemas/electronApi'
 
 const isAcceleratorKey = (key: KeySchema): boolean => {
   return key === 'Command' || key === 'Control' || key === 'CommandOrControl' || key === 'Alt' || key === 'Shift'

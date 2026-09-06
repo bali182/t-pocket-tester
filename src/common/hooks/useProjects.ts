@@ -1,8 +1,8 @@
 import { useAtomValue } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
+import { projectsAtom } from '../../web/state/projectsAtom'
 import type { ProjectSchema } from '../schemas/project'
-import { projectsAtom } from '../state/projectsAtom'
 import { isDefined } from '../utils/isDefined'
 import { useRecentProjectOperations } from './useRecentProjectOperations'
 

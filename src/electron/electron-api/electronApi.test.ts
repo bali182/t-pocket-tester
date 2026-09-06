@@ -29,9 +29,9 @@ vi.mock('node:fs/promises', () => ({
   writeFile,
 }))
 
-import { fileManagementApi } from './fileManagementApi'
+import { _electronApi } from './electronApi'
 
-describe('fileManagementApi', () => {
+describe('electronApi', () => {
   beforeEach(() => {
     vi.resetAllMocks()
   })
@@ -39,7 +39,7 @@ describe('fileManagementApi', () => {
   it('reads a known file path', async () => {
     readFile.mockResolvedValue('{"name":"Example"}')
 
-    await expect(fileManagementApi.read({ type: 'read', filePath: '/projects/example.json' })).resolves.toEqual({
+    await expect(_electronApi.read({ type: 'read', filePath: '/projects/example.json' })).resolves.toEqual({
       type: 'read-succeeded',
       contents: '{"name":"Example"}',
     })
@@ -48,14 +48,14 @@ describe('fileManagementApi', () => {
   it('returns a generic error when reading fails', async () => {
     readFile.mockRejectedValue(new Error('Cannot read file'))
 
-    await expect(fileManagementApi.read({ type: 'read', filePath: '/projects/example.json' })).resolves.toEqual({
+    await expect(_electronApi.read({ type: 'read', filePath: '/projects/example.json' })).resolves.toEqual({
       type: 'error',
     })
   })
 
   it('writes to a known file path', async () => {
     await expect(
-      fileManagementApi.write({
+      _electronApi.write({
         type: 'write',
         contents: '{"name":"Example"}',
         filePath: '/projects/example.json',
@@ -69,7 +69,7 @@ describe('fileManagementApi', () => {
     showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/projects/example.json'] })
 
     await expect(
-      fileManagementApi.dialog({
+      _electronApi.dialog({
         type: 'read',
         target: 'file',
         title: 'Open project',
@@ -94,7 +94,7 @@ describe('fileManagementApi', () => {
     showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/projects'] })
 
     await expect(
-      fileManagementApi.dialog({
+      _electronApi.dialog({
         type: 'read',
         target: 'directory',
         title: 'Choose folder',
@@ -110,14 +110,14 @@ describe('fileManagementApi', () => {
   it('returns cancelled when a dialog is cancelled', async () => {
     showOpenDialog.mockResolvedValue({ canceled: true, filePaths: [] })
 
-    await expect(fileManagementApi.dialog({ type: 'read', target: 'file' })).resolves.toEqual({ type: 'cancelled' })
+    await expect(_electronApi.dialog({ type: 'read', target: 'file' })).resolves.toEqual({ type: 'cancelled' })
   })
 
   it('maps a write dialog configuration to Electron options', async () => {
     showSaveDialog.mockResolvedValue({ canceled: false, filePath: '/projects/example.project' })
 
     await expect(
-      fileManagementApi.dialog({
+      _electronApi.dialog({
         type: 'write',
         title: 'Save project',
         message: 'Choose a destination',
@@ -139,7 +139,7 @@ describe('fileManagementApi', () => {
   it('returns a generic error when a dialog fails', async () => {
     showSaveDialog.mockRejectedValue(new Error('Dialog failed'))
 
-    await expect(fileManagementApi.dialog({ type: 'write' })).resolves.toEqual({ type: 'error' })
+    await expect(_electronApi.dialog({ type: 'write' })).resolves.toEqual({ type: 'error' })
   })
 
   it('finds existing file paths', async () => {
@@ -154,7 +154,7 @@ describe('fileManagementApi', () => {
     })
 
     await expect(
-      fileManagementApi.findExistingFilePaths({
+      _electronApi.findExistingFilePaths({
         type: 'find-existing-file-paths',
         filePaths: ['/projects/existing.project', '/projects/missing.project'],
       }),
@@ -168,7 +168,7 @@ describe('fileManagementApi', () => {
     getPath.mockReturnValue('/Users/example/Documents')
 
     await expect(
-      fileManagementApi.suggestPath({ type: 'suggest-path', fileName: 'A / project?', extension: 'project' }),
+      _electronApi.suggestPath({ type: 'suggest-path', fileName: 'A / project?', extension: 'project' }),
     ).resolves.toEqual({
       type: 'suggested-path',
       filePath: '/Users/example/Documents/A - project-.project',
@@ -180,7 +180,7 @@ describe('fileManagementApi', () => {
     stat.mockRejectedValueOnce(createError('ENOENT'))
 
     await expect(
-      fileManagementApi.validateCreatePath({ type: 'validate-create-path', filePath: '/projects/example.project' }),
+      _electronApi.validateCreatePath({ type: 'validate-create-path', filePath: '/projects/example.project' }),
     ).resolves.toEqual({ type: 'create-path-available' })
 
     expect(access).toHaveBeenCalledWith('/projects', 2)
@@ -191,13 +191,13 @@ describe('fileManagementApi', () => {
     stat.mockResolvedValueOnce({ isFile: () => true })
 
     await expect(
-      fileManagementApi.validateCreatePath({ type: 'validate-create-path', filePath: '/projects/example.project' }),
+      _electronApi.validateCreatePath({ type: 'validate-create-path', filePath: '/projects/example.project' }),
     ).resolves.toEqual({ type: 'create-path-existing' })
   })
 
   it('returns invalid when the create path is not absolute', async () => {
     await expect(
-      fileManagementApi.validateCreatePath({ type: 'validate-create-path', filePath: 'example.project' }),
+      _electronApi.validateCreatePath({ type: 'validate-create-path', filePath: 'example.project' }),
     ).resolves.toEqual({ type: 'create-path-invalid' })
   })
 })

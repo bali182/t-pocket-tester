@@ -8,14 +8,14 @@ import { needsFullProjectPatch } from '../../common/component-patches/needsFullP
 import type { EditorContextType } from '../../common/contexts/EditorContext'
 import { Loadable } from '../../common/loadable'
 import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
-import type { ElectronProjectSchema } from '../../common/schemas/electronProject'
 import type { LoadableSchema } from '../../common/schemas/loadable'
 import type { ProjectSchema } from '../../common/schemas/project'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../../common/schemas/subProject'
-import { electronProjectAtom } from '../../common/state/electronProjectAtom'
 import { isDefined } from '../../common/utils/isDefined'
 import { electronAppRoutes } from '../electronAppRoutes'
+import type { ElectronProjectSchema } from '../schemas/electronProject'
 import type { ElectronSubProjectRouteParamsSchema } from '../schemas/electronRouteParams'
+import { electronProjectAtom } from '../state/electronProjectAtom'
 
 export const useElectronEditorContextValue = (): EditorContextType => {
   const { subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()

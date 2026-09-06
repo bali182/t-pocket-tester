@@ -2,7 +2,7 @@ import { stat } from 'node:fs/promises'
 import {
   FileFindExistingFilePathsRequestSchema,
   FileFindExistingFilePathsResponseSchema,
-} from '../../../common/schemas/fileManagement'
+} from '../../schemas/electronApi'
 import { hasErrorCode } from './utils'
 
 export const findExistingFilePaths = async (

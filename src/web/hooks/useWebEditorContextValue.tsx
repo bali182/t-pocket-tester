@@ -9,9 +9,9 @@ import type { EditorContextType } from '../../common/contexts/EditorContext'
 import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
 import type { ProjectSchema } from '../../common/schemas/project'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../../common/schemas/subProject'
-import { projectsAtom } from '../../common/state/projectsAtom'
 import { isDefined } from '../../common/utils/isDefined'
 import type { WebSubProjectRouteParamsSchema } from '../schemas/webRouteParams'
+import { projectsAtom } from '../state/projectsAtom'
 import { webAppRoutes } from '../webAppRoutes'
 
 export const useWebEditorContextValue = (): EditorContextType => {

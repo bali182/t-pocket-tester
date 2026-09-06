@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import type { FileReadRequestSchema, FileReadResponseSchema } from '../../../common/schemas/fileManagement'
+import type { FileReadRequestSchema, FileReadResponseSchema } from '../../schemas/electronApi'
 
 export const read = async (request: FileReadRequestSchema): Promise<FileReadResponseSchema> => {
   try {

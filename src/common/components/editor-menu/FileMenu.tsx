@@ -1,7 +1,7 @@
 import { Button, Menu, Portal } from '@chakra-ui/react'
 import { FC, useCallback, useState } from 'react'
 import { PiCaretDown, PiExport, PiFloppyDisk, PiFolder } from 'react-icons/pi'
-import { useElectronCommandsContext } from '../../contexts/ElectronCommandsContext'
+import { useElectronCommandsContext } from '../../../electron/contexts/ElectronCommandsContext'
 import { useProject } from '../../hooks/useProject'
 import { isElectron } from '../../platform/isElectron'
 import { portalRef } from '../../portalRef'
