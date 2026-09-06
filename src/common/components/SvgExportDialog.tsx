@@ -1,4 +1,4 @@
-import { Button, Dialog, IconButton } from '@chakra-ui/react'
+import { Button, Dialog, IconButton, Portal } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
 import { PiX } from 'react-icons/pi'
@@ -7,6 +7,7 @@ import { LANGUAGE } from '../constants/language'
 import { useProject } from '../hooks/useProject'
 import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import { getComputedProject } from '../logic/getComputedProject'
+import { portalRef } from '../portalRef'
 import type { EditableSchema } from '../schemas/editable'
 import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema } from '../schemas/validation'
@@ -95,36 +96,38 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
 
   return (
     <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg" placement="center">
-      <Dialog.Backdrop />
-      <Dialog.Positioner>
-        <Dialog.Content>
-          <form onSubmit={handleSubmit}>
-            <Dialog.Header>
-              <Dialog.Title>{t.svgExport.dialog.title}</Dialog.Title>
-              <Dialog.CloseTrigger asChild>
-                <IconButton size="sm" variant="ghost">
-                  <PiX />
-                </IconButton>
-              </Dialog.CloseTrigger>
-            </Dialog.Header>
-            <Dialog.Body px="0">
-              <SvgExportEditor
-                editable={editableParams}
-                issues={validationResult.issues}
-                onChange={handleParamsChange}
-              />
-            </Dialog.Body>
-            <Dialog.Footer>
-              <Dialog.ActionTrigger asChild>
-                <Button variant="outline">{t.common.actions.cancel}</Button>
-              </Dialog.ActionTrigger>
-              <Button disabled={hasErrors} type="submit" variant="solid">
-                {t.svgExport.dialog.actions.export}
-              </Button>
-            </Dialog.Footer>
-          </form>
-        </Dialog.Content>
-      </Dialog.Positioner>
+      <Portal container={portalRef}>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <form onSubmit={handleSubmit}>
+              <Dialog.Header>
+                <Dialog.Title>{t.svgExport.dialog.title}</Dialog.Title>
+                <Dialog.CloseTrigger asChild>
+                  <IconButton size="sm" variant="ghost">
+                    <PiX />
+                  </IconButton>
+                </Dialog.CloseTrigger>
+              </Dialog.Header>
+              <Dialog.Body px="0">
+                <SvgExportEditor
+                  editable={editableParams}
+                  issues={validationResult.issues}
+                  onChange={handleParamsChange}
+                />
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button variant="outline">{t.common.actions.cancel}</Button>
+                </Dialog.ActionTrigger>
+                <Button disabled={hasErrors} type="submit" variant="solid">
+                  {t.svgExport.dialog.actions.export}
+                </Button>
+              </Dialog.Footer>
+            </form>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
     </Dialog.Root>
   )
 }

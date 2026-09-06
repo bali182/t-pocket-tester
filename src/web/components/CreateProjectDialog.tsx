@@ -1,4 +1,4 @@
-import { Button, Dialog } from '@chakra-ui/react'
+import { Button, Dialog, Portal } from '@chakra-ui/react'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -8,6 +8,7 @@ import { useEditableModel } from '../../common/hooks/useEditableModel'
 import { useProjects } from '../../common/hooks/useProjects'
 import { addSubProject } from '../../common/operations/project/addSubProject'
 import { getUnusedName } from '../../common/operations/subProject/utils/getUnusedName'
+import { portalRef } from '../../common/portalRef'
 import type { ProjectSchema } from '../../common/schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../../common/schemas/validation'
 import { useTranslation } from '../../common/translations/translation'
@@ -89,27 +90,29 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
 
   return (
     <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg" placement="center">
-      <Dialog.Backdrop />
-      <Dialog.Positioner>
-        <Dialog.Content>
-          <form onSubmit={handleSubmit}>
-            <Dialog.Header>
-              <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
-            </Dialog.Header>
-            <Dialog.Body px="0">
-              <ProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
-            </Dialog.Body>
-            <Dialog.Footer>
-              <Dialog.ActionTrigger asChild>
-                <Button variant="outline">{t.common.actions.cancel}</Button>
-              </Dialog.ActionTrigger>
-              <Button disabled={hasErrors} type="submit" variant="solid">
-                {t.projects.createDialog.actions.create}
-              </Button>
-            </Dialog.Footer>
-          </form>
-        </Dialog.Content>
-      </Dialog.Positioner>
+      <Portal container={portalRef}>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <form onSubmit={handleSubmit}>
+              <Dialog.Header>
+                <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body px="0">
+                <ProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button variant="outline">{t.common.actions.cancel}</Button>
+                </Dialog.ActionTrigger>
+                <Button disabled={hasErrors} type="submit" variant="solid">
+                  {t.projects.createDialog.actions.create}
+                </Button>
+              </Dialog.Footer>
+            </form>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
     </Dialog.Root>
   )
 }

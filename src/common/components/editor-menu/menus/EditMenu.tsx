@@ -1,59 +1,18 @@
 import { Menu } from '@chakra-ui/react'
-import { FC, useCallback } from 'react'
-import { PiLineSegmentFill, PiNeedle } from 'react-icons/pi'
-import { useProject } from '../../../hooks/useProject'
-import { useProjectOperations } from '../../../hooks/useProjectOperations'
-import { NumberEditorStepSchema } from '../../../schemas/settings'
+import { FC } from 'react'
 import { useTranslation } from '../../../translations/translation'
 import { BaseMenu } from '../BaseMenu'
-import { StepMenuItem } from '../items/StepMenuItem'
-import { StitchingSettingsMenuItems } from '../groups/StitchingSettingsMenuItems'
+import { StepIncrementMenuGroup } from '../groups/StepIncrementMenuGroup'
+import { StitchingSettingsMenuGroup } from '../groups/StitchingSettingsMenuGroup'
 
 export const EditMenu: FC = () => {
   const t = useTranslation()
-  const { project } = useProject()
-  const { updateEditingSettings, updateStitchingSettings } = useProjectOperations()
-
-  const handleStepSelect = useCallback(
-    (numberEditorStep: NumberEditorStepSchema): void => updateEditingSettings({ numberEditorStep }),
-    [updateEditingSettings],
-  )
 
   return (
     <BaseMenu title={t.editor.menus.edit.name} autoFocus>
-      <Menu.ItemGroup>
-        <Menu.ItemGroupLabel>{t.editor.menus.edit.increment.name}</Menu.ItemGroupLabel>
-        <StepMenuItem
-          onSelect={handleStepSelect}
-          selectedValue={project.editingSettings.numberEditorStep}
-          subTitle={t.editor.menus.edit.increment.size(0.1)}
-          title={t.editor.menus.edit.increment.small}
-          icon={PiLineSegmentFill}
-          iconScale={0.8}
-          value={0.1}
-        />
-        <StepMenuItem
-          onSelect={handleStepSelect}
-          selectedValue={project.editingSettings.numberEditorStep}
-          subTitle={t.editor.menus.edit.increment.size(1)}
-          title={t.editor.menus.edit.increment.default}
-          icon={PiLineSegmentFill}
-          value={1}
-        />
-        <StepMenuItem
-          onSelect={handleStepSelect}
-          selectedValue={project.editingSettings.numberEditorStep}
-          subTitle={t.editor.menus.edit.increment.size(project.stitchingSettings.stitchHoleDistance)}
-          title={t.editor.menus.edit.increment.stitch}
-          icon={PiNeedle}
-          value="stitch-hole-distance"
-        />
-      </Menu.ItemGroup>
+      <StepIncrementMenuGroup />
       <Menu.Separator />
-      <Menu.ItemGroup>
-        <Menu.ItemGroupLabel>{t.editor.menus.edit.stitching.name}</Menu.ItemGroupLabel>
-        <StitchingSettingsMenuItems onChange={updateStitchingSettings} value={project.stitchingSettings} />
-      </Menu.ItemGroup>
+      <StitchingSettingsMenuGroup />
     </BaseMenu>
   )
 }

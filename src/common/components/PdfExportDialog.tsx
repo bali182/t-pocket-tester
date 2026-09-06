@@ -1,4 +1,4 @@
-import { Alert, Box, Button, CloseButton, Dialog, IconButton, chakra } from '@chakra-ui/react'
+import { Alert, Box, Button, CloseButton, Dialog, IconButton, Portal, chakra } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
 import { PiX } from 'react-icons/pi'
@@ -8,6 +8,7 @@ import { useProject } from '../hooks/useProject'
 import { exportPdf } from '../logic/exports/exportPdf'
 import { getComputedPdfExport } from '../logic/exports/getComputedPdfExport'
 import { getComputedProject } from '../logic/getComputedProject'
+import { portalRef } from '../portalRef'
 import type { EditableSchema } from '../schemas/editable'
 import type { PdfExportSettingsSchema, PdfExportUnsuccessfulLayoutSchema } from '../schemas/pdfExport'
 import type { BaseValidationContextSchema } from '../schemas/validation'
@@ -132,41 +133,43 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
 
   return (
     <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} scrollBehavior="inside" size="lg" placement="center">
-      <Dialog.Backdrop />
-      <Dialog.Positioner>
-        <Dialog.Content>
-          <chakra.form display="flex" flex="1" flexDirection="column" minH="0" onSubmit={handleSubmit}>
-            <Dialog.Header>
-              <Dialog.Title>{t.pdfExport.dialog.title}</Dialog.Title>
-              {!isExporting && (
-                <Dialog.CloseTrigger asChild>
-                  <IconButton size="sm" variant="ghost">
-                    <PiX />
-                  </IconButton>
-                </Dialog.CloseTrigger>
-              )}
-            </Dialog.Header>
-            <Dialog.Body px="0">
-              <PdfExportFailureAlert failure={failure} onDismiss={handleFailureDismiss} />
-              <PdfExportEditor
-                editable={editableParams}
-                issues={validationResult.issues}
-                onChange={handleParamsChange}
-              />
-            </Dialog.Body>
-            <Dialog.Footer>
-              <Dialog.ActionTrigger asChild>
-                <Button disabled={isExporting} variant="outline">
-                  {t.common.actions.cancel}
+      <Portal container={portalRef}>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <chakra.form display="flex" flex="1" flexDirection="column" minH="0" onSubmit={handleSubmit}>
+              <Dialog.Header>
+                <Dialog.Title>{t.pdfExport.dialog.title}</Dialog.Title>
+                {!isExporting && (
+                  <Dialog.CloseTrigger asChild>
+                    <IconButton size="sm" variant="ghost">
+                      <PiX />
+                    </IconButton>
+                  </Dialog.CloseTrigger>
+                )}
+              </Dialog.Header>
+              <Dialog.Body px="0">
+                <PdfExportFailureAlert failure={failure} onDismiss={handleFailureDismiss} />
+                <PdfExportEditor
+                  editable={editableParams}
+                  issues={validationResult.issues}
+                  onChange={handleParamsChange}
+                />
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button disabled={isExporting} variant="outline">
+                    {t.common.actions.cancel}
+                  </Button>
+                </Dialog.ActionTrigger>
+                <Button disabled={hasErrors || isExporting} loading={isExporting} type="submit" variant="solid">
+                  {t.pdfExport.dialog.actions.export}
                 </Button>
-              </Dialog.ActionTrigger>
-              <Button disabled={hasErrors || isExporting} loading={isExporting} type="submit" variant="solid">
-                {t.pdfExport.dialog.actions.export}
-              </Button>
-            </Dialog.Footer>
-          </chakra.form>
-        </Dialog.Content>
-      </Dialog.Positioner>
+              </Dialog.Footer>
+            </chakra.form>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
     </Dialog.Root>
   )
 }
