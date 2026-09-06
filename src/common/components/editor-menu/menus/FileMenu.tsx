@@ -1,3 +1,4 @@
+import { Menu } from '@chakra-ui/react'
 import { FC } from 'react'
 import { isElectron } from '../../../platform/isElectron'
 import { useTranslation } from '../../../translations/translation'
@@ -10,6 +11,7 @@ export const FileMenu: FC = () => {
   return (
     <BaseMenu title={t.editor.menus.file.name}>
       {isElectron() && <ElectronFileManagementMenuGroup />}
+      <Menu.Separator />
       <ExportMenuGroup />
     </BaseMenu>
   )

@@ -1,18 +1,15 @@
 import { Box } from '@chakra-ui/react'
 import { type FC } from 'react'
 import { Outlet } from 'react-router'
-import { CommandsContext, CommandsContextValue } from '../../common/contexts/CommandsContext'
 import { NumberEditorStepContext } from '../../common/contexts/NumberEditorStepContext'
 import { useNumberEditorStep } from '../../common/hooks/useNumberEditorStep'
-import { useElectronCommandsContextValue } from '../hooks/useElectronCommandsContextValue'
+import { ElectronCommandManager } from '../contexts/ElectronCommandManager'
 
 export const ElectronEditor: FC = () => {
   const numberEditorStep = useNumberEditorStep()
-  const electronCommandsContextValue = useElectronCommandsContextValue()
 
   return (
-    // No generic context provider, ffs
-    <CommandsContext.Provider value={electronCommandsContextValue as CommandsContextValue<string>}>
+    <ElectronCommandManager>
       <NumberEditorStepContext.Provider value={numberEditorStep}>
         <Box bg="bg.emphasized" height="100%" minHeight="0" minWidth="0" overflow="hidden" position="relative">
           <Box inset="0" minHeight="0" minWidth="0" overflow="hidden" position="absolute">
@@ -20,6 +17,6 @@ export const ElectronEditor: FC = () => {
           </Box>
         </Box>
       </NumberEditorStepContext.Provider>
-    </CommandsContext.Provider>
+    </ElectronCommandManager>
   )
 }

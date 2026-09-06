@@ -1,34 +1,32 @@
 import { Menu } from '@chakra-ui/react'
+import { useCommandsContext } from '../../../contexts/CommandsContext'
 import { useProject } from '../../../hooks/useProject'
-import { useProjectOperations } from '../../../hooks/useProjectOperations'
+import { CommonCommandIdSchema } from '../../../schemas/command'
 import { useTranslation } from '../../../translations/translation'
 import { StitchVisibilityMenuItem } from '../items/StitchVisibilityMenuItem'
 
 export const StitchingVisibilityMenuGroup = () => {
   const t = useTranslation()
   const { project } = useProject()
-  const { updateStitchingSettings } = useProjectOperations()
+  const { getCommand } = useCommandsContext<CommonCommandIdSchema>()
 
   return (
     <Menu.ItemGroup>
       <Menu.ItemGroupLabel>{t.editor.menus.view.stitching.name}</Menu.ItemGroupLabel>
       <StitchVisibilityMenuItem
-        field="stitchLinesVisible"
         label={t.editor.menus.view.stitching.stitchLinesVisible}
-        onChange={updateStitchingSettings}
         value={project.stitchingSettings.stitchLinesVisible}
+        command={getCommand('stitch-line-visibility')}
       />
       <StitchVisibilityMenuItem
-        field="stitchHolesVisible"
         label={t.editor.menus.view.stitching.stitchHolesVisible}
-        onChange={updateStitchingSettings}
         value={project.stitchingSettings.stitchHolesVisible}
+        command={getCommand('stitch-hole-visibility')}
       />
       <StitchVisibilityMenuItem
-        field="stitchesVisible"
         label={t.editor.menus.view.stitching.stitchesVisible}
-        onChange={updateStitchingSettings}
         value={project.stitchingSettings.stitchesVisible}
+        command={getCommand('stitches-visibility')}
       />
     </Menu.ItemGroup>
   )

@@ -53,6 +53,11 @@ export const useCommonCommands = ({ hasOpenProject }: UseCommonCommandsParams): 
         disabled: hasOpenProject,
         combination: ['CommandOrControl', 'Shift', 'T'],
       },
+      scaling: {
+        id: 'scaling',
+        disabled: false,
+        combination: ['CommandOrControl', 'Shift', 'V'],
+      },
     }
   }, [hasOpenProject])
 

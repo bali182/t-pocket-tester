@@ -6,12 +6,13 @@ import { isDefined } from '../../utils/isDefined'
 
 type MenuShortcutProps = {
   command: CommandSchema<unknown>
+  noPadding?: boolean
 }
 
-export const MenuShortcut: FC<MenuShortcutProps> = ({ command }) => {
+export const MenuShortcut: FC<MenuShortcutProps> = ({ command, noPadding }) => {
   const shortcut = useMemo(() => formatShortcut(command.combination), [command.combination])
   if (!isDefined(shortcut)) {
     return null
   }
-  return <Menu.ItemCommand>{shortcut}</Menu.ItemCommand>
+  return <Menu.ItemCommand {...(noPadding ? { paddingInlineStart: 0 } : {})}>{shortcut}</Menu.ItemCommand>
 }

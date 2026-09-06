@@ -1,7 +1,10 @@
 import { Icon, Menu, Text } from '@chakra-ui/react'
 import { FC, useCallback } from 'react'
 import { IconType } from 'react-icons'
+import { useCommandsContext } from '../../../contexts/CommandsContext'
+import { CommandSchema, CommonCommandIdSchema } from '../../../schemas/command'
 import { NumberEditorStepSchema } from '../../../schemas/settings'
+import { MenuShortcut } from '../MenuShortcut'
 
 export type StepMenuItemProps = {
   title: string
@@ -10,7 +13,7 @@ export type StepMenuItemProps = {
   selectedValue: NumberEditorStepSchema
   icon: IconType
   iconScale?: number
-  onSelect: (value: NumberEditorStepSchema) => void
+  command: CommandSchema<CommonCommandIdSchema>
 }
 
 export const StepMenuItem: FC<StepMenuItemProps> = ({
@@ -19,16 +22,17 @@ export const StepMenuItem: FC<StepMenuItemProps> = ({
   subTitle,
   selectedValue,
   iconScale = 1,
+  command,
   icon,
-  onSelect,
 }) => {
-  const handleSelect = useCallback(() => onSelect(value), [onSelect, value])
+  const { emitCommand } = useCommandsContext()
+  const handleSelect = useCallback(() => emitCommand(command.id), [command.id, emitCommand])
   const isSelected = selectedValue === value
   return (
     <Menu.Item
+      value={command.id}
       background={isSelected ? 'bg.emphasized' : undefined}
       onSelect={handleSelect}
-      value={value.toString()}
       closeOnSelect={false}
     >
       <Icon as={icon} transform={`scale(${iconScale})`} transformOrigin="center" />
@@ -38,7 +42,7 @@ export const StepMenuItem: FC<StepMenuItemProps> = ({
       <Text color="fg.muted" fontSize="xs" fontWeight={isSelected ? 'bold' : undefined}>
         {subTitle}
       </Text>
-      {/* <Menu.ItemCommand paddingInlineStart={0}>{formatShortcut(['CommandOrControl', 'L'], 'darwin')}</Menu.ItemCommand> */}
+      <MenuShortcut command={command} noPadding />
     </Menu.Item>
   )
 }

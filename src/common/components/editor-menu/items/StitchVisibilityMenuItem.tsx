@@ -1,24 +1,26 @@
 import { Icon, Menu } from '@chakra-ui/react'
 import { FC, useCallback } from 'react'
 import { PiEye, PiEyeSlash, PiNeedle } from 'react-icons/pi'
-import type { StitchingVisibilityConfigSchema, StitchLineCommonConfigSchema } from '../../../schemas/stitching'
+import { useCommandsContext } from '../../../contexts/CommandsContext'
+import { CommandSchema, CommonCommandIdSchema } from '../../../schemas/command'
+import { MenuShortcut } from '../MenuShortcut'
 
 type StitchVisibilityMenuItemProps = {
   value: boolean
   label: string
-  field: keyof StitchingVisibilityConfigSchema
-  onChange: (update: Partial<StitchLineCommonConfigSchema>) => void
+  command: CommandSchema<CommonCommandIdSchema>
 }
 
-export const StitchVisibilityMenuItem: FC<StitchVisibilityMenuItemProps> = ({ onChange, field, value, label }) => {
-  const toggle = useCallback(() => onChange({ [field]: !value }), [field, onChange, value])
+export const StitchVisibilityMenuItem: FC<StitchVisibilityMenuItemProps> = ({ command, value, label }) => {
+  const { emitCommand } = useCommandsContext<CommonCommandIdSchema>()
+  const toggle = useCallback(() => emitCommand(command.id), [command.id, emitCommand])
 
   return (
-    <Menu.Item onSelect={toggle} value={field} closeOnSelect={false}>
+    <Menu.Item disabled={command.disabled} onSelect={toggle} value={command.id} closeOnSelect={false}>
       <PiNeedle />
       <Menu.ItemText mr="2">{label}</Menu.ItemText>
       {value ? <PiEye /> : <Icon as={PiEyeSlash} color="fg.muted" />}
-      {/* <Menu.ItemCommand paddingInlineStart={0}>{formatShortcut(['CommandOrControl', 'L'], 'darwin')}</Menu.ItemCommand> */}
+      <MenuShortcut command={command} noPadding />
     </Menu.Item>
   )
 }
