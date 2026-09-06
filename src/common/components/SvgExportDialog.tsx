@@ -9,11 +9,11 @@ import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import { getComputedProject } from '../logic/getComputedProject'
 import { portalRef } from '../portalRef'
 import type { EditableSchema } from '../schemas/editable'
-import { BaseExportSettingsSchema } from '../schemas/settings'
+import type { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema } from '../schemas/validation'
 import { svgExportParamsAtom } from '../state/svgExportParamsAtom'
 import { useTranslation } from '../translations/translation'
-import { downloadSvg } from '../utils/downloadSvg'
+import { downloadFile } from '../utils/downloadFile'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
 import { validateBaseExportSettingsSchema } from '../validators/validateBaseExportSettingsSchema'
@@ -87,7 +87,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
 
       const computedProject = getComputedProject(project)
       const svg = renderSvgToString(project, computedProject, submitValidationResult.value)
-      downloadSvg(svg, `${project.name}.svg`)
+      downloadFile({ contentType: 'image/svg+xml', content: svg, fileName: `${project.name}.svg` })
       setStoredParams(submitValidationResult.value)
       onOpenChange(false)
     },

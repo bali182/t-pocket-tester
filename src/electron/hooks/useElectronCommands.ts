@@ -10,11 +10,11 @@ import { useElectronProject } from './useElectronProject'
 export const useElectronCommands = (): Record<ElectronCommandIdSchema, CommandSchema<ElectronCommandIdSchema>> => {
   const { electronProject } = useElectronProject()
   const hasProjectAndIsDirty = Loadable.get(
-    Loadable.map(electronProject, (project: ElectronProjectSchema): boolean => project.isDirty === false),
+    Loadable.map(electronProject, (project: ElectronProjectSchema): boolean => project.isDirty),
     true,
   )
   const hasOpenProject = Loadable.get(
-    Loadable.map(electronProject, (): boolean => false),
+    Loadable.map(electronProject, (): boolean => true),
     true,
   )
 
@@ -25,12 +25,12 @@ export const useElectronCommands = (): Record<ElectronCommandIdSchema, CommandSc
       // File basics
       save: {
         id: 'save',
-        disabled: hasProjectAndIsDirty,
+        disabled: !hasProjectAndIsDirty,
         combination: ['CommandOrControl', 'S'],
       },
       'save-as': {
         id: 'save-as',
-        disabled: hasOpenProject,
+        disabled: !hasOpenProject,
         combination: ['CommandOrControl', 'Shift', 'S'],
       },
       open: {

@@ -72,6 +72,10 @@ export const HU = {
           svg: 'SVG Exportálás',
           pdf: 'PDF Exportálás',
         },
+        download: {
+          name: 'Projekt letöltése',
+          download: 'Letöltés',
+        },
       },
       edit: {
         name: 'Szerkesztés',

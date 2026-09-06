@@ -73,6 +73,10 @@ export const EN: typeof HU = {
           svg: 'Export SVG',
           pdf: 'Export PDF',
         },
+        download: {
+          name: 'Download project',
+          download: 'Download',
+        },
       },
       edit: {
         name: 'Edit',
