@@ -1,13 +1,13 @@
-import { Button, Menu, Portal } from '@chakra-ui/react'
+import { Menu } from '@chakra-ui/react'
 import { FC, useCallback, useState } from 'react'
-import { PiCaretDown, PiExport, PiFloppyDisk, PiFolder } from 'react-icons/pi'
+import { PiExport, PiFloppyDisk, PiFolder } from 'react-icons/pi'
 import { useElectronCommandsContext } from '../../../electron/contexts/ElectronCommandsContext'
 import { useProject } from '../../hooks/useProject'
 import { isElectron } from '../../platform/isElectron'
-import { portalRef } from '../../portalRef'
 import { useTranslation } from '../../translations/translation'
 import { PdfExportDialog } from '../PdfExportDialog'
 import { SvgExportDialog } from '../SvgExportDialog'
+import { BaseMenu } from './BaseMenu'
 
 export const FileMenu: FC = () => {
   const t = useTranslation()
@@ -21,32 +21,20 @@ export const FileMenu: FC = () => {
 
   return (
     <>
-      <Menu.Root>
-        <Menu.Trigger asChild>
-          <Button size="sm" variant="ghost">
-            <PiCaretDown />
-            {t.editor.menus.file.name}
-          </Button>
-        </Menu.Trigger>
-        <Portal container={portalRef}>
-          <Menu.Positioner>
-            <Menu.Content>
-              {isElectron() && <ElectronFileManegementMenu />}
-              <Menu.ItemGroup>
-                <Menu.ItemGroupLabel>{t.editor.menus.file.export.name}</Menu.ItemGroupLabel>
-                <Menu.Item disabled={!isExportEnabled} value="export-svg" onSelect={handleSvgExportClick}>
-                  <PiExport />
-                  <Menu.ItemText>{t.editor.menus.file.export.svg}</Menu.ItemText>
-                </Menu.Item>
-                <Menu.Item disabled={!isExportEnabled} value="export-pdf" onSelect={handlePdfExportClick}>
-                  <PiExport />
-                  <Menu.ItemText>{t.editor.menus.file.export.pdf}</Menu.ItemText>
-                </Menu.Item>
-              </Menu.ItemGroup>
-            </Menu.Content>
-          </Menu.Positioner>
-        </Portal>
-      </Menu.Root>
+      <BaseMenu title={t.editor.menus.file.name}>
+        {isElectron() && <ElectronFileManegementMenu />}
+        <Menu.ItemGroup>
+          <Menu.ItemGroupLabel>{t.editor.menus.file.export.name}</Menu.ItemGroupLabel>
+          <Menu.Item disabled={!isExportEnabled} value="export-svg" onSelect={handleSvgExportClick}>
+            <PiExport />
+            <Menu.ItemText>{t.editor.menus.file.export.svg}</Menu.ItemText>
+          </Menu.Item>
+          <Menu.Item disabled={!isExportEnabled} value="export-pdf" onSelect={handlePdfExportClick}>
+            <PiExport />
+            <Menu.ItemText>{t.editor.menus.file.export.pdf}</Menu.ItemText>
+          </Menu.Item>
+        </Menu.ItemGroup>
+      </BaseMenu>
 
       {/* Own modals */}
       {isExportEnabled && <SvgExportDialog isOpen={isSvgExportDialogOpen} onOpenChange={setSvgExportDialogOpen} />}
