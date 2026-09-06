@@ -18,6 +18,7 @@ export const StitchVisibilityMenuItem: FC<StitchVisibilityMenuItemProps> = ({ on
       <PiNeedle />
       <Menu.ItemText mr="2">{label}</Menu.ItemText>
       {value ? <PiEye /> : <Icon as={PiEyeSlash} color="fg.muted" />}
+      {/* <Menu.ItemCommand paddingInlineStart={0}>{formatShortcut(['CommandOrControl', 'L'], 'darwin')}</Menu.ItemCommand> */}
     </Menu.Item>
   )
 }

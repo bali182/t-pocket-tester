@@ -38,6 +38,7 @@ export const StepMenuItem: FC<StepMenuItemProps> = ({
       <Text color="fg.muted" fontSize="xs" fontWeight={isSelected ? 'bold' : undefined}>
         {subTitle}
       </Text>
+      {/* <Menu.ItemCommand paddingInlineStart={0}>{formatShortcut(['CommandOrControl', 'L'], 'darwin')}</Menu.ItemCommand> */}
     </Menu.Item>
   )
 }
