@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 
-import type { ThemeSchema } from '../schemas/theme'
-import { readThemeFromStorage, saveThemeToStorage } from './storage'
+import type { ThemeSchema } from '../../common/schemas/theme'
+import { readThemeFromStorage, saveThemeToStorage } from '../../common/state/storage'
 
 const themeStorageAtom = atom<ThemeSchema>(readThemeFromStorage())
 

@@ -1,13 +1,15 @@
-import { useAtom } from 'jotai'
-import { ThemeSchema } from '../schemas/theme'
-import { themeAtom } from '../state/themeAtom'
+import { useContext } from 'react'
 
-type UseThemeResult = {
-  theme: ThemeSchema
-  setTheme: (schema: ThemeSchema) => void
-}
+import type { ThemeContextValue } from '../contexts/ThemeContext'
+import { ThemeContext } from '../contexts/ThemeContext'
+import { isDefined } from '../utils/isDefined'
 
-export const useTheme = (): UseThemeResult => {
-  const [theme, setTheme] = useAtom(themeAtom)
-  return { theme, setTheme }
+export const useTheme = (): ThemeContextValue => {
+  const themeContext = useContext(ThemeContext)
+
+  if (!isDefined(themeContext)) {
+    throw new Error('useTheme must be used inside ThemeContext.Provider')
+  }
+
+  return themeContext
 }

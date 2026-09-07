@@ -1,4 +1,5 @@
 import type { HasTypeSchema } from '../../common/schemas/common'
+import type { ThemeSchema } from '../../common/schemas/theme'
 
 export type NativePlatformSchema =
   | 'aix'
@@ -114,12 +115,24 @@ export type FileValidateCreatePathResponseSchema =
   | FileCreatePathInvalidResponseSchema
   | FileErrorResponseSchema
 
+export type ThemeSetRequestSchema = HasTypeSchema<'set-theme'> & {
+  theme: ThemeSchema
+}
+
+export type ThemeSetSucceededResponseSchema = HasTypeSchema<'theme-set'> & {
+  theme: ThemeSchema
+}
+
+export type ThemeSetResponseSchema = ThemeSetSucceededResponseSchema | FileErrorResponseSchema
+
 export type ElectronApi = {
   dialog: (request: FileDialogRequestSchema) => Promise<FileDialogResponseSchema>
   findExistingFilePaths: (
     request: FileFindExistingFilePathsRequestSchema,
   ) => Promise<FileFindExistingFilePathsResponseSchema>
+  getTheme: () => Promise<ThemeSchema>
   read: (request: FileReadRequestSchema) => Promise<FileReadResponseSchema>
+  setTheme: (request: ThemeSetRequestSchema) => Promise<ThemeSetResponseSchema>
   suggestPath: (request: FileSuggestPathRequestSchema) => Promise<FileSuggestPathResponseSchema>
   validateCreatePath: (request: FileValidateCreatePathRequestSchema) => Promise<FileValidateCreatePathResponseSchema>
   write: (request: FileWriteRequestSchema) => Promise<FileWriteResponseSchema>

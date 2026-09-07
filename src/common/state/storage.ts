@@ -5,6 +5,7 @@ import type { ProjectSchema } from '../schemas/project'
 import type { RecentProjectsSchema } from '../schemas/recentProject'
 import type { BaseExportSettingsSchema } from '../schemas/settings'
 import type { ThemeSchema } from '../schemas/theme'
+import { getSystemTheme } from '../utils/getSystemTheme'
 
 type StorageKey = 'pdf-export-params' | 'projects' | 'recent-projects' | 'scaling' | 'svg-export-params' | 'theme'
 
@@ -33,8 +34,7 @@ export const saveScalingToStorage = (scaling: number): void => {
 }
 
 export const readThemeFromStorage = (): ThemeSchema => {
-  const isSysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  return safeReadStorage<ThemeSchema>('theme', isSysDark ? 'dark' : 'light', (raw) => typia.assert<ThemeSchema>(raw))
+  return safeReadStorage<ThemeSchema>('theme', getSystemTheme(), (raw) => typia.assert<ThemeSchema>(raw))
 }
 
 export const saveThemeToStorage = (theme: ThemeSchema): void => {

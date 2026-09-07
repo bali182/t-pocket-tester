@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { access, getPath, readFile, showOpenDialog, showSaveDialog, stat, writeFile } = vi.hoisted(() => ({
+const { access, getPath, nativeTheme, readFile, showOpenDialog, showSaveDialog, stat, writeFile } = vi.hoisted(() => ({
   access: vi.fn(),
   getPath: vi.fn(),
+  nativeTheme: { shouldUseDarkColors: false },
   readFile: vi.fn(),
   showOpenDialog: vi.fn(),
   showSaveDialog: vi.fn(),
@@ -12,6 +13,7 @@ const { access, getPath, readFile, showOpenDialog, showSaveDialog, stat, writeFi
 
 vi.mock('electron', () => ({
   app: { getPath },
+  nativeTheme,
   dialog: {
     showOpenDialog,
     showSaveDialog,
@@ -34,6 +36,46 @@ import { _electronApi } from './electronApi'
 describe('electronApi', () => {
   beforeEach(() => {
     vi.resetAllMocks()
+    nativeTheme.shouldUseDarkColors = false
+  })
+
+  it('reads the saved Electron theme', async () => {
+    getPath.mockReturnValue('/Users/example/Application Support/App')
+    readFile.mockResolvedValue('"dark"')
+
+    await expect(_electronApi.getTheme()).resolves.toBe('dark')
+
+    expect(readFile).toHaveBeenCalledWith('/Users/example/Application Support/App/theme.json', 'utf8')
+  })
+
+  it('falls back to the system theme when the Electron theme cannot be read', async () => {
+    readFile.mockRejectedValue(new Error('Cannot read theme'))
+    nativeTheme.shouldUseDarkColors = true
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    await expect(_electronApi.getTheme()).resolves.toBe('dark')
+
+    consoleError.mockRestore()
+  })
+
+  it('writes the Electron theme', async () => {
+    getPath.mockReturnValue('/Users/example/Application Support/App')
+
+    await expect(_electronApi.setTheme({ theme: 'dark', type: 'set-theme' })).resolves.toEqual({
+      theme: 'dark',
+      type: 'theme-set',
+    })
+
+    expect(writeFile).toHaveBeenCalledWith('/Users/example/Application Support/App/theme.json', '"dark"', 'utf8')
+  })
+
+  it('returns a generic error when saving the Electron theme fails', async () => {
+    writeFile.mockRejectedValue(new Error('Cannot save theme'))
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    await expect(_electronApi.setTheme({ theme: 'dark', type: 'set-theme' })).resolves.toEqual({ type: 'error' })
+
+    consoleError.mockRestore()
   })
 
   it('reads a known file path', async () => {
