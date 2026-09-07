@@ -7,6 +7,8 @@ import type { ProjectSchema } from '../../../common/schemas/project'
 import type { ValidationIssuesSchema } from '../../../common/schemas/validation'
 import { useTranslation } from '../../../common/translations/translation'
 import { isDefined } from '../../../common/utils/isDefined'
+import { noop } from '../../../common/utils/noop'
+import { ElectronFilePicker } from './ElectronFilePicker'
 
 type ElectronProjectBasicSectionProps = {
   editable: EditableSchema<ProjectSchema>
@@ -31,6 +33,10 @@ export const ElectronProjectBasicSection: FC<ElectronProjectBasicSectionProps> =
       <SectionGroup.SectionRowTitle>{t.common.labels.name}</SectionGroup.SectionRowTitle>
       <SectionGroup.SectionRowEditor issue={issues.name}>
         <Input aria-invalid={hasNameError} autoFocus onChange={handleNameChange} size="xs" value={editable.name} />
+      </SectionGroup.SectionRowEditor>
+      <SectionGroup.SectionRowTitle>{t.projects.createDialog.filePath}</SectionGroup.SectionRowTitle>
+      <SectionGroup.SectionRowEditor>
+        <ElectronFilePicker onChange={noop} onFilePickerButtonPressed={noop} value="" />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

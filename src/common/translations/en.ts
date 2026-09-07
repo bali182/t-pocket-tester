@@ -216,8 +216,10 @@ export const EN: typeof HU = {
     },
     createDialog: {
       title: 'Create new project',
+      filePath: 'File path',
       actions: {
         create: 'Create',
+        browse: 'Browse',
       },
     },
     openDialog: {

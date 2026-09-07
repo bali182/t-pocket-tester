@@ -215,8 +215,10 @@ export const HU = {
     },
     createDialog: {
       title: 'Új projekt létrehozása',
+      filePath: 'Fájl útvonala',
       actions: {
         create: 'Létrehozás',
+        browse: 'Tallózás',
       },
     },
     openDialog: {
