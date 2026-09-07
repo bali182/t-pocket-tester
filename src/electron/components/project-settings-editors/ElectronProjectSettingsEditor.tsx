@@ -1,22 +1,26 @@
 import { Tabs } from '@chakra-ui/react'
 import type { FC } from 'react'
 
-import type { EditableSchema } from '../../schemas/editable'
-import type { ProjectSchema } from '../../schemas/project'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { useTranslation } from '../../translations/translation'
-import { SectionGroup } from '../common/SectionGroup'
-import { ColorSettingsSections } from './ColorSettingsSections'
-import { ProjectBasicSection } from './ProjectBasicSection'
-import { ProjectStitchingSection } from './ProjectStitchingSection'
+import { SectionGroup } from '../../../common/components/common/SectionGroup'
+import { ColorSettingsSections } from '../../../common/components/project-settings-editors/ColorSettingsSections'
+import { ProjectStitchingSection } from '../../../common/components/project-settings-editors/ProjectStitchingSection'
+import type { EditableSchema } from '../../../common/schemas/editable'
+import type { ProjectSchema } from '../../../common/schemas/project'
+import type { ValidationIssuesSchema } from '../../../common/schemas/validation'
+import { useTranslation } from '../../../common/translations/translation'
+import { ElectronProjectBasicSection } from './ElectronProjectBasicSection'
 
-type ProjectSettingsEditorProps = {
+type ElectronProjectSettingsEditorProps = {
   editable: EditableSchema<ProjectSchema>
   issues: ValidationIssuesSchema<ProjectSchema>
   onChange: (updated: EditableSchema<ProjectSchema>) => void
 }
 
-export const ProjectSettingsEditor: FC<ProjectSettingsEditorProps> = ({ editable, issues, onChange }) => {
+export const ElectronProjectSettingsEditor: FC<ElectronProjectSettingsEditorProps> = ({
+  editable,
+  issues,
+  onChange,
+}) => {
   const t = useTranslation()
 
   return (
@@ -27,7 +31,7 @@ export const ProjectSettingsEditor: FC<ProjectSettingsEditorProps> = ({ editable
       </Tabs.List>
       <Tabs.Content value="basic" pt={0}>
         <SectionGroup.Root>
-          <ProjectBasicSection editable={editable} issues={issues} onChange={onChange} />
+          <ElectronProjectBasicSection editable={editable} issues={issues} onChange={onChange} />
           <ColorSettingsSections editable={editable} issues={issues} onChange={onChange} />
         </SectionGroup.Root>
       </Tabs.Content>

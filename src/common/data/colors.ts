@@ -28,10 +28,10 @@ const mediumGreen = '#428c42'
 const lightGreen = '#89c382'
 const cyan = '#4aaab0'
 
-const selectionBlue = '#2A84FF'
-const selectionGreen = '#0AA661'
-const selectionOrange = '#FC621A'
-const selectionYellow = '#EBA500'
+const selectionBlue = '#2a84ff'
+const selectionGreen = '#0aa661'
+const selectionOrange = '#fc621a'
+const selectionYellow = '#eba500'
 const selectionWhite = '#ffffff'
 
 export const stitchHoleColors = {

@@ -2,7 +2,6 @@ import { Button, Dialog, Portal } from '@chakra-ui/react'
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 
-import { ProjectSettingsEditor } from '../../common/components/project-settings-editors/ProjectSettingsEditor'
 import { LANGUAGE } from '../../common/constants/language'
 import { useEditableModel } from '../../common/hooks/useEditableModel'
 import { useProjects } from '../../common/hooks/useProjects'
@@ -16,13 +15,14 @@ import { createProject } from '../../common/utils/createProject'
 import { hasValidationErrors } from '../../common/utils/hasValidationErrors'
 import { validateProjectSchema } from '../../common/validators/validateProjectSchema'
 import { webAppRoutes } from '../webAppRoutes'
+import { WebProjectSettingsEditor } from './project-settings-editors/WebProjectSettingsEditor'
 
-type CreateProjectDialogProps = {
+type WebCreateProjectDialogProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
 
-export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOpenChange }) => {
+export const WebCreateProjectDialog: FC<WebCreateProjectDialogProps> = ({ isOpen, onOpenChange }) => {
   const { addProject, projects } = useProjects()
   const navigate = useNavigate()
   const t = useTranslation()
@@ -99,7 +99,7 @@ export const CreateProjectDialog: FC<CreateProjectDialogProps> = ({ isOpen, onOp
                 <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body px="0">
-                <ProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
+                <WebProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
               </Dialog.Body>
               <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>

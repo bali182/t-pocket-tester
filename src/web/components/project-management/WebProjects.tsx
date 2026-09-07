@@ -6,7 +6,7 @@ import { ProjectManagementHeader } from '../../../common/components/project-mana
 import { RecentProjects } from '../../../common/components/project-management/RecentProjects'
 import { useTranslation } from '../../../common/translations/translation'
 import { useWebRecentProjects } from '../../hooks/useWebRecentProjects'
-import { CreateProjectDialog } from '../CreateProjectDialog'
+import { WebCreateProjectDialog } from '../WebCreateProjectDialog'
 import { WebProjectItem } from './WebProjectItem'
 
 export const WebProjects: FC = () => {
@@ -32,7 +32,7 @@ export const WebProjects: FC = () => {
         </Stack>
       </Stack>
 
-      <CreateProjectDialog isOpen={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
+      <WebCreateProjectDialog isOpen={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
     </Box>
   )
 }

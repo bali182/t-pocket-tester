@@ -1,20 +1,20 @@
 import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type FC } from 'react'
 
-import type { EditableSchema } from '../../schemas/editable'
-import type { ProjectSchema } from '../../schemas/project'
-import type { ValidationIssuesSchema } from '../../schemas/validation'
-import { useTranslation } from '../../translations/translation'
-import { isDefined } from '../../utils/isDefined'
-import { SectionGroup } from '../common/SectionGroup'
+import { SectionGroup } from '../../../common/components/common/SectionGroup'
+import type { EditableSchema } from '../../../common/schemas/editable'
+import type { ProjectSchema } from '../../../common/schemas/project'
+import type { ValidationIssuesSchema } from '../../../common/schemas/validation'
+import { useTranslation } from '../../../common/translations/translation'
+import { isDefined } from '../../../common/utils/isDefined'
 
-type ProjectBasicSectionProps = {
+type WebProjectBasicSectionProps = {
   editable: EditableSchema<ProjectSchema>
   issues: ValidationIssuesSchema<ProjectSchema>
   onChange: (updated: EditableSchema<ProjectSchema>) => void
 }
 
-export const ProjectBasicSection: FC<ProjectBasicSectionProps> = ({ editable, issues, onChange }) => {
+export const WebProjectBasicSection: FC<WebProjectBasicSectionProps> = ({ editable, issues, onChange }) => {
   const t = useTranslation()
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {

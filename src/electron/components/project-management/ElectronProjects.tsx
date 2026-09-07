@@ -1,5 +1,5 @@
 import { Box, Button, HStack, Spinner, Stack } from '@chakra-ui/react'
-import type { FC } from 'react'
+import { useCallback, useState, type FC } from 'react'
 import { PiFolder, PiPlus } from 'react-icons/pi'
 
 import { ProjectManagementHeader } from '../../../common/components/project-management/ProjectManagementHeader'
@@ -8,12 +8,18 @@ import { Loadable } from '../../../common/loadable'
 import { useTranslation } from '../../../common/translations/translation'
 import { useElectronProject } from '../../hooks/useElectronProject'
 import { useElectronRecentProjects } from '../../hooks/useElectronRecentProjects'
+import { ElectronCreateProjectDialog } from '../ElectronCreateProjectDialog'
 import { ElectronProjectItem } from './ElectronProjectItem'
 
 export const ElectronProjects: FC = () => {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const recentProjects = useElectronRecentProjects()
   const { openProject } = useElectronProject()
   const t = useTranslation()
+
+  const handleCreateProject = useCallback((): void => {
+    setIsCreateDialogOpen(true)
+  }, [])
 
   return (
     <Box bg="bg.emphasized" height="100%" padding="8">
@@ -23,7 +29,7 @@ export const ElectronProjects: FC = () => {
           {Loadable.hasValue(recentProjects) ? (
             <RecentProjects ProjectItem={ElectronProjectItem} projects={recentProjects.data}>
               <HStack gap="2" mt="2">
-                <Button disabled width="100%" variant="solid" display="flex" flex="1">
+                <Button onClick={handleCreateProject} width="100%" variant="solid" display="flex" flex="1">
                   <PiPlus />
                   {t.projects.actions.create}
                 </Button>
@@ -38,6 +44,7 @@ export const ElectronProjects: FC = () => {
           )}
         </Stack>
       </Stack>
+      <ElectronCreateProjectDialog isOpen={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
     </Box>
   )
 }
