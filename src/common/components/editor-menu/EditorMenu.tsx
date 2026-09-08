@@ -4,14 +4,16 @@ import { PiCaretLeft, PiMoon, PiSun, PiWalletDuotone } from 'react-icons/pi'
 import { useEditorContext } from '../../contexts/EditorContext'
 import { useEditableProject } from '../../hooks/useEditableProject'
 import { useTheme } from '../../hooks/useTheme'
+import type { ProjectSchema } from '../../schemas/project'
 import { isDefined } from '../../utils/isDefined'
 
 type EditorMenuProps = {
   menu: ReactElement
+  projects: readonly ProjectSchema[]
 }
 
-export const EditorMenu: FC<EditorMenuProps> = ({ menu }) => {
-  const { editableProject, setProject, validationIssues } = useEditableProject()
+export const EditorMenu: FC<EditorMenuProps> = ({ menu, projects }) => {
+  const { editableProject, setProject, validationIssues } = useEditableProject(projects)
   const { theme, setTheme } = useTheme()
   const { navigateToProjects } = useEditorContext()
   const hasNameError = isDefined(validationIssues.name) && validationIssues.name.severity === 'error'

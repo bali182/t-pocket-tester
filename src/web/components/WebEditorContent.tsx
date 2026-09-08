@@ -1,6 +1,7 @@
 import { type FC } from 'react'
 
 import { EditorContent } from '../../common/components/EditorContent'
+import { useProjects } from '../hooks/useProjects'
 import { WebEditorMenu } from './editor-menu/WebEditorMenu'
 
 type WebEditorContentProps = {
@@ -8,5 +9,7 @@ type WebEditorContentProps = {
 }
 
 export const WebEditorContent: FC<WebEditorContentProps> = ({ subProjectId }) => {
-  return <EditorContent menu={<WebEditorMenu />} subProjectId={subProjectId} />
+  const { projects } = useProjects()
+
+  return <EditorContent menu={<WebEditorMenu />} projects={projects} subProjectId={subProjectId} />
 }

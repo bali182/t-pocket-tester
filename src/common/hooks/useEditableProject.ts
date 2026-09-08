@@ -10,7 +10,6 @@ import { validateProjectSchema } from '../validators/validateProjectSchema'
 import { useEditableModel } from './useEditableModel'
 import { useProject } from './useProject'
 import { useProjectOperations } from './useProjectOperations'
-import { useProjects } from './useProjects'
 
 export type UseEditableProjectResult = {
   editableProject: EditableSchema<ProjectSchema>
@@ -19,10 +18,9 @@ export type UseEditableProjectResult = {
   validationIssues: ValidationIssuesSchema<ProjectSchema>
 }
 
-export const useEditableProject = (): UseEditableProjectResult => {
+export const useEditableProject = (projects: readonly ProjectSchema[]): UseEditableProjectResult => {
   const { project } = useProject()
   const { updateProject } = useProjectOperations()
-  const { projects } = useProjects()
   const t = useTranslation()
   const context = useMemo<ProjectBasedValidationContextSchema>(
     () => ({ language: LANGUAGE, projects, t }),

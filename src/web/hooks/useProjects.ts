@@ -1,10 +1,11 @@
 import { useAtomValue } from 'jotai'
 import { useAtomCallback } from 'jotai/react/utils'
 import { useCallback } from 'react'
-import { projectsAtom } from '../../web/state/projectsAtom'
-import type { ProjectSchema } from '../schemas/project'
-import { isDefined } from '../utils/isDefined'
-import { useRecentProjectOperations } from './useRecentProjectOperations'
+
+import { useRecentProjectOperations } from '../../common/hooks/useRecentProjectOperations'
+import type { ProjectSchema } from '../../common/schemas/project'
+import { isDefined } from '../../common/utils/isDefined'
+import { projectsAtom } from '../state/projectsAtom'
 
 // TODO this should contain real projects
 export const useProjects = () => {

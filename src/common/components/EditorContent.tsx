@@ -4,6 +4,7 @@ import { PiPlus, PiWarningCircle } from 'react-icons/pi'
 import { useEditorContext } from '../contexts/EditorContext'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
+import type { ProjectSchema } from '../schemas/project'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
 import { CommonEmptyState } from './common/CommonEmptyState'
@@ -18,10 +19,11 @@ const defaultPanelSizes: string[] = ['auto', '350px']
 
 type EditorContentProps = {
   menu: ReactElement
+  projects: readonly ProjectSchema[]
   subProjectId: string | undefined
 }
 
-export const EditorContent: FC<EditorContentProps> = ({ menu, subProjectId }) => {
+export const EditorContent: FC<EditorContentProps> = ({ menu, projects, subProjectId }) => {
   const t = useTranslation()
   const { project } = useProject()
   const subProject = useMemo(
@@ -46,7 +48,7 @@ export const EditorContent: FC<EditorContentProps> = ({ menu, subProjectId }) =>
 
           <Box left="3" position="absolute" right="3" top="3" zIndex="1">
             <Box maxWidth="100%" width="fit-content">
-              <EditorMenu menu={menu} />
+              <EditorMenu menu={menu} projects={projects} />
             </Box>
           </Box>
 

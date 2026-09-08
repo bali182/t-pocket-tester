@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, type SetStateAction } from 'react'
 
-import { FILE_EXTENSION } from '../fileExtension'
 import { Loadable } from '../../common/loadable'
 import type { LoadableSchema } from '../../common/schemas/loadable'
 import type { IssueSchema } from '../../common/schemas/validation'
 import { useTranslation } from '../../common/translations/translation'
 import type { TranslationSchema } from '../../common/translations/translationSchema'
 import { electronApi } from '../electronApi'
+import { FILE_EXTENSION } from '../fileExtension'
 import type { FileValidateCreatePathResponseSchema } from '../schemas/electronApi'
 
 type UseCreateProjectFilePathResult = {

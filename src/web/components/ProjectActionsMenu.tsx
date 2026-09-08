@@ -3,9 +3,9 @@ import { useCallback, type FC, type MouseEvent } from 'react'
 import { PiDotsThreeVertical, PiTrash } from 'react-icons/pi'
 import { useNavigate } from 'react-router'
 
-import { useProjects } from '../../common/hooks/useProjects'
 import { portalRef } from '../../common/portalRef'
 import { useTranslation } from '../../common/translations/translation'
+import { useProjects } from '../hooks/useProjects'
 import { webAppRoutes } from '../webAppRoutes'
 
 type ProjectActionsMenuProps = {
