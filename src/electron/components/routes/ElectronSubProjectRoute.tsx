@@ -1,7 +1,6 @@
 import { useEffect, type FC } from 'react'
 import { useParams } from 'react-router'
 
-import { EditorContent } from '../../../common/components/EditorContent'
 import { DrawAreaContext } from '../../../common/contexts/DrawAreaContext'
 import { useEditorDrawArea } from '../../../common/hooks/useEditorDrawArea'
 import { useOptionalProject } from '../../../common/hooks/useOptionalProject'
@@ -9,6 +8,7 @@ import { useOptionalSubProject } from '../../../common/hooks/useOptionalSubProje
 import { useRecentProjectOperations } from '../../../common/hooks/useRecentProjectOperations'
 import { isDefined } from '../../../common/utils/isDefined'
 import type { ElectronSubProjectRouteParamsSchema } from '../../schemas/electronRouteParams'
+import { ElectronEditorContent } from '../ElectronEditorContent'
 
 export const ElectronSubProjectRoute: FC = () => {
   const { filePath, subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
@@ -26,7 +26,7 @@ export const ElectronSubProjectRoute: FC = () => {
   }, [filePath, markOpened, project, subProjectExists, subProjectId])
 
   if (!subProjectExists) {
-    return <EditorContent subProjectId={subProjectId} />
+    return <ElectronEditorContent subProjectId={subProjectId} />
   }
 
   return <ExistingElectronSubProjectRoute subProjectId={subProjectId} />
@@ -41,7 +41,7 @@ const ExistingElectronSubProjectRoute: FC<ExistingElectronSubProjectRouteProps> 
 
   return (
     <DrawAreaContext.Provider value={drawAreaContext}>
-      <EditorContent subProjectId={subProjectId} />
+      <ElectronEditorContent subProjectId={subProjectId} />
     </DrawAreaContext.Provider>
   )
 }

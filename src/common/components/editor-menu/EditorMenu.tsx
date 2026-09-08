@@ -1,15 +1,16 @@
 import { Card, HStack, IconButton, Input, Separator, Switch } from '@chakra-ui/react'
-import { useCallback, type ChangeEvent } from 'react'
+import { useCallback, type ChangeEvent, type FC, type ReactElement } from 'react'
 import { PiCaretLeft, PiMoon, PiSun, PiWalletDuotone } from 'react-icons/pi'
 import { useEditorContext } from '../../contexts/EditorContext'
 import { useEditableProject } from '../../hooks/useEditableProject'
 import { useTheme } from '../../hooks/useTheme'
 import { isDefined } from '../../utils/isDefined'
-import { EditMenu } from './menus/EditMenu'
-import { FileMenu } from './menus/FileMenu'
-import { ViewMenu } from './menus/ViewMenu'
 
-export const EditorMenu = () => {
+type EditorMenuProps = {
+  menu: ReactElement
+}
+
+export const EditorMenu: FC<EditorMenuProps> = ({ menu }) => {
   const { editableProject, setProject, validationIssues } = useEditableProject()
   const { theme, setTheme } = useTheme()
   const { navigateToProjects } = useEditorContext()
@@ -54,11 +55,7 @@ export const EditorMenu = () => {
             />
           </HStack>
           <Separator orientation="vertical" height="5" ml="3" mr="3" />
-          <HStack gap="1">
-            <FileMenu />
-            <EditMenu />
-            <ViewMenu />
-          </HStack>
+          <HStack gap="1">{menu}</HStack>
           <Separator orientation="vertical" height="5" ml="3" mr="7" />
           <Switch.Root checked={theme === 'dark'} onCheckedChange={handleThemeChange} size="lg">
             <Switch.HiddenInput />

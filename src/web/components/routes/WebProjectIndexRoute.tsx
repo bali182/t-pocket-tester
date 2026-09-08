@@ -1,11 +1,11 @@
 import { useEffect, type FC } from 'react'
 import { Navigate } from 'react-router'
 
-import { EditorContent } from '../../../common/components/EditorContent'
 import { useProject } from '../../../common/hooks/useProject'
 import { useRecentProjectOperations } from '../../../common/hooks/useRecentProjectOperations'
 import { isDefined } from '../../../common/utils/isDefined'
 import { useWebRecentProjects } from '../../hooks/useWebRecentProjects'
+import { WebEditorContent } from '../WebEditorContent'
 
 export const WebProjectIndexRoute: FC = () => {
   const { project } = useProject()
@@ -29,5 +29,5 @@ export const WebProjectIndexRoute: FC = () => {
     return <Navigate replace to={project.subProjects[0].id} />
   }
 
-  return <EditorContent subProjectId={undefined} />
+  return <WebEditorContent subProjectId={undefined} />
 }

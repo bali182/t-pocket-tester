@@ -1,9 +1,10 @@
 import { Menu } from '@chakra-ui/react'
-import { FC } from 'react'
+import { type FC } from 'react'
 import { PiDownload } from 'react-icons/pi'
-import { WebCommandIdSchema } from '../../../../web/schemas/webCommands'
-import { useTranslation } from '../../../translations/translation'
-import { CommandMenuItem } from '../items/CommandMenuItem'
+
+import { CommandMenuItem } from '../../../../common/components/editor-menu/items/CommandMenuItem'
+import { useTranslation } from '../../../../common/translations/translation'
+import type { WebCommandIdSchema } from '../../../schemas/webCommands'
 
 export const DownloadMenuGroup: FC = () => {
   const t = useTranslation()
@@ -13,8 +14,8 @@ export const DownloadMenuGroup: FC = () => {
       <Menu.ItemGroupLabel>{t.editor.menus.file.download.name}</Menu.ItemGroupLabel>
       <CommandMenuItem<WebCommandIdSchema>
         command="download-project"
-        title={t.editor.menus.file.download.download}
         icon={PiDownload}
+        title={t.editor.menus.file.download.download}
       />
     </Menu.ItemGroup>
   )

@@ -1,5 +1,5 @@
 import { Box, Button, Card, Heading, Splitter, SplitterPanelData } from '@chakra-ui/react'
-import { FC, useCallback, useMemo } from 'react'
+import { FC, ReactElement, useCallback, useMemo } from 'react'
 import { PiPlus, PiWarningCircle } from 'react-icons/pi'
 import { useEditorContext } from '../contexts/EditorContext'
 import { useProject } from '../hooks/useProject'
@@ -17,10 +17,11 @@ const panels: SplitterPanelData[] = [{ id: 'draw-area' }, { id: 'tree' }]
 const defaultPanelSizes: string[] = ['auto', '350px']
 
 type EditorContentProps = {
+  menu: ReactElement
   subProjectId: string | undefined
 }
 
-export const EditorContent: FC<EditorContentProps> = ({ subProjectId }) => {
+export const EditorContent: FC<EditorContentProps> = ({ menu, subProjectId }) => {
   const t = useTranslation()
   const { project } = useProject()
   const subProject = useMemo(
@@ -45,7 +46,7 @@ export const EditorContent: FC<EditorContentProps> = ({ subProjectId }) => {
 
           <Box left="3" position="absolute" right="3" top="3" zIndex="1">
             <Box maxWidth="100%" width="fit-content">
-              <EditorMenu />
+              <EditorMenu menu={menu} />
             </Box>
           </Box>
 
