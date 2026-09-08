@@ -1,4 +1,3 @@
-import { Menu } from '@chakra-ui/react'
 import { FC } from 'react'
 import { useTranslation } from '../../../translations/translation'
 import { BaseMenu } from '../BaseMenu'
@@ -11,9 +10,7 @@ export const ViewMenu: FC = () => {
   return (
     <BaseMenu title={t.editor.menus.view.name}>
       <StitchingVisibilityMenuGroup />
-      <Menu.Separator />
       <ColorsMenuGroup />
-      <Menu.Separator />
       <ScalingMenuGroup />
     </BaseMenu>
   )
