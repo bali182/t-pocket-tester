@@ -60,7 +60,7 @@ export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) 
             <Slider.Thumb index={0} />
           </Slider.Control>
         </Slider.Root>
-        <Box transform={`scale(${draftScaling})`} transformOrigin="left center">
+        <Box alignSelf="flex-start" transform={`scale(${draftScaling})`} transformOrigin="left center">
           <RulerSvg />
         </Box>
       </VStack>
