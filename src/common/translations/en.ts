@@ -217,6 +217,12 @@ export const EN: typeof HU = {
     createDialog: {
       title: 'Create new project',
       filePath: 'File path',
+      filePickerTitle: 'Select project file location',
+      errors: {
+        filePathExisting: 'A file already exists at this path.',
+        filePathInvalid: 'The specified path is invalid or not writable.',
+        filePathValidationFailed: 'The file path could not be validated.',
+      },
       actions: {
         create: 'Create',
         browse: 'Browse',

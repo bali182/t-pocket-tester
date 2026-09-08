@@ -1,6 +1,6 @@
 import { Button, Dialog, IconButton, Portal } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FC, type SubmitEvent } from 'react'
 import { PiX } from 'react-icons/pi'
 
 import { LANGUAGE } from '../constants/language'
@@ -76,7 +76,7 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   const handleSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>): void => {
+    (event: SubmitEvent<HTMLFormElement>): void => {
       event.preventDefault()
 
       const submitValidationResult = validateBaseExportSettingsSchema(editableParams, exportParams, context)

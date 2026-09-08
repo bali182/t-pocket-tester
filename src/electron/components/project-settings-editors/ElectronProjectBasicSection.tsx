@@ -2,21 +2,38 @@ import { Input } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type FC } from 'react'
 
 import { SectionGroup } from '../../../common/components/common/SectionGroup'
+import { Loadable } from '../../../common/loadable'
 import type { EditableSchema } from '../../../common/schemas/editable'
+import type { LoadableSchema } from '../../../common/schemas/loadable'
 import type { ProjectSchema } from '../../../common/schemas/project'
-import type { ValidationIssuesSchema } from '../../../common/schemas/validation'
+import type { IssueSchema, ValidationIssuesSchema } from '../../../common/schemas/validation'
 import { useTranslation } from '../../../common/translations/translation'
 import { isDefined } from '../../../common/utils/isDefined'
-import { noop } from '../../../common/utils/noop'
 import { ElectronFilePicker } from './ElectronFilePicker'
 
 type ElectronProjectBasicSectionProps = {
   editable: EditableSchema<ProjectSchema>
+  filePath: string
+  filePathIssue: LoadableSchema<IssueSchema | undefined>
+  isFilePathManuallyModified: boolean
   issues: ValidationIssuesSchema<ProjectSchema>
   onChange: (updated: EditableSchema<ProjectSchema>) => void
+  onFilePathChange: (filePath: string) => void
+  onFilePathReset: () => void
+  onFilePickerButtonPressed: () => void
 }
 
-export const ElectronProjectBasicSection: FC<ElectronProjectBasicSectionProps> = ({ editable, issues, onChange }) => {
+export const ElectronProjectBasicSection: FC<ElectronProjectBasicSectionProps> = ({
+  editable,
+  filePath,
+  filePathIssue,
+  isFilePathManuallyModified,
+  issues,
+  onChange,
+  onFilePathChange,
+  onFilePathReset,
+  onFilePickerButtonPressed,
+}) => {
   const t = useTranslation()
   const handleNameChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
@@ -35,8 +52,14 @@ export const ElectronProjectBasicSection: FC<ElectronProjectBasicSectionProps> =
         <Input aria-invalid={hasNameError} autoFocus onChange={handleNameChange} size="xs" value={editable.name} />
       </SectionGroup.SectionRowEditor>
       <SectionGroup.SectionRowTitle>{t.projects.createDialog.filePath}</SectionGroup.SectionRowTitle>
-      <SectionGroup.SectionRowEditor>
-        <ElectronFilePicker onChange={noop} onFilePickerButtonPressed={noop} value="" />
+      <SectionGroup.SectionRowEditor issue={Loadable.get(filePathIssue)}>
+        <ElectronFilePicker
+          isManuallyModified={isFilePathManuallyModified}
+          onChange={onFilePathChange}
+          onFilePickerButtonPressed={onFilePickerButtonPressed}
+          onReset={onFilePathReset}
+          value={filePath}
+        />
       </SectionGroup.SectionRowEditor>
     </SectionGroup.Section>
   )

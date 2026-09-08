@@ -12,6 +12,10 @@ function hasValue<T>(loadable: LoadableSchema<T>): loadable is LoadableWithValue
   return loadable.type === 'loaded' || loadable.type === 'loading-with-value'
 }
 
+function isSettled<T>(loadable: LoadableSchema<T>): boolean {
+  return loadable.type === 'loaded' || loadable.type === 'failed'
+}
+
 function get<T>(loadable: LoadableSchema<T>): T | undefined
 function get<T, F>(loadable: LoadableSchema<T>, fallback: F): T | F
 function get<T, F>(loadable: LoadableSchema<T>, fallback?: F): T | F | undefined {
@@ -117,6 +121,7 @@ export const Loadable = {
   // Functional utilities
   get,
   hasValue,
+  isSettled,
   map,
   merge,
 }

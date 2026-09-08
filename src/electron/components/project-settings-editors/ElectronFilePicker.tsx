@@ -1,12 +1,14 @@
-import { Button, Input, InputGroup } from '@chakra-ui/react'
+import { Button, HStack, IconButton, Input, InputGroup, Separator } from '@chakra-ui/react'
 import { useCallback, type ChangeEvent, type FC } from 'react'
-import { PiFolder } from 'react-icons/pi'
+import { PiArrowCounterClockwise, PiFolder } from 'react-icons/pi'
 
 import { useTranslation } from '../../../common/translations/translation'
 
 type ElectronFilePickerProps = {
   value: string
   disabled?: boolean
+  isManuallyModified: boolean
+  onReset: () => void
   onChange: (value: string) => void
   onFilePickerButtonPressed: () => void
 }
@@ -16,6 +18,8 @@ export const ElectronFilePicker: FC<ElectronFilePickerProps> = ({
   onChange,
   onFilePickerButtonPressed,
   value,
+  isManuallyModified,
+  onReset,
 }) => {
   const t = useTranslation()
   const handleChange = useCallback(
@@ -28,18 +32,32 @@ export const ElectronFilePicker: FC<ElectronFilePickerProps> = ({
   return (
     <InputGroup
       endAddon={
-        <Button
-          alignSelf="stretch"
-          borderRadius="0"
-          disabled={disabled}
-          height="auto"
-          onClick={onFilePickerButtonPressed}
-          size="xs"
-          variant="plain"
-        >
-          <PiFolder />
-          {t.projects.createDialog.actions.browse}
-        </Button>
+        <HStack alignSelf="stretch" gap="0" height="100%">
+          <Button
+            alignSelf="stretch"
+            borderRadius="0"
+            disabled={disabled}
+            height="auto"
+            onClick={onFilePickerButtonPressed}
+            size="xs"
+            variant="plain"
+          >
+            <PiFolder />
+            {t.projects.createDialog.actions.browse}
+          </Button>
+          <Separator alignSelf="stretch" orientation="vertical" size="sm" />
+          <IconButton
+            alignSelf="stretch"
+            borderRadius="0"
+            disabled={!isManuallyModified || disabled}
+            height="auto"
+            onClick={onReset}
+            size="xs"
+            variant="plain"
+          >
+            <PiArrowCounterClockwise />
+          </IconButton>
+        </HStack>
       }
       endAddonProps={{ px: 0, size: 'xs' }}
     >

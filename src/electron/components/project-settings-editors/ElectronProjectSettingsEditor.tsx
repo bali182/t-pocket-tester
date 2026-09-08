@@ -5,21 +5,34 @@ import { SectionGroup } from '../../../common/components/common/SectionGroup'
 import { ColorSettingsSections } from '../../../common/components/project-settings-editors/ColorSettingsSections'
 import { ProjectStitchingSection } from '../../../common/components/project-settings-editors/ProjectStitchingSection'
 import type { EditableSchema } from '../../../common/schemas/editable'
+import type { LoadableSchema } from '../../../common/schemas/loadable'
 import type { ProjectSchema } from '../../../common/schemas/project'
-import type { ValidationIssuesSchema } from '../../../common/schemas/validation'
+import type { IssueSchema, ValidationIssuesSchema } from '../../../common/schemas/validation'
 import { useTranslation } from '../../../common/translations/translation'
 import { ElectronProjectBasicSection } from './ElectronProjectBasicSection'
 
 type ElectronProjectSettingsEditorProps = {
   editable: EditableSchema<ProjectSchema>
+  filePath: string
+  filePathIssue: LoadableSchema<IssueSchema | undefined>
+  isFilePathManuallyModified: boolean
   issues: ValidationIssuesSchema<ProjectSchema>
   onChange: (updated: EditableSchema<ProjectSchema>) => void
+  onFilePathChange: (filePath: string) => void
+  onFilePathReset: () => void
+  onFilePickerButtonPressed: () => void
 }
 
 export const ElectronProjectSettingsEditor: FC<ElectronProjectSettingsEditorProps> = ({
   editable,
+  filePath,
+  filePathIssue,
+  isFilePathManuallyModified,
   issues,
   onChange,
+  onFilePathChange,
+  onFilePathReset,
+  onFilePickerButtonPressed,
 }) => {
   const t = useTranslation()
 
@@ -31,7 +44,17 @@ export const ElectronProjectSettingsEditor: FC<ElectronProjectSettingsEditorProp
       </Tabs.List>
       <Tabs.Content value="basic" pt={0}>
         <SectionGroup.Root>
-          <ElectronProjectBasicSection editable={editable} issues={issues} onChange={onChange} />
+          <ElectronProjectBasicSection
+            editable={editable}
+            filePath={filePath}
+            filePathIssue={filePathIssue}
+            isFilePathManuallyModified={isFilePathManuallyModified}
+            issues={issues}
+            onChange={onChange}
+            onFilePathChange={onFilePathChange}
+            onFilePathReset={onFilePathReset}
+            onFilePickerButtonPressed={onFilePickerButtonPressed}
+          />
           <ColorSettingsSections editable={editable} issues={issues} onChange={onChange} />
         </SectionGroup.Root>
       </Tabs.Content>

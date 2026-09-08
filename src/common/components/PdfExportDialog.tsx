@@ -1,6 +1,6 @@
 import { Alert, Box, Button, CloseButton, Dialog, IconButton, Portal, chakra } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FC, type SubmitEvent } from 'react'
 import { PiX } from 'react-icons/pi'
 
 import { LANGUAGE } from '../constants/language'
@@ -98,7 +98,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
   }, [])
 
   const handleSubmit = useCallback(
-    async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+    async (event: SubmitEvent<HTMLFormElement>): Promise<void> => {
       event.preventDefault()
 
       const submitValidationResult = validatePdfExportSettingsSchema(editableParams, exportParams, context)

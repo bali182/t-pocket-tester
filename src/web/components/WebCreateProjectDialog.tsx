@@ -1,5 +1,5 @@
 import { Button, Dialog, Portal } from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useState, type FC, type FormEvent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FC, type SubmitEvent } from 'react'
 import { useNavigate } from 'react-router'
 
 import { LANGUAGE } from '../../common/constants/language'
@@ -69,7 +69,7 @@ export const WebCreateProjectDialog: FC<WebCreateProjectDialogProps> = ({ isOpen
   )
 
   const handleSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>): void => {
+    (event: SubmitEvent<HTMLFormElement>): void => {
       event.preventDefault()
 
       const validationResult = validateProjectSchema(editableValue, project, context)

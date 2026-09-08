@@ -216,6 +216,12 @@ export const HU = {
     createDialog: {
       title: 'Új projekt létrehozása',
       filePath: 'Fájl útvonala',
+      filePickerTitle: 'Projektfájl helyének kiválasztása',
+      errors: {
+        filePathExisting: 'A megadott útvonalon már létezik fájl.',
+        filePathInvalid: 'A megadott útvonal nem érvényes vagy nem írható.',
+        filePathValidationFailed: 'A fájlútvonal ellenőrzése nem sikerült.',
+      },
       actions: {
         create: 'Létrehozás',
         browse: 'Tallózás',
