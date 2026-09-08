@@ -1,13 +1,12 @@
-import { Button, Dialog, Portal } from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useState, type FC, type SubmitEvent } from 'react'
+import { useCallback, useMemo, useState, type FC } from 'react'
 import { useNavigate } from 'react-router'
 
+import { EditDialog } from '../../common/components/EditDialog'
 import { LANGUAGE } from '../../common/constants/language'
 import { useEditableModel } from '../../common/hooks/useEditableModel'
 import { useProjects } from '../../common/hooks/useProjects'
 import { addSubProject } from '../../common/operations/project/addSubProject'
 import { getUnusedName } from '../../common/operations/subProject/utils/getUnusedName'
-import { portalRef } from '../../common/portalRef'
 import type { ProjectSchema } from '../../common/schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../../common/schemas/validation'
 import { useTranslation } from '../../common/translations/translation'
@@ -35,13 +34,9 @@ export const WebCreateProjectDialog: FC<WebCreateProjectDialogProps> = ({ isOpen
 
   const [project, setProject] = useState<ProjectSchema>(() => createEmptyProject())
 
-  useEffect(() => {
-    if (!isOpen) {
-      return
-    }
-
+  const resetProject = useCallback((): void => {
     setProject(createEmptyProject())
-  }, [createEmptyProject, isOpen, t])
+  }, [createEmptyProject])
 
   const context = useMemo<ProjectBasedValidationContextSchema>(
     () => ({ language: LANGUAGE, projects, t }),
@@ -61,58 +56,32 @@ export const WebCreateProjectDialog: FC<WebCreateProjectDialogProps> = ({ isOpen
 
   const hasErrors = useMemo<boolean>(() => hasValidationErrors<ProjectSchema>(validationIssues), [validationIssues])
 
-  const handleOpenChange = useCallback(
-    (details: Dialog.OpenChangeDetails): void => {
-      onOpenChange(details.open)
-    },
-    [onOpenChange],
-  )
+  const handleSubmit = useCallback((): void => {
+    const validationResult = validateProjectSchema(editableValue, project, context)
 
-  const handleSubmit = useCallback(
-    (event: SubmitEvent<HTMLFormElement>): void => {
-      event.preventDefault()
+    if (!validationResult.isValid) {
+      return
+    }
 
-      const validationResult = validateProjectSchema(editableValue, project, context)
-
-      if (!validationResult.isValid) {
-        return
-      }
-
-      const { project: createdProject, subProject: initialSubProject } = addSubProject(validationResult.value, {
-        baseRootComponentName: t.defaults.rootComponentName,
-      })
-      addProject(createdProject)
-      onOpenChange(false)
-      navigate(webAppRoutes.subProject(createdProject.id, initialSubProject.id))
-    },
-    [addProject, context, editableValue, navigate, onOpenChange, project, t],
-  )
+    const { project: createdProject, subProject: initialSubProject } = addSubProject(validationResult.value, {
+      baseRootComponentName: t.defaults.rootComponentName,
+    })
+    addProject(createdProject)
+    onOpenChange(false)
+    navigate(webAppRoutes.subProject(createdProject.id, initialSubProject.id))
+  }, [addProject, context, editableValue, navigate, onOpenChange, project, t])
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg" placement="center">
-      <Portal container={portalRef}>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <form onSubmit={handleSubmit}>
-              <Dialog.Header>
-                <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body px="0">
-                <WebProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline">{t.common.actions.cancel}</Button>
-                </Dialog.ActionTrigger>
-                <Button disabled={hasErrors} type="submit" variant="solid">
-                  {t.projects.createDialog.actions.create}
-                </Button>
-              </Dialog.Footer>
-            </form>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <EditDialog
+      canSubmit={!hasErrors}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      onResetData={resetProject}
+      onSubmit={handleSubmit}
+      submit={t.projects.createDialog.actions.create}
+      title={t.projects.createDialog.title}
+    >
+      <WebProjectSettingsEditor editable={editableValue} issues={validationIssues} onChange={setValue} />
+    </EditDialog>
   )
 }

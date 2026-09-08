@@ -1,13 +1,12 @@
-import { Button, Dialog, Portal } from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useState, type FC, type SubmitEvent } from 'react'
+import { useCallback, useMemo, useState, type FC } from 'react'
 import { useNavigate } from 'react-router'
 
+import { EditDialog } from '../../common/components/EditDialog'
 import { toaster } from '../../common/components/Toaster'
 import { LANGUAGE } from '../../common/constants/language'
 import { useEditableModel } from '../../common/hooks/useEditableModel'
 import { Loadable } from '../../common/loadable'
 import { addSubProject } from '../../common/operations/project/addSubProject'
-import { portalRef } from '../../common/portalRef'
 import type { ProjectSchema } from '../../common/schemas/project'
 import type { ProjectBasedValidationContextSchema } from '../../common/schemas/validation'
 import { useTranslation } from '../../common/translations/translation'
@@ -35,13 +34,9 @@ export const ElectronCreateProjectDialog: FC<ElectronCreateProjectDialogProps> =
 
   const [project, setProject] = useState<ProjectSchema>(() => createEmptyProject())
 
-  useEffect(() => {
-    if (!isOpen) {
-      return
-    }
-
+  const resetProject = useCallback((): void => {
     setProject(createEmptyProject())
-  }, [createEmptyProject, isOpen])
+  }, [createEmptyProject])
 
   const context = useMemo<ProjectBasedValidationContextSchema>(() => ({ language: LANGUAGE, projects: [], t }), [t])
 
@@ -64,13 +59,6 @@ export const ElectronCreateProjectDialog: FC<ElectronCreateProjectDialogProps> =
     !Loadable.hasValue(createProjectFilePath.filePathIssue) ||
     hasFilePathError
 
-  const handleOpenChange = useCallback(
-    (details: Dialog.OpenChangeDetails): void => {
-      onOpenChange(details.open)
-    },
-    [onOpenChange],
-  )
-
   const showSaveFailedToast = useCallback((): void => {
     toaster.create({
       description: t.projects.saveDialog.errors.saveFailed,
@@ -78,82 +66,63 @@ export const ElectronCreateProjectDialog: FC<ElectronCreateProjectDialogProps> =
     })
   }, [t.projects.saveDialog.errors.saveFailed])
 
-  const handleSubmit = useCallback(
-    async (event: SubmitEvent<HTMLFormElement>): Promise<void> => {
-      event.preventDefault()
+  const handleSubmit = useCallback(async (): Promise<void> => {
+    const validationResult = validateProjectSchema(editableValue, project, context)
 
-      const validationResult = validateProjectSchema(editableValue, project, context)
+    if (!validationResult.isValid) {
+      showSaveFailedToast()
+      return
+    }
 
-      if (!validationResult.isValid) {
-        showSaveFailedToast()
-        return
-      }
+    const { project: createdProject, subProject: initialSubProject } = addSubProject(validationResult.value, {
+      baseRootComponentName: t.defaults.rootComponentName,
+    })
 
-      const { project: createdProject, subProject: initialSubProject } = addSubProject(validationResult.value, {
-        baseRootComponentName: t.defaults.rootComponentName,
-      })
+    const response = await electronApi.write({
+      contents: JSON.stringify(createdProject, null, 2),
+      filePath: createProjectFilePath.filePath,
+      type: 'write',
+    })
 
-      const response = await electronApi.write({
-        contents: JSON.stringify(createdProject, null, 2),
-        filePath: createProjectFilePath.filePath,
-        type: 'write',
-      })
+    if (response.type === 'error') {
+      showSaveFailedToast()
+      return
+    }
 
-      if (response.type === 'error') {
-        showSaveFailedToast()
-        return
-      }
-
-      onOpenChange(false)
-      navigate(electronAppRoutes.subProject(createProjectFilePath.filePath, initialSubProject.id))
-    },
-    [
-      context,
-      createProjectFilePath.filePath,
-      editableValue,
-      navigate,
-      onOpenChange,
-      project,
-      showSaveFailedToast,
-      t.defaults.rootComponentName,
-    ],
-  )
+    onOpenChange(false)
+    navigate(electronAppRoutes.subProject(createProjectFilePath.filePath, initialSubProject.id))
+  }, [
+    context,
+    createProjectFilePath.filePath,
+    editableValue,
+    navigate,
+    onOpenChange,
+    project,
+    showSaveFailedToast,
+    t.defaults.rootComponentName,
+  ])
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg" placement="center">
-      <Portal container={portalRef}>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <form onSubmit={handleSubmit}>
-              <Dialog.Header>
-                <Dialog.Title>{t.projects.createDialog.title}</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body px="0">
-                <ElectronProjectSettingsEditor
-                  editable={editableValue}
-                  filePath={createProjectFilePath.filePath}
-                  filePathIssue={createProjectFilePath.filePathIssue}
-                  isFilePathManuallyModified={createProjectFilePath.isManuallyModified}
-                  issues={validationIssues}
-                  onChange={setValue}
-                  onFilePathChange={createProjectFilePath.onFilePathChange}
-                  onFilePathReset={createProjectFilePath.onFilePathReset}
-                  onFilePickerButtonPressed={createProjectFilePath.onFilePickerButtonPressed}
-                />
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline">{t.common.actions.cancel}</Button>
-                </Dialog.ActionTrigger>
-                <Button disabled={isCreateDisabled} type="submit" variant="solid">
-                  {t.projects.createDialog.actions.create}
-                </Button>
-              </Dialog.Footer>
-            </form>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <EditDialog
+      canSubmit={!isCreateDisabled}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      onResetData={resetProject}
+      onSubmit={handleSubmit}
+      submit={t.projects.createDialog.actions.create}
+      title={t.projects.createDialog.title}
+    >
+      <ElectronProjectSettingsEditor
+        editable={editableValue}
+        filePath={createProjectFilePath.filePath}
+        filePathIssue={createProjectFilePath.filePathIssue}
+        isFilePathManuallyModified={createProjectFilePath.isManuallyModified}
+        issues={validationIssues}
+        onChange={setValue}
+        onFilePathChange={createProjectFilePath.onFilePathChange}
+        onFilePathReset={createProjectFilePath.onFilePathReset}
+        onFilePickerButtonPressed={createProjectFilePath.onFilePickerButtonPressed}
+      />
+    </EditDialog>
   )
 }

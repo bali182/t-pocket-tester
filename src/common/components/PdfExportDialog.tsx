@@ -1,14 +1,12 @@
-import { Alert, Box, Button, CloseButton, Dialog, IconButton, Portal, chakra } from '@chakra-ui/react'
+import { Alert, Box, CloseButton } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState, type FC, type SubmitEvent } from 'react'
-import { PiX } from 'react-icons/pi'
+import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { LANGUAGE } from '../constants/language'
 import { useProject } from '../hooks/useProject'
 import { exportPdf } from '../logic/exports/exportPdf'
 import { getComputedPdfExport } from '../logic/exports/getComputedPdfExport'
 import { getComputedProject } from '../logic/getComputedProject'
-import { portalRef } from '../portalRef'
 import type { EditableSchema } from '../schemas/editable'
 import type { PdfExportSettingsSchema, PdfExportUnsuccessfulLayoutSchema } from '../schemas/pdfExport'
 import type { BaseValidationContextSchema } from '../schemas/validation'
@@ -18,6 +16,7 @@ import { getEditableSchema } from '../utils/getEditableSchema'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
 import { isDefined } from '../utils/isDefined'
 import { validatePdfExportSettingsSchema } from '../validators/validatePdfExportSettingsSchema'
+import { EditDialog } from './EditDialog'
 import { PdfExportEditor } from './pdf-export/PdfExportEditor'
 
 type PdfExportDialogProps = {
@@ -64,25 +63,6 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
     setFailure(undefined)
   }, [context, storedParams])
 
-  useEffect(() => {
-    if (!isOpen) {
-      return
-    }
-
-    resetDraft()
-  }, [isOpen, resetDraft])
-
-  const handleOpenChange = useCallback(
-    (details: Dialog.OpenChangeDetails): void => {
-      if (isExporting) {
-        return
-      }
-
-      onOpenChange(details.open)
-    },
-    [isExporting, onOpenChange],
-  )
-
   const handleParamsChange = useCallback(
     (updatedEditableParams: EditableSchema<PdfExportSettingsSchema>): void => {
       const updatedValidationResult = validatePdfExportSettingsSchema(updatedEditableParams, exportParams, context)
@@ -97,80 +77,49 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
     setFailure(undefined)
   }, [])
 
-  const handleSubmit = useCallback(
-    async (event: SubmitEvent<HTMLFormElement>): Promise<void> => {
-      event.preventDefault()
+  const handleSubmit = useCallback(async (): Promise<void> => {
+    const submitValidationResult = validatePdfExportSettingsSchema(editableParams, exportParams, context)
 
-      const submitValidationResult = validatePdfExportSettingsSchema(editableParams, exportParams, context)
+    if (!submitValidationResult.isValid) {
+      return
+    }
 
-      if (!submitValidationResult.isValid) {
-        return
-      }
+    const computedProject = getComputedProject(project)
+    const layout = getComputedPdfExport(project, computedProject, submitValidationResult.value)
 
-      const computedProject = getComputedProject(project)
-      const layout = getComputedPdfExport(project, computedProject, submitValidationResult.value)
+    if (layout.type === 'unsuccessful-pdf-export') {
+      setFailure({ layout, type: 'unplaceable' })
+      return
+    }
 
-      if (layout.type === 'unsuccessful-pdf-export') {
-        setFailure({ layout, type: 'unplaceable' })
-        return
-      }
+    setIsExporting(true)
 
-      setIsExporting(true)
-
-      try {
-        await exportPdf(project, submitValidationResult.value, layout)
-        setStoredParams(submitValidationResult.value)
-        onOpenChange(false)
-      } catch (error) {
-        console.error('Unable to export PDF:', error)
-        setFailure({ type: 'runtime' })
-      } finally {
-        setIsExporting(false)
-      }
-    },
-    [context, editableParams, exportParams, onOpenChange, project, setStoredParams],
-  )
+    try {
+      await exportPdf(project, submitValidationResult.value, layout)
+      setStoredParams(submitValidationResult.value)
+      onOpenChange(false)
+    } catch (error) {
+      console.error('Unable to export PDF:', error)
+      setFailure({ type: 'runtime' })
+    } finally {
+      setIsExporting(false)
+    }
+  }, [context, editableParams, exportParams, onOpenChange, project, setStoredParams])
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} scrollBehavior="inside" size="lg" placement="center">
-      <Portal container={portalRef}>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <chakra.form display="flex" flex="1" flexDirection="column" minH="0" onSubmit={handleSubmit}>
-              <Dialog.Header>
-                <Dialog.Title>{t.pdfExport.dialog.title}</Dialog.Title>
-                {!isExporting && (
-                  <Dialog.CloseTrigger asChild>
-                    <IconButton size="sm" variant="ghost">
-                      <PiX />
-                    </IconButton>
-                  </Dialog.CloseTrigger>
-                )}
-              </Dialog.Header>
-              <Dialog.Body px="0">
-                <PdfExportFailureAlert failure={failure} onDismiss={handleFailureDismiss} />
-                <PdfExportEditor
-                  editable={editableParams}
-                  issues={validationResult.issues}
-                  onChange={handleParamsChange}
-                />
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button disabled={isExporting} variant="outline">
-                    {t.common.actions.cancel}
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button disabled={hasErrors || isExporting} loading={isExporting} type="submit" variant="solid">
-                  {t.pdfExport.dialog.actions.export}
-                </Button>
-              </Dialog.Footer>
-            </chakra.form>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <EditDialog
+      canSubmit={!hasErrors && !isExporting}
+      isOpen={isOpen}
+      loading={isExporting}
+      onOpenChange={onOpenChange}
+      onResetData={resetDraft}
+      onSubmit={handleSubmit}
+      submit={t.pdfExport.dialog.actions.export}
+      title={t.pdfExport.dialog.title}
+    >
+      <PdfExportFailureAlert failure={failure} onDismiss={handleFailureDismiss} />
+      <PdfExportEditor editable={editableParams} issues={validationResult.issues} onChange={handleParamsChange} />
+    </EditDialog>
   )
 }
 

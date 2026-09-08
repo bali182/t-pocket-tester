@@ -1,13 +1,10 @@
-import { Button, Dialog, IconButton, Portal } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState, type FC, type SubmitEvent } from 'react'
-import { PiX } from 'react-icons/pi'
+import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { LANGUAGE } from '../constants/language'
 import { useProject } from '../hooks/useProject'
 import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import { getComputedProject } from '../logic/getComputedProject'
-import { portalRef } from '../portalRef'
 import type { EditableSchema } from '../schemas/editable'
 import type { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema } from '../schemas/validation'
@@ -17,6 +14,7 @@ import { downloadFile } from '../utils/downloadFile'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
 import { validateBaseExportSettingsSchema } from '../validators/validateBaseExportSettingsSchema'
+import { EditDialog } from './EditDialog'
 import { SvgExportEditor } from './svg-export/SvgExportEditor'
 
 type SvgExportDialogProps = {
@@ -50,21 +48,6 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
     setEditableParams(getEditableSchema(storedParams, context))
   }, [context, storedParams])
 
-  useEffect(() => {
-    if (!isOpen) {
-      return
-    }
-
-    resetDraft()
-  }, [isOpen, resetDraft])
-
-  const handleOpenChange = useCallback(
-    (details: Dialog.OpenChangeDetails): void => {
-      onOpenChange(details.open)
-    },
-    [onOpenChange],
-  )
-
   const handleParamsChange = useCallback(
     (updatedEditableParams: EditableSchema<BaseExportSettingsSchema>): void => {
       const updatedValidationResult = validateBaseExportSettingsSchema(updatedEditableParams, exportParams, context)
@@ -75,59 +58,31 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
     [context, exportParams],
   )
 
-  const handleSubmit = useCallback(
-    (event: SubmitEvent<HTMLFormElement>): void => {
-      event.preventDefault()
+  const handleSubmit = useCallback((): void => {
+    const submitValidationResult = validateBaseExportSettingsSchema(editableParams, exportParams, context)
 
-      const submitValidationResult = validateBaseExportSettingsSchema(editableParams, exportParams, context)
+    if (!submitValidationResult.isValid) {
+      return
+    }
 
-      if (!submitValidationResult.isValid) {
-        return
-      }
-
-      const computedProject = getComputedProject(project)
-      const svg = renderSvgToString(project, computedProject, submitValidationResult.value)
-      downloadFile({ contentType: 'image/svg+xml', content: svg, fileName: `${project.name}.svg` })
-      setStoredParams(submitValidationResult.value)
-      onOpenChange(false)
-    },
-    [context, editableParams, exportParams, onOpenChange, project, setStoredParams],
-  )
+    const computedProject = getComputedProject(project)
+    const svg = renderSvgToString(project, computedProject, submitValidationResult.value)
+    downloadFile({ contentType: 'image/svg+xml', content: svg, fileName: `${project.name}.svg` })
+    setStoredParams(submitValidationResult.value)
+    onOpenChange(false)
+  }, [context, editableParams, exportParams, onOpenChange, project, setStoredParams])
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="lg" placement="center">
-      <Portal container={portalRef}>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <form onSubmit={handleSubmit}>
-              <Dialog.Header>
-                <Dialog.Title>{t.svgExport.dialog.title}</Dialog.Title>
-                <Dialog.CloseTrigger asChild>
-                  <IconButton size="sm" variant="ghost">
-                    <PiX />
-                  </IconButton>
-                </Dialog.CloseTrigger>
-              </Dialog.Header>
-              <Dialog.Body px="0">
-                <SvgExportEditor
-                  editable={editableParams}
-                  issues={validationResult.issues}
-                  onChange={handleParamsChange}
-                />
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline">{t.common.actions.cancel}</Button>
-                </Dialog.ActionTrigger>
-                <Button disabled={hasErrors} type="submit" variant="solid">
-                  {t.svgExport.dialog.actions.export}
-                </Button>
-              </Dialog.Footer>
-            </form>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <EditDialog
+      canSubmit={!hasErrors}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      onResetData={resetDraft}
+      onSubmit={handleSubmit}
+      submit={t.svgExport.dialog.actions.export}
+      title={t.svgExport.dialog.title}
+    >
+      <SvgExportEditor editable={editableParams} issues={validationResult.issues} onChange={handleParamsChange} />
+    </EditDialog>
   )
 }

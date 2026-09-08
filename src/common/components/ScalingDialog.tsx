@@ -1,22 +1,11 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  IconButton,
-  Portal,
-  Slider,
-  Text,
-  VStack,
-  type SliderValueChangeDetails,
-} from '@chakra-ui/react'
+import { Box, Slider, Text, VStack, type SliderValueChangeDetails } from '@chakra-ui/react'
 import BigNumber from 'bignumber.js'
 import { useAtom } from 'jotai'
 import { useCallback, useState, type FC } from 'react'
 
-import { PiX } from 'react-icons/pi'
-import { portalRef } from '../portalRef'
 import { scalingAtom } from '../state/scalingAtom'
 import { useTranslation } from '../translations/translation'
+import { EditDialog } from './EditDialog'
 import { RulerSvg } from './svg/RulerSvg'
 
 type ScalingDialogProps = {
@@ -30,13 +19,9 @@ export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) 
   const t = useTranslation()
   const scalingPercent = new BigNumber(draftScaling).times(100).toNumber()
 
-  const handleOpenChange = useCallback(
-    (details: Dialog.OpenChangeDetails): void => {
-      setDraftScaling(scaling)
-      onOpenChange(details.open)
-    },
-    [onOpenChange, scaling],
-  )
+  const resetDraft = useCallback((): void => {
+    setDraftScaling(scaling)
+  }, [scaling])
 
   const handleScaleChange = useCallback((details: SliderValueChangeDetails): void => {
     const nextScaling = details.value[0]
@@ -46,57 +31,39 @@ export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) 
     }
   }, [])
 
-  const handleApply = useCallback((): void => {
+  const handleSubmit = useCallback((): void => {
     setScaling(draftScaling)
     onOpenChange(false)
   }, [draftScaling, onOpenChange, setScaling])
 
   return (
-    <Dialog.Root onOpenChange={handleOpenChange} open={isOpen} size="xl">
-      <Portal container={portalRef}>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.CloseTrigger asChild>
-              <IconButton size="sm" variant="ghost">
-                <PiX />
-              </IconButton>
-            </Dialog.CloseTrigger>
-            <Dialog.Header>
-              <VStack align="stretch" gap="2">
-                <Dialog.Title>{t.editor.scalingDialog.title}</Dialog.Title>
-                <Dialog.Description>{t.editor.scalingDialog.description}</Dialog.Description>
-              </VStack>
-            </Dialog.Header>
-            <Dialog.Body>
-              <VStack align="stretch" gap="12">
-                <Slider.Root min={0.5} max={2} step={0.001} value={[draftScaling]} onValueChange={handleScaleChange}>
-                  <Text fontWeight="medium">
-                    {t.editor.scalingDialog.title}: {scalingPercent}%
-                  </Text>
-                  <Slider.Control>
-                    <Slider.Track>
-                      <Slider.Range />
-                    </Slider.Track>
-                    <Slider.Thumb index={0} />
-                  </Slider.Control>
-                </Slider.Root>
-                <Box transform={`scale(${draftScaling})`} transformOrigin="left center">
-                  <RulerSvg />
-                </Box>
-              </VStack>
-            </Dialog.Body>
-            <Dialog.Footer>
-              <Dialog.ActionTrigger asChild>
-                <Button variant="outline">{t.common.actions.cancel}</Button>
-              </Dialog.ActionTrigger>
-              <Button onClick={handleApply} variant="solid">
-                {t.common.actions.apply}
-              </Button>
-            </Dialog.Footer>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <EditDialog
+      canSubmit={true}
+      description={t.editor.scalingDialog.description}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      onResetData={resetDraft}
+      onSubmit={handleSubmit}
+      size="xl"
+      submit={t.common.actions.apply}
+      title={t.editor.scalingDialog.title}
+    >
+      <VStack align="stretch" gap="12" px="6">
+        <Slider.Root min={0.5} max={2} step={0.001} value={[draftScaling]} onValueChange={handleScaleChange}>
+          <Text fontWeight="medium">
+            {t.editor.scalingDialog.title}: {scalingPercent}%
+          </Text>
+          <Slider.Control>
+            <Slider.Track>
+              <Slider.Range />
+            </Slider.Track>
+            <Slider.Thumb index={0} />
+          </Slider.Control>
+        </Slider.Root>
+        <Box transform={`scale(${draftScaling})`} transformOrigin="left center">
+          <RulerSvg />
+        </Box>
+      </VStack>
+    </EditDialog>
   )
 }

@@ -1,4 +1,5 @@
 export const STROKE_COLOR = '#000000'
+export const LIGHT_STROKE_COLOR = '#FFFFFF'
 export const STITCH_LINE_STORKE_COLOR = '#000000'
 export const STITCH_HOLE_COLOR = '#000000'
 export const CARD_COLOR = '#1cabff'

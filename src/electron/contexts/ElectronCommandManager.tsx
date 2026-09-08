@@ -55,7 +55,7 @@ export const ElectronCommandManager: FC<PropsWithChildren> = ({ children }) => {
         case 'export-svg':
           return setSvgExportDialogOpen(true)
         case 'export-pdf':
-          return setSvgExportDialogOpen(true)
+          return setPdfExportDialogOpen(true)
         case 'scaling':
           return setScalingDialogOpen(true)
         case 'increment-small':
