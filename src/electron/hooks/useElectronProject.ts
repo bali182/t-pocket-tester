@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router'
 import typia from 'typia'
 
 import { toaster } from '../../common/components/Toaster'
-import { FILE_EXTENSION } from '../../common/extension'
+import { FILE_EXTENSION } from '../fileExtension'
 import { Loadable } from '../../common/loadable'
 import type { LoadableSchema } from '../../common/schemas/loadable'
 import type { ProjectSchema } from '../../common/schemas/project'

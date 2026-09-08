@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, type SetStateAction } from 'react'
 
-import { FILE_EXTENSION } from '../../common/extension'
+import { FILE_EXTENSION } from '../fileExtension'
 import { Loadable } from '../../common/loadable'
 import type { LoadableSchema } from '../../common/schemas/loadable'
 import type { IssueSchema } from '../../common/schemas/validation'
