@@ -1,9 +1,10 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { useDrawAreaContext, type DrawAreaHoleStyleParams } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import { useSubProject } from '../../hooks/useSubProject'
 import type { ComputedHoleSchema } from '../../schemas/computed'
+import type { DrawAreaHoleStyleParams } from '../../schemas/drawArea'
 import type { HoleSchema } from '../../schemas/hole'
 import { isDefined } from '../../utils/isDefined'
 

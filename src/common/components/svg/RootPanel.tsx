@@ -1,11 +1,12 @@
 import { useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { useDrawAreaContext, type DrawAreaComponentStyleParams } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
 import type { RootPanelSchema } from '../../schemas/components'
 import type { ComputedRootPanelSchema } from '../../schemas/computed'
+import type { DrawAreaComponentStyleParams } from '../../schemas/drawArea'
 import { HoleHighlights } from './HoleHighlights'
 import { Panel } from './Panel'
 import { PocketCluster } from './PocketCluster'

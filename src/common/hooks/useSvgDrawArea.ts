@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
 import { COMPONENT_DIMENSIONS_COLOR, COMPONENT_NAME_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
-import {
+import { defaultSubProjectSelection } from '../contexts/SubProjectSelectionContext'
+import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
+import type {
   DrawAreaCardStyles,
   DrawAreaComponentStyles,
   DrawAreaContextValue,
@@ -9,9 +11,7 @@ import {
   DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
   DrawAreaStitchLineStyles,
-} from '../contexts/DrawAreaContext'
-import { defaultSubProjectSelection } from '../contexts/SubProjectSelectionContext'
-import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
+} from '../schemas/drawArea'
 import { BaseExportSettingsSchema } from '../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'

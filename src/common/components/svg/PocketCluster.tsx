@@ -1,11 +1,12 @@
 import { Fragment, useCallback, useState, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
-import { useDrawAreaContext, type DrawAreaComponentStyleParams } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { useComponent } from '../../hooks/useComponent'
 import { useComputedComponent } from '../../hooks/useComputedComponent'
 import { usePath } from '../../hooks/usePath'
 import type { PocketClusterSchema } from '../../schemas/components'
 import type { ComputedPocketClusterSchema } from '../../schemas/computed'
+import type { DrawAreaComponentStyleParams } from '../../schemas/drawArea'
 import { isDefined } from '../../utils/isDefined'
 import { Card } from './Card'
 import { HoleHighlights } from './HoleHighlights'

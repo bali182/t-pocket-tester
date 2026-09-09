@@ -1,8 +1,9 @@
 import type { FC } from 'react'
 
-import { useDrawAreaContext, type DrawAreaCardStyleParams } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { PocketClusterSchema } from '../../schemas/components'
+import type { DrawAreaCardStyleParams } from '../../schemas/drawArea'
 import type { PathSchema } from '../../schemas/geometry'
 
 type CardProps = {

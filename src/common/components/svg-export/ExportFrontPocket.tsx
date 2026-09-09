@@ -1,7 +1,8 @@
 import type { FC } from 'react'
 
-import { useDrawAreaContext, type DrawAreaComponentStyleParams } from '../../contexts/DrawAreaContext'
+import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
 import { usePath } from '../../hooks/usePath'
+import type { DrawAreaComponentStyleParams } from '../../schemas/drawArea'
 import type { SvgExportFrontPocketSchema } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
 import { ExportElementText } from './ExportElementText'

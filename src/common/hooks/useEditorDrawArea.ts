@@ -1,15 +1,5 @@
 import { useCallback, useMemo } from 'react'
 import { STROKE_THICKNESS } from '../constants/drawing'
-import {
-  DrawAreaCardStyles,
-  DrawAreaComponentStyles,
-  DrawAreaContextValue,
-  DrawAreaExportIdentifiers,
-  DrawAreaExportTextStyles,
-  DrawAreaHoleStyles,
-  DrawAreaMarkerStyles,
-  DrawAreaStitchLineStyles,
-} from '../contexts/DrawAreaContext'
 import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { produce } from '../utils/produce'
@@ -18,6 +8,16 @@ import { useSubProject } from './useSubProject'
 
 import { formatHex8, parse } from 'culori'
 import { getSelectionObstructingComponentIds } from '../logic/getSelectionObstructingComponentIds'
+import type {
+  DrawAreaCardStyles,
+  DrawAreaComponentStyles,
+  DrawAreaContextValue,
+  DrawAreaExportIdentifiers,
+  DrawAreaExportTextStyles,
+  DrawAreaHoleStyles,
+  DrawAreaMarkerStyles,
+  DrawAreaStitchLineStyles,
+} from '../schemas/drawArea'
 import { useSubProjectSelection } from './useSubProjectSelection'
 
 const addAlpha = (color: string): string => {
