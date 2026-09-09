@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { PathSchema } from '../../schemas/geometry'
 import type { SvgExportStitchLineSchema } from '../../schemas/svgExport'
-import { StitchHole } from '../svg/StitchHole'
+import { ExportStitchHole } from './ExportStitchHole'
 
 type ExportStitchLineProps = {
   stitchLine: SvgExportStitchLineSchema
@@ -23,14 +23,14 @@ export const ExportStitchLine: FC<ExportStitchLineProps> = ({ stitchLine }) => {
       ))}
 
       {stitchLine.holes.map((hole, index) => (
-        <StitchHole hole={hole} key={index} stitchLine={stitchLine.stitchLine} />
+        <ExportStitchHole hole={hole} key={index} stitchLine={stitchLine.stitchLine} />
       ))}
     </g>
   )
 }
 
 const ExportStitchPath: FC<ExportStitchPathProps> = ({ path, stitchLine }) => {
-  const { stitchLineStyles, exportIdentifiers } = useDrawAreaContext()
+  const { stitchLineStyles, exportIdentifiers } = useExportDrawAreaContext()
   const pathData = usePath(path)
 
   return (

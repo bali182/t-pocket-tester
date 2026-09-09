@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { getSvgExportElementBoundingRect } from '../../logic/exports/getSvgExportElementBoundingRect'
 import type { SvgExportElementSchema } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
@@ -11,7 +11,7 @@ type ExportElementTextProps = {
 }
 
 export const ExportElementText: FC<ExportElementTextProps> = ({ element }) => {
-  const { exportTextStyles, exportIdentifiers } = useDrawAreaContext()
+  const { exportTextStyles, exportIdentifiers } = useExportDrawAreaContext()
   const lines = [
     getExportTextLine(
       exportIdentifiers.getNameText(element),

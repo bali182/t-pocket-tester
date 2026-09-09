@@ -1,7 +1,7 @@
 import { Svg } from '@react-pdf/renderer'
 import { useMemo, type FC, type ReactNode } from 'react'
 
-import { DrawAreaContext } from '../../contexts/DrawAreaContext'
+import { ExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { useSvgDrawArea } from '../../hooks/useSvgDrawArea'
 import { getSvgExportElementLayoutBoundingRect } from '../../logic/exports/getSvgExportElementLayoutBoundingRect'
 import type { PdfExportElement, PdfExportPageSchema, PdfExportSettingsSchema } from '../../schemas/pdfExport'
@@ -43,7 +43,7 @@ const PdfElement: FC<PdfElementProps> = ({ element: { element, placement }, proj
   const sourceRect = useMemo(() => getSvgExportElementLayoutBoundingRect(element), [element])
 
   return (
-    <DrawAreaContext.Provider value={drawAreaContextValue}>
+    <ExportDrawAreaContext.Provider value={drawAreaContextValue}>
       <Svg
         fixed
         height={`${sourceRect.height.toString()}mm`}
@@ -60,7 +60,7 @@ const PdfElement: FC<PdfElementProps> = ({ element: { element, placement }, proj
       >
         {renderPdfElement(element)}
       </Svg>
-    </DrawAreaContext.Provider>
+    </ExportDrawAreaContext.Provider>
   )
 }
 

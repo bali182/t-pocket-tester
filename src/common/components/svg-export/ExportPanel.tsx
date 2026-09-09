@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { DrawAreaComponentStyleParams } from '../../schemas/drawArea'
 import type { SvgExportPanelSchema } from '../../schemas/svgExport'
@@ -14,7 +14,7 @@ type ExportPanelProps = {
 }
 
 export const ExportPanel: FC<ExportPanelProps> = ({ element }) => {
-  const { componentStyles, exportIdentifiers } = useDrawAreaContext()
+  const { componentStyles, exportIdentifiers } = useExportDrawAreaContext()
   const pathData = usePath(element.path)
   const styleParams: DrawAreaComponentStyleParams = {
     component: element.component,

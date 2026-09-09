@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { PathSchema } from '../../schemas/geometry'
 
@@ -9,7 +9,7 @@ type ExportMarkerPathProps = {
 }
 
 export const ExportMarkerPath: FC<ExportMarkerPathProps> = ({ path }) => {
-  const { markerStyles } = useDrawAreaContext()
+  const { markerStyles } = useExportDrawAreaContext()
   const pathData = usePath(path)
 
   return <path d={pathData} fill="none" stroke={markerStyles.getColor()} strokeWidth={markerStyles.getThickness()} />

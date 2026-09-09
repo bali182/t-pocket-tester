@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { DrawAreaComponentStyleParams } from '../../schemas/drawArea'
 import type { SvgExportFrontPocketSchema } from '../../schemas/svgExport'
@@ -14,7 +14,7 @@ type ExportFrontPocketProps = {
 }
 
 export const ExportFrontPocket: FC<ExportFrontPocketProps> = ({ element }) => {
-  const { componentStyles, exportIdentifiers } = useDrawAreaContext()
+  const { componentStyles, exportIdentifiers } = useExportDrawAreaContext()
   const pathData = usePath(element.pocket.path)
   const styleParams: DrawAreaComponentStyleParams = {
     component: element.ownerComponent,

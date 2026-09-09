@@ -1,7 +1,7 @@
 import { G, Path } from '@react-pdf/renderer'
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { PathSchema } from '../../schemas/geometry'
 import type { SvgExportStitchLineSchema } from '../../schemas/svgExport'
@@ -30,7 +30,7 @@ export const PdfStitchLine: FC<PdfStitchLineProps> = ({ stitchLine }) => {
 }
 
 const PdfStitchPath: FC<PdfStitchPathProps> = ({ path, stitchLine }) => {
-  const { stitchLineStyles } = useDrawAreaContext()
+  const { stitchLineStyles } = useExportDrawAreaContext()
   const pathData = usePath(path)
 
   return (

@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import type { FC } from 'react'
 
-import { DrawAreaContext } from '../../contexts/DrawAreaContext'
+import { ExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { useSvgDrawArea } from '../../hooks/useSvgDrawArea'
 import type { ProjectSchema } from '../../schemas/project'
 import type { SvgExportElementSchema, SvgExportSchema } from '../../schemas/svgExport'
@@ -50,7 +50,9 @@ const SvgExportElement: FC<SvgExportElementProps> = ({ element, project, setting
   const drawAreaContextValue = useSvgDrawArea(element.subProject, project.stitchingSettings, settings)
 
   return (
-    <DrawAreaContext.Provider value={drawAreaContextValue}>{renderSvgExportElement(element)}</DrawAreaContext.Provider>
+    <ExportDrawAreaContext.Provider value={drawAreaContextValue}>
+      {renderSvgExportElement(element)}
+    </ExportDrawAreaContext.Provider>
   )
 }
 

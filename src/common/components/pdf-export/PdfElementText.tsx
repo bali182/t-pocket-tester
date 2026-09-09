@@ -2,7 +2,7 @@ import { G, Text } from '@react-pdf/renderer'
 import BigNumber from 'bignumber.js'
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { getSvgExportElementBoundingRect } from '../../logic/exports/getSvgExportElementBoundingRect'
 import type { SvgExportElementSchema } from '../../schemas/svgExport'
 import { isDefined } from '../../utils/isDefined'
@@ -24,7 +24,7 @@ type PdfTextLinePosition = {
 }
 
 export const PdfElementText: FC<PdfElementTextProps> = ({ element }) => {
-  const { exportTextStyles, exportIdentifiers } = useDrawAreaContext()
+  const { exportTextStyles, exportIdentifiers } = useExportDrawAreaContext()
   const lines = [
     getPdfTextLine(
       exportIdentifiers.getNameText(element),

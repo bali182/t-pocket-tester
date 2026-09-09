@@ -1,7 +1,7 @@
 import { G, Path } from '@react-pdf/renderer'
 import type { FC } from 'react'
 
-import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useExportDrawAreaContext } from '../../contexts/ExportDrawAreaContext'
 import { usePath } from '../../hooks/usePath'
 import type { DrawAreaComponentStyleParams } from '../../schemas/drawArea'
 import type { SvgExportPanelSchema } from '../../schemas/svgExport'
@@ -15,7 +15,7 @@ type PdfPanelProps = {
 }
 
 export const PdfPanel: FC<PdfPanelProps> = ({ element }) => {
-  const { componentStyles } = useDrawAreaContext()
+  const { componentStyles } = useExportDrawAreaContext()
   const pathData = usePath(element.path)
   const styleParams: DrawAreaComponentStyleParams = {
     component: element.component,
