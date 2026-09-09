@@ -205,7 +205,7 @@ const computePocketCluster = (
     cornerRadius: getCornerRadius(pocketCluster),
     parentBoundingRect,
     parentCornerRadius,
-    radiusCap: new BigNumber(pocketCluster.pocketStep),
+    radiusCap: getPocketClusterRadiusCap(pocketCluster),
   })
   const normalizedPocketCluster = normalizePocketCluster(pocketCluster, boundingRect)
   const geometry = calculatePocketClusterGeometry(
@@ -230,6 +230,21 @@ const computePocketCluster = (
   computedComponents[pocketCluster.id] = computed
 
   return computed
+}
+
+const getPocketClusterRadiusCap = (pocketCluster: PocketClusterSchema): Partial<CornerRadiusSchema> => {
+  const pocketStep = new BigNumber(pocketCluster.pocketStep)
+
+  switch (pocketCluster.orientation) {
+    case 'up':
+      return { topLeft: pocketStep, topRight: pocketStep }
+    case 'right':
+      return { topRight: pocketStep, bottomRight: pocketStep }
+    case 'down':
+      return { bottomRight: pocketStep, bottomLeft: pocketStep }
+    case 'left':
+      return { bottomLeft: pocketStep, topLeft: pocketStep }
+  }
 }
 
 const computeLayoutChildren = (

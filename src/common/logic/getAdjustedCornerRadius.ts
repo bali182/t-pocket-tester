@@ -12,7 +12,7 @@ type BaseCornerRadiusAdjustmentParams = {
 }
 
 type GetAdjustedCornerRadiusParams = BaseCornerRadiusAdjustmentParams & {
-  radiusCap?: CornerRadiusSchema | BigNumber
+  radiusCap?: Partial<CornerRadiusSchema> | BigNumber
 }
 
 /**
@@ -104,12 +104,16 @@ const capCornerRadius = (radius: CornerRadiusSchema, cap: CornerRadiusSchema): C
 })
 
 const getCornerRadiusCap = (
-  radiusCap: CornerRadiusSchema | BigNumber | undefined,
+  radiusCap: Partial<CornerRadiusSchema> | BigNumber | undefined,
   boundingRect: RectSchema,
 ): CornerRadiusSchema => {
-  if (isDefined(radiusCap)) {
-    return BigNumber.isBigNumber(radiusCap) ? getUniformCornerRadius(radiusCap) : radiusCap
+  if (isDefined(radiusCap) && BigNumber.isBigNumber(radiusCap)) {
+    return getUniformCornerRadius(radiusCap)
   }
   const smallerSide = BigNumber.max(BigNumber.min(boundingRect.width, boundingRect.height), 0)
-  return getUniformCornerRadius(smallerSide.div(2))
+  const baseRadiusCap = getUniformCornerRadius(smallerSide.div(2))
+  if (isDefined(radiusCap) && typeof radiusCap === 'object') {
+    return { ...baseRadiusCap, ...radiusCap }
+  }
+  return baseRadiusCap
 }
