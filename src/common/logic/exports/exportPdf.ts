@@ -1,7 +1,8 @@
-import { pdf } from '@react-pdf/renderer'
+import { Font, pdf } from '@react-pdf/renderer'
 
 import type { PdfExportSettingsSchema, PdfExportSuccessfulLayoutSchema } from '../../schemas/pdfExport'
 import type { ProjectSchema } from '../../schemas/project'
+import { has } from '../../utils/has'
 import { getPdfExportPageSize } from './getPdfExportLayout'
 import { renderPdfDocument } from './renderPdfDocument'
 
@@ -11,6 +12,17 @@ export const exportPdf = async (
   layout: PdfExportSuccessfulLayoutSchema,
 ): Promise<void> => {
   const pageSize = getPdfExportPageSize(settings)
+  const openSans = await import('open-sans-fonts/open-sans/Regular/OpenSans-Regular.ttf?inline')
+
+  const registeredFonts = Font.getRegisteredFonts()
+
+  if (!has(registeredFonts, 'Open Sans')) {
+    Font.register({
+      family: 'Open Sans',
+      src: openSans.default,
+    })
+  }
+
   const blob = await pdf(renderPdfDocument(project, settings, layout, pageSize)).toBlob()
 
   downloadPdf(blob, `${project.name}.pdf`)

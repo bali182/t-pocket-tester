@@ -57,6 +57,7 @@ export const PdfElementText: FC<PdfElementTextProps> = ({ element }) => {
           dominantBaseline="middle"
           fill={position.line.color}
           key={position.line.text}
+          style={{ fontFamily: 'Open Sans' }}
           textAnchor="middle"
           x={position.x.toString()}
           y={position.y.toString()}
