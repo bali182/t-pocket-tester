@@ -1,10 +1,12 @@
-import { Box, Button, Card, Heading, Splitter, SplitterPanelData } from '@chakra-ui/react'
+import { Box, Button, Card, Heading, Splitter, SplitterPanelData, SplitterResizeEndDetails } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
 import { FC, ReactElement, useCallback, useMemo } from 'react'
 import { PiPlus, PiWarningCircle } from 'react-icons/pi'
 import { useEditorContext } from '../contexts/EditorContext'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
 import type { ProjectSchema } from '../schemas/project'
+import { editorSplitterSizesAtom } from '../state/editorSplitterSizesAtom'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
 import { CommonEmptyState } from './common/CommonEmptyState'
@@ -14,9 +16,10 @@ import { EditorMenu } from './editor-menu/EditorMenu'
 import { EditorSubProjectTabs } from './EditorSubProjectTabs'
 import { FloatingEditors } from './FloatingEditors'
 
-const panels: SplitterPanelData[] = [{ id: 'draw-area' }, { id: 'tree' }]
-const defaultPanelSizes: string[] = ['auto', '350px']
-
+const panels: SplitterPanelData[] = [
+  { id: 'draw-area', collapsible: false },
+  { id: 'tree', resizeBehavior: 'preserve-pixel-size', maxSize: 50 },
+]
 type EditorContentProps = {
   menu: ReactElement
   projects: readonly ProjectSchema[]
@@ -26,18 +29,26 @@ type EditorContentProps = {
 export const EditorContent: FC<EditorContentProps> = ({ menu, projects, subProjectId }) => {
   const t = useTranslation()
   const { project } = useProject()
+  const [editorSplitterSizes, setEditorSplitterSizes] = useAtom(editorSplitterSizesAtom)
   const subProject = useMemo(
     () => project.subProjects.find((candidate) => candidate.id === subProjectId),
     [project.subProjects, subProjectId],
   )
+  const handleResizeEnd = useCallback(
+    ({ size }: SplitterResizeEndDetails): void => {
+      setEditorSplitterSizes([size[0], size[1]])
+    },
+    [setEditorSplitterSizes],
+  )
 
   return (
     <Splitter.Root
-      defaultSize={defaultPanelSizes}
+      defaultSize={editorSplitterSizes}
       height="100%"
       minHeight="0"
       minWidth="0"
       orientation="horizontal"
+      onResizeEnd={handleResizeEnd}
       panels={panels}
     >
       <Splitter.Panel id="draw-area" minHeight="0" minWidth="0">
