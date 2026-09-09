@@ -122,12 +122,29 @@ const translateSvgExportStitchLine = (
   return {
     ...stitchLine,
     paths: stitchLine.paths.map((path) => translatePath(path, translation)),
-    holes: stitchLine.holes.map((hole) => ({
-      ...hole,
-      center: {
-        x: hole.center.x.plus(translation.x),
-        y: hole.center.y.plus(translation.y),
+    holes: stitchLine.holes.map((hole) => translateStitchHole(hole, translation)),
+  }
+}
+
+const translateStitchHole = (
+  hole: SvgExportStitchLineSchema['holes'][number],
+  translation: PointSchema,
+): SvgExportStitchLineSchema['holes'][number] => {
+  return {
+    ...hole,
+    center: {
+      x: hole.center.x.plus(translation.x),
+      y: hole.center.y.plus(translation.y),
+    },
+    line: {
+      start: {
+        x: hole.line.start.x.plus(translation.x),
+        y: hole.line.start.y.plus(translation.y),
       },
-    })),
+      end: {
+        x: hole.line.end.x.plus(translation.x),
+        y: hole.line.end.y.plus(translation.y),
+      },
+    },
   }
 }
