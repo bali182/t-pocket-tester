@@ -6,6 +6,7 @@ import { ScalingMenuGroup } from '../../../common/components/editor-menu/groups/
 import { StepIncrementMenuGroup } from '../../../common/components/editor-menu/groups/StepIncrementMenuGroup'
 import { StitchingSettingsMenuGroup } from '../../../common/components/editor-menu/groups/StitchingSettingsMenuGroup'
 import { StitchingVisibilityMenuGroup } from '../../../common/components/editor-menu/groups/StitchingVisibilityMenuGroup'
+import { UndoRedoMenuGroup } from '../../../common/components/editor-menu/groups/UndoRedoMenuGroup'
 import { EditMenu, FileMenu, ViewMenu } from '../../../common/components/editor-menu/Menus'
 import { DownloadMenuGroup } from './groups/DownloadMenuGroup'
 
@@ -17,6 +18,7 @@ export const WebEditorMenu: FC = () => {
         <ExportMenuGroup />
       </FileMenu>
       <EditMenu>
+        <UndoRedoMenuGroup />
         <StepIncrementMenuGroup />
         <StitchingSettingsMenuGroup />
       </EditMenu>

@@ -11,6 +11,7 @@ import { CommandsContext, CommandsContextValue } from '../../common/contexts/Com
 import { useCommonCommandEmitter } from '../../common/hooks/useCommonCommandEmitter'
 import { useOptionalProject } from '../../common/hooks/useOptionalProject'
 import { useProjectOperations } from '../../common/hooks/useProjectOperations'
+import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
 import { downloadFile } from '../../common/utils/downloadFile'
 import { isDefined } from '../../common/utils/isDefined'
 import { useWebCommands } from '../hooks/useWebCommands'
@@ -22,6 +23,7 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
   const { updateEditingSettings, updateStitchingSettings } = useProjectOperations()
   const { project } = useOptionalProject()
+  const { redo, undo } = useSubProjectHistory()
 
   const commands = useWebCommands()
 
@@ -49,6 +51,10 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
           return setSvgExportDialogOpen(true)
         case 'export-pdf':
           return setPdfExportDialogOpen(true)
+        case 'undo':
+          return undo()
+        case 'redo':
+          return redo()
         case 'scaling':
           return setScalingDialogOpen(true)
         case 'increment-small':
@@ -77,7 +83,7 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
           console.log(`Command "${id}" not yet handled!`)
       }
     },
-    [getCommand, project, updateEditingSettings, updateStitchingSettings],
+    [getCommand, project, redo, undo, updateEditingSettings, updateStitchingSettings],
   )
 
   useCommonCommandEmitter({ commands, execute: emitCommand })

@@ -38,6 +38,9 @@ export type CommonCommandIdSchema =
   // File menu - Exports
   | 'export-pdf'
   | 'export-svg'
+  // Edit menu - History
+  | 'undo'
+  | 'redo'
   // Edit menu - Increments
   | 'increment-small'
   | 'increment-medium'

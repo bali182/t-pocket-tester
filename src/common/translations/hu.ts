@@ -79,6 +79,11 @@ export const HU = {
       },
       edit: {
         name: 'Szerkesztés',
+        history: {
+          name: 'Előzmények',
+          undo: 'Visszavonás',
+          redo: 'Újra',
+        },
         increment: {
           name: 'Módosítás lépésköze',
           small: 'Kicsi',

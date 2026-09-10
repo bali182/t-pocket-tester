@@ -31,6 +31,7 @@ import { useTranslation } from '../translations/translation'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
+import { useSubProjectHistory } from './useSubProjectHistory'
 
 export type UseSubProjectOperationsOutput = {
   addComponent: (parentId: string, type: ComponentSchema['type']) => ComponentSchema
@@ -54,6 +55,7 @@ export type UseSubProjectOperationsOutput = {
 
 export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
   const { project, subProject, setSubProject } = useEditorContext()
+  const { recordChange, recordThrottledChange: recordThrottledUpdate } = useSubProjectHistory()
   const t = useTranslation()
 
   const addComponent = useCallback(
@@ -70,11 +72,12 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
         stitchingSettings: currentProject.stitchingSettings,
       })
 
+      recordChange(currentSubProject)
       setSubProject(addComponentPure(currentSubProject, { component, parentId }))
 
       return component
     },
-    [project, setSubProject, subProject, t],
+    [project, recordChange, setSubProject, subProject, t],
   )
 
   const addStitchLineToComponent = useCallback(
@@ -87,11 +90,12 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
         getUnusedStitchLineName(type, currentSubProject, t),
       )
 
+      recordChange(currentSubProject)
       setSubProject(addStitchLinePure(currentSubProject, { stitchLine }))
 
       return stitchLine
     },
-    [setSubProject, subProject, t],
+    [recordChange, setSubProject, subProject, t],
   )
 
   const addStitchLineToHole = useCallback(
@@ -105,11 +109,12 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
         getUnusedStitchLineName(type, currentSubProject, t),
       )
 
+      recordChange(currentSubProject)
       setSubProject(addStitchLinePure(currentSubProject, { stitchLine }))
 
       return stitchLine
     },
-    [setSubProject, subProject, t],
+    [recordChange, setSubProject, subProject, t],
   )
 
   const addHole = useCallback(
@@ -121,11 +126,12 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
         name: getUnusedHoleName(currentSubProject, t),
       })
 
+      recordChange(currentSubProject)
       setSubProject(addHolePure(currentSubProject, { hole }))
 
       return hole
     },
-    [setSubProject, subProject, t],
+    [recordChange, setSubProject, subProject, t],
   )
 
   const cloneComponent = useCallback(
@@ -150,78 +156,87 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
         },
       })
 
+      recordChange(currentSubProject)
       setSubProject(clonedSubProject)
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const deleteComponent = useCallback(
     (componentId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(deleteComponentPure(currentSubProject, { componentId }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const cloneHole = useCallback(
     (holeId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(cloneHolePure(currentSubProject, { getUnusedId: id, getUnusedName, holeId }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const deleteHole = useCallback(
     (holeId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(deleteHolePure(currentSubProject, { holeId }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const cloneStitchLine = useCallback(
     (stitchLineId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(cloneStitchLinePure(currentSubProject, { getUnusedId: id, getUnusedName, stitchLineId }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const deleteStitchLine = useCallback(
     (stitchLineId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(deleteStitchLinePure(currentSubProject, { stitchLineId }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const moveComponent = useCallback(
     (componentId: string, targetParentId: string, beforeComponentId: string | undefined): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(moveComponentPure(currentSubProject, { beforeComponentId, componentId, targetParentId }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const moveHole = useCallback(
     (holeId: string, targetComponentId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(moveHolePure(currentSubProject, { holeId, targetComponentId }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const moveStitchLineToComponent = useCallback(
     (stitchLineId: string, componentId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(
         moveStitchLinePure(currentSubProject, {
           stitchLineId,
@@ -230,43 +245,47 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
         }),
       )
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const moveStitchLineToHole = useCallback(
     (stitchLineId: string, holeId: string): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordChange(currentSubProject)
       setSubProject(moveStitchLinePure(currentSubProject, { stitchLineId, targetId: holeId, targetType: 'hole' }))
     },
-    [setSubProject, subProject],
+    [recordChange, setSubProject, subProject],
   )
 
   const updateComponent = useCallback(
     (component: ComponentSchema): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordThrottledUpdate(`component:${component.id}`, currentSubProject)
       setSubProject(updateComponentPure(currentSubProject, { component }))
     },
-    [setSubProject, subProject],
+    [recordThrottledUpdate, setSubProject, subProject],
   )
 
   const updateHole = useCallback(
     (hole: HoleSchema): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordThrottledUpdate(`hole:${hole.id}`, currentSubProject)
       setSubProject(updateHolePure(currentSubProject, { hole }))
     },
-    [setSubProject, subProject],
+    [recordThrottledUpdate, setSubProject, subProject],
   )
 
   const updateStitchLine = useCallback(
     (stitchLine: StitchLineSchema): void => {
       const currentSubProject = ensureSubProject(subProject)
 
+      recordThrottledUpdate(`stitch-line:${stitchLine.id}`, currentSubProject)
       setSubProject(updateStitchLinePure(currentSubProject, { stitchLine }))
     },
-    [setSubProject, subProject],
+    [recordThrottledUpdate, setSubProject, subProject],
   )
 
   return useMemo<UseSubProjectOperationsOutput>(

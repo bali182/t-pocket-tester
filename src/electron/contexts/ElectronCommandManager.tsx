@@ -11,6 +11,7 @@ import { CommandsContext, CommandsContextValue } from '../../common/contexts/Com
 import { useCommonCommandEmitter } from '../../common/hooks/useCommonCommandEmitter'
 import { useOptionalProject } from '../../common/hooks/useOptionalProject'
 import { useProjectOperations } from '../../common/hooks/useProjectOperations'
+import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
 import { isDefined } from '../../common/utils/isDefined'
 import { useElectronCommands } from '../hooks/useElectronCommands'
 import { useElectronProject } from '../hooks/useElectronProject'
@@ -23,6 +24,7 @@ export const ElectronCommandManager: FC<PropsWithChildren> = ({ children }) => {
   const { openProject, saveProject, saveProjectAs } = useElectronProject()
   const { updateEditingSettings, updateStitchingSettings } = useProjectOperations()
   const { project } = useOptionalProject()
+  const { redo, undo } = useSubProjectHistory()
 
   const commands = useElectronCommands()
 
@@ -56,6 +58,10 @@ export const ElectronCommandManager: FC<PropsWithChildren> = ({ children }) => {
           return setSvgExportDialogOpen(true)
         case 'export-pdf':
           return setPdfExportDialogOpen(true)
+        case 'undo':
+          return undo()
+        case 'redo':
+          return redo()
         case 'scaling':
           return setScalingDialogOpen(true)
         case 'increment-small':
@@ -80,8 +86,10 @@ export const ElectronCommandManager: FC<PropsWithChildren> = ({ children }) => {
       project?.stitchingSettings?.stitchHolesVisible,
       project?.stitchingSettings?.stitchLinesVisible,
       project?.stitchingSettings?.stitchesVisible,
+      redo,
       saveProject,
       saveProjectAs,
+      undo,
       updateEditingSettings,
       updateStitchingSettings,
     ],

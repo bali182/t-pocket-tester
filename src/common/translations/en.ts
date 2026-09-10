@@ -80,6 +80,11 @@ export const EN: typeof HU = {
       },
       edit: {
         name: 'Edit',
+        history: {
+          name: 'History',
+          undo: 'Undo',
+          redo: 'Redo',
+        },
         increment: {
           name: 'Adjustment increment',
           small: 'Small',

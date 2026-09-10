@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useCommonCommands } from '../../common/hooks/useCommonCommands'
+import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
 import { Loadable } from '../../common/loadable'
 import type { CommandSchema } from '../../common/schemas/command'
 import { ElectronCommandIdSchema } from '../schemas/electronCommands'
@@ -9,6 +10,7 @@ import { useElectronProject } from './useElectronProject'
 
 export const useElectronCommands = (): Record<ElectronCommandIdSchema, CommandSchema<ElectronCommandIdSchema>> => {
   const { electronProject } = useElectronProject()
+  const { canRedo, canUndo } = useSubProjectHistory()
   const hasProjectAndIsDirty = Loadable.get(
     Loadable.map(electronProject, (project: ElectronProjectSchema): boolean => project.isDirty),
     true,
@@ -18,7 +20,11 @@ export const useElectronCommands = (): Record<ElectronCommandIdSchema, CommandSc
     true,
   )
 
-  const commonCommands = useCommonCommands({ hasOpenProject })
+  const commonCommands = useCommonCommands({
+    canRedo,
+    canUndo,
+    hasOpenProject,
+  })
 
   const commands = useMemo<Record<ElectronCommandIdSchema, CommandSchema<ElectronCommandIdSchema>>>(() => {
     return {

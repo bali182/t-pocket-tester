@@ -1,11 +1,12 @@
 import { useAtom } from 'jotai'
-import { useCallback, useMemo, type SetStateAction } from 'react'
+import { useCallback, useEffect, useMemo, type SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
 import { getPatchedProject } from '../../common/component-patches/getPatchedProject'
 import { getPatchedSubProject } from '../../common/component-patches/getPatchedSubProject'
 import { needsFullProjectPatch } from '../../common/component-patches/needsFullProjectPatch'
 import type { EditorContextType } from '../../common/contexts/EditorContext'
+import { useClearSubProjectHistory } from '../../common/hooks/useClearSubProjectHistory'
 import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
 import type { ProjectSchema } from '../../common/schemas/project'
 import type { ComputedSubProjectSchema, SubProjectSchema } from '../../common/schemas/subProject'
@@ -18,10 +19,15 @@ export const useWebEditorContextValue = (): EditorContextType => {
   const { projectId, subProjectId } = useParams<WebSubProjectRouteParamsSchema>()
   const navigate = useNavigate()
   const [projects, setProjects] = useAtom(projectsAtom)
+  const { clearSubProjectHistory } = useClearSubProjectHistory()
 
   const project = useMemo<ProjectSchema | undefined>(() => {
     return projects.find((candidate) => candidate.id === projectId)
   }, [projectId, projects])
+
+  useEffect(() => {
+    clearSubProjectHistory()
+  }, [clearSubProjectHistory, project?.id])
 
   const subProject = useMemo<SubProjectSchema | undefined>(() => {
     return project?.subProjects.find((candidate) => candidate.id === subProjectId)

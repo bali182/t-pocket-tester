@@ -1,11 +1,12 @@
 import { useAtom } from 'jotai'
-import { useCallback, useMemo, type SetStateAction } from 'react'
+import { useCallback, useEffect, useMemo, type SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
 import { getPatchedProject } from '../../common/component-patches/getPatchedProject'
 import { getPatchedSubProject } from '../../common/component-patches/getPatchedSubProject'
 import { needsFullProjectPatch } from '../../common/component-patches/needsFullProjectPatch'
 import type { EditorContextType } from '../../common/contexts/EditorContext'
+import { useClearSubProjectHistory } from '../../common/hooks/useClearSubProjectHistory'
 import { Loadable } from '../../common/loadable'
 import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
 import type { LoadableSchema } from '../../common/schemas/loadable'
@@ -21,8 +22,13 @@ export const useElectronEditorContextValue = (): EditorContextType => {
   const { subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
   const navigate = useNavigate()
   const [electronProject, setElectronProject] = useAtom(electronProjectAtom)
+  const { clearSubProjectHistory } = useClearSubProjectHistory()
   const loadedElectronProject = Loadable.get(electronProject)
   const project = loadedElectronProject?.project
+
+  useEffect(() => {
+    clearSubProjectHistory()
+  }, [clearSubProjectHistory, project?.id])
 
   const subProject = useMemo<SubProjectSchema | undefined>(() => {
     if (!isDefined(project) || !isDefined(subProjectId)) {
