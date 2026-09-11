@@ -6,10 +6,8 @@ import type { RecentProjectsSchema } from '../schemas/recentProject'
 import type { BaseExportSettingsSchema, GlobalSettingsSchema } from '../schemas/settings'
 import type { ThemeSchema } from '../schemas/theme'
 import { getSystemTheme } from '../utils/getSystemTheme'
-import type { EditorSplitterSizes } from './editorSplitterSizesAtom'
 
 type StorageKey =
-  | 'editor-splitter-sizes'
   | 'global-settings'
   | 'pdf-export-params'
   | 'projects'
@@ -17,16 +15,6 @@ type StorageKey =
   | 'scaling'
   | 'svg-export-params'
   | 'theme'
-
-export const readEditorSplitterSizesFromStorage = (defaultValue: EditorSplitterSizes): EditorSplitterSizes => {
-  return safeReadStorage<EditorSplitterSizes>('editor-splitter-sizes', defaultValue, (raw) =>
-    typia.assert<EditorSplitterSizes>(raw),
-  )
-}
-
-export const saveEditorSplitterSizesToStorage = (sizes: EditorSplitterSizes): void => {
-  safeWriteStorage('editor-splitter-sizes', sizes)
-}
 
 export const readGlobalSettingsFromStorage = (defaultValue: GlobalSettingsSchema): GlobalSettingsSchema => {
   return safeReadStorage<GlobalSettingsSchema>('global-settings', defaultValue, (raw) =>
