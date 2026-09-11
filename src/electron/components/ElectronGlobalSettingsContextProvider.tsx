@@ -62,9 +62,9 @@ export const ElectronGlobalSettingsContextProvider: FC<ElectronGlobalSettingsCon
     setSettings((current) => ({ ...current, pdfExport: { ...current.pdfExport, ...updates } }))
   }, [])
 
-  const setRecents = useCallback((updates: Partial<RecentProjectsSchema>): void => {
+  const setRecentProjects = useCallback((updates: Partial<RecentProjectsSchema>): void => {
     setSettings((current) => {
-      const recents: RecentProjectsSchema = { ...current.recents }
+      const recents: RecentProjectsSchema = { ...current.recentProjects }
 
       for (const [key, recentProject] of Object.entries(updates)) {
         if (isDefined(recentProject)) {
@@ -72,7 +72,7 @@ export const ElectronGlobalSettingsContextProvider: FC<ElectronGlobalSettingsCon
         }
       }
 
-      return { ...current, recents }
+      return { ...current, recentProjects: recents }
     })
   }, [])
 
@@ -81,7 +81,7 @@ export const ElectronGlobalSettingsContextProvider: FC<ElectronGlobalSettingsCon
       setAppSettings,
       setEditSettings,
       setPdfExportSettings,
-      setRecents,
+      setRecentProjects,
       setSettings,
       setSvgExportSettings,
       setViewSettings,
@@ -91,7 +91,7 @@ export const ElectronGlobalSettingsContextProvider: FC<ElectronGlobalSettingsCon
       setAppSettings,
       setEditSettings,
       setPdfExportSettings,
-      setRecents,
+      setRecentProjects,
       setSettings,
       setSvgExportSettings,
       setViewSettings,

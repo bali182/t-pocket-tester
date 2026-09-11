@@ -13,7 +13,7 @@ export const createDefaultGlobalSettings = (theme: ThemeSchema): GlobalSettingsS
       step: 1,
     },
     pdfExport: defaultPdfExportParams,
-    recents: {},
+    recentProjects: {},
     svgExport: defaultSvgExportParams,
     view: {
       scale: 1,

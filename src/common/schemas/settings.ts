@@ -50,5 +50,5 @@ export type GlobalSettingsSchema = {
   view: ViewSettingsSchema
   svgExport: BaseExportSettingsSchema
   pdfExport: PdfExportSettingsSchema
-  recents: RecentProjectsSchema
+  recentProjects: RecentProjectsSchema
 }

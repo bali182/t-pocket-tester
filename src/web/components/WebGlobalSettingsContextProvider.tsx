@@ -53,10 +53,10 @@ export const WebGlobalSettingsContextProvider: FC<PropsWithChildren> = ({ childr
     [setSettings],
   )
 
-  const setRecents = useCallback(
+  const setRecentProjects = useCallback(
     (updates: Partial<RecentProjectsSchema>): void => {
       setSettings((current) => {
-        const recents: RecentProjectsSchema = { ...current.recents }
+        const recents: RecentProjectsSchema = { ...current.recentProjects }
 
         for (const [key, recentProject] of Object.entries(updates)) {
           if (isDefined(recentProject)) {
@@ -64,7 +64,7 @@ export const WebGlobalSettingsContextProvider: FC<PropsWithChildren> = ({ childr
           }
         }
 
-        return { ...current, recents }
+        return { ...current, recentProjects: recents }
       })
     },
     [setSettings],
@@ -75,7 +75,7 @@ export const WebGlobalSettingsContextProvider: FC<PropsWithChildren> = ({ childr
       setAppSettings,
       setEditSettings,
       setPdfExportSettings,
-      setRecents,
+      setRecentProjects,
       setSettings,
       setSvgExportSettings,
       setViewSettings,
@@ -85,7 +85,7 @@ export const WebGlobalSettingsContextProvider: FC<PropsWithChildren> = ({ childr
       setAppSettings,
       setEditSettings,
       setPdfExportSettings,
-      setRecents,
+      setRecentProjects,
       setSettings,
       setSvgExportSettings,
       setViewSettings,
