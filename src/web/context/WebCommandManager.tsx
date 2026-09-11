@@ -9,6 +9,7 @@ import {
 } from '../../common/constants/commands'
 import { CommandsContext, CommandsContextValue } from '../../common/contexts/CommandsContext'
 import { useCommonCommandEmitter } from '../../common/hooks/useCommonCommandEmitter'
+import { useGlobalSettings } from '../../common/hooks/useGlobalSettings'
 import { useOptionalProject } from '../../common/hooks/useOptionalProject'
 import { useProjectOperations } from '../../common/hooks/useProjectOperations'
 import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
@@ -21,7 +22,8 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
-  const { updateEditingSettings, updateStitchingSettings } = useProjectOperations()
+  const { updateStitchingSettings } = useProjectOperations()
+  const { setEditSettings } = useGlobalSettings()
   const { project } = useOptionalProject()
   const { redo, undo } = useSubProjectHistory()
 
@@ -58,11 +60,11 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
         case 'scaling':
           return setScalingDialogOpen(true)
         case 'increment-small':
-          return updateEditingSettings({ numberEditorStep: EDITOR_SMALL_STEP })
+          return setEditSettings({ step: EDITOR_SMALL_STEP })
         case 'increment-medium':
-          return updateEditingSettings({ numberEditorStep: EDITOR_MEDIUM_STEP })
+          return setEditSettings({ step: EDITOR_MEDIUM_STEP })
         case 'increment-stitch-hole-distance':
-          return updateEditingSettings({ numberEditorStep: EDITOR_STITCH_HOLE_DISTANCE_STEP })
+          return setEditSettings({ step: EDITOR_STITCH_HOLE_DISTANCE_STEP })
         case 'stitch-line-visibility':
           return updateStitchingSettings({ stitchLinesVisible: !project?.stitchingSettings?.stitchLinesVisible })
         case 'stitch-hole-visibility':
@@ -83,7 +85,7 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
           console.log(`Command "${id}" not yet handled!`)
       }
     },
-    [getCommand, project, redo, undo, updateEditingSettings, updateStitchingSettings],
+    [getCommand, project, redo, setEditSettings, undo, updateStitchingSettings],
   )
 
   useCommonCommandEmitter({ commands, execute: emitCommand })

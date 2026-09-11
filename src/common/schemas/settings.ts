@@ -4,12 +4,6 @@ import type { ThemeSchema } from './theme'
 
 export type NumberEditorStepSchema = number | 'stitch-hole-distance'
 
-// Remove this type
-export type ProjectEditingSettingSchema = {
-  addBaseColorByDefault: boolean
-  numberEditorStep: NumberEditorStepSchema
-}
-
 export type ColorSettingsSchema = {
   leatherColor: string
   stitchHoleColor: string

@@ -23,10 +23,6 @@ export const validateProjectSchema = (
   )
   const colorSettingsResult = validateColorSettings(input.colorSettings, currentValue.colorSettings, context)
   const issues: ValidationIssuesSchema<ProjectSchema> = {
-    editingSettings: {
-      addBaseColorByDefault: undefined,
-      numberEditorStep: undefined,
-    },
     id: undefined,
     name: nameResult.issues,
     subProjects: [],
@@ -34,7 +30,6 @@ export const validateProjectSchema = (
     stitchingSettings: stitchingSettingsResult.issues,
   }
   const committedValue: ProjectSchema = {
-    editingSettings: currentValue.editingSettings,
     id: currentValue.id,
     name: nameResult.committedValue,
     subProjects: currentValue.subProjects,

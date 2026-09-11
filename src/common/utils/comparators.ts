@@ -1,7 +1,7 @@
 import type { ComponentSchema, PanelSchema, PocketClusterSchema, RootPanelSchema } from '../schemas/components'
 import type { HoleSchema } from '../schemas/hole'
 import type { ProjectSchema } from '../schemas/project'
-import type { ColorSettingsSchema, ProjectEditingSettingSchema } from '../schemas/settings'
+import type { ColorSettingsSchema } from '../schemas/settings'
 import type {
   ComponentBoundsStitchLineSchema,
   PocketClusterStitchLineSchema,
@@ -16,14 +16,10 @@ export const comparators = {
     return (
       a.id === b.id &&
       a.name === b.name &&
-      comparators.editingSettings(a.editingSettings, b.editingSettings) &&
       comparators.stitchingSettings(a.stitchingSettings, b.stitchingSettings) &&
       comparators.colorSettings(a.colorSettings, b.colorSettings) &&
       areArraysEqual(a.subProjects, b.subProjects, comparators.subProject)
     )
-  },
-  editingSettings: (a: ProjectEditingSettingSchema, b: ProjectEditingSettingSchema): boolean => {
-    return a.addBaseColorByDefault === b.addBaseColorByDefault && a.numberEditorStep === b.numberEditorStep
   },
   stitchingSettings: (a: StitchLineCommonConfigSchema, b: StitchLineCommonConfigSchema): boolean => {
     return (
