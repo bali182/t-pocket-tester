@@ -42,9 +42,6 @@ export const validateStitchLineCommonConfigSchema = (
     stitchHoleThickness: stitchHoleThicknessResult.issues,
     stitchLineThickness: stitchLineThicknessResult.issues,
     stitchMargin: stitchMarginResult.issues,
-    stitchLinesVisible: undefined,
-    stitchHolesVisible: undefined,
-    stitchesVisible: undefined,
   }
   const committedValue: StitchLineCommonConfigSchema = {
     stitchHoleDistance: stitchHoleDistanceResult.committedValue,
@@ -52,9 +49,6 @@ export const validateStitchLineCommonConfigSchema = (
     stitchHoleThickness: stitchHoleThicknessResult.committedValue,
     stitchLineThickness: stitchLineThicknessResult.committedValue,
     stitchMargin: stitchMarginResult.committedValue,
-    stitchLinesVisible: input.stitchLinesVisible,
-    stitchHolesVisible: input.stitchHolesVisible,
-    stitchesVisible: input.stitchesVisible,
   }
 
   if (

@@ -12,7 +12,6 @@ type StorageKey =
   | 'pdf-export-params'
   | 'projects'
   | 'recent-projects'
-  | 'scaling'
   | 'svg-export-params'
   | 'theme'
 
@@ -40,14 +39,6 @@ export const readRecentProjectsFromStorage = (): RecentProjectsSchema => {
 
 export const saveRecentProjectsToStorage = (recentProjects: RecentProjectsSchema): void => {
   safeWriteStorage('recent-projects', recentProjects)
-}
-
-export const readScalingFromStorage = (): number => {
-  return safeReadStorage<number>('scaling', 1, (raw) => typia.assert<number>(raw))
-}
-
-export const saveScalingToStorage = (scaling: number): void => {
-  safeWriteStorage('scaling', scaling)
 }
 
 export const readThemeFromStorage = (): ThemeSchema => {

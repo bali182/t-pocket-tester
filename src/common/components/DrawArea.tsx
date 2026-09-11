@@ -1,12 +1,11 @@
 import { Box } from '@chakra-ui/react'
-import { useAtomValue } from 'jotai'
 import { type FC } from 'react'
 
-import { scalingAtom } from '../state/scalingAtom'
+import { useGlobalSettings } from '../hooks/useGlobalSettings'
 import { SvgRoot } from './svg/SvgRoot'
 
 export const DrawArea: FC = () => {
-  const scaling = useAtomValue(scalingAtom)
+  const { settings } = useGlobalSettings()
 
   return (
     <Box boxSizing="border-box" height="100%" overflow="auto" width="100%">
@@ -19,7 +18,7 @@ export const DrawArea: FC = () => {
         py="5"
         width="max-content"
       >
-        <Box style={{ zoom: scaling }}>
+        <Box style={{ zoom: settings.view.scale }}>
           <SvgRoot />
         </Box>
       </Box>

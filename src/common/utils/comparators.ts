@@ -27,10 +27,7 @@ export const comparators = {
       a.stitchHoleLength === b.stitchHoleLength &&
       a.stitchHoleDistance === b.stitchHoleDistance &&
       a.stitchHoleThickness === b.stitchHoleThickness &&
-      a.stitchLineThickness === b.stitchLineThickness &&
-      a.stitchLinesVisible === b.stitchLinesVisible &&
-      a.stitchHolesVisible === b.stitchHolesVisible &&
-      a.stitchesVisible === b.stitchesVisible
+      a.stitchLineThickness === b.stitchLineThickness
     )
   },
   colorSettings: (a: ColorSettingsSchema, b: ColorSettingsSchema): boolean => {
@@ -195,9 +192,6 @@ export const comparators = {
       a.stitchHoleDistance === b.stitchHoleDistance &&
       a.stitchHoleThickness === b.stitchHoleThickness &&
       a.stitchLineThickness === b.stitchLineThickness &&
-      a.stitchLinesVisible === b.stitchLinesVisible &&
-      a.stitchHolesVisible === b.stitchHolesVisible &&
-      a.stitchesVisible === b.stitchesVisible &&
       a.topStartOffset === b.topStartOffset &&
       a.topEndOffset === b.topEndOffset &&
       a.rightStartOffset === b.rightStartOffset &&
@@ -237,9 +231,6 @@ export const comparators = {
       a.stitchHoleDistance === b.stitchHoleDistance &&
       a.stitchHoleThickness === b.stitchHoleThickness &&
       a.stitchLineThickness === b.stitchLineThickness &&
-      a.stitchLinesVisible === b.stitchLinesVisible &&
-      a.stitchHolesVisible === b.stitchHolesVisible &&
-      a.stitchesVisible === b.stitchesVisible &&
       a.startOffset === b.startOffset &&
       a.endOffset === b.endOffset &&
       a.stitchDirection === b.stitchDirection
