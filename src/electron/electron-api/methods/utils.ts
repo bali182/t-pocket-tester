@@ -9,10 +9,6 @@ export const hasErrorCode = (error: unknown, expectedCode: string): boolean => {
   return error.code === expectedCode
 }
 
-export const getThemeFilePath = (): string => {
-  return join(app.getPath('userData'), 'theme.json')
-}
-
 export const getSettingsFilePath = (): string => {
   return join(app.getPath('userData'), 'settings.json')
 }

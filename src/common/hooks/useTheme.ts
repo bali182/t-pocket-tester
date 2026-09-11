@@ -1,15 +1,28 @@
-import { useContext } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
-import type { ThemeContextValue } from '../contexts/ThemeContext'
-import { ThemeContext } from '../contexts/ThemeContext'
-import { isDefined } from '../utils/isDefined'
+import type { ThemeSchema } from '../schemas/theme'
+import { setDocumentBackgroundColor } from '../utils/setDocumentBackgroundColor'
+import { useGlobalSettings } from './useGlobalSettings'
 
-export const useTheme = (): ThemeContextValue => {
-  const themeContext = useContext(ThemeContext)
+export type UseThemeOutput = {
+  setTheme: (theme: ThemeSchema) => void
+  theme: ThemeSchema
+}
 
-  if (!isDefined(themeContext)) {
-    throw new Error('useTheme must be used inside ThemeContext.Provider')
-  }
+export const useTheme = (): UseThemeOutput => {
+  const { setAppSettings, settings } = useGlobalSettings()
+  const theme = settings.app.theme
 
-  return themeContext
+  const setTheme = useCallback(
+    (theme: ThemeSchema): void => {
+      setAppSettings({ theme })
+    },
+    [setAppSettings],
+  )
+
+  useEffect(() => {
+    setDocumentBackgroundColor(theme)
+  }, [theme])
+
+  return useMemo<UseThemeOutput>(() => ({ setTheme, theme }), [setTheme, theme])
 }

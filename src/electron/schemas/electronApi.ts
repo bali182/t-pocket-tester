@@ -1,6 +1,5 @@
 import type { HasTypeSchema } from '../../common/schemas/common'
 import type { GlobalSettingsSchema } from '../../common/schemas/settings'
-import type { ThemeSchema } from '../../common/schemas/theme'
 
 export type NativePlatformSchema =
   | 'aix'
@@ -116,16 +115,6 @@ export type FileValidateCreatePathResponseSchema =
   | FileCreatePathInvalidResponseSchema
   | FileErrorResponseSchema
 
-export type ThemeSetRequestSchema = HasTypeSchema<'set-theme'> & {
-  theme: ThemeSchema
-}
-
-export type ThemeSetSucceededResponseSchema = HasTypeSchema<'theme-set'> & {
-  theme: ThemeSchema
-}
-
-export type ThemeSetResponseSchema = ThemeSetSucceededResponseSchema | FileErrorResponseSchema
-
 export type SettingsSetRequestSchema = HasTypeSchema<'settings-set'> & {
   settings: GlobalSettingsSchema
 }
@@ -142,10 +131,8 @@ export type ElectronApi = {
     request: FileFindExistingFilePathsRequestSchema,
   ) => Promise<FileFindExistingFilePathsResponseSchema>
   getSettings: () => Promise<GlobalSettingsSchema>
-  getTheme: () => Promise<ThemeSchema>
   read: (request: FileReadRequestSchema) => Promise<FileReadResponseSchema>
   setSettings: (request: SettingsSetRequestSchema) => Promise<SettingsSetResponseSchema>
-  setTheme: (request: ThemeSetRequestSchema) => Promise<ThemeSetResponseSchema>
   suggestPath: (request: FileSuggestPathRequestSchema) => Promise<FileSuggestPathResponseSchema>
   validateCreatePath: (request: FileValidateCreatePathRequestSchema) => Promise<FileValidateCreatePathResponseSchema>
   write: (request: FileWriteRequestSchema) => Promise<FileWriteResponseSchema>

@@ -11,7 +11,6 @@ import type {
   FileValidateCreatePathRequestSchema,
   FileWriteRequestSchema,
   SettingsSetRequestSchema,
-  ThemeSetRequestSchema,
 } from '../schemas/electronApi'
 import { getPreloadPath, getRendererPath } from './buildPaths'
 import { _electronApi } from './electronApi'
@@ -21,9 +20,9 @@ const currentDirectory = dirname(fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow
 
 const createMainWindow = async (): Promise<BrowserWindow> => {
-  const theme = await _electronApi.getTheme()
+  const settings = await _electronApi.getSettings()
   const browserWindow = new BrowserWindow({
-    backgroundColor: BACKGROUND_COLORS[theme],
+    backgroundColor: BACKGROUND_COLORS[settings.app.theme],
     titleBarStyle: 'default',
     webPreferences: {
       contextIsolation: true,
@@ -76,10 +75,6 @@ ipcMain.handle(electronIpcChannels.read, (_event, request: unknown) => {
   return _electronApi.read(request)
 })
 
-ipcMain.handle(electronIpcChannels.getTheme, () => {
-  return _electronApi.getTheme()
-})
-
 ipcMain.handle(electronIpcChannels.getSettings, () => {
   return _electronApi.getSettings()
 })
@@ -97,26 +92,6 @@ ipcMain.handle(electronIpcChannels.setSettings, async (_event, request: unknown)
 
   try {
     mainWindow.setBackgroundColor(BACKGROUND_COLORS[response.settings.app.theme])
-    return response
-  } catch (error) {
-    console.error('Unable to set Electron window background color:', error)
-    return { type: 'error' }
-  }
-})
-
-ipcMain.handle(electronIpcChannels.setTheme, async (_event, request: unknown) => {
-  if (!typia.is<ThemeSetRequestSchema>(request)) {
-    return { type: 'error' }
-  }
-
-  const response = await _electronApi.setTheme(request)
-
-  if (response.type === 'error') {
-    return response
-  }
-
-  try {
-    mainWindow.setBackgroundColor(BACKGROUND_COLORS[response.theme])
     return response
   } catch (error) {
     console.error('Unable to set Electron window background color:', error)
