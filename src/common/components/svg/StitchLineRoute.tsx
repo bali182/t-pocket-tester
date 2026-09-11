@@ -5,6 +5,7 @@ import { usePath } from '../../hooks/usePath'
 import type { ComputedStitchRouteSchema } from '../../schemas/computed'
 import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
 import { StitchHole } from './StitchHole'
+import { StitchRouteLabel } from './StitchRouteLabel'
 import { Stitches } from './Stitches'
 
 type StitchLineRouteProps = {
@@ -17,6 +18,11 @@ export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine })
   const pathData = usePath(route.path)
   const stitchLineThickness = stitchLineStyles.getLineThickness(stitchLine)
   const stitchHoleThickness = stitchLineStyles.getStitchHoleThickness(stitchLine)
+  const isStitchLineActive =
+    selection.selectedStitchLine?.id === stitchLine.id ||
+    selection.hoveredStitchLineId === stitchLine.id ||
+    (selection.hoveredTreeSelection?.type === 'stitch-line' &&
+      selection.hoveredTreeSelection.stitchLineId === stitchLine.id)
   const hitAreaThickness =
     1 + Math.max(stitchLineThickness ?? 0, stitchLine.stitchHoleLength / Math.SQRT2 + (stitchHoleThickness ?? 0))
 
@@ -60,6 +66,7 @@ export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine })
       {(!isInteractive || stitchLine.stitchHolesVisible) &&
         route.holes.map((hole, index) => <StitchHole key={index} hole={hole} stitchLine={stitchLine} />)}
       {isInteractive && stitchLine.stitchesVisible && <Stitches stitches={route.stitches} stitchLine={stitchLine} />}
+      {isInteractive && isStitchLineActive && <StitchRouteLabel route={route} />}
       {isInteractive && (
         <path d={pathData} fill="none" pointerEvents="stroke" stroke="transparent" strokeWidth={hitAreaThickness} />
       )}

@@ -15,3 +15,6 @@ export const VIEWBOX_PADDING = 10
 
 export const COMPONENT_NAME_COLOR = '#000000'
 export const COMPONENT_DIMENSIONS_COLOR = '#666666'
+
+export const STITCH_LINE_LABEL_COLOR = '#000000'
+export const STITCH_LINE_LABEL_STROKE_COLOR = '#ffffff66'

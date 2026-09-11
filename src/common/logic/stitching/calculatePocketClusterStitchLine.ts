@@ -1,7 +1,7 @@
 import { ZERO_CORNER_RADIUS } from '../../constants/layout'
-import type { PocketClusterSchema } from '../../schemas/components'
+import type { PocketClusterSchema, PocketOrientationSchema } from '../../schemas/components'
 import type { ComputedPocketClusterSchema, ComputedStitchLineSchema } from '../../schemas/computed'
-import type { ResolvedPocketClusterStitchLineSchema } from '../../schemas/stitching'
+import type { ResolvedPocketClusterStitchLineSchema, StitchSideSchema } from '../../schemas/stitching'
 import { normalizePocketCluster } from '../normalizePocketCluster'
 import { calculateRouteStitches } from './calculateRouteStitches'
 import { calculateStitchLineBoundingRect } from './calculateStitchLineBoundingRect'
@@ -25,10 +25,12 @@ export const calculatePocketClusterStitchLine = (
     const holes = calculateTPocketStitchHoles(stitchLine, calculatedStitchLine.line)
 
     return {
+      boundingRect: calculateStitchLineBoundingRect([calculatedStitchLine.line.start, calculatedStitchLine.line.end]),
       path: calculatedStitchLine.path,
       holes,
       isClosed: false,
       stitches: calculateRouteStitches(holes, false),
+      labelPosition: getPocketClusterStitchRouteLabelPosition(normalizedPocketCluster.orientation),
       disconnectedCorners: {
         'top-left': undefined,
         'top-right': undefined,
@@ -47,5 +49,18 @@ export const calculatePocketClusterStitchLine = (
     boundingRect: calculateStitchLineBoundingRect(points),
     routes,
     connectingStitches: [],
+  }
+}
+
+const getPocketClusterStitchRouteLabelPosition = (orientation: PocketOrientationSchema): StitchSideSchema => {
+  switch (orientation) {
+    case 'up':
+      return 'top'
+    case 'down':
+      return 'bottom'
+    case 'left':
+      return 'left'
+    case 'right':
+      return 'right'
   }
 }

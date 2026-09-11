@@ -33,6 +33,7 @@ export type CalculatedStitchLinePath = {
   path: PathSchema
   fragments: StitchPathFragment[]
   isClosed: boolean
+  labelPosition: StitchSideSchema
 }
 
 type SelectableStitchPathFragment = StitchPathFragment & {
@@ -46,12 +47,43 @@ export const calculateStitchLinePaths = (
   const fragments = calculateStitchLinePathFragments(stitchLine, target)
 
   return groupStitchLinePathFragments(fragments)
-    .map((routeFragments) => ({
-      path: createPathFromFragments(routeFragments),
-      fragments: routeFragments,
-      isClosed: arePointsEqual(routeFragments[0].start, routeFragments[routeFragments.length - 1].end),
-    }))
+    .map((routeFragments) => {
+      const isClosed = arePointsEqual(routeFragments[0].start, routeFragments[routeFragments.length - 1].end)
+
+      return {
+        path: createPathFromFragments(routeFragments),
+        fragments: routeFragments,
+        isClosed,
+        labelPosition: calculateStitchRouteLabelPosition(routeFragments, isClosed),
+      }
+    })
     .filter((calculatedPath) => calculatedPath.path.commands.length > 1)
+}
+
+const calculateStitchRouteLabelPosition = (fragments: StitchPathFragment[], isClosed: boolean): StitchSideSchema => {
+  if (isClosed) {
+    return 'top'
+  }
+
+  const sideFragments = fragments.filter((fragment): fragment is StitchSidePathFragment => fragment.type === 'side')
+
+  switch (sideFragments.length) {
+    case 1:
+      return sideFragments[0].side
+    case 2: {
+      const fragment = sideFragments.filter((f) => f.side === 'top' || f.side === 'bottom')[0]
+      if (!isDefined(fragment)) {
+        throw new Error('No horizontal fragment found')
+      }
+      return fragment.side
+    }
+    case 3:
+      return sideFragments[1].side
+    case 4:
+      return 'top'
+    default:
+      throw new Error(`Unexpected stitch route side count: ${sideFragments.length}`)
+  }
 }
 
 const calculateStitchLinePathFragments = (

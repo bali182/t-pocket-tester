@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { COMPONENT_DIMENSIONS_COLOR, COMPONENT_NAME_COLOR, STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
+import { defaultDrawAreaContext } from '../contexts/drawAreaContextDefaults'
 import { defaultSubProjectSelection } from '../contexts/SubProjectSelectionContext'
 import { getSvgExportElementBoundingRect } from '../logic/exports/getSvgExportElementBoundingRect'
 import type {
-  DrawAreaCardStyles,
   DrawAreaComponentStyles,
   DrawAreaContextValue,
   DrawAreaExportIdentifiers,
@@ -24,21 +24,13 @@ export const useSvgDrawArea = (
   settings: BaseExportSettingsSchema,
 ): DrawAreaContextValue => {
   const t = useTranslation()
+
   const componentStyles = useMemo<DrawAreaComponentStyles>(
     () => ({
       getBackgroundColor: produce('none'),
       getBorderColor: produce(STROKE_COLOR),
       getBorderThickness: produce(STROKE_THICKNESS),
       getFilter: produce(undefined),
-    }),
-    [],
-  )
-
-  const cardStyles = useMemo<DrawAreaCardStyles>(
-    () => ({
-      getBackgroundColor: produce(undefined),
-      getStrokeColor: produce(undefined),
-      getStrokeThickness: produce(undefined),
     }),
     [],
   )
@@ -130,13 +122,14 @@ export const useSvgDrawArea = (
       selection: defaultSubProjectSelection,
       holeStyles,
       componentStyles,
-      cardStyles,
+      cardStyles: defaultDrawAreaContext.cardStyles,
       stitchLineStyles,
       exportTextStyles,
       markerStyles,
       exportIdentifiers,
+      stitchRouteLabelStyles: defaultDrawAreaContext.stitchRouteLabelStyles,
     }),
-    [cardStyles, componentStyles, exportIdentifiers, exportTextStyles, holeStyles, markerStyles, stitchLineStyles],
+    [componentStyles, exportIdentifiers, exportTextStyles, holeStyles, markerStyles, stitchLineStyles],
   )
 
   return drawAreaContextValue

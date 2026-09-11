@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { STROKE_THICKNESS } from '../constants/drawing'
+import { STITCH_LINE_LABEL_COLOR, STITCH_LINE_LABEL_STROKE_COLOR, STROKE_THICKNESS } from '../constants/drawing'
 import { getComponentColor } from '../utils/getComponentColor'
 import { isDefined } from '../utils/isDefined'
 import { produce } from '../utils/produce'
@@ -17,6 +17,7 @@ import type {
   DrawAreaHoleStyles,
   DrawAreaMarkerStyles,
   DrawAreaStitchLineStyles,
+  DrawAreaStitchRouteLabelStyles,
 } from '../schemas/drawArea'
 import { useSubProjectSelection } from './useSubProjectSelection'
 
@@ -220,6 +221,16 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
     ],
   )
 
+  const stitchRouteLabelStyles = useMemo<DrawAreaStitchRouteLabelStyles>(
+    () => ({
+      getLabelColor: produce(STITCH_LINE_LABEL_COLOR),
+      getLabelStrokeColor: produce(STITCH_LINE_LABEL_STROKE_COLOR),
+      getLabelFontFamily: produce('sans-serif'),
+      getLabelFontSize: produce(3.2),
+    }),
+    [],
+  )
+
   const drawAreaContextValue = useMemo<DrawAreaContextValue>(
     () => ({
       isInteractive: true,
@@ -232,8 +243,9 @@ export const useEditorDrawArea = (): DrawAreaContextValue => {
       exportTextStyles,
       markerStyles,
       exportIdentifiers,
+      stitchRouteLabelStyles,
     }),
-    [cardStyles, componentStyles, drawAreaSelection, holeStyles, stitchLineStyles],
+    [cardStyles, componentStyles, drawAreaSelection, holeStyles, stitchLineStyles, stitchRouteLabelStyles],
   )
 
   return drawAreaContextValue

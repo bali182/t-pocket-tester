@@ -19,12 +19,15 @@ export const calculateComponentBoundsStitchLine = (
   )
   const routes = calculatedPaths.map((calculatedPath): ComputedStitchRouteSchema => {
     const holes = calculateStitchLineHoles(stitchLine, calculatedPath)
+    const routePoints = calculatedPath.fragments.flatMap((fragment) => [fragment.start, fragment.end])
 
     return {
+      boundingRect: calculateStitchLineBoundingRect(routePoints),
       path: calculatedPath.path,
       holes,
       isClosed: calculatedPath.isClosed,
       stitches: calculateRouteStitches(holes, calculatedPath.isClosed),
+      labelPosition: calculatedPath.labelPosition,
       disconnectedCorners: calculateRouteDisconnectedCorners(stitchLine, calculatedPath, holes),
     }
   })
