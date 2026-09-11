@@ -3,10 +3,8 @@ import typia from 'typia'
 import type { ProjectSchema } from '../schemas/project'
 import type { RecentProjectsSchema } from '../schemas/recentProject'
 import type { GlobalSettingsSchema } from '../schemas/settings'
-import type { ThemeSchema } from '../schemas/theme'
-import { getSystemTheme } from '../utils/getSystemTheme'
 
-type StorageKey = 'global-settings' | 'projects' | 'recent-projects' | 'theme'
+type StorageKey = 'global-settings' | 'projects' | 'recent-projects'
 
 export const readGlobalSettingsFromStorage = (defaultValue: GlobalSettingsSchema): GlobalSettingsSchema => {
   return safeReadStorage<GlobalSettingsSchema>('global-settings', defaultValue, (raw) =>
@@ -32,14 +30,6 @@ export const readRecentProjectsFromStorage = (): RecentProjectsSchema => {
 
 export const saveRecentProjectsToStorage = (recentProjects: RecentProjectsSchema): void => {
   safeWriteStorage('recent-projects', recentProjects)
-}
-
-export const readThemeFromStorage = (): ThemeSchema => {
-  return safeReadStorage<ThemeSchema>('theme', getSystemTheme(), (raw) => typia.assert<ThemeSchema>(raw))
-}
-
-export const saveThemeToStorage = (theme: ThemeSchema): void => {
-  safeWriteStorage('theme', theme)
 }
 
 const safeReadStorage = <T>(key: StorageKey, defaultValue: T, assert: (raw: unknown) => void): T => {
