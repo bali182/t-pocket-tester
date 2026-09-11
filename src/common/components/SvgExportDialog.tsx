@@ -1,14 +1,13 @@
-import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { LANGUAGE } from '../constants/language'
+import { useGlobalSettings } from '../hooks/useGlobalSettings'
 import { useProject } from '../hooks/useProject'
 import { renderSvgToString } from '../logic/exports/renderSvgToString'
 import { getComputedProject } from '../logic/getComputedProject'
 import type { EditableSchema } from '../schemas/editable'
 import type { BaseExportSettingsSchema } from '../schemas/settings'
 import type { BaseValidationContextSchema } from '../schemas/validation'
-import { svgExportParamsAtom } from '../state/svgExportParamsAtom'
 import { useTranslation } from '../translations/translation'
 import { downloadFile } from '../utils/downloadFile'
 import { getEditableSchema } from '../utils/getEditableSchema'
@@ -24,18 +23,18 @@ type SvgExportDialogProps = {
 
 export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange }) => {
   const { project } = useProject()
-  const [storedParams, setStoredParams] = useAtom(svgExportParamsAtom)
+  const { setSvgExportSettings, settings } = useGlobalSettings()
   const t = useTranslation()
   const context = useMemo<BaseValidationContextSchema>(() => ({ language: LANGUAGE, t }), [t])
-  const [exportParams, setExportParams] = useState<BaseExportSettingsSchema>(storedParams)
+  const [localSvgExportSettings, setLocalSvgExportParams] = useState<BaseExportSettingsSchema>(settings.svgExport)
 
   const [editableParams, setEditableParams] = useState<EditableSchema<BaseExportSettingsSchema>>(() =>
-    getEditableSchema(storedParams, context),
+    getEditableSchema(settings.svgExport, context),
   )
 
   const validationResult = useMemo(
-    () => validateBaseExportSettingsSchema(editableParams, exportParams, context),
-    [context, editableParams, exportParams],
+    () => validateBaseExportSettingsSchema(editableParams, localSvgExportSettings, context),
+    [context, editableParams, localSvgExportSettings],
   )
 
   const hasErrors = useMemo(
@@ -44,22 +43,26 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   const resetDraft = useCallback((): void => {
-    setExportParams(storedParams)
-    setEditableParams(getEditableSchema(storedParams, context))
-  }, [context, storedParams])
+    setLocalSvgExportParams(settings.svgExport)
+    setEditableParams(getEditableSchema(settings.svgExport, context))
+  }, [context, settings.svgExport])
 
   const handleParamsChange = useCallback(
     (updatedEditableParams: EditableSchema<BaseExportSettingsSchema>): void => {
-      const updatedValidationResult = validateBaseExportSettingsSchema(updatedEditableParams, exportParams, context)
+      const updatedValidationResult = validateBaseExportSettingsSchema(
+        updatedEditableParams,
+        localSvgExportSettings,
+        context,
+      )
 
       setEditableParams(updatedEditableParams)
-      setExportParams(updatedValidationResult.committedValue)
+      setLocalSvgExportParams(updatedValidationResult.committedValue)
     },
-    [context, exportParams],
+    [context, localSvgExportSettings],
   )
 
   const handleSubmit = useCallback((): void => {
-    const submitValidationResult = validateBaseExportSettingsSchema(editableParams, exportParams, context)
+    const submitValidationResult = validateBaseExportSettingsSchema(editableParams, localSvgExportSettings, context)
 
     if (!submitValidationResult.isValid) {
       return
@@ -68,9 +71,9 @@ export const SvgExportDialog: FC<SvgExportDialogProps> = ({ isOpen, onOpenChange
     const computedProject = getComputedProject(project)
     const svg = renderSvgToString(project, computedProject, submitValidationResult.value)
     downloadFile({ contentType: 'image/svg+xml', content: svg, fileName: `${project.name}.svg` })
-    setStoredParams(submitValidationResult.value)
+    setSvgExportSettings(submitValidationResult.value)
     onOpenChange(false)
-  }, [context, editableParams, exportParams, onOpenChange, project, setStoredParams])
+  }, [context, editableParams, localSvgExportSettings, onOpenChange, project, setSvgExportSettings])
 
   return (
     <EditDialog

@@ -1,19 +1,12 @@
 import typia from 'typia'
 
-import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
 import type { ProjectSchema } from '../schemas/project'
 import type { RecentProjectsSchema } from '../schemas/recentProject'
-import type { BaseExportSettingsSchema, GlobalSettingsSchema } from '../schemas/settings'
+import type { GlobalSettingsSchema } from '../schemas/settings'
 import type { ThemeSchema } from '../schemas/theme'
 import { getSystemTheme } from '../utils/getSystemTheme'
 
-type StorageKey =
-  | 'global-settings'
-  | 'pdf-export-params'
-  | 'projects'
-  | 'recent-projects'
-  | 'svg-export-params'
-  | 'theme'
+type StorageKey = 'global-settings' | 'projects' | 'recent-projects' | 'theme'
 
 export const readGlobalSettingsFromStorage = (defaultValue: GlobalSettingsSchema): GlobalSettingsSchema => {
   return safeReadStorage<GlobalSettingsSchema>('global-settings', defaultValue, (raw) =>
@@ -47,26 +40,6 @@ export const readThemeFromStorage = (): ThemeSchema => {
 
 export const saveThemeToStorage = (theme: ThemeSchema): void => {
   safeWriteStorage('theme', theme)
-}
-
-export const readSvgExportParamsFromStorage = (defaultValue: BaseExportSettingsSchema): BaseExportSettingsSchema => {
-  return safeReadStorage<BaseExportSettingsSchema>('svg-export-params', defaultValue, (raw) =>
-    typia.assert<BaseExportSettingsSchema>(raw),
-  )
-}
-
-export const saveSvgExportParamsToStorage = (params: BaseExportSettingsSchema): void => {
-  safeWriteStorage('svg-export-params', params)
-}
-
-export const readPdfExportParamsFromStorage = (defaultValue: PdfExportSettingsSchema): PdfExportSettingsSchema => {
-  return safeReadStorage<PdfExportSettingsSchema>('pdf-export-params', defaultValue, (raw) =>
-    typia.assert<PdfExportSettingsSchema>(raw),
-  )
-}
-
-export const savePdfExportParamsToStorage = (params: PdfExportSettingsSchema): void => {
-  safeWriteStorage('pdf-export-params', params)
 }
 
 const safeReadStorage = <T>(key: StorageKey, defaultValue: T, assert: (raw: unknown) => void): T => {

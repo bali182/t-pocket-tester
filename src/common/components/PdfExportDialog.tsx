@@ -1,8 +1,8 @@
 import { Alert, Box, CloseButton } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState, type FC } from 'react'
 
 import { LANGUAGE } from '../constants/language'
+import { useGlobalSettings } from '../hooks/useGlobalSettings'
 import { useProject } from '../hooks/useProject'
 import { exportPdf } from '../logic/exports/exportPdf'
 import { getComputedPdfExport } from '../logic/exports/getComputedPdfExport'
@@ -10,7 +10,6 @@ import { getComputedProject } from '../logic/getComputedProject'
 import type { EditableSchema } from '../schemas/editable'
 import type { PdfExportSettingsSchema, PdfExportUnsuccessfulLayoutSchema } from '../schemas/pdfExport'
 import type { BaseValidationContextSchema } from '../schemas/validation'
-import { pdfExportParamsAtom } from '../state/pdfExportParamsAtom'
 import { useTranslation } from '../translations/translation'
 import { getEditableSchema } from '../utils/getEditableSchema'
 import { hasValidationErrors } from '../utils/hasValidationErrors'
@@ -37,10 +36,10 @@ type PdfExportFailure = PdfExportUnplaceableFailure | PdfExportRuntimeFailure
 
 export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange }) => {
   const { project } = useProject()
-  const [storedParams, setStoredParams] = useAtom(pdfExportParamsAtom)
-  const [exportParams, setExportParams] = useState<PdfExportSettingsSchema>(storedParams)
-  const [editableParams, setEditableParams] = useState<EditableSchema<PdfExportSettingsSchema>>(() =>
-    getEditableSchema(storedParams, { language: LANGUAGE }),
+  const { setPdfExportSettings, settings } = useGlobalSettings()
+  const [exportParams, setExportParams] = useState<PdfExportSettingsSchema>(settings.pdfExport)
+  const [localPdfExportSettings, setLocalPdfExportSettings] = useState<EditableSchema<PdfExportSettingsSchema>>(() =>
+    getEditableSchema(settings.pdfExport, { language: LANGUAGE }),
   )
   const [failure, setFailure] = useState<PdfExportFailure | undefined>(undefined)
   const [isExporting, setIsExporting] = useState<boolean>(false)
@@ -48,8 +47,8 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
   const context = useMemo<BaseValidationContextSchema>(() => ({ language: LANGUAGE, t }), [t])
 
   const validationResult = useMemo(
-    () => validatePdfExportSettingsSchema(editableParams, exportParams, context),
-    [context, editableParams, exportParams],
+    () => validatePdfExportSettingsSchema(localPdfExportSettings, exportParams, context),
+    [context, localPdfExportSettings, exportParams],
   )
 
   const hasErrors = useMemo(
@@ -58,16 +57,16 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
   )
 
   const resetDraft = useCallback((): void => {
-    setEditableParams(getEditableSchema(storedParams, context))
-    setExportParams(storedParams)
+    setLocalPdfExportSettings(getEditableSchema(settings.pdfExport, context))
+    setExportParams(settings.pdfExport)
     setFailure(undefined)
-  }, [context, storedParams])
+  }, [context, settings.pdfExport])
 
   const handleParamsChange = useCallback(
     (updatedEditableParams: EditableSchema<PdfExportSettingsSchema>): void => {
       const updatedValidationResult = validatePdfExportSettingsSchema(updatedEditableParams, exportParams, context)
 
-      setEditableParams(updatedEditableParams)
+      setLocalPdfExportSettings(updatedEditableParams)
       setExportParams(updatedValidationResult.committedValue)
     },
     [context, exportParams],
@@ -78,7 +77,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
   }, [])
 
   const handleSubmit = useCallback(async (): Promise<void> => {
-    const submitValidationResult = validatePdfExportSettingsSchema(editableParams, exportParams, context)
+    const submitValidationResult = validatePdfExportSettingsSchema(localPdfExportSettings, exportParams, context)
 
     if (!submitValidationResult.isValid) {
       return
@@ -96,7 +95,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
 
     try {
       await exportPdf(project, submitValidationResult.value, layout)
-      setStoredParams(submitValidationResult.value)
+      setPdfExportSettings(submitValidationResult.value)
       onOpenChange(false)
     } catch (error) {
       console.error('Unable to export PDF:', error)
@@ -104,7 +103,7 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
     } finally {
       setIsExporting(false)
     }
-  }, [context, editableParams, exportParams, onOpenChange, project, setStoredParams])
+  }, [context, localPdfExportSettings, exportParams, onOpenChange, project, setPdfExportSettings])
 
   return (
     <EditDialog
@@ -118,7 +117,11 @@ export const PdfExportDialog: FC<PdfExportDialogProps> = ({ isOpen, onOpenChange
       title={t.pdfExport.dialog.title}
     >
       <PdfExportFailureAlert failure={failure} onDismiss={handleFailureDismiss} />
-      <PdfExportEditor editable={editableParams} issues={validationResult.issues} onChange={handleParamsChange} />
+      <PdfExportEditor
+        editable={localPdfExportSettings}
+        issues={validationResult.issues}
+        onChange={handleParamsChange}
+      />
     </EditDialog>
   )
 }
