@@ -3,13 +3,14 @@ import typia from 'typia'
 import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
 import type { ProjectSchema } from '../schemas/project'
 import type { RecentProjectsSchema } from '../schemas/recentProject'
-import type { BaseExportSettingsSchema } from '../schemas/settings'
+import type { BaseExportSettingsSchema, GlobalSettingsSchema } from '../schemas/settings'
 import type { ThemeSchema } from '../schemas/theme'
 import { getSystemTheme } from '../utils/getSystemTheme'
 import type { EditorSplitterSizes } from './editorSplitterSizesAtom'
 
 type StorageKey =
   | 'editor-splitter-sizes'
+  | 'global-settings'
   | 'pdf-export-params'
   | 'projects'
   | 'recent-projects'
@@ -25,6 +26,16 @@ export const readEditorSplitterSizesFromStorage = (defaultValue: EditorSplitterS
 
 export const saveEditorSplitterSizesToStorage = (sizes: EditorSplitterSizes): void => {
   safeWriteStorage('editor-splitter-sizes', sizes)
+}
+
+export const readGlobalSettingsFromStorage = (defaultValue: GlobalSettingsSchema): GlobalSettingsSchema => {
+  return safeReadStorage<GlobalSettingsSchema>('global-settings', defaultValue, (raw) =>
+    typia.assert<GlobalSettingsSchema>(raw),
+  )
+}
+
+export const saveGlobalSettingsToStorage = (settings: GlobalSettingsSchema): void => {
+  safeWriteStorage('global-settings', settings)
 }
 
 export const readProjectsFromStorage = (): ProjectSchema[] => {

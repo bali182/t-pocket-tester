@@ -13,19 +13,21 @@ export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
 export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
 export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
 
+// TODO marked for removal
 export type StitchingVisibilityConfigSchema = {
   stitchLinesVisible: boolean
   stitchHolesVisible: boolean
   stitchesVisible: boolean
 }
 
-export type StitchLineCommonConfigSchema = StitchingVisibilityConfigSchema & {
-  stitchMargin: number
-  stitchHoleLength: number
-  stitchHoleDistance: number
-  stitchHoleThickness: number
-  stitchLineThickness: number
-}
+export type StitchLineCommonConfigSchema =
+  /* Remove StitchingVisibilityConfigSchema from this type.  */ StitchingVisibilityConfigSchema & {
+    stitchMargin: number
+    stitchHoleLength: number
+    stitchHoleDistance: number
+    stitchHoleThickness: number
+    stitchLineThickness: number
+  }
 
 export type HasDirectionalOffsetsSchema = {
   // Offsets of the sides we stitch. What are these used for?

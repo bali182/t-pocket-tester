@@ -1,4 +1,5 @@
 import type { HasTypeSchema } from '../../common/schemas/common'
+import type { GlobalSettingsSchema } from '../../common/schemas/settings'
 import type { ThemeSchema } from '../../common/schemas/theme'
 
 export type NativePlatformSchema =
@@ -125,13 +126,25 @@ export type ThemeSetSucceededResponseSchema = HasTypeSchema<'theme-set'> & {
 
 export type ThemeSetResponseSchema = ThemeSetSucceededResponseSchema | FileErrorResponseSchema
 
+export type SettingsSetRequestSchema = HasTypeSchema<'settings-set'> & {
+  settings: GlobalSettingsSchema
+}
+
+export type SettingsSetSucceededResponseSchema = HasTypeSchema<'settings-set-succeeded'> & {
+  settings: GlobalSettingsSchema
+}
+
+export type SettingsSetResponseSchema = SettingsSetSucceededResponseSchema | FileErrorResponseSchema
+
 export type ElectronApi = {
   dialog: (request: FileDialogRequestSchema) => Promise<FileDialogResponseSchema>
   findExistingFilePaths: (
     request: FileFindExistingFilePathsRequestSchema,
   ) => Promise<FileFindExistingFilePathsResponseSchema>
+  getSettings: () => Promise<GlobalSettingsSchema>
   getTheme: () => Promise<ThemeSchema>
   read: (request: FileReadRequestSchema) => Promise<FileReadResponseSchema>
+  setSettings: (request: SettingsSetRequestSchema) => Promise<SettingsSetResponseSchema>
   setTheme: (request: ThemeSetRequestSchema) => Promise<ThemeSetResponseSchema>
   suggestPath: (request: FileSuggestPathRequestSchema) => Promise<FileSuggestPathResponseSchema>
   validateCreatePath: (request: FileValidateCreatePathRequestSchema) => Promise<FileValidateCreatePathResponseSchema>

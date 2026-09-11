@@ -10,6 +10,7 @@ import type {
   FileSuggestPathRequestSchema,
   FileValidateCreatePathRequestSchema,
   FileWriteRequestSchema,
+  SettingsSetRequestSchema,
   ThemeSetRequestSchema,
 } from '../schemas/electronApi'
 import { getPreloadPath, getRendererPath } from './buildPaths'
@@ -77,6 +78,30 @@ ipcMain.handle(electronIpcChannels.read, (_event, request: unknown) => {
 
 ipcMain.handle(electronIpcChannels.getTheme, () => {
   return _electronApi.getTheme()
+})
+
+ipcMain.handle(electronIpcChannels.getSettings, () => {
+  return _electronApi.getSettings()
+})
+
+ipcMain.handle(electronIpcChannels.setSettings, async (_event, request: unknown) => {
+  if (!typia.is<SettingsSetRequestSchema>(request)) {
+    return { type: 'error' }
+  }
+
+  const response = await _electronApi.setSettings(request)
+
+  if (response.type === 'error') {
+    return response
+  }
+
+  try {
+    mainWindow.setBackgroundColor(BACKGROUND_COLORS[response.settings.app.theme])
+    return response
+  } catch (error) {
+    console.error('Unable to set Electron window background color:', error)
+    return { type: 'error' }
+  }
 })
 
 ipcMain.handle(electronIpcChannels.setTheme, async (_event, request: unknown) => {

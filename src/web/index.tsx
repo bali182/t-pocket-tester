@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import { appStore } from '../common/state/store'
 import { WebApp } from './WebApp'
+import { WebGlobalSettingsContextProvider } from './components/WebGlobalSettingsContextProvider'
 import { WebThemeContextProvider } from './components/WebThemeContextProvider'
 
 const rootElement = document.getElementById('root')
@@ -16,9 +17,11 @@ createRoot(rootElement).render(
   <JotaiProvider store={appStore}>
     <ChakraProvider value={defaultSystem}>
       <BrowserRouter basename={import.meta.env.BASE_URL} useTransitions={false}>
-        <WebThemeContextProvider>
-          <WebApp />
-        </WebThemeContextProvider>
+        <WebGlobalSettingsContextProvider>
+          <WebThemeContextProvider>
+            <WebApp />
+          </WebThemeContextProvider>
+        </WebGlobalSettingsContextProvider>
       </BrowserRouter>
     </ChakraProvider>
   </JotaiProvider>,
