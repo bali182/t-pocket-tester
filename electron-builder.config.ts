@@ -1,8 +1,8 @@
 import type { Configuration } from 'electron-builder'
 
 const config: Configuration = {
-  appId: 'com.tpockettester.app',
-  productName: 'T Pocket Tester',
+  appId: 'com.gomb.app',
+  productName: 'Gomb',
   directories: {
     output: 'release',
   },

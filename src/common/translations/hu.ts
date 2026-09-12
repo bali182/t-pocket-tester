@@ -2,6 +2,10 @@ import type { ColorKey } from '../data/colors'
 import type { CardSchemaId } from '../schemas/valuables'
 
 export const HU = {
+  app: {
+    title: 'Gomb',
+    subtitle: 'Egy egyszerű bőrdíszmű tervező program.',
+  },
   common: {
     actions: {
       add: 'Hozzáadás',

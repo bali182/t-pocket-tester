@@ -3,6 +3,10 @@ import type { CardSchemaId } from '../schemas/valuables'
 import type { HU } from './hu'
 
 export const EN: typeof HU = {
+  app: {
+    title: 'Gomb',
+    subtitle: 'A simple app for designing leathercraft projects.',
+  },
   common: {
     actions: {
       add: 'Add',

@@ -1,6 +1,7 @@
 import typia from '@typia/unplugin/vite'
 import react from '@vitejs/plugin-react'
 import type { Plugin, UserConfig } from 'vite'
+import svgr from 'vite-plugin-svgr'
 
 export type ViteConfigOptions = {
   appEntry: string
@@ -55,7 +56,13 @@ export const createViteConfig = ({
     define: {
       'import.meta.env.VITE_IS_ELECTRON': JSON.stringify(isElectron ? 'true' : 'false'),
     },
-    plugins: [entry(appEntry), ...(csp === undefined ? [] : [contentSecurityPolicy(csp)]), typia(), react()],
+    plugins: [
+      entry(appEntry),
+      ...(csp === undefined ? [] : [contentSecurityPolicy(csp)]),
+      svgr({ svgrOptions: { exportType: 'named' } }),
+      typia(),
+      react(),
+    ],
     server: {
       port,
       strictPort: true,
