@@ -91,14 +91,6 @@ export const HU = {
           stitch: `Öltés`,
           size: (size: number) => `${size}mm`,
         },
-        stitching: {
-          name: 'Varrás',
-          margin: 'Margó',
-          holeLength: 'Lyuk hossza',
-          holeDistance: 'Lyuktávolság',
-          holeThickness: 'Lyuk vastagsága',
-          lineThickness: 'Vonal vastagsága',
-        },
       },
       view: {
         name: 'Nézet',
@@ -113,6 +105,9 @@ export const HU = {
           stitchesVisible: 'Cérna láthatósága',
           stitchCountVisible: 'Lyukak számának láthatósága',
         },
+      },
+      project: {
+        name: 'Projekt',
         colors: {
           name: 'Színek',
           leatherColor: 'Bőr színe',
@@ -122,6 +117,14 @@ export const HU = {
           selectionColor: 'Kijelölés színe',
           cardColor: 'Kártya színe',
           threadColor: 'Cérna színe',
+        },
+        stitching: {
+          name: 'Varrás',
+          margin: 'Margó',
+          holeLength: 'Lyuk hossza',
+          holeDistance: 'Lyuktávolság',
+          holeThickness: 'Lyuk vastagsága',
+          lineThickness: 'Vonal vastagsága',
         },
       },
     },

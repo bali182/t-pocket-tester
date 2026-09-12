@@ -7,7 +7,7 @@ import { StepIncrementMenuGroup } from '../../../common/components/editor-menu/g
 import { StitchingSettingsMenuGroup } from '../../../common/components/editor-menu/groups/StitchingSettingsMenuGroup'
 import { StitchingVisibilityMenuGroup } from '../../../common/components/editor-menu/groups/StitchingVisibilityMenuGroup'
 import { UndoRedoMenuGroup } from '../../../common/components/editor-menu/groups/UndoRedoMenuGroup'
-import { EditMenu, FileMenu, ViewMenu } from '../../../common/components/editor-menu/Menus'
+import { EditMenu, FileMenu, ProjectMenu, ViewMenu } from '../../../common/components/editor-menu/Menus'
 import { ElectronFileManagementMenuGroup } from './groups/ElectronFileManagementMenuGroup'
 
 export const ElectronEditorMenu: FC = () => {
@@ -17,14 +17,16 @@ export const ElectronEditorMenu: FC = () => {
         <ElectronFileManagementMenuGroup />
         <ExportMenuGroup />
       </FileMenu>
+      <ProjectMenu>
+        <ColorsMenuGroup />
+        <StitchingSettingsMenuGroup />
+      </ProjectMenu>
       <EditMenu>
         <UndoRedoMenuGroup />
         <StepIncrementMenuGroup />
-        <StitchingSettingsMenuGroup />
       </EditMenu>
       <ViewMenu>
         <StitchingVisibilityMenuGroup />
-        <ColorsMenuGroup />
         <ScalingMenuGroup />
       </ViewMenu>
     </>

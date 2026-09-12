@@ -28,53 +28,53 @@ export const ColorsMenuGroup: FC = () => {
 
   return (
     <Menu.ItemGroup>
-      <Menu.ItemGroupLabel>{t.editor.menus.view.colors.name}</Menu.ItemGroupLabel>
+      <Menu.ItemGroupLabel>{t.editor.menus.project.colors.name}</Menu.ItemGroupLabel>
       <ColorPickerMenuItem
         colors={leatherColorValues}
         field="leatherColor"
-        label={t.editor.menus.view.colors.leatherColor}
+        label={t.editor.menus.project.colors.leatherColor}
         onChange={updateColorSettings}
         value={project.colorSettings.leatherColor}
       />
       <ColorPickerMenuItem
         colors={strokeColorValues}
         field="strokeColor"
-        label={t.editor.menus.view.colors.strokeColor}
+        label={t.editor.menus.project.colors.strokeColor}
         onChange={updateColorSettings}
         value={project.colorSettings.strokeColor}
       />
       <ColorPickerMenuItem
         colors={cardColorValues}
         field="cardColor"
-        label={t.editor.menus.view.colors.cardColor}
+        label={t.editor.menus.project.colors.cardColor}
         onChange={updateColorSettings}
         value={project.colorSettings.cardColor}
       />
       <ColorPickerMenuItem
         colors={stitchHoleColorValues}
         field="stitchHoleColor"
-        label={t.editor.menus.view.colors.stitchHoleColor}
+        label={t.editor.menus.project.colors.stitchHoleColor}
         onChange={updateColorSettings}
         value={project.colorSettings.stitchHoleColor}
       />
       <ColorPickerMenuItem
         colors={stitchLineColorValues}
         field="stitchLineColor"
-        label={t.editor.menus.view.colors.stitchLineColor}
+        label={t.editor.menus.project.colors.stitchLineColor}
         onChange={updateColorSettings}
         value={project.colorSettings.stitchLineColor}
       />
       <ColorPickerMenuItem
         colors={threadColorValues}
         field="threadColor"
-        label={t.editor.menus.view.colors.threadColor}
+        label={t.editor.menus.project.colors.threadColor}
         onChange={updateColorSettings}
         value={project.colorSettings.threadColor}
       />
       <ColorPickerMenuItem
         colors={selectionColorValues}
         field="selectionColor"
-        label={t.editor.menus.view.colors.selectionColor}
+        label={t.editor.menus.project.colors.selectionColor}
         onChange={updateColorSettings}
         value={project.colorSettings.selectionColor}
       />

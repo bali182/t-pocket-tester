@@ -24,3 +24,8 @@ export const ViewMenu: FC<CommonMenuProps> = ({ children }) => {
   const t = useTranslation()
   return <BaseMenu title={t.editor.menus.view.name}>{children}</BaseMenu>
 }
+
+export const ProjectMenu: FC<CommonMenuProps> = ({ children }) => {
+  const t = useTranslation()
+  return <BaseMenu title={t.editor.menus.project.name}>{children}</BaseMenu>
+}

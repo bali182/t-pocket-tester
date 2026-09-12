@@ -92,14 +92,6 @@ export const EN: typeof HU = {
           stitch: 'Stitch-size',
           size: (size: number) => `${size} mm`,
         },
-        stitching: {
-          name: 'Stitching',
-          margin: 'Margin',
-          holeLength: 'Hole length',
-          holeDistance: 'Hole spacing',
-          holeThickness: 'Hole thickness',
-          lineThickness: 'Line thickness',
-        },
       },
       view: {
         name: 'View',
@@ -114,6 +106,9 @@ export const EN: typeof HU = {
           stitchesVisible: 'Thread visibility',
           stitchCountVisible: 'Hole count visibility',
         },
+      },
+      project: {
+        name: 'Project',
         colors: {
           name: 'Colors',
           leatherColor: 'Leather color',
@@ -123,6 +118,14 @@ export const EN: typeof HU = {
           selectionColor: 'Selection color',
           cardColor: 'Card color',
           threadColor: 'Thread color',
+        },
+        stitching: {
+          name: 'Stitching',
+          margin: 'Margin',
+          holeLength: 'Hole length',
+          holeDistance: 'Hole spacing',
+          holeThickness: 'Hole thickness',
+          lineThickness: 'Line thickness',
         },
       },
     },
