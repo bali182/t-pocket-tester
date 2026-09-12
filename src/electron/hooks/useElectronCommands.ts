@@ -31,17 +31,17 @@ export const useElectronCommands = (): ElectronCommandMap => {
       save: {
         id: 'save',
         disabled: !hasProjectAndIsDirty,
-        combination: ['CommandOrControl', 'S'],
+        shortcut: { default: ['CommandOrControl', 'S'] },
       },
       'save-as': {
         id: 'save-as',
         disabled: !hasOpenProject,
-        combination: ['CommandOrControl', 'Shift', 'S'],
+        shortcut: { default: ['CommandOrControl', 'Shift', 'S'] },
       },
       open: {
         id: 'open',
         disabled: false,
-        combination: ['CommandOrControl', 'O'],
+        shortcut: { default: ['CommandOrControl', 'O'] },
       },
       // Common commands
       ...commonCommands,

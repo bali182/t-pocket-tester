@@ -1,20 +1,22 @@
-import type { KeySchema } from '../../common/schemas/command'
+import type { CommandShortcutSchema, KeySchema } from '../../common/schemas/command'
 import { isDefined } from '../../common/utils/isDefined'
+import { getCommandShortcut } from './getCommandShortcut'
 import { platform } from './platform'
 
 const isAcceleratorKey = (key: KeySchema): boolean => {
   return key === 'Command' || key === 'Control' || key === 'CommandOrControl' || key === 'Alt' || key === 'Shift'
 }
 
-export const matchesShortcut = (shortcut: KeySchema[], event: KeyboardEvent): boolean => {
+export const matchesShortcut = (shortcut: CommandShortcutSchema, event: KeyboardEvent): boolean => {
   if (platform === 'mobile') {
     return false
   }
-  const hasCommand = shortcut.includes('Command')
-  const hasControl = shortcut.includes('Control')
-  const hasCommandOrControl = shortcut.includes('CommandOrControl')
-  const hasAlt = shortcut.includes('Alt')
-  const hasShift = shortcut.includes('Shift')
+  const keys = getCommandShortcut(shortcut)
+  const hasCommand = keys.includes('Command')
+  const hasControl = keys.includes('Control')
+  const hasCommandOrControl = keys.includes('CommandOrControl')
+  const hasAlt = keys.includes('Alt')
+  const hasShift = keys.includes('Shift')
   const expectsMeta = hasCommand || (platform === 'mac' && hasCommandOrControl)
   const expectsControl = hasControl || (platform !== 'mac' && hasCommandOrControl)
 
@@ -28,7 +30,7 @@ export const matchesShortcut = (shortcut: KeySchema[], event: KeyboardEvent): bo
   }
 
   const pressedKey = event.key.toUpperCase()
-  const shortcutKey = shortcut.find((key: KeySchema): boolean => !isAcceleratorKey(key))
+  const shortcutKey = keys.find((key: KeySchema): boolean => !isAcceleratorKey(key))
 
   return isDefined(shortcutKey) && pressedKey === shortcutKey
 }

@@ -12,7 +12,7 @@ export const useCommonCommandEmitter = <C extends string>({ commands, execute }:
   const commandList = useMemo<CommandSchema<C>[]>(() => Object.values(commands), [commands])
 
   const handleKeyDown = useEffectEvent(async (event: KeyboardEvent): Promise<void> => {
-    const command = commandList.find((candidate) => matchesShortcut(candidate.combination, event))
+    const command = commandList.find((candidate) => matchesShortcut(candidate.shortcut, event))
 
     if (!isDefined(command)) {
       return

@@ -22,7 +22,7 @@ export const useWebCommands = (): WebCommandMap => {
       'download-project': {
         id: 'download-project',
         disabled: !hasOpenProject,
-        combination: ['CommandOrControl', 'S'],
+        shortcut: { default: ['CommandOrControl', 'S'] },
       },
       // Common commands
       ...commonCommands,

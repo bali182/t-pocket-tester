@@ -10,7 +10,7 @@ type MenuShortcutProps = {
 }
 
 export const MenuShortcut: FC<MenuShortcutProps> = ({ command, noPadding }) => {
-  const shortcut = useMemo(() => formatShortcut(command.combination), [command.combination])
+  const shortcut = useMemo(() => formatShortcut(command.shortcut), [command.shortcut])
   if (!isDefined(shortcut)) {
     return null
   }

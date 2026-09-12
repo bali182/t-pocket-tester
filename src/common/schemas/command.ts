@@ -34,6 +34,11 @@ export type LetterKeySchema =
 
 export type KeySchema = AcceleratorKeySchema | NumberKeySchema | LetterKeySchema | FunctionKeySchema
 
+export type CommandShortcutSchema = {
+  default: KeySchema[]
+  mac?: KeySchema[]
+}
+
 export type CommonCommandIdSchema =
   // File menu - Exports
   | 'export-pdf'
@@ -55,5 +60,5 @@ export type CommonCommandIdSchema =
 export type CommandSchema<C> = {
   id: C
   disabled?: boolean
-  combination: KeySchema[]
+  shortcut: CommandShortcutSchema
 }
