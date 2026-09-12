@@ -4,9 +4,9 @@ import { useCommonCommands } from '../../common/hooks/useCommonCommands'
 import { useOptionalProject } from '../../common/hooks/useOptionalProject'
 import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
 import { isDefined } from '../../common/utils/isDefined'
-import { WebCommandIdSchema, WebCommandSchema } from '../schemas/webCommands'
+import type { WebCommandMap } from '../schemas/webCommands'
 
-export const useWebCommands = (): Record<WebCommandIdSchema, WebCommandSchema> => {
+export const useWebCommands = (): WebCommandMap => {
   const { project } = useOptionalProject()
   const { canRedo, canUndo } = useSubProjectHistory()
   const hasOpenProject = isDefined(project)
@@ -16,7 +16,7 @@ export const useWebCommands = (): Record<WebCommandIdSchema, WebCommandSchema> =
     hasOpenProject,
   })
 
-  const commands = useMemo<Record<WebCommandIdSchema, WebCommandSchema>>(() => {
+  const commands = useMemo<WebCommandMap>(() => {
     return {
       // File basics
       'download-project': {
@@ -26,7 +26,7 @@ export const useWebCommands = (): Record<WebCommandIdSchema, WebCommandSchema> =
       },
       // Common commands
       ...commonCommands,
-    }
+    } satisfies WebCommandMap
   }, [commonCommands, hasOpenProject])
 
   return commands

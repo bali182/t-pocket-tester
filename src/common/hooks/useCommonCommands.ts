@@ -67,13 +67,18 @@ export const useCommonCommands = ({ canRedo, canUndo, hasOpenProject }: UseCommo
         disabled: !hasOpenProject,
         combination: ['CommandOrControl', 'Shift', 'T'],
       },
+      'stitch-count-visibility': {
+        id: 'stitch-count-visibility',
+        disabled: !hasOpenProject,
+        combination: ['CommandOrControl', 'Shift', 'B'],
+      },
       // View scaling
       scaling: {
         id: 'scaling',
         disabled: false,
         combination: ['CommandOrControl', 'Shift', 'V'],
       },
-    }
+    } satisfies CommonCommandsMap
   }, [canRedo, canUndo, hasOpenProject])
 
   return commands

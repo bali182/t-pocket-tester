@@ -3,12 +3,11 @@ import { useMemo } from 'react'
 import { useCommonCommands } from '../../common/hooks/useCommonCommands'
 import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
 import { Loadable } from '../../common/loadable'
-import type { CommandSchema } from '../../common/schemas/command'
-import { ElectronCommandIdSchema } from '../schemas/electronCommands'
+import type { ElectronCommandMap } from '../schemas/electronCommands'
 import type { ElectronProjectSchema } from '../schemas/electronProject'
 import { useElectronProject } from './useElectronProject'
 
-export const useElectronCommands = (): Record<ElectronCommandIdSchema, CommandSchema<ElectronCommandIdSchema>> => {
+export const useElectronCommands = (): ElectronCommandMap => {
   const { electronProject } = useElectronProject()
   const { canRedo, canUndo } = useSubProjectHistory()
   const hasProjectAndIsDirty = Loadable.get(
@@ -26,7 +25,7 @@ export const useElectronCommands = (): Record<ElectronCommandIdSchema, CommandSc
     hasOpenProject,
   })
 
-  const commands = useMemo<Record<ElectronCommandIdSchema, CommandSchema<ElectronCommandIdSchema>>>(() => {
+  const commands = useMemo<ElectronCommandMap>(() => {
     return {
       // File basics
       save: {
@@ -46,7 +45,7 @@ export const useElectronCommands = (): Record<ElectronCommandIdSchema, CommandSc
       },
       // Common commands
       ...commonCommands,
-    }
+    } satisfies ElectronCommandMap
   }, [commonCommands, hasOpenProject, hasProjectAndIsDirty])
 
   return commands

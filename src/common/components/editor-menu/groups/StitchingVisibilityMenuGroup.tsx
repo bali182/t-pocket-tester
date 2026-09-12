@@ -28,6 +28,11 @@ export const StitchingVisibilityMenuGroup = () => {
         value={settings.view.stitchesVisible}
         command={getCommand('stitches-visibility')}
       />
+      <StitchVisibilityMenuItem
+        label={t.editor.menus.view.stitching.stitchCountVisible}
+        value={settings.view.stitchCountVisible}
+        command={getCommand('stitch-count-visibility')}
+      />
     </Menu.ItemGroup>
   )
 }

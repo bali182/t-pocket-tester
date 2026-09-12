@@ -112,6 +112,7 @@ export const EN: typeof HU = {
           stitchLinesVisible: 'Line visibility',
           stitchHolesVisible: 'Hole visibility',
           stitchesVisible: 'Thread visibility',
+          stitchCountVisible: 'Hole count visibility',
         },
         colors: {
           name: 'Colors',

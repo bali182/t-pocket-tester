@@ -111,6 +111,7 @@ export const HU = {
           stitchLinesVisible: 'Vonalak láthatósága',
           stitchHolesVisible: 'Lyukak láthatósága',
           stitchesVisible: 'Cérna láthatósága',
+          stitchCountVisible: 'Lyukak számának láthatósága',
         },
         colors: {
           name: 'Színek',

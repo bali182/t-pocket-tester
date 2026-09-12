@@ -49,6 +49,7 @@ export type CommonCommandIdSchema =
   | 'stitch-line-visibility'
   | 'stitch-hole-visibility'
   | 'stitches-visibility'
+  | 'stitch-count-visibility'
   | 'scaling'
 
 export type CommandSchema<C> = {

@@ -15,7 +15,7 @@ import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
 import { downloadFile } from '../../common/utils/downloadFile'
 import { isDefined } from '../../common/utils/isDefined'
 import { useWebCommands } from '../hooks/useWebCommands'
-import { WebCommandIdSchema, WebCommandSchema } from '../schemas/webCommands'
+import type { WebCommandIdSchema, WebCommandSchema } from '../schemas/webCommands'
 
 export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
   const [isScalingDialogOpen, setScalingDialogOpen] = useState<boolean>(false)
@@ -69,6 +69,8 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
           return setViewSettings({ stitchHolesVisible: !settings.view.stitchHolesVisible })
         case 'stitches-visibility':
           return setViewSettings({ stitchesVisible: !settings.view.stitchesVisible })
+        case 'stitch-count-visibility':
+          return setViewSettings({ stitchCountVisible: !settings.view.stitchCountVisible })
         case 'download-project': {
           if (!isDefined(project)) {
             throw new Error(`Cannot download project.`)
@@ -79,8 +81,9 @@ export const WebCommandManager: FC<PropsWithChildren> = ({ children }) => {
             fileName: `${project.name}.json`,
           })
         }
-        default:
+        default: {
           console.log(`Command "${id}" not yet handled!`)
+        }
       }
     },
     [getCommand, project, redo, setEditSettings, setViewSettings, settings.view, undo],

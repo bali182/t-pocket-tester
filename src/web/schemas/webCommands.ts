@@ -3,3 +3,5 @@ import { CommandSchema, CommonCommandIdSchema } from '../../common/schemas/comma
 export type WebCommandIdSchema = 'download-project' | CommonCommandIdSchema
 
 export type WebCommandSchema = CommandSchema<WebCommandIdSchema>
+
+export type WebCommandMap = Record<WebCommandIdSchema, WebCommandSchema>
