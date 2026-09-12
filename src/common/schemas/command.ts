@@ -1,6 +1,28 @@
 export type AcceleratorKeySchema = 'Command' | 'Control' | 'CommandOrControl' | 'Alt' | 'Shift'
 
-export type NumberKeySchema = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+export type DigitKeySchema =
+  | 'Digit0'
+  | 'Digit1'
+  | 'Digit2'
+  | 'Digit3'
+  | 'Digit4'
+  | 'Digit5'
+  | 'Digit6'
+  | 'Digit7'
+  | 'Digit8'
+  | 'Digit9'
+
+export type NumpadKeySchema =
+  | 'Numpad0'
+  | 'Numpad1'
+  | 'Numpad2'
+  | 'Numpad3'
+  | 'Numpad4'
+  | 'Numpad5'
+  | 'Numpad6'
+  | 'Numpad7'
+  | 'Numpad8'
+  | 'Numpad9'
 
 export type FunctionKeySchema = 'F1' | 'F2' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'F10' | 'F11' | 'F12'
 
@@ -32,7 +54,7 @@ export type LetterKeySchema =
   | 'Y'
   | 'Z'
 
-export type KeySchema = AcceleratorKeySchema | NumberKeySchema | LetterKeySchema | FunctionKeySchema
+export type KeySchema = AcceleratorKeySchema | LetterKeySchema | FunctionKeySchema | DigitKeySchema | NumpadKeySchema
 
 export type CommandShortcutSchema = {
   default: KeySchema[]

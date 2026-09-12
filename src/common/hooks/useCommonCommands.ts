@@ -42,17 +42,26 @@ export const useCommonCommands = ({ canRedo, canUndo, hasOpenProject }: UseCommo
       'increment-small': {
         id: 'increment-small',
         disabled: !hasOpenProject,
-        shortcut: { default: ['CommandOrControl', '1'] },
+        shortcut: {
+          default: ['CommandOrControl', 'Shift', 'Digit1'],
+          mac: ['Command', 'Alt', 'Digit1'],
+        },
       },
       'increment-medium': {
         id: 'increment-medium',
         disabled: !hasOpenProject,
-        shortcut: { default: ['CommandOrControl', '2'] },
+        shortcut: {
+          default: ['CommandOrControl', 'Shift', 'Digit2'],
+          mac: ['Command', 'Alt', 'Digit2'],
+        },
       },
       'increment-stitch-hole-distance': {
         id: 'increment-stitch-hole-distance',
         disabled: !hasOpenProject,
-        shortcut: { default: ['CommandOrControl', '3'] },
+        shortcut: {
+          default: ['CommandOrControl', 'Shift', 'Digit3'],
+          mac: ['Command', 'Alt', 'Digit3'],
+        },
       },
       // View - stitch part visibility
       'stitch-line-visibility': {

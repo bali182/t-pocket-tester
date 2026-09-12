@@ -27,6 +27,8 @@ export const useElectronCommands = (): ElectronCommandMap => {
 
   const commands = useMemo<ElectronCommandMap>(() => {
     return {
+      // Common commands
+      ...commonCommands,
       // File basics
       save: {
         id: 'save',
@@ -43,8 +45,22 @@ export const useElectronCommands = (): ElectronCommandMap => {
         disabled: false,
         shortcut: { default: ['CommandOrControl', 'O'] },
       },
-      // Common commands
-      ...commonCommands,
+      // Edit - Change increments
+      'increment-small': {
+        id: 'increment-small',
+        disabled: !hasOpenProject,
+        shortcut: { default: ['CommandOrControl', 'Digit1'] },
+      },
+      'increment-medium': {
+        id: 'increment-medium',
+        disabled: !hasOpenProject,
+        shortcut: { default: ['CommandOrControl', 'Digit2'] },
+      },
+      'increment-stitch-hole-distance': {
+        id: 'increment-stitch-hole-distance',
+        disabled: !hasOpenProject,
+        shortcut: { default: ['CommandOrControl', 'Digit2'] },
+      },
     } satisfies ElectronCommandMap
   }, [commonCommands, hasOpenProject, hasProjectAndIsDirty])
 

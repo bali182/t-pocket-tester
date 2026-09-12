@@ -18,14 +18,14 @@ export const useWebCommands = (): WebCommandMap => {
 
   const commands = useMemo<WebCommandMap>(() => {
     return {
+      // Common commands
+      ...commonCommands,
       // File basics
       'download-project': {
         id: 'download-project',
         disabled: !hasOpenProject,
         shortcut: { default: ['CommandOrControl', 'S'] },
       },
-      // Common commands
-      ...commonCommands,
     } satisfies WebCommandMap
   }, [commonCommands, hasOpenProject])
 
