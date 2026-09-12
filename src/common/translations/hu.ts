@@ -249,6 +249,14 @@ export const HU = {
         saveFailed: 'A projekt mentése nem sikerült.',
       },
     },
+    unsavedChangesDialog: {
+      title: 'Nem mentett módosítások',
+      description: 'Szeretnéd menteni a módosításaid mielőtt elhagyod a projekt szerkesztőt?',
+      actions: {
+        discard: 'Folytatás mentés nélkül',
+        save: 'Mentés',
+      },
+    },
     settingsDialog: {
       title: 'Projekt beállításai',
       colorSettings: {

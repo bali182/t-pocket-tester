@@ -1,7 +1,7 @@
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { Provider as JotaiProvider } from 'jotai'
 import { createRoot } from 'react-dom/client'
-import { HashRouter } from 'react-router'
+import { createHashRouter, RouterProvider } from 'react-router'
 import type { GlobalSettingsSchema } from '../common/schemas/settings'
 import { appStore } from '../common/state/store'
 import { createDefaultGlobalSettings } from '../common/utils/createDefaultGlobalSettings'
@@ -16,6 +16,13 @@ if (!rootElement) {
   throw new Error('Root element not found')
 }
 
+const electronRouter = createHashRouter([
+  {
+    path: '*',
+    Component: ElectronApp,
+  },
+])
+
 const renderElectronApp = async (): Promise<void> => {
   let initialSettings: GlobalSettingsSchema
 
@@ -29,11 +36,9 @@ const renderElectronApp = async (): Promise<void> => {
   createRoot(rootElement).render(
     <JotaiProvider store={appStore}>
       <ChakraProvider value={defaultSystem}>
-        <HashRouter useTransitions={false}>
-          <ElectronGlobalSettingsContextProvider initialSettings={initialSettings}>
-            <ElectronApp />
-          </ElectronGlobalSettingsContextProvider>
-        </HashRouter>
+        <ElectronGlobalSettingsContextProvider initialSettings={initialSettings}>
+          <RouterProvider router={electronRouter} useTransitions={false} />
+        </ElectronGlobalSettingsContextProvider>
       </ChakraProvider>
     </JotaiProvider>,
   )

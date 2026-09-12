@@ -250,6 +250,14 @@ export const EN: typeof HU = {
         saveFailed: 'The project could not be saved.',
       },
     },
+    unsavedChangesDialog: {
+      title: 'Unsaved changes',
+      description: 'Do you want to save your changes before leaving?',
+      actions: {
+        discard: 'Continue without saving',
+        save: 'Save',
+      },
+    },
     settingsDialog: {
       title: 'Project settings',
       colorSettings: {
