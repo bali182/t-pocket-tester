@@ -7,10 +7,6 @@ export const createProject = (name: string): ProjectSchema => {
     id: id(),
     name,
     subProjects: [],
-    editingSettings: {
-      addBaseColorByDefault: false,
-      numberEditorStep: 1,
-    },
     colorSettings: { ...defaultColorSettings },
     stitchingSettings: { ...defaultStitchingSettings },
   }

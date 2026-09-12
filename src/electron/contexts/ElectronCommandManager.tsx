@@ -9,8 +9,7 @@ import {
 } from '../../common/constants/commands'
 import { CommandsContext, CommandsContextValue } from '../../common/contexts/CommandsContext'
 import { useCommonCommandEmitter } from '../../common/hooks/useCommonCommandEmitter'
-import { useOptionalProject } from '../../common/hooks/useOptionalProject'
-import { useProjectOperations } from '../../common/hooks/useProjectOperations'
+import { useGlobalSettings } from '../../common/hooks/useGlobalSettings'
 import { useSubProjectHistory } from '../../common/hooks/useSubProjectHistory'
 import { isDefined } from '../../common/utils/isDefined'
 import { useElectronCommands } from '../hooks/useElectronCommands'
@@ -22,8 +21,7 @@ export const ElectronCommandManager: FC<PropsWithChildren> = ({ children }) => {
   const [isSvgExportDialogOpen, setSvgExportDialogOpen] = useState<boolean>(false)
   const [isPdfExportDialogOpen, setPdfExportDialogOpen] = useState<boolean>(false)
   const { openProject, saveProject, saveProjectAs } = useElectronProject()
-  const { updateEditingSettings, updateStitchingSettings } = useProjectOperations()
-  const { project } = useOptionalProject()
+  const { setEditSettings, setViewSettings, settings } = useGlobalSettings()
   const { redo, undo } = useSubProjectHistory()
 
   const commands = useElectronCommands()
@@ -65,34 +63,22 @@ export const ElectronCommandManager: FC<PropsWithChildren> = ({ children }) => {
         case 'scaling':
           return setScalingDialogOpen(true)
         case 'increment-small':
-          return updateEditingSettings({ numberEditorStep: EDITOR_SMALL_STEP })
+          return setEditSettings({ step: EDITOR_SMALL_STEP })
         case 'increment-medium':
-          return updateEditingSettings({ numberEditorStep: EDITOR_MEDIUM_STEP })
+          return setEditSettings({ step: EDITOR_MEDIUM_STEP })
         case 'increment-stitch-hole-distance':
-          return updateEditingSettings({ numberEditorStep: EDITOR_STITCH_HOLE_DISTANCE_STEP })
+          return setEditSettings({ step: EDITOR_STITCH_HOLE_DISTANCE_STEP })
         case 'stitch-line-visibility':
-          return updateStitchingSettings({ stitchLinesVisible: !project?.stitchingSettings?.stitchLinesVisible })
+          return setViewSettings({ stitchLinesVisible: !settings.view.stitchLinesVisible })
         case 'stitch-hole-visibility':
-          return updateStitchingSettings({ stitchHolesVisible: !project?.stitchingSettings?.stitchHolesVisible })
+          return setViewSettings({ stitchHolesVisible: !settings.view.stitchHolesVisible })
         case 'stitches-visibility':
-          return updateStitchingSettings({ stitchesVisible: !project?.stitchingSettings?.stitchesVisible })
+          return setViewSettings({ stitchesVisible: !settings.view.stitchesVisible })
         default:
           console.log(`Command "${id}" not yet handled!`)
       }
     },
-    [
-      getCommand,
-      openProject,
-      project?.stitchingSettings?.stitchHolesVisible,
-      project?.stitchingSettings?.stitchLinesVisible,
-      project?.stitchingSettings?.stitchesVisible,
-      redo,
-      saveProject,
-      saveProjectAs,
-      undo,
-      updateEditingSettings,
-      updateStitchingSettings,
-    ],
+    [getCommand, openProject, redo, saveProject, saveProjectAs, undo, setEditSettings, setViewSettings, settings.view],
   )
 
   useCommonCommandEmitter({ commands, execute: emitCommand })

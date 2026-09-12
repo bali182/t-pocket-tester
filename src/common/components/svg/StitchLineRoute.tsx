@@ -1,6 +1,7 @@
 import { useCallback, type FC, type MouseEventHandler, type PointerEventHandler } from 'react'
 
 import { useDrawAreaContext } from '../../contexts/DrawAreaContext'
+import { useGlobalSettings } from '../../hooks/useGlobalSettings'
 import { usePath } from '../../hooks/usePath'
 import type { ComputedStitchRouteSchema } from '../../schemas/computed'
 import type { ResolvedStitchLineSchema } from '../../schemas/stitching'
@@ -15,6 +16,7 @@ type StitchLineRouteProps = {
 
 export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine }) => {
   const { isInteractive, selection, stitchLineStyles } = useDrawAreaContext()
+  const { settings } = useGlobalSettings()
   const pathData = usePath(route.path)
   const stitchLineThickness = stitchLineStyles.getLineThickness(stitchLine)
   const stitchHoleThickness = stitchLineStyles.getStitchHoleThickness(stitchLine)
@@ -55,7 +57,7 @@ export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine })
       onPointerEnter={isInteractive ? handlePointerEnter : undefined}
       onPointerLeave={isInteractive ? handlePointerLeave : undefined}
     >
-      {(!isInteractive || stitchLine.stitchLinesVisible) && (
+      {(!isInteractive || settings.view.stitchLinesVisible) && (
         <path
           d={pathData}
           fill="none"
@@ -63,10 +65,10 @@ export const StitchLineRoute: FC<StitchLineRouteProps> = ({ route, stitchLine })
           strokeWidth={stitchLineThickness}
         />
       )}
-      {(!isInteractive || stitchLine.stitchHolesVisible) &&
+      {(!isInteractive || settings.view.stitchHolesVisible) &&
         route.holes.map((hole, index) => <StitchHole key={index} hole={hole} stitchLine={stitchLine} />)}
-      {isInteractive && stitchLine.stitchesVisible && <Stitches stitches={route.stitches} stitchLine={stitchLine} />}
-      {isInteractive && isStitchLineActive && <StitchRouteLabel route={route} />}
+      {isInteractive && settings.view.stitchesVisible && <Stitches stitches={route.stitches} stitchLine={stitchLine} />}
+      {isInteractive && isStitchLineActive && settings.view.stitchCountVisible && <StitchRouteLabel route={route} />}
       {isInteractive && (
         <path d={pathData} fill="none" pointerEvents="stroke" stroke="transparent" strokeWidth={hitAreaThickness} />
       )}

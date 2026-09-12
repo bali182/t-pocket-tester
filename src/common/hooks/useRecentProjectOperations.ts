@@ -1,9 +1,8 @@
-import { useSetAtom } from 'jotai'
 import { useCallback, useMemo } from 'react'
 
 import type { RecentProjectSchema } from '../schemas/recentProject'
-import { recentProjectsAtom } from '../state/recentProjectsAtom'
 import { isDefined } from '../utils/isDefined'
+import { useGlobalSettings } from './useGlobalSettings'
 
 export type UseRecentProjectOperationsOutput = {
   markOpened: (key: string, subProjectId?: string) => void
@@ -11,7 +10,7 @@ export type UseRecentProjectOperationsOutput = {
 }
 
 export const useRecentProjectOperations = (): UseRecentProjectOperationsOutput => {
-  const setRecentProjects = useSetAtom(recentProjectsAtom)
+  const { setRecentProjects, setSettings } = useGlobalSettings()
 
   const markOpened = useCallback(
     (key: string, subProjectId?: string): void => {
@@ -20,21 +19,21 @@ export const useRecentProjectOperations = (): UseRecentProjectOperationsOutput =
         ...(isDefined(subProjectId) ? { lastSubProjectId: subProjectId } : {}),
       }
 
-      setRecentProjects((recentProjects) => ({ ...recentProjects, [key]: recentProject }))
+      setRecentProjects({ [key]: recentProject })
     },
     [setRecentProjects],
   )
 
   const removeRecentProject = useCallback(
     (key: string): void => {
-      setRecentProjects((recentProjects) => {
-        const remainingRecentProjects = { ...recentProjects }
+      setSettings((current) => {
+        const remainingRecentProjects = { ...current.recentProjects }
         delete remainingRecentProjects[key]
 
-        return remainingRecentProjects
+        return { ...current, recentProjects: remainingRecentProjects }
       })
     },
-    [setRecentProjects],
+    [setSettings],
   )
 
   return useMemo<UseRecentProjectOperationsOutput>(

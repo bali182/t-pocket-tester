@@ -5,6 +5,7 @@ import type { Plugin, UserConfig } from 'vite'
 export type ViteConfigOptions = {
   appEntry: string
   base: string
+  contentSecurityPolicy?: string
   isElectron: boolean
   port: number
 }
@@ -21,9 +22,31 @@ const entry = (entryPath: string): Plugin => {
   }
 }
 
+const contentSecurityPolicy = (policy: string): Plugin => {
+  return {
+    name: 'content-security-policy',
+    transformIndexHtml: {
+      order: 'pre',
+      handler() {
+        return [
+          {
+            tag: 'meta',
+            attrs: {
+              content: policy,
+              'http-equiv': 'Content-Security-Policy',
+            },
+            injectTo: 'head',
+          },
+        ]
+      },
+    },
+  }
+}
+
 export const createViteConfig = ({
   appEntry,
   base,
+  contentSecurityPolicy: csp,
   isElectron,
   port,
 }: ViteConfigOptions): Omit<UserConfig, 'build'> => {
@@ -32,7 +55,7 @@ export const createViteConfig = ({
     define: {
       'import.meta.env.VITE_IS_ELECTRON': JSON.stringify(isElectron ? 'true' : 'false'),
     },
-    plugins: [entry(appEntry), typia(), react()],
+    plugins: [entry(appEntry), ...(csp === undefined ? [] : [contentSecurityPolicy(csp)]), typia(), react()],
     server: {
       port,
       strictPort: true,

@@ -45,9 +45,6 @@ export const validatePocketClusterStitchLineSchema = (
     stitchHoleThickness: commonConfigResult.issues.stitchHoleThickness,
     stitchLineThickness: commonConfigResult.issues.stitchLineThickness,
     stitchMargin: commonConfigResult.issues.stitchMargin,
-    stitchLinesVisible: commonConfigResult.issues.stitchLinesVisible,
-    stitchHolesVisible: commonConfigResult.issues.stitchHolesVisible,
-    stitchesVisible: commonConfigResult.issues.stitchesVisible,
     type: undefined,
   }
 

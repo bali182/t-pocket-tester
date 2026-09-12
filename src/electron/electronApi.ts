@@ -17,9 +17,9 @@ const api = (): ElectronApi => {
 export const electronApi: ElectronApi = {
   dialog: (request) => api().dialog(request),
   findExistingFilePaths: (request) => api().findExistingFilePaths(request),
-  getTheme: () => api().getTheme(),
+  getSettings: () => api().getSettings(),
   read: (request) => api().read(request),
-  setTheme: (request) => api().setTheme(request),
+  setSettings: (request) => api().setSettings(request),
   suggestPath: (request) => api().suggestPath(request),
   validateCreatePath: (request) => api().validateCreatePath(request),
   write: (request) => api().write(request),

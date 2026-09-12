@@ -5,7 +5,7 @@ import { addSubProject as addSubProjectPure } from '../operations/project/addSub
 import { cloneSubProject as cloneSubProjectPure } from '../operations/project/cloneSubProject'
 import { deleteSubProject as deleteSubProjectPure } from '../operations/project/deleteSubProject'
 import type { ProjectSchema } from '../schemas/project'
-import type { ColorSettingsSchema, ProjectEditingSettingSchema } from '../schemas/settings'
+import type { ColorSettingsSchema } from '../schemas/settings'
 import type { StitchLineCommonConfigSchema } from '../schemas/stitching'
 import type { SubProjectSchema } from '../schemas/subProject'
 import { useTranslation } from '../translations/translation'
@@ -17,7 +17,6 @@ export type UseProjectOperationsOutput = {
   createSubProject: () => SubProjectSchema
   deleteSubProject: (subProjectId: string) => void
   updateColorSettings: (update: Partial<ColorSettingsSchema>) => void
-  updateEditingSettings: (update: Partial<ProjectEditingSettingSchema>) => void
   updateProject: (project: ProjectSchema) => void
   updateStitchingSettings: (update: Partial<StitchLineCommonConfigSchema>) => void
 }
@@ -31,18 +30,6 @@ export const useProjectOperations = (): UseProjectOperationsOutput => {
       setProject(updatedProject)
     },
     [setProject],
-  )
-
-  const updateEditingSettings = useCallback(
-    (update: Partial<ProjectEditingSettingSchema>): void => {
-      const currentProject = ensureProject(project)
-
-      setProject({
-        ...currentProject,
-        editingSettings: { ...currentProject.editingSettings, ...update },
-      })
-    },
-    [project, setProject],
   )
 
   const updateStitchingSettings = useCallback(
@@ -107,19 +94,10 @@ export const useProjectOperations = (): UseProjectOperationsOutput => {
       createSubProject,
       deleteSubProject,
       updateColorSettings,
-      updateEditingSettings,
       updateProject,
       updateStitchingSettings,
     }),
-    [
-      cloneSubProject,
-      createSubProject,
-      deleteSubProject,
-      updateColorSettings,
-      updateEditingSettings,
-      updateProject,
-      updateStitchingSettings,
-    ],
+    [cloneSubProject, createSubProject, deleteSubProject, updateColorSettings, updateProject, updateStitchingSettings],
   )
 }
 

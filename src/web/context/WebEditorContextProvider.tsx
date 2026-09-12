@@ -1,11 +1,11 @@
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, type SetStateAction } from 'react'
+import { useCallback, useEffect, useMemo, type FC, type PropsWithChildren, type SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
 import { getPatchedProject } from '../../common/component-patches/getPatchedProject'
 import { getPatchedSubProject } from '../../common/component-patches/getPatchedSubProject'
 import { needsFullProjectPatch } from '../../common/component-patches/needsFullProjectPatch'
-import type { EditorContextType } from '../../common/contexts/EditorContext'
+import { EditorContext, type EditorContextType } from '../../common/contexts/EditorContext'
 import { useClearSubProjectHistory } from '../../common/hooks/useClearSubProjectHistory'
 import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
 import type { ProjectSchema } from '../../common/schemas/project'
@@ -15,7 +15,7 @@ import type { WebSubProjectRouteParamsSchema } from '../schemas/webRouteParams'
 import { projectsAtom } from '../state/projectsAtom'
 import { webAppRoutes } from '../webAppRoutes'
 
-export const useWebEditorContextValue = (): EditorContextType => {
+export const WebEditorContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const { projectId, subProjectId } = useParams<WebSubProjectRouteParamsSchema>()
   const navigate = useNavigate()
   const [projects, setProjects] = useAtom(projectsAtom)
@@ -119,7 +119,7 @@ export const useWebEditorContextValue = (): EditorContextType => {
     [navigate, projectId],
   )
 
-  return useMemo<EditorContextType>(
+  const value = useMemo<EditorContextType>(
     () => ({
       computedSubProject,
       navigateToProject,
@@ -141,6 +141,8 @@ export const useWebEditorContextValue = (): EditorContextType => {
       subProject,
     ],
   )
+
+  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
 }
 
 const ensureSelectedProjectId = (projectId: string | undefined): string => {

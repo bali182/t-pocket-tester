@@ -5,9 +5,9 @@ import { electronIpcChannels } from './electronIpcChannels'
 const electronApi: ElectronApi = {
   dialog: (request) => ipcRenderer.invoke(electronIpcChannels.dialog, request),
   findExistingFilePaths: (request) => ipcRenderer.invoke(electronIpcChannels.findExistingFilePaths, request),
-  getTheme: () => ipcRenderer.invoke(electronIpcChannels.getTheme),
+  getSettings: () => ipcRenderer.invoke(electronIpcChannels.getSettings),
   read: (request) => ipcRenderer.invoke(electronIpcChannels.read, request),
-  setTheme: (request) => ipcRenderer.invoke(electronIpcChannels.setTheme, request),
+  setSettings: (request) => ipcRenderer.invoke(electronIpcChannels.setSettings, request),
   suggestPath: (request) => ipcRenderer.invoke(electronIpcChannels.suggestPath, request),
   validateCreatePath: (request) => ipcRenderer.invoke(electronIpcChannels.validateCreatePath, request),
   write: (request) => ipcRenderer.invoke(electronIpcChannels.write, request),

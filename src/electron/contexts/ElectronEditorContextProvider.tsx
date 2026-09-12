@@ -1,11 +1,11 @@
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, type SetStateAction } from 'react'
+import { useCallback, useEffect, useMemo, type FC, type PropsWithChildren, type SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
 import { getPatchedProject } from '../../common/component-patches/getPatchedProject'
 import { getPatchedSubProject } from '../../common/component-patches/getPatchedSubProject'
 import { needsFullProjectPatch } from '../../common/component-patches/needsFullProjectPatch'
-import type { EditorContextType } from '../../common/contexts/EditorContext'
+import { EditorContext, type EditorContextType } from '../../common/contexts/EditorContext'
 import { useClearSubProjectHistory } from '../../common/hooks/useClearSubProjectHistory'
 import { Loadable } from '../../common/loadable'
 import { getComputedSubProject } from '../../common/logic/getComputedSubProject'
@@ -18,7 +18,7 @@ import type { ElectronProjectSchema } from '../schemas/electronProject'
 import type { ElectronSubProjectRouteParamsSchema } from '../schemas/electronRouteParams'
 import { electronProjectAtom } from '../state/electronProjectAtom'
 
-export const useElectronEditorContextValue = (): EditorContextType => {
+export const ElectronEditorContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const { subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
   const navigate = useNavigate()
   const [electronProject, setElectronProject] = useAtom(electronProjectAtom)
@@ -129,7 +129,7 @@ export const useElectronEditorContextValue = (): EditorContextType => {
     [loadedElectronProject, navigate],
   )
 
-  return useMemo<EditorContextType>(
+  const value = useMemo<EditorContextType>(
     () => ({
       computedSubProject,
       navigateToProject,
@@ -151,4 +151,6 @@ export const useElectronEditorContextValue = (): EditorContextType => {
       subProject,
     ],
   )
+
+  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
 }

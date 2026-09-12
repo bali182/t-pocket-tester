@@ -1,12 +1,11 @@
 import { Box, Button, Card, Heading, Splitter, SplitterPanelData, SplitterResizeEndDetails } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
 import { FC, ReactElement, useCallback, useMemo } from 'react'
 import { PiPlus, PiWarningCircle } from 'react-icons/pi'
 import { useEditorContext } from '../contexts/EditorContext'
+import { useGlobalSettings } from '../hooks/useGlobalSettings'
 import { useProject } from '../hooks/useProject'
 import { useProjectOperations } from '../hooks/useProjectOperations'
 import type { ProjectSchema } from '../schemas/project'
-import { editorSplitterSizesAtom } from '../state/editorSplitterSizesAtom'
 import { useTranslation } from '../translations/translation'
 import { isDefined } from '../utils/isDefined'
 import { CommonEmptyState } from './common/CommonEmptyState'
@@ -29,21 +28,21 @@ type EditorContentProps = {
 export const EditorContent: FC<EditorContentProps> = ({ menu, projects, subProjectId }) => {
   const t = useTranslation()
   const { project } = useProject()
-  const [editorSplitterSizes, setEditorSplitterSizes] = useAtom(editorSplitterSizesAtom)
+  const { setAppSettings, settings } = useGlobalSettings()
   const subProject = useMemo(
     () => project.subProjects.find((candidate) => candidate.id === subProjectId),
     [project.subProjects, subProjectId],
   )
   const handleResizeEnd = useCallback(
     ({ size }: SplitterResizeEndDetails): void => {
-      setEditorSplitterSizes([size[0], size[1]])
+      setAppSettings({ splitterSizes: [size[0], size[1]] })
     },
-    [setEditorSplitterSizes],
+    [setAppSettings],
   )
 
   return (
     <Splitter.Root
-      defaultSize={editorSplitterSizes}
+      defaultSize={settings.app.splitterSizes}
       height="100%"
       minHeight="0"
       minWidth="0"

@@ -1,9 +1,8 @@
 import { Box, Slider, Text, VStack, type SliderValueChangeDetails } from '@chakra-ui/react'
 import BigNumber from 'bignumber.js'
-import { useAtom } from 'jotai'
 import { useCallback, useState, type FC } from 'react'
 
-import { scalingAtom } from '../state/scalingAtom'
+import { useGlobalSettings } from '../hooks/useGlobalSettings'
 import { useTranslation } from '../translations/translation'
 import { EditDialog } from './EditDialog'
 import { RulerSvg } from './svg/RulerSvg'
@@ -14,14 +13,14 @@ type ScalingDialogProps = {
 }
 
 export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) => {
-  const [scaling, setScaling] = useAtom(scalingAtom)
-  const [draftScaling, setDraftScaling] = useState<number>(scaling)
+  const { setViewSettings, settings } = useGlobalSettings()
+  const [draftScaling, setDraftScaling] = useState<number>(settings.view.scale)
   const t = useTranslation()
   const scalingPercent = new BigNumber(draftScaling).times(100).toNumber()
 
   const resetDraft = useCallback((): void => {
-    setDraftScaling(scaling)
-  }, [scaling])
+    setDraftScaling(settings.view.scale)
+  }, [settings.view.scale])
 
   const handleScaleChange = useCallback((details: SliderValueChangeDetails): void => {
     const nextScaling = details.value[0]
@@ -32,9 +31,9 @@ export const ScalingDialog: FC<ScalingDialogProps> = ({ isOpen, onOpenChange }) 
   }, [])
 
   const handleSubmit = useCallback((): void => {
-    setScaling(draftScaling)
+    setViewSettings({ scale: draftScaling })
     onOpenChange(false)
-  }, [draftScaling, onOpenChange, setScaling])
+  }, [draftScaling, onOpenChange, setViewSettings])
 
   return (
     <EditDialog

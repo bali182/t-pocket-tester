@@ -1,11 +1,8 @@
-export type AdjustCornerRadiiSchema = 'never' | 'increase' | 'sync'
+import { PdfExportSettingsSchema } from './pdfExport'
+import { RecentProjectsSchema } from './recentProject'
+import type { ThemeSchema } from './theme'
 
 export type NumberEditorStepSchema = number | 'stitch-hole-distance'
-
-export type ProjectEditingSettingSchema = {
-  addBaseColorByDefault: boolean
-  numberEditorStep: NumberEditorStepSchema
-}
 
 export type ColorSettingsSchema = {
   leatherColor: string
@@ -27,4 +24,31 @@ export type BaseExportSettingsSchema = {
   showDimensions: boolean
   childMarkers: boolean
   cutHelperDistance: number
+}
+
+export type AppSettingsSchema = {
+  theme: ThemeSchema
+  splitterSizes: [number | string, number | string]
+}
+
+export type EditSettingSchema = {
+  step: NumberEditorStepSchema
+  addBaseColor: boolean
+}
+
+export type ViewSettingsSchema = {
+  stitchLinesVisible: boolean
+  stitchHolesVisible: boolean
+  stitchesVisible: boolean
+  stitchCountVisible: boolean
+  scale: number
+}
+
+export type GlobalSettingsSchema = {
+  app: AppSettingsSchema
+  edit: EditSettingSchema
+  view: ViewSettingsSchema
+  svgExport: BaseExportSettingsSchema
+  pdfExport: PdfExportSettingsSchema
+  recentProjects: RecentProjectsSchema
 }

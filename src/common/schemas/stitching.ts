@@ -13,13 +13,7 @@ export type VerticalStitchDirectionSchema = 'top-to-bottom' | 'bottom-to-top'
 export type StitchSideSchema = 'top' | 'right' | 'bottom' | 'left'
 export type StitchCornerSchema = 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left'
 
-export type StitchingVisibilityConfigSchema = {
-  stitchLinesVisible: boolean
-  stitchHolesVisible: boolean
-  stitchesVisible: boolean
-}
-
-export type StitchLineCommonConfigSchema = StitchingVisibilityConfigSchema & {
+export type StitchLineCommonConfigSchema = {
   stitchMargin: number
   stitchHoleLength: number
   stitchHoleDistance: number

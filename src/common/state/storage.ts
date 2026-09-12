@@ -1,30 +1,18 @@
 import typia from 'typia'
 
-import type { PdfExportSettingsSchema } from '../schemas/pdfExport'
 import type { ProjectSchema } from '../schemas/project'
-import type { RecentProjectsSchema } from '../schemas/recentProject'
-import type { BaseExportSettingsSchema } from '../schemas/settings'
-import type { ThemeSchema } from '../schemas/theme'
-import { getSystemTheme } from '../utils/getSystemTheme'
-import type { EditorSplitterSizes } from './editorSplitterSizesAtom'
+import type { GlobalSettingsSchema } from '../schemas/settings'
 
-type StorageKey =
-  | 'editor-splitter-sizes'
-  | 'pdf-export-params'
-  | 'projects'
-  | 'recent-projects'
-  | 'scaling'
-  | 'svg-export-params'
-  | 'theme'
+type StorageKey = 'global-settings' | 'projects'
 
-export const readEditorSplitterSizesFromStorage = (defaultValue: EditorSplitterSizes): EditorSplitterSizes => {
-  return safeReadStorage<EditorSplitterSizes>('editor-splitter-sizes', defaultValue, (raw) =>
-    typia.assert<EditorSplitterSizes>(raw),
+export const readGlobalSettingsFromStorage = (defaultValue: GlobalSettingsSchema): GlobalSettingsSchema => {
+  return safeReadStorage<GlobalSettingsSchema>('global-settings', defaultValue, (raw) =>
+    typia.assert<GlobalSettingsSchema>(raw),
   )
 }
 
-export const saveEditorSplitterSizesToStorage = (sizes: EditorSplitterSizes): void => {
-  safeWriteStorage('editor-splitter-sizes', sizes)
+export const saveGlobalSettingsToStorage = (settings: GlobalSettingsSchema): void => {
+  safeWriteStorage('global-settings', settings)
 }
 
 export const readProjectsFromStorage = (): ProjectSchema[] => {
@@ -33,50 +21,6 @@ export const readProjectsFromStorage = (): ProjectSchema[] => {
 
 export const saveProjectsToStorage = (projects: ProjectSchema[]): void => {
   safeWriteStorage('projects', projects)
-}
-
-export const readRecentProjectsFromStorage = (): RecentProjectsSchema => {
-  return safeReadStorage<RecentProjectsSchema>('recent-projects', {}, (raw) => typia.assert<RecentProjectsSchema>(raw))
-}
-
-export const saveRecentProjectsToStorage = (recentProjects: RecentProjectsSchema): void => {
-  safeWriteStorage('recent-projects', recentProjects)
-}
-
-export const readScalingFromStorage = (): number => {
-  return safeReadStorage<number>('scaling', 1, (raw) => typia.assert<number>(raw))
-}
-
-export const saveScalingToStorage = (scaling: number): void => {
-  safeWriteStorage('scaling', scaling)
-}
-
-export const readThemeFromStorage = (): ThemeSchema => {
-  return safeReadStorage<ThemeSchema>('theme', getSystemTheme(), (raw) => typia.assert<ThemeSchema>(raw))
-}
-
-export const saveThemeToStorage = (theme: ThemeSchema): void => {
-  safeWriteStorage('theme', theme)
-}
-
-export const readSvgExportParamsFromStorage = (defaultValue: BaseExportSettingsSchema): BaseExportSettingsSchema => {
-  return safeReadStorage<BaseExportSettingsSchema>('svg-export-params', defaultValue, (raw) =>
-    typia.assert<BaseExportSettingsSchema>(raw),
-  )
-}
-
-export const saveSvgExportParamsToStorage = (params: BaseExportSettingsSchema): void => {
-  safeWriteStorage('svg-export-params', params)
-}
-
-export const readPdfExportParamsFromStorage = (defaultValue: PdfExportSettingsSchema): PdfExportSettingsSchema => {
-  return safeReadStorage<PdfExportSettingsSchema>('pdf-export-params', defaultValue, (raw) =>
-    typia.assert<PdfExportSettingsSchema>(raw),
-  )
-}
-
-export const savePdfExportParamsToStorage = (params: PdfExportSettingsSchema): void => {
-  safeWriteStorage('pdf-export-params', params)
 }
 
 const safeReadStorage = <T>(key: StorageKey, defaultValue: T, assert: (raw: unknown) => void): T => {

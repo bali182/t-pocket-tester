@@ -31,6 +31,7 @@ import { useTranslation } from '../translations/translation'
 import { getUnusedStitchLineName } from '../utils/getUnusedStitchLineName'
 import { id } from '../utils/id'
 import { isDefined } from '../utils/isDefined'
+import { useGlobalSettings } from './useGlobalSettings'
 import { useSubProjectHistory } from './useSubProjectHistory'
 
 export type UseSubProjectOperationsOutput = {
@@ -55,6 +56,7 @@ export type UseSubProjectOperationsOutput = {
 
 export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
   const { project, subProject, setSubProject } = useEditorContext()
+  const { settings } = useGlobalSettings()
   const { recordChange, recordThrottledChange: recordThrottledUpdate } = useSubProjectHistory()
   const t = useTranslation()
 
@@ -64,9 +66,7 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
       const currentSubProject = ensureSubProject(subProject)
       const component = createComponent({
         type,
-        color: currentProject.editingSettings.addBaseColorByDefault
-          ? currentProject.colorSettings.leatherColor
-          : undefined,
+        color: settings.edit.addBaseColor ? currentProject.colorSettings.leatherColor : undefined,
         id: id(),
         name: getUnusedComponentName(type, currentSubProject, t),
         stitchingSettings: currentProject.stitchingSettings,
@@ -77,7 +77,7 @@ export const useSubProjectOperations = (): UseSubProjectOperationsOutput => {
 
       return component
     },
-    [project, recordChange, setSubProject, subProject, t],
+    [project, recordChange, setSubProject, settings.edit.addBaseColor, subProject, t],
   )
 
   const addStitchLineToComponent = useCallback(
