@@ -3,6 +3,7 @@ import { FC, useMemo } from 'react'
 import { CommandSchema } from '../../schemas/command'
 import { formatShortcut } from '../../utils/formatShortcut'
 import { isDefined } from '../../utils/isDefined'
+import { PLATFORM } from '../../utils/platform'
 
 type MenuShortcutProps = {
   command: CommandSchema<unknown>
@@ -10,7 +11,7 @@ type MenuShortcutProps = {
 }
 
 export const MenuShortcut: FC<MenuShortcutProps> = ({ command, noPadding }) => {
-  const shortcut = useMemo(() => formatShortcut(command.shortcut), [command.shortcut])
+  const shortcut = useMemo(() => formatShortcut(command.shortcut, PLATFORM), [command.shortcut])
   if (!isDefined(shortcut)) {
     return null
   }

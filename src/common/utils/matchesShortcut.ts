@@ -1,18 +1,27 @@
-import type { AcceleratorKeySchema, CommandShortcutSchema, KeySchema } from '../../common/schemas/command'
+import type {
+  AcceleratorKeySchema,
+  BasicKeyEventSchema,
+  CommandShortcutSchema,
+  KeySchema,
+} from '../../common/schemas/command'
 import { isDefined } from '../../common/utils/isDefined'
+import { PlatformSchema } from '../schemas/platform'
 import { getCommandShortcut } from './getCommandShortcut'
 import { keyboardEventMapping } from './keyboardEventMapping'
-import { platform } from './platform'
 
 const isAcceleratorKey = (key: KeySchema): key is AcceleratorKeySchema => {
   return key === 'Command' || key === 'Control' || key === 'CommandOrControl' || key === 'Alt' || key === 'Shift'
 }
 
-export const matchesShortcut = (shortcut: CommandShortcutSchema, event: KeyboardEvent): boolean => {
+export const matchesShortcut = (
+  shortcut: CommandShortcutSchema,
+  event: BasicKeyEventSchema,
+  platform: PlatformSchema,
+): boolean => {
   if (platform === 'mobile') {
     return false
   }
-  const keys = getCommandShortcut(shortcut)
+  const keys = getCommandShortcut(shortcut, platform)
   const hasCommand = keys.includes('Command')
   const hasControl = keys.includes('Control')
   const hasCommandOrControl = keys.includes('CommandOrControl')

@@ -1,6 +1,6 @@
 import type { CommandShortcutSchema, DigitKeySchema, KeySchema, NumpadKeySchema } from '../../common/schemas/command'
+import type { PlatformSchema } from '../schemas/platform'
 import { getCommandShortcut } from './getCommandShortcut'
-import { platform } from './platform'
 
 const formattedDigitKeyByKey: Record<DigitKeySchema, string> = {
   Digit0: '0',
@@ -78,13 +78,13 @@ const formatMacKey = (key: KeySchema): string => {
   }
 }
 
-export const formatShortcut = (shortcut: CommandShortcutSchema): string | undefined => {
+export const formatShortcut = (shortcut: CommandShortcutSchema, platform: PlatformSchema): string | undefined => {
   if (platform === 'mobile') {
     return undefined
   }
   const separator = platform === 'mac' ? '' : '+'
   const keyFormatter = platform === 'mac' ? formatMacKey : formatWinKey
-  return getCommandShortcut(shortcut)
+  return getCommandShortcut(shortcut, platform)
     .map((key: KeySchema): string => keyFormatter(key))
     .join(separator)
 }

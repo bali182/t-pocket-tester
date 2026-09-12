@@ -13,6 +13,7 @@ import type {
   SettingsSetRequestSchema,
 } from '../schemas/electronApi'
 import { getPreloadPath, getRendererPath } from './buildPaths'
+import { createNativeCommandHandler } from './createNativeCommandHandler'
 import { _electronApi } from './electronApi'
 import { electronIpcChannels } from './electronIpcChannels'
 
@@ -32,12 +33,10 @@ const createMainWindow = async (): Promise<BrowserWindow> => {
     },
   })
 
-  browserWindow.webContents.on('before-input-event', (event, input) => {
-    if (input.type === 'keyDown' && input.code === 'KeyI' && input.meta && input.alt) {
-      event.preventDefault()
-      browserWindow.webContents.toggleDevTools()
-    }
-  })
+  browserWindow.webContents.on(
+    'before-input-event',
+    createNativeCommandHandler({ app, browserWindow, platform: process.platform === 'darwin' ? 'mac' : 'desktop' }),
+  )
 
   const devServerUrl = process.env.ELECTRON_RENDERER_URL
 

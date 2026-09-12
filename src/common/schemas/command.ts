@@ -56,6 +56,15 @@ export type LetterKeySchema =
 
 export type KeySchema = AcceleratorKeySchema | LetterKeySchema | FunctionKeySchema | DigitKeySchema | NumpadKeySchema
 
+export type BasicKeyEventSchema = {
+  metaKey: boolean
+  ctrlKey: boolean
+  altKey: boolean
+  shiftKey: boolean
+  key: string
+  code: string
+}
+
 export type CommandShortcutSchema = {
   default: KeySchema[]
   mac?: KeySchema[]

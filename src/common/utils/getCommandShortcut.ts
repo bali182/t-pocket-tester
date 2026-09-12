@@ -1,9 +1,9 @@
 import type { CommandShortcutSchema, KeySchema } from '../schemas/command'
+import type { PlatformSchema } from '../schemas/platform'
 import { isDefined } from './isDefined'
-import { platform } from './platform'
 
-export const getCommandShortcut = (shortcut: CommandShortcutSchema): KeySchema[] => {
-  if (platform === 'mac' && isDefined(shortcut.mac)) {
+export const getCommandShortcut = (shortcut: CommandShortcutSchema, plaform: PlatformSchema): KeySchema[] => {
+  if (plaform === 'mac' && isDefined(shortcut.mac)) {
     return shortcut.mac
   }
 

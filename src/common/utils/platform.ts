@@ -22,4 +22,4 @@ const parsePlatform = (): PlatformSchema => {
   }
 }
 
-export const platform: PlatformSchema = parsePlatform()
+export const PLATFORM: PlatformSchema = parsePlatform()

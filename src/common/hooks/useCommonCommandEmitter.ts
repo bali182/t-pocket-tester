@@ -2,6 +2,7 @@ import { useEffect, useEffectEvent, useMemo } from 'react'
 import { CommandSchema } from '../schemas/command'
 import { isDefined } from '../utils/isDefined'
 import { matchesShortcut } from '../utils/matchesShortcut'
+import { PLATFORM } from '../utils/platform'
 
 export type UseCommonCommandEmitterParams<C extends string> = {
   commands: Record<C, CommandSchema<C>>
@@ -12,7 +13,7 @@ export const useCommonCommandEmitter = <C extends string>({ commands, execute }:
   const commandList = useMemo<CommandSchema<C>[]>(() => Object.values(commands), [commands])
 
   const handleKeyDown = useEffectEvent(async (event: KeyboardEvent): Promise<void> => {
-    const command = commandList.find((candidate) => matchesShortcut(candidate.shortcut, event))
+    const command = commandList.find((candidate) => matchesShortcut(candidate.shortcut, event, PLATFORM))
 
     if (!isDefined(command)) {
       return
