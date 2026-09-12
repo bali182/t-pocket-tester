@@ -7,8 +7,8 @@ import type { RecentProjectItemProps } from '../../../common/components/project-
 
 export const ElectronProjectItem: FC<RecentProjectItemProps> = ({ project }) => {
   return (
-    <Listbox.Item flex="none" item={project}>
-      <Link style={{ flex: 1 }} to={project.link}>
+    <Link to={project.link}>
+      <Listbox.Item flex="none" item={project}>
         <HStack gap="3">
           <PiWalletDuotone size={18} />
           <Listbox.ItemText>
@@ -18,7 +18,7 @@ export const ElectronProjectItem: FC<RecentProjectItemProps> = ({ project }) => 
             </Text>
           </Listbox.ItemText>
         </HStack>
-      </Link>
-    </Listbox.Item>
+      </Listbox.Item>
+    </Link>
   )
 }
