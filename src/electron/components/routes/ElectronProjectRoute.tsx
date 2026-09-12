@@ -4,12 +4,11 @@ import { PiWarningCircle } from 'react-icons/pi'
 import { useNavigate, useParams } from 'react-router'
 
 import { CommonEmptyState } from '../../../common/components/common/CommonEmptyState'
-import { EditorContext } from '../../../common/contexts/EditorContext'
 import { Loadable } from '../../../common/loadable'
 import { useTranslation } from '../../../common/translations/translation'
 import { isDefined } from '../../../common/utils/isDefined'
+import { ElectronEditorContextProvider } from '../../contexts/ElectronEditorContextProvider'
 import { electronAppRoutes } from '../../electronAppRoutes'
-import { useElectronEditorContextValue } from '../../hooks/useElectronEditorContextValue'
 import { useElectronProject } from '../../hooks/useElectronProject'
 import type { ElectronProjectSchema } from '../../schemas/electronProject'
 import type { ElectronSubProjectRouteParamsSchema } from '../../schemas/electronRouteParams'
@@ -19,7 +18,6 @@ export const ElectronProjectRoute: FC = () => {
   const { filePath, subProjectId } = useParams<ElectronSubProjectRouteParamsSchema>()
   const { electronProject, loadProject } = useElectronProject(filePath)
   const navigate = useNavigate()
-  const editorContextValue = useElectronEditorContextValue()
   const isCurrentFilePath = useMemo<boolean>(
     () =>
       Loadable.get(
@@ -65,9 +63,9 @@ export const ElectronProjectRoute: FC = () => {
   }
 
   return (
-    <EditorContext.Provider value={editorContextValue}>
+    <ElectronEditorContextProvider>
       <ElectronEditor />
-    </EditorContext.Provider>
+    </ElectronEditorContextProvider>
   )
 }
 

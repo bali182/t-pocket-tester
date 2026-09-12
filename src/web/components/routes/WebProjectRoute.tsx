@@ -2,19 +2,17 @@ import type { FC } from 'react'
 import { PiWarningCircle } from 'react-icons/pi'
 
 import { CommonEmptyState } from '../../../common/components/common/CommonEmptyState'
-import { EditorContext, useEditorContext } from '../../../common/contexts/EditorContext'
+import { useEditorContext } from '../../../common/contexts/EditorContext'
 import { useTranslation } from '../../../common/translations/translation'
 import { isDefined } from '../../../common/utils/isDefined'
-import { useWebEditorContextValue } from '../../hooks/useWebEditorContextValue'
+import { WebEditorContextProvider } from '../../context/WebEditorContextProvider'
 import { WebEditor } from '../WebEditor'
 
 export const WebProjectRoute: FC = () => {
-  const editorContextValue = useWebEditorContextValue()
-
   return (
-    <EditorContext.Provider value={editorContextValue}>
+    <WebEditorContextProvider>
       <WebProjectRouteContent />
-    </EditorContext.Provider>
+    </WebEditorContextProvider>
   )
 }
 
