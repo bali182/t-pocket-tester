@@ -7,7 +7,6 @@ import type {
 import { isDefined } from '../../common/utils/isDefined'
 import { PlatformSchema } from '../schemas/platform'
 import { getCommandShortcut } from './getCommandShortcut'
-import { keyboardEventMapping } from './keyboardEventMapping'
 
 const isAcceleratorKey = (key: KeySchema): key is AcceleratorKeySchema => {
   return key === 'Command' || key === 'Control' || key === 'CommandOrControl' || key === 'Alt' || key === 'Shift'
@@ -45,7 +44,5 @@ export const matchesShortcut = (
     return false
   }
 
-  const eventField = keyboardEventMapping[shortcutKey]
-
-  return event[eventField].toUpperCase() === shortcutKey.toUpperCase()
+  return event.code === shortcutKey
 }

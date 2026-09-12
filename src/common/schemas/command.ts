@@ -27,32 +27,32 @@ export type NumpadKeySchema =
 export type FunctionKeySchema = 'F1' | 'F2' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'F10' | 'F11' | 'F12'
 
 export type LetterKeySchema =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
+  | 'KeyA'
+  | 'KeyB'
+  | 'KeyC'
+  | 'KeyD'
+  | 'KeyE'
+  | 'KeyF'
+  | 'KeyG'
+  | 'KeyH'
+  | 'KeyI'
+  | 'KeyJ'
+  | 'KeyK'
+  | 'KeyL'
+  | 'KeyM'
+  | 'KeyN'
+  | 'KeyO'
+  | 'KeyP'
+  | 'KeyQ'
+  | 'KeyR'
+  | 'KeyS'
+  | 'KeyT'
+  | 'KeyU'
+  | 'KeyV'
+  | 'KeyW'
+  | 'KeyX'
+  | 'KeyY'
+  | 'KeyZ'
 
 export type KeySchema = AcceleratorKeySchema | LetterKeySchema | FunctionKeySchema | DigitKeySchema | NumpadKeySchema
 
@@ -61,7 +61,6 @@ export type BasicKeyEventSchema = {
   ctrlKey: boolean
   altKey: boolean
   shiftKey: boolean
-  key: string
   code: string
 }
 

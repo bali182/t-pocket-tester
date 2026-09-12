@@ -1,4 +1,10 @@
-import type { CommandShortcutSchema, DigitKeySchema, KeySchema, NumpadKeySchema } from '../../common/schemas/command'
+import type {
+  CommandShortcutSchema,
+  DigitKeySchema,
+  KeySchema,
+  LetterKeySchema,
+  NumpadKeySchema,
+} from '../../common/schemas/command'
 import type { PlatformSchema } from '../schemas/platform'
 import { getCommandShortcut } from './getCommandShortcut'
 
@@ -28,6 +34,35 @@ const formattedNumpadKeyByKey: Record<NumpadKeySchema, string> = {
   Numpad9: '9',
 }
 
+const formattedLetterKeyByKey: Record<LetterKeySchema, string> = {
+  KeyA: 'A',
+  KeyB: 'B',
+  KeyC: 'C',
+  KeyD: 'D',
+  KeyE: 'E',
+  KeyF: 'F',
+  KeyG: 'G',
+  KeyH: 'H',
+  KeyI: 'I',
+  KeyJ: 'J',
+  KeyK: 'K',
+  KeyL: 'L',
+  KeyM: 'M',
+  KeyN: 'N',
+  KeyO: 'O',
+  KeyP: 'P',
+  KeyQ: 'Q',
+  KeyR: 'R',
+  KeyS: 'S',
+  KeyT: 'T',
+  KeyU: 'U',
+  KeyV: 'V',
+  KeyW: 'W',
+  KeyX: 'X',
+  KeyY: 'Y',
+  KeyZ: 'Z',
+}
+
 const isDigitKey = (key: KeySchema): key is DigitKeySchema => {
   return key in formattedDigitKeyByKey
 }
@@ -36,12 +71,19 @@ const isNumpadKey = (key: KeySchema): key is NumpadKeySchema => {
   return key in formattedNumpadKeyByKey
 }
 
+const isLetterKey = (key: KeySchema): key is LetterKeySchema => {
+  return key in formattedLetterKeyByKey
+}
+
 const formatKeyboardEventKey = (key: KeySchema): string => {
   if (isDigitKey(key)) {
     return formattedDigitKeyByKey[key]
   }
   if (isNumpadKey(key)) {
     return formattedNumpadKeyByKey[key]
+  }
+  if (isLetterKey(key)) {
+    return formattedLetterKeyByKey[key]
   }
   return key
 }
