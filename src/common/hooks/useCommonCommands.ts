@@ -72,17 +72,17 @@ export const useCommonCommands = ({ canRedo, canUndo, hasOpenProject }: UseCommo
       'stitch-hole-visibility': {
         id: 'stitch-hole-visibility',
         disabled: !hasOpenProject,
-        shortcut: { default: ['CommandOrControl', 'Shift', 'H'] },
+        shortcut: { default: ['CommandOrControl', 'Shift', 'F'] },
       },
       'stitches-visibility': {
         id: 'stitches-visibility',
         disabled: !hasOpenProject,
-        shortcut: { default: ['CommandOrControl', 'Shift', 'T'] },
+        shortcut: { default: ['CommandOrControl', 'Shift', 'U'] },
       },
       'stitch-count-visibility': {
         id: 'stitch-count-visibility',
         disabled: !hasOpenProject,
-        shortcut: { default: ['CommandOrControl', 'Shift', 'B'] },
+        shortcut: { default: ['CommandOrControl', 'Shift', 'X'] },
       },
       // View scaling
       scaling: {
